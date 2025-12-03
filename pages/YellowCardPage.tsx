@@ -1,4 +1,4 @@
-import { Heart, Award, Download, Printer, CheckCircle, Calendar, Target, Star } from 'lucide-react';
+import { Heart, Award, Download, Printer, Calendar, Target, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function YellowCardPage() {

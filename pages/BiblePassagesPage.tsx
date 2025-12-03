@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { ChevronDown, ChevronUp, Heart, BookOpen } from 'lucide-react';
+import { Heart, BookOpen } from 'lucide-react';
 
 interface BiblePassage {
   reference: string;
@@ -10,17 +9,6 @@ interface BiblePassage {
 }
 
 export default function BiblePassagesPage() {
-  const [expandedCards, setExpandedCards] = useState<Set<number>>(new Set([0, 1, 2])); // First 3 expanded by default
-
-  const toggleCard = (index: number) => {
-    const newExpanded = new Set(expandedCards);
-    if (newExpanded.has(index)) {
-      newExpanded.delete(index);
-    } else {
-      newExpanded.add(index);
-    }
-    setExpandedCards(newExpanded);
-  };
 
   const passages: BiblePassage[] = [
     { reference: "Matthew 5:43-45", text: "", explanation: "", application: "", category: "command" },
@@ -75,25 +63,7 @@ export default function BiblePassagesPage() {
     { reference: "Revelation 3:19", text: "", explanation: "", application: "", category: "promise" }
   ];
 
-  const getCategoryColor = (category: string) => {
-    switch (category) {
-      case 'command': return 'bg-blue-100 border-blue-300 text-blue-800';
-      case 'example': return 'bg-green-100 border-green-300 text-green-800';
-      case 'promise': return 'bg-purple-100 border-purple-300 text-purple-800';
-      case 'warning': return 'bg-red-100 border-red-300 text-red-800';
-      default: return 'bg-gray-100 border-gray-300 text-gray-800';
-    }
-  };
 
-  const getCategoryIcon = (category: string) => {
-    switch (category) {
-      case 'command': return '📝';
-      case 'example': return '💡';
-      case 'promise': return '✨';
-      case 'warning': return '⚠️';
-      default: return '📖';
-    }
-  };
 
   return (
     <section className="py-20 px-6 bg-gradient-to-b from-orange-100 to-red-50">

@@ -47,7 +47,7 @@ function countJourneyMilestones(journeyProgress: JourneyProgress[]): number {
   return journeyProgress.reduce((total, jp) => total + jp.completedSteps.length, 0);
 }
 
-export default function ProgressStats({ progress, totalJourneys = 0 }: ProgressStatsProps) {
+export default function ProgressStats({ progress }: ProgressStatsProps) {
   const completedChallenges = progress.completedChallenges.length;
   const reflectionSessions = progress.reflectionSessions.length;
   const completedJourneys = countCompletedJourneys(progress.journeyProgress);

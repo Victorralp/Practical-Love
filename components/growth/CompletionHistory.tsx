@@ -126,7 +126,7 @@ export default function CompletionHistory({ progress, maxItems = 10 }: Completio
         
         {/* Timeline items */}
         <div className="space-y-4">
-          {timelineItems.map((item, index) => (
+          {timelineItems.map((item) => (
             <div key={item.id} className="relative flex items-start gap-4 pl-10">
               {/* Timeline dot */}
               <div className={`absolute left-2 w-5 h-5 rounded-full ${item.color} text-white flex items-center justify-center -translate-x-1/2`}>
