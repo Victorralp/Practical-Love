@@ -31,7 +31,7 @@ function TestimonyCard({ name, role, image, testimony, rating }: TestimonyProps)
           </div>
         </div>
       </div>
-      
+
       <Quote className="w-8 h-8 text-purple-300 mb-4" />
       <blockquote className="text-gray-600 leading-relaxed italic">
         "{testimony}"
@@ -41,50 +41,7 @@ function TestimonyCard({ name, role, image, testimony, rating }: TestimonyProps)
 }
 
 export default function TestimoniesPage() {
-  const testimonies = [
-    {
-      name: "Adunni Okonkwo",
-      role: "Marriage Counselor",
-      image: "https://images.unsplash.com/photo-1681597107753-58e48bb38c32?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhZnJpY2FuJTIwd29tYW4lMjBzbWlsaW5nJTIwcG9ydHJhaXR8ZW58MXx8fHwxNzU4OTkzMjQzfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-      testimony: "Understanding practical love has transformed not only my marriage but also how I guide couples in my practice. The principles here are life-changing and biblically sound.",
-      rating: 5
-    },
-    {
-      name: "James Adeleke",
-      role: "Pastor & Community Leader",
-      image: "https://images.unsplash.com/photo-1651684215020-f7a5b6610f23?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtYW4lMjBzbWlsaW5nJTIwcG9ydHJhaXQlMjBwcm9mZXNzaW9uYWx8ZW58MXx8fHwxNzU4OTkzMjQ2fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-      testimony: "This approach to love has helped me serve my community better. When you truly understand love as described here, it becomes the foundation for all meaningful relationships.",
-      rating: 5
-    },
-    {
-      name: "Sarah Johnson",
-      role: "Young Professional",
-      image: "https://images.unsplash.com/photo-1580640611343-3f53b12a5b1d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxoYXBweSUyMHBlb3BsZSUyMHRlc3RpbW9uaWFsfGVufDF8fHx8MTc1ODk5MzI0MHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-      testimony: "I used to think love was just a feeling, but learning about practical love showed me it's a choice and an action. My relationships with family and friends have never been stronger.",
-      rating: 5
-    },
-    {
-      name: "Dr. Michael Okafor",
-      role: "Relationship Coach",
-      image: "https://images.unsplash.com/photo-1651684215020-f7a5b6610f23?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtYW4lMjBzbWlsaW5nJTIwcG9ydHJhaXQlMjBwcm9mZXNzaW9uYWx8ZW58MXx8fHwxNzU4OTkzMjQ2fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-      testimony: "After 20 years of helping couples, I can confidently say that practical love principles are the most effective tools for building lasting, meaningful relationships.",
-      rating: 5
-    },
-    {
-      name: "Grace Emeka",
-      role: "Mother & Educator",
-      image: "https://images.unsplash.com/photo-1681597107753-58e48bb38c32?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhZnJpY2FuJTIwd29tYW4lMjBzbWlsaW5nJTIwcG9ydHJhaXR8ZW58MXx8fHwxNzU4OTkzMjQzfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-      testimony: "Teaching my children about practical love has given them tools for life. They understand that love is about serving others and being patient, kind, and forgiving.",
-      rating: 5
-    },
-    {
-      name: "Emmanuel Nkem",
-      role: "Youth Leader",
-      image: "https://images.unsplash.com/photo-1651684215020-f7a5b6610f23?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtYW4lMjBzbWlsaW5nJTIwcG9ydHJhaXQlMjBwcm9mZXNzaW9uYWx8ZW58MXx8fHwxNzU4OTkzMjQ2fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-      testimony: "Working with young people, I see how transformative it is when they grasp what real love looks like. It changes how they treat each other and approach their futures.",
-      rating: 5
-    }
-  ]
+  const testimonies: TestimonyProps[] = [];
 
   return (
     <section className="py-20 px-6 bg-gradient-to-b from-green-50 to-purple-50">
@@ -97,19 +54,27 @@ export default function TestimoniesPage() {
             Hear from real people whose lives have been transformed by understanding and practicing true, practical love.
           </p>
         </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-          {testimonies.map((testimony, index) => (
-            <TestimonyCard
-              key={index}
-              name={testimony.name}
-              role={testimony.role}
-              image={testimony.image}
-              testimony={testimony.testimony}
-              rating={testimony.rating}
-            />
-          ))}
-        </div>
+
+        {testimonies.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+            {testimonies.map((testimony, index) => (
+              <TestimonyCard
+                key={index}
+                name={testimony.name}
+                role={testimony.role}
+                image={testimony.image}
+                testimony={testimony.testimony}
+                rating={testimony.rating}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center mb-16 py-12 bg-white rounded-xl shadow-sm">
+            <p className="text-xl text-gray-500 italic">
+              "Be the first to share your testimony of how Practical Love has impacted your life."
+            </p>
+          </div>
+        )}
 
         {/* Call to Action */}
         <div className="bg-purple-600 rounded-2xl p-12 text-white text-center">

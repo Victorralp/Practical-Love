@@ -1,4 +1,4 @@
-import { Heart, Award, Download, Printer, Calendar, Target, Star } from 'lucide-react';
+import { Heart, Award, Download, Printer, Calendar, Target, Star, ArrowRight, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function YellowCardPage() {
@@ -40,20 +40,7 @@ export default function YellowCardPage() {
     }
   ];
 
-  const testimonials = [
-    {
-      name: "Sarah Johnson",
-      role: "Mother of Two",
-      content: "The Yellow Card transformed how I communicate with my children. Patient love has brought us closer than ever before.",
-      rating: 5
-    },
-    {
-      name: "Michael Okafor",
-      role: "Community Leader",
-      content: "Implementing these principles in our community projects has led to remarkable collaboration and success.",
-      rating: 5
-    }
-  ];
+
 
   const benefits = [
     {
@@ -138,7 +125,7 @@ export default function YellowCardPage() {
           <p className="text-gray-600 text-center mb-10 max-w-2xl mx-auto">
             Simple steps to integrate the characteristics of love into your everyday life
           </p>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
             {dailyPractices.map((practice, index) => (
               <div key={index} className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-xl p-6 border border-yellow-200">
@@ -151,54 +138,64 @@ export default function YellowCardPage() {
             ))}
           </div>
 
-          {/* Progress Tracker */}
-          <div className="bg-gradient-to-r from-red-50 to-orange-50 rounded-xl p-6 border border-red-100">
-            <h3 className="text-xl font-semibold text-red-800 mb-4 flex items-center">
-              <Star className="w-5 h-5 mr-2 text-yellow-500 fill-current" />
-              30-Day Love Challenge
-            </h3>
-            <p className="text-gray-700 mb-4">
-              Track your progress as you practice each characteristic daily. Mark each day you successfully demonstrate practical love.
-            </p>
-            <div className="grid grid-cols-7 gap-2 mb-4">
-              {Array.from({ length: 30 }).map((_, index) => (
-                <div key={index} className="h-10 bg-white border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center text-gray-400">
-                  {index + 1}
+          {/* 30-Day Challenge Teaser */}
+          <div className="bg-gradient-to-br from-red-600 to-orange-600 rounded-2xl p-1 shadow-xl mb-12 transform hover:scale-[1.01] transition-transform duration-300">
+            <div className="bg-white rounded-xl p-6 md:p-8">
+              <div className="flex flex-col md:flex-row items-center gap-8">
+                <div className="flex-1 text-center md:text-left">
+                  <div className="inline-flex items-center px-3 py-1 rounded-full bg-yellow-100 text-yellow-700 text-sm font-semibold mb-4">
+                    <Sparkles className="w-4 h-4 mr-2" />
+                    Transform Your Life
+                  </div>
+                  <h3 className="text-3xl font-serif text-gray-900 mb-4">
+                    30-Day Love Challenge
+                  </h3>
+                  <p className="text-gray-600 text-lg mb-6 leading-relaxed">
+                    Embark on a transformative journey. Each day, focus on one characteristic of love to strengthen your relationships and personal character.
+                  </p>
+
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                    <Link
+                      to="/love-challenge"
+                      className="inline-flex items-center justify-center px-8 py-4 bg-red-600 text-white rounded-xl font-semibold hover:bg-red-700 transition-colors shadow-lg group"
+                    >
+                      Start the Challenge
+                      <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                    </Link>
+                    <div className="flex items-center justify-center text-gray-500 text-sm font-medium">
+                      <Star className="w-4 h-4 text-yellow-500 mr-1" />
+                      Join 1,000+ others
+                    </div>
+                  </div>
                 </div>
-              ))}
+
+                {/* Visual Preview Card */}
+                <div className="w-full md:w-2/5 max-w-sm">
+                  <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100 shadow-inner relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-24 h-24 bg-yellow-100 rounded-full -mr-12 -mt-12 opacity-50"></div>
+                    <div className="relative z-10">
+                      <div className="flex justify-between items-center mb-4">
+                        <span className="text-xs font-bold tracking-wider text-gray-400 uppercase">Preview</span>
+                        <span className="bg-red-100 text-red-600 text-xs font-bold px-2 py-1 rounded">Day 1</span>
+                      </div>
+                      <h4 className="text-xl font-bold text-gray-800 mb-2">Love is Patient</h4>
+                      <p className="text-gray-600 text-sm mb-4">
+                        "Today, I will choose to breathe and wait before reacting in difficult situations."
+                      </p>
+                      <div className="flex gap-2">
+                        {[1, 2, 3, 4, 5].map((_, i) => (
+                          <div key={i} className={`h-2 flex-1 rounded-full ${i === 0 ? 'bg-red-500' : 'bg-gray-200'}`}></div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <Link to="/love-challenge" className="bg-gradient-to-r from-red-500 to-orange-500 text-white px-6 py-2 rounded-lg font-medium hover:from-red-600 hover:to-orange-600 transition-all inline-block">
-              Start Challenge
-            </Link>
           </div>
         </div>
 
-        {/* Testimonials */}
-        <div className="mb-12">
-          <h2 className="text-3xl font-serif text-center text-red-800 mb-2">Success Stories</h2>
-          <p className="text-gray-600 text-center mb-10 max-w-2xl mx-auto">
-            Hear from people who have transformed their lives through the Yellow Card
-          </p>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {testimonials.map((testimonial, index) => (
-              <div key={index} className="bg-white rounded-xl p-6 shadow-lg">
-                <div className="flex items-center mb-4">
-                  <div className="flex text-yellow-400">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="w-5 h-5 fill-current" />
-                    ))}
-                  </div>
-                </div>
-                <p className="text-gray-700 italic mb-4">"{testimonial.content}"</p>
-                <div>
-                  <p className="font-semibold text-gray-800">{testimonial.name}</p>
-                  <p className="text-gray-600 text-sm">{testimonial.role}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+
 
         {/* Benefits Section */}
         <div className="mb-12">
@@ -225,7 +222,7 @@ export default function YellowCardPage() {
           <p className="text-orange-100 mb-8 max-w-2xl mx-auto text-lg">
             Download your printable version or save it to your phone for daily inspiration
           </p>
-          
+
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
             <button className="bg-white text-red-600 px-8 py-4 rounded-lg font-medium hover:bg-orange-50 transition-colors flex items-center justify-center shadow-lg">
               <Download className="w-5 h-5 mr-2" />
@@ -236,7 +233,7 @@ export default function YellowCardPage() {
               Print Version
             </button>
           </div>
-          
+
           <div className="text-orange-200 text-sm">
             <p>Also available as a mobile app - coming soon!</p>
           </div>
@@ -248,16 +245,16 @@ export default function YellowCardPage() {
           <p className="text-gray-600 mb-8 max-w-2xl mx-auto text-lg">
             Start practicing practical love today and experience the transformation in your relationships and community.
           </p>
-          
+
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link 
-              to="/characteristics" 
+            <Link
+              to="/characteristics"
               className="bg-gradient-to-r from-red-500 to-orange-500 text-white px-8 py-4 rounded-lg font-medium hover:from-red-600 hover:to-orange-600 transition-all shadow-lg"
             >
               View All 17 Characteristics
             </Link>
-            <Link 
-              to="/bible-passages" 
+            <Link
+              to="/bible-passages"
               className="border-2 border-red-500 text-red-500 px-8 py-4 rounded-lg font-medium hover:bg-red-50 transition-colors shadow-lg"
             >
               Explore 50 Love Passages
