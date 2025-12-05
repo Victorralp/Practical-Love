@@ -10,6 +10,7 @@ import YellowCardPage from './pages/YellowCardPage'
 import LoveChallengePage from './pages/LoveChallengePage'
 import ShareTestimonyPage from './pages/ShareTestimonyPage'
 import GrowthPage from './pages/GrowthPage'
+import YellowCardSeriesPage from './pages/YellowCardSeriesPage'
 
 export default function App() {
   return (
@@ -23,6 +24,7 @@ export default function App() {
           <Route path="/love-in-nigeria" element={<LoveInNigeriaPage />} />
           <Route path="/mission-vision" element={<MissionVisionPage />} />
           <Route path="/yellow-card" element={<YellowCardPage />} />
+          <Route path="/yellow-card-series" element={<YellowCardSeriesPage />} />
           <Route path="/love-challenge" element={<LoveChallengePage />} />
           <Route path="/share-testimony" element={<ShareTestimonyPage />} />
           <Route path="/growth" element={<GrowthPage />} />

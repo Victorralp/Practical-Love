@@ -15,6 +15,7 @@ export default function Header() {
     { name: 'Bible Passages', href: '/bible-passages' },
     { name: 'Love in Nigeria', href: '/love-in-nigeria' },
     { name: 'Mission & Vision', href: '/mission-vision' },
+    { name: 'Yellow Card Series', href: '/yellow-card-series' },
     { name: 'Growth', href: '/growth' },
   ];
 

@@ -223,12 +223,18 @@ export default function YellowCardPage() {
             Download your printable version or save it to your phone for daily inspiration
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
-            <button className="bg-white text-red-600 px-8 py-4 rounded-lg font-medium hover:bg-orange-50 transition-colors flex items-center justify-center shadow-lg">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6 print:hidden">
+            <button
+              onClick={() => window.print()}
+              className="bg-white text-red-600 px-8 py-4 rounded-lg font-medium hover:bg-orange-50 transition-colors flex items-center justify-center shadow-lg"
+            >
               <Download className="w-5 h-5 mr-2" />
               Download PDF
             </button>
-            <button className="bg-transparent border-2 border-white text-white px-8 py-4 rounded-lg font-medium hover:bg-white hover:text-red-600 transition-colors flex items-center justify-center shadow-lg">
+            <button
+              onClick={() => window.print()}
+              className="bg-transparent border-2 border-white text-white px-8 py-4 rounded-lg font-medium hover:bg-white hover:text-red-600 transition-colors flex items-center justify-center shadow-lg"
+            >
               <Printer className="w-5 h-5 mr-2" />
               Print Version
             </button>
