@@ -43,21 +43,13 @@ export default function Hero() {
           <Leaf className="absolute bottom-40 left-20 w-10 h-10 text-orange-300 opacity-40" />
         </div>
 
-        {/* Family Silhouette */}
-        <div className="absolute right-10 top-1/2 transform -translate-y-1/2 hidden lg:block">
-          <svg width="200" height="300" viewBox="0 0 200 300" className="text-orange-400 opacity-60">
-            {/* Adult 1 */}
-            <ellipse cx="60" cy="50" rx="25" ry="30" fill="currentColor" />
-            <rect x="35" y="80" width="50" height="120" rx="25" fill="currentColor" />
-
-            {/* Adult 2 */}
-            <ellipse cx="120" cy="55" rx="22" ry="28" fill="currentColor" />
-            <rect x="98" y="83" width="44" height="110" rx="22" fill="currentColor" />
-
-            {/* Child */}
-            <ellipse cx="90" cy="160" rx="18" ry="22" fill="currentColor" />
-            <rect x="72" y="182" width="36" height="80" rx="18" fill="currentColor" />
-          </svg>
+        {/* Family Love Image */}
+        <div className="absolute right-0 lg:right-10 top-1/2 transform -translate-y-1/2 hidden lg:block overflow-hidden rounded-2xl shadow-2xl border-4 border-white/20">
+          <img
+            src="/love-hero.png"
+            alt="Family embracing in warm light"
+            className="w-[400px] h-auto object-cover opacity-90 hover:opacity-100 transition-opacity duration-500"
+          />
         </div>
 
         <div className="relative z-10 flex items-center min-h-screen px-6">
