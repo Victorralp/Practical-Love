@@ -11,6 +11,8 @@ import LoveChallengePage from './pages/LoveChallengePage'
 import ShareTestimonyPage from './pages/ShareTestimonyPage'
 import GrowthPage from './pages/GrowthPage'
 import YellowCardSeriesPage from './pages/YellowCardSeriesPage'
+import PublicationsPage from './pages/PublicationsPage'
+import BookReaderPage from './pages/BookReaderPage'
 
 export default function App() {
   return (
@@ -28,6 +30,8 @@ export default function App() {
           <Route path="/love-challenge" element={<LoveChallengePage />} />
           <Route path="/share-testimony" element={<ShareTestimonyPage />} />
           <Route path="/growth" element={<GrowthPage />} />
+          <Route path="/publications" element={<PublicationsPage />} />
+          <Route path="/read/:id" element={<BookReaderPage />} />
         </Routes>
       </main>
       <Footer />

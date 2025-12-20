@@ -13,7 +13,7 @@ export default function Footer() {
               <h3 className="text-2xl font-serif">Practical Love</h3>
             </div>
             <p className="text-orange-100 leading-relaxed mb-6 max-w-md">
-              Discover the winning power behind all human endeavours through practical, 
+              Discover the winning power behind all human endeavours through practical,
               biblical principles of love that transform lives, relationships, and communities.
             </p>
             <div className="flex space-x-4">
@@ -57,8 +57,8 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link to="/testimonies" className="text-orange-100 hover:text-white transition-colors">
-                  Testimonies
+                <Link to="/publications" className="text-orange-100 hover:text-white transition-colors">
+                  Publications
                 </Link>
               </li>
             </ul>

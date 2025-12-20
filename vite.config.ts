@@ -15,4 +15,8 @@ export default defineConfig({
     globals: true,
     environment: 'node',
   },
+  server: {
+    port: 3000,
+    host: '127.0.0.1',
+  },
 })

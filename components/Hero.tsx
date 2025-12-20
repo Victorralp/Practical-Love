@@ -67,14 +67,16 @@ export default function Hero() {
                 Practical<br />Love
               </h1>
 
-              <h2 className="text-xl md:text-2xl text-white mb-6 tracking-wide uppercase">
-                THE OVERWHELMING WINNING POWER<br />
-                BEHIND ALL HUMAN ENDEAVOURS
+              <h2 className="text-xl md:text-3xl text-white mb-6 tracking-wide font-medium">
+                Can we be honest for a moment? You are tired.
               </h2>
 
-              <p className="text-lg text-white mb-8 max-w-lg leading-relaxed">
-                Transform Nigeria through God's love! Insert your name wherever you see <span className="font-semibold text-white">LOVE</span> in 1 Corinthians 13.
-                Experience the power that overcomes money, materialism, and wickedness in our families and communities.
+              <p className="text-lg text-white mb-8 max-w-xl leading-relaxed">
+                Behind the smile, behind the hustle, there is a secret weight you carry. You’ve chased the contracts, the status, and the security, yet the deep hunger in your heart remains unfed.
+                <br /><br />
+                We want to hand you a key to unlocking the life you were made for. It starts with a whisper. Take 1 Corinthians 13 and put your name in the center of it. Say it: <span className="italic text-orange-200">"I am patient... I am kind..."</span>
+                <br /><br />
+                Do you feel that? That is your soul finally taking a breath. Come home to Love.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4">
