@@ -46,7 +46,7 @@ export default function Hero() {
         {/* Family Love Image */}
         <div className="absolute right-0 lg:right-10 top-1/2 transform -translate-y-1/2 hidden lg:block overflow-hidden rounded-2xl shadow-2xl border-4 border-white/20">
           <img
-            src="/love-hero.png"
+            src="/love-hero-v2.png"
             alt="Family embracing in warm light"
             className="w-[400px] h-auto object-cover opacity-90 hover:opacity-100 transition-opacity duration-500"
           />
