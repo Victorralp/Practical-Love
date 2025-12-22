@@ -38,7 +38,6 @@ export default function BiblePassagesPage() {
     
     // Check if popup would overflow on the right
     const popupWidth = 340;
-    const containerWidth = containerRect.width;
     
     let left = relativeLeft;
     let top = relativeTop;
