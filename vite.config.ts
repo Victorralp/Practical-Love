@@ -5,8 +5,14 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   base: '/',
   plugins: [react()],
+  publicDir: 'public',
   resolve: {
     alias: { '@': '/src' },
+  },
+  build: {
+    outDir: 'dist',
+    assetsDir: 'assets',
+    copyPublicDir: true,
   },
   // Vitest settings are fine here; Vitest extends Vite's config type.
   test: {
