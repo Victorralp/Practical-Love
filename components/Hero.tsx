@@ -59,14 +59,14 @@ export default function Hero() {
                 Practical<br />Love
               </h1>
 
-              <h2 className="text-xl md:text-3xl text-white mb-6 tracking-wide font-medium">
+              <h2 className="text-xl md:text-3xl text-white mb-8 tracking-wide font-medium">
                 Can we be honest for a moment? You are tired.
               </h2>
 
-              <p className="text-lg text-white mb-8 max-w-xl leading-relaxed">
-                Behind the smile, behind the hustle, there is a secret weight you carry. You’ve chased the contracts, the status, and the security, yet the deep hunger in your heart remains unfed.
+              <p className="text-lg text-white mb-10 max-w-xl leading-relaxed">
+                Behind the smile, behind the hustle, there is a secret weight you carry. You've chased success, status, and security, yet the deep hunger in your heart remains unfed.
                 <br /><br />
-                We want to hand you a key to unlocking the life you were made for. It starts with a whisper. Take 1 Corinthians 13 and put your name in the center of it. Say it: <span className="italic text-orange-200">"I am patient... I am kind..."</span>
+                We want to hand you the key to unlocking the life you were made for. It starts with a simple whisper. Take 1 Corinthians 13 and put your name in place of the word "love." Say it: <span className="italic text-orange-200 font-medium">"I am patient... I am kind..."</span>
                 <br /><br />
                 Do you feel that? That is your soul finally taking a breath. Come home to Love.
               </p>
@@ -74,14 +74,14 @@ export default function Hero() {
               <div className="flex flex-col sm:flex-row gap-4">
                 <button
                   onClick={handleStartWithLove}
-                  className="group bg-orange-400 hover:bg-orange-300 text-white px-8 py-4 rounded-lg transition-all duration-300 flex items-center justify-center space-x-2 text-lg font-medium shadow-lg hover:shadow-xl"
+                  className="group bg-orange-400 hover:bg-orange-300 text-white px-8 py-4 rounded-lg transition-all duration-300 flex items-center justify-center space-x-2 text-lg font-semibold shadow-lg hover:shadow-xl"
                 >
-                  <span>Start with love</span>
+                  <span>Begin Your Journey</span>
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </button>
                 <Link
                   to="/yellow-card-series"
-                  className="bg-white text-red-600 hover:bg-orange-50 px-8 py-4 rounded-lg transition-all duration-300 flex items-center justify-center space-x-2 text-lg font-medium shadow-lg hover:shadow-xl"
+                  className="bg-white text-red-600 hover:bg-orange-50 px-8 py-4 rounded-lg transition-all duration-300 flex items-center justify-center space-x-2 text-lg font-semibold shadow-lg hover:shadow-xl"
                 >
                   <span>Get Your Yellow Card</span>
                 </Link>

@@ -44,19 +44,19 @@ export default function TestimoniesPage() {
   const testimonies: TestimonyProps[] = [];
 
   return (
-    <section className="py-20 px-6 bg-gradient-to-b from-green-50 to-purple-50">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16">
+    <section className="py-24 px-6 md:px-12 bg-gradient-to-b from-green-50 to-purple-50">
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-20">
           <h2 className="text-4xl md:text-5xl font-serif text-purple-800 mb-6">
-            Testimonies
+            Stories of Transformation
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Hear from real people whose lives have been transformed by understanding and practicing true, practical love.
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            Discover how real people have experienced life-changing transformation through the practice of genuine, practical love.
           </p>
         </div>
 
         {testimonies.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mb-20">
             {testimonies.map((testimony, index) => (
               <TestimonyCard
                 key={index}
@@ -69,22 +69,26 @@ export default function TestimoniesPage() {
             ))}
           </div>
         ) : (
-          <div className="text-center mb-16 py-12 bg-white rounded-xl shadow-sm">
-            <p className="text-xl text-gray-500 italic">
-              "Be the first to share your testimony of how Practical Love has impacted your life."
+          <div className="text-center mb-20 py-16 bg-white rounded-2xl shadow-md border border-purple-100">
+            <Heart className="w-16 h-16 mx-auto mb-6 text-purple-300" />
+            <p className="text-2xl text-gray-700 font-medium mb-2">
+              Your Story Matters
+            </p>
+            <p className="text-lg text-gray-500 max-w-md mx-auto">
+              Be the first to share how Practical Love has transformed your life and inspired your journey.
             </p>
           </div>
         )}
 
         {/* Call to Action */}
-        <div className="bg-purple-600 rounded-2xl p-12 text-white text-center">
-          <Heart className="w-16 h-16 mx-auto mb-6 text-pink-300 fill-current" />
-          <h3 className="text-3xl font-serif mb-4">Share Your Story</h3>
-          <p className="text-purple-100 mb-8 max-w-2xl mx-auto">
-            Have you experienced the power of practical love in your life? We'd love to hear your testimony and share it with others who need encouragement.
+        <div className="bg-gradient-to-r from-purple-600 to-purple-700 rounded-2xl p-12 md:p-16 text-white text-center shadow-xl">
+          <Heart className="w-20 h-20 mx-auto mb-8 text-pink-300 fill-current animate-pulse" />
+          <h3 className="text-3xl md:text-4xl font-serif mb-6">Share Your Transformation Story</h3>
+          <p className="text-lg text-purple-100 mb-10 max-w-2xl mx-auto leading-relaxed">
+            Has practical love changed your relationships, your family, or your life? Your story could be the encouragement someone else needs to begin their own journey of transformation.
           </p>
-          <Link to="/share-testimony" className="bg-white text-purple-600 px-8 py-3 rounded-lg font-medium hover:bg-purple-50 transition-colors inline-block">
-            Share Your Testimony
+          <Link to="/share-testimony" className="bg-white text-purple-600 px-10 py-4 rounded-lg font-semibold hover:bg-purple-50 transition-all hover:shadow-lg inline-block text-lg">
+            Share Your Story Now
           </Link>
         </div>
       </div>

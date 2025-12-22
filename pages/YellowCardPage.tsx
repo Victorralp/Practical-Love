@@ -60,126 +60,129 @@ export default function YellowCardPage() {
     }
   ];
 
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-yellow-50 to-orange-100 py-8 px-4 sm:px-6">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-b from-yellow-50 to-orange-100 py-24 px-6 md:px-8">
+      <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full mb-6 shadow-lg">
-            <Heart className="w-8 h-8 text-red-700 fill-current" />
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full mb-8 shadow-xl animate-pulse">
+            <Heart className="w-10 h-10 text-red-700 fill-current" />
           </div>
-          <h1 className="text-4xl md:text-5xl font-serif text-red-800 mb-4">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif text-red-800 mb-6 font-bold">
             The Yellow Card
           </h1>
-          <p className="text-xl text-gray-700 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-xl md:text-2xl text-gray-700 max-w-3xl mx-auto leading-relaxed">
             God's Love Language — The 17 Characteristics of Love from 1 Corinthians 13
           </p>
         </div>
 
         {/* Yellow Card Preview */}
-        <div className="bg-gradient-to-br from-yellow-300 to-yellow-400 rounded-2xl shadow-2xl p-2 mb-12 relative overflow-hidden">
-          <div className="bg-yellow-100 rounded-xl shadow-lg">
-            <div className="p-6 md:p-8">
+        <div className="bg-gradient-to-br from-yellow-300 to-yellow-400 rounded-3xl shadow-2xl p-3 mb-20 relative overflow-hidden transform hover:scale-[1.01] transition-transform duration-500">
+          <div className="bg-yellow-100 rounded-2xl shadow-lg border border-yellow-200">
+            <div className="p-8 md:p-12">
               {/* Card Header */}
-              <div className="text-center mb-6 bg-gradient-to-r from-red-600 to-orange-600 rounded-xl p-4 text-white">
-                <h2 className="text-2xl md:text-3xl font-serif font-bold mb-1">Practical Love</h2>
-                <p className="text-lg font-semibold">THE OVERWHELMING WINNING POWER</p>
-                <p className="text-sm">BEHIND ALL HUMAN ENDEAVOURS</p>
+              <div className="text-center mb-10 bg-gradient-to-r from-red-600 to-orange-600 rounded-2xl p-6 text-white shadow-lg">
+                <h2 className="text-3xl md:text-4xl font-serif font-bold mb-2 tracking-wide">Practical Love</h2>
+                <p className="text-lg md:text-xl font-bold tracking-wider opacity-90">THE OVERWHELMING WINNING POWER</p>
+                <p className="text-sm md:text-base font-medium tracking-widest uppercase opacity-75 mt-1">BEHIND ALL HUMAN ENDEAVOURS</p>
               </div>
 
-              <div className="text-center mb-6">
-                <h3 className="text-xl md:text-2xl font-bold text-red-800 mb-2">Characteristics of Love</h3>
-                <p className="text-red-700 font-semibold bg-yellow-200 inline-block px-4 py-2 rounded-lg">
+              <div className="text-center mb-10">
+                <h3 className="text-2xl md:text-3xl font-bold text-red-800 mb-4">Characteristics of Love</h3>
+                <p className="text-red-700 font-bold bg-yellow-200/80 inline-block px-6 py-2 rounded-full text-sm md:text-base shadow-sm border border-yellow-300">
                   INSERT YOUR NAME WHEREVER YOU SEE LOVE
                 </p>
               </div>
 
-              <div className="space-y-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {characteristics.map((item) => (
-                  <div key={item.num} className="flex items-start bg-white rounded-lg p-3 shadow-sm">
-                    <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center mr-3 flex-shrink-0 text-white font-bold text-sm">
+                  <div key={item.num} className="flex items-start bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow border border-yellow-50">
+                    <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center mr-4 flex-shrink-0 text-white font-bold text-sm shadow-md">
                       {item.num}
                     </div>
-                    <p className="text-gray-800 text-sm md:text-base leading-relaxed">
+                    <p className="text-gray-800 text-base leading-relaxed font-medium">
                       {item.text}
                     </p>
                   </div>
                 ))}
               </div>
 
-              <div className="mt-6 pt-4 border-t-2 border-yellow-400 text-center">
-                <p className="text-red-800 font-bold text-lg mb-2">
+              <div className="mt-10 pt-8 border-t-2 border-yellow-400/50 text-center">
+                <p className="text-red-800 font-bold text-xl mb-3 font-serif">
                   1 Corinthians 13 (Amplified Version)
                 </p>
-                <p className="text-gray-700 text-sm italic">
-                  "Any family who memorizes and practices these characteristics of Love — IT IS MANDATORY OR COMPULSORY FOR GOD TO BLESS THAT FAMILY!"
-                </p>
+                <div className="bg-yellow-50 p-6 rounded-xl border border-yellow-200 inline-block max-w-4xl">
+                  <p className="text-gray-800 text-lg italic font-medium leading-relaxed">
+                    "Any family who memorizes and practices these characteristics of Love — IT IS MANDATORY OR COMPULSORY FOR GOD TO BLESS THAT FAMILY!"
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
         {/* Daily Practice Guide */}
-        <div className="bg-white rounded-2xl p-8 shadow-xl mb-12">
-          <h2 className="text-3xl font-serif text-center text-red-800 mb-2">Your Daily Practice Guide</h2>
-          <p className="text-gray-600 text-center mb-10 max-w-2xl mx-auto">
+        <div className="bg-white rounded-3xl p-10 md:p-14 shadow-xl mb-20 border border-gray-100">
+          <h2 className="text-3xl md:text-4xl font-serif text-center text-red-800 mb-4 font-bold">Your Daily Practice Guide</h2>
+          <p className="text-xl text-gray-600 text-center mb-12 max-w-2xl mx-auto">
             Simple steps to integrate the characteristics of love into your everyday life
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
             {dailyPractices.map((practice, index) => (
-              <div key={index} className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-xl p-6 border border-yellow-200">
-                <div className="w-12 h-12 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-lg flex items-center justify-center mb-4">
+              <div key={index} className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-2xl p-8 border border-yellow-200 hover:-translate-y-1 transition-transform duration-300 shadow-sm hover:shadow-lg group">
+                <div className="w-14 h-14 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-2xl flex items-center justify-center mb-6 shadow-md group-hover:scale-110 transition-transform">
                   {practice.icon}
                 </div>
-                <h3 className="text-xl font-semibold text-gray-800 mb-2">{practice.title}</h3>
-                <p className="text-gray-600">{practice.description}</p>
+                <h3 className="text-xl font-bold text-gray-800 mb-3 group-hover:text-red-700 transition-colors">{practice.title}</h3>
+                <p className="text-gray-600 leading-relaxed">{practice.description}</p>
               </div>
             ))}
           </div>
 
           {/* 30-Day Challenge Teaser */}
-          <div className="bg-gradient-to-br from-red-600 to-orange-600 rounded-2xl p-1 shadow-xl mb-12 transform hover:scale-[1.01] transition-transform duration-300">
-            <div className="bg-white rounded-xl p-6 md:p-8">
-              <div className="flex flex-col md:flex-row items-center gap-8">
-                <div className="flex-1 text-center md:text-left">
-                  <div className="inline-flex items-center px-3 py-1 rounded-full bg-yellow-100 text-yellow-700 text-sm font-semibold mb-4">
+          <div className="bg-gradient-to-r from-red-600 to-orange-600 rounded-2xl p-1 shadow-2xl transform hover:scale-[1.01] transition-transform duration-300">
+            <div className="bg-white rounded-xl p-8 md:p-10">
+              <div className="flex flex-col lg:flex-row items-center gap-12">
+                <div className="flex-1 text-center lg:text-left">
+                  <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-yellow-100 text-yellow-800 text-sm font-bold mb-6 tracking-wide uppercase">
                     <Sparkles className="w-4 h-4 mr-2" />
                     Transform Your Life
                   </div>
-                  <h3 className="text-3xl font-serif text-gray-900 mb-4">
+                  <h3 className="text-3xl md:text-4xl font-serif font-bold text-gray-900 mb-4">
                     30-Day Love Challenge
                   </h3>
-                  <p className="text-gray-600 text-lg mb-6 leading-relaxed">
+                  <p className="text-gray-600 text-lg mb-8 leading-relaxed max-w-xl">
                     Embark on a transformative journey. Each day, focus on one characteristic of love to strengthen your relationships and personal character.
                   </p>
 
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                  <div className="flex flex-col sm:flex-row gap-5 justify-center lg:justify-start">
                     <Link
                       to="/love-challenge"
-                      className="inline-flex items-center justify-center px-8 py-4 bg-red-600 text-white rounded-xl font-semibold hover:bg-red-700 transition-colors shadow-lg group"
+                      className="inline-flex items-center justify-center px-8 py-4 bg-red-600 text-white rounded-xl font-bold text-lg hover:bg-red-700 transition-all shadow-lg hover:shadow-xl group"
                     >
                       Start the Challenge
                       <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                     </Link>
-                    <div className="flex items-center justify-center text-gray-500 text-sm font-medium">
-                      <Star className="w-4 h-4 text-yellow-500 mr-1" />
-                      Join 1,000+ others
+                    <div className="flex items-center justify-center text-gray-500 text-sm font-medium bg-gray-50 px-6 py-4 rounded-xl border border-gray-100">
+                      <Star className="w-4 h-4 text-yellow-500 mr-2 fill-current" />
+                      Join 1,000+ others today
                     </div>
                   </div>
                 </div>
 
                 {/* Visual Preview Card */}
-                <div className="w-full md:w-2/5 max-w-sm">
-                  <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100 shadow-inner relative overflow-hidden">
-                    <div className="absolute top-0 right-0 w-24 h-24 bg-yellow-100 rounded-full -mr-12 -mt-12 opacity-50"></div>
+                <div className="w-full lg:w-5/12 max-w-md">
+                  <div className="bg-gray-50 rounded-2xl p-8 border border-gray-100 shadow-inner relative overflow-hidden group hover:shadow-md transition-shadow">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-100 rounded-full -mr-16 -mt-16 opacity-50 transition-transform group-hover:scale-110"></div>
                     <div className="relative z-10">
-                      <div className="flex justify-between items-center mb-4">
+                      <div className="flex justify-between items-center mb-6">
                         <span className="text-xs font-bold tracking-wider text-gray-400 uppercase">Preview</span>
-                        <span className="bg-red-100 text-red-600 text-xs font-bold px-2 py-1 rounded">Day 1</span>
+                        <span className="bg-red-100 text-red-600 text-xs font-bold px-3 py-1 rounded-full">Day 1</span>
                       </div>
-                      <h4 className="text-xl font-bold text-gray-800 mb-2">Love is Patient</h4>
-                      <p className="text-gray-600 text-sm mb-4">
+                      <h4 className="text-2xl font-bold text-gray-800 mb-3">Love is Patient</h4>
+                      <p className="text-gray-600 text-base mb-6 italic leading-relaxed">
                         "Today, I will choose to breathe and wait before reacting in difficult situations."
                       </p>
                       <div className="flex gap-2">
@@ -195,73 +198,73 @@ export default function YellowCardPage() {
           </div>
         </div>
 
-
-
         {/* Benefits Section */}
-        <div className="mb-12">
-          <h2 className="text-3xl font-serif text-center text-red-800 mb-2">Benefits of Practicing Love</h2>
-          <p className="text-gray-600 text-center mb-10 max-w-2xl mx-auto">
+        <div className="mb-20">
+          <h2 className="text-3xl md:text-4xl font-serif text-center text-red-800 mb-6 font-bold">Benefits of Practicing Love</h2>
+          <p className="text-xl text-gray-600 text-center mb-12 max-w-3xl mx-auto">
             Discover the transformative power of incorporating these principles into your daily life
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {benefits.map((benefit, index) => (
-              <div key={index} className="bg-white rounded-xl p-6 shadow-lg text-center hover:shadow-xl transition-shadow">
-                <div className="w-16 h-16 bg-gradient-to-r from-yellow-100 to-orange-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div key={index} className="bg-white rounded-2xl p-8 shadow-lg text-center hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-t-4 border-orange-400">
+                <div className="w-20 h-20 bg-gradient-to-r from-yellow-100 to-orange-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-tiny">
                   {benefit.icon}
                 </div>
-                <h3 className="text-xl font-semibold text-gray-800 mb-2">{benefit.title}</h3>
-                <p className="text-gray-600">{benefit.description}</p>
+                <h3 className="text-xl font-bold text-gray-800 mb-3">{benefit.title}</h3>
+                <p className="text-gray-600 leading-relaxed text-lg">{benefit.description}</p>
               </div>
             ))}
           </div>
         </div>
 
         {/* Download Section */}
-        <div className="bg-gradient-to-r from-red-600 to-orange-600 rounded-2xl p-8 text-white text-center mb-12 shadow-xl">
-          <h2 className="text-3xl font-serif mb-2">Get Your Personal Yellow Card</h2>
-          <p className="text-orange-100 mb-8 max-w-2xl mx-auto text-lg">
-            Download your printable version or save it to your phone for daily inspiration
-          </p>
+        <div className="bg-gradient-to-r from-red-700 to-orange-600 rounded-3xl p-12 md:p-16 text-white text-center mb-20 shadow-2xl relative overflow-hidden">
+          <div className="relative z-10">
+            <h2 className="text-3xl md:text-5xl font-serif mb-6 font-bold">Get Your Personal Yellow Card</h2>
+            <p className="text-orange-100 mb-10 max-w-2xl mx-auto text-xl leading-relaxed">
+              Download your printable version or save it to your phone for daily inspiration. It's free and transformative.
+            </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6 print:hidden">
-            <button
-              onClick={() => window.print()}
-              className="bg-white text-red-600 px-8 py-4 rounded-lg font-medium hover:bg-orange-50 transition-colors flex items-center justify-center shadow-lg"
-            >
-              <Download className="w-5 h-5 mr-2" />
-              Download PDF
-            </button>
-            <button
-              onClick={() => window.print()}
-              className="bg-transparent border-2 border-white text-white px-8 py-4 rounded-lg font-medium hover:bg-white hover:text-red-600 transition-colors flex items-center justify-center shadow-lg"
-            >
-              <Printer className="w-5 h-5 mr-2" />
-              Print Version
-            </button>
-          </div>
+            <div className="flex flex-col sm:flex-row gap-6 justify-center mb-8 print:hidden">
+              <button
+                onClick={() => window.print()}
+                className="bg-white text-red-700 px-10 py-4 rounded-xl font-bold text-lg hover:bg-orange-50 hover:scale-105 transition-all flex items-center justify-center shadow-xl"
+              >
+                <Download className="w-5 h-5 mr-2" />
+                Download PDF
+              </button>
+              <button
+                onClick={() => window.print()}
+                className="bg-transparent border-2 border-white text-white px-10 py-4 rounded-xl font-bold text-lg hover:bg-white/10 hover:scale-105 transition-all flex items-center justify-center shadow-lg"
+              >
+                <Printer className="w-5 h-5 mr-2" />
+                Print Version
+              </button>
+            </div>
 
-          <div className="text-orange-200 text-sm">
-            <p>Also available as a mobile app - coming soon!</p>
+            <div className="inline-block bg-white/10 backdrop-blur-sm px-6 py-2 rounded-full border border-white/20">
+              <p className="text-orange-100 text-sm font-semibold">✨ Also available as a mobile app - coming soon!</p>
+            </div>
           </div>
         </div>
 
         {/* Call to Action */}
-        <div className="text-center bg-white rounded-2xl p-8 shadow-lg">
-          <h2 className="text-3xl font-serif text-red-800 mb-4">Ready to Begin Your Journey?</h2>
-          <p className="text-gray-600 mb-8 max-w-2xl mx-auto text-lg">
+        <div className="text-center bg-white rounded-3xl p-12 md:p-16 shadow-xl border border-gray-100">
+          <h2 className="text-4xl font-serif text-red-800 mb-6 font-bold">Ready to Begin Your Journey?</h2>
+          <p className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
             Start practicing practical love today and experience the transformation in your relationships and community.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <Link
               to="/characteristics"
-              className="bg-gradient-to-r from-red-500 to-orange-500 text-white px-8 py-4 rounded-lg font-medium hover:from-red-600 hover:to-orange-600 transition-all shadow-lg"
+              className="bg-gradient-to-r from-red-600 to-orange-600 text-white px-10 py-4 rounded-xl font-bold text-lg hover:from-red-700 hover:to-orange-700 transition-all shadow-lg hover:shadow-xl"
             >
-              View All 17 Characteristics
+              Detailed Characteristics Guide
             </Link>
             <Link
               to="/bible-passages"
-              className="border-2 border-red-500 text-red-500 px-8 py-4 rounded-lg font-medium hover:bg-red-50 transition-colors shadow-lg"
+              className="bg-white border-2 border-red-600 text-red-600 px-10 py-4 rounded-xl font-bold text-lg hover:bg-red-50 transition-all shadow-md hover:shadow-lg"
             >
               Explore 50 Love Passages
             </Link>

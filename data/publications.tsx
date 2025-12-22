@@ -19,7 +19,7 @@ export const publications: PublicationProps[] = [
         author: "Moses Remi Owoeyemi",
         description: "Discover the solution to corruption and the path to national blessing through the practical application of love.",
         type: "Book",
-        coverImage: "/publications/universal-cover.png",
+        coverImage: "/backgrounds/reader-bg.png",
         pages: [
             {
                 content: (
@@ -278,7 +278,7 @@ export const publications: PublicationProps[] = [
         author: "Moses Remi Owoeyemi",
         description: "Discover the solution to division and the path to national blessing through the practical application of love in America.",
         type: "Book",
-        coverImage: "/publications/universal-cover.png",
+        coverImage: "/backgrounds/reader-bg.png",
         pages: [
             {
                 content: (

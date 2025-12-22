@@ -88,7 +88,7 @@ export default function GrowthPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white">
-        <div className="max-w-6xl mx-auto px-4 py-12">
+        <div className="max-w-7xl mx-auto px-6 md:px-12 py-12">
           <div className="flex flex-col items-center justify-center py-24">
             <div className="animate-pulse">
               <Heart className="w-16 h-16 text-orange-400" />
@@ -102,13 +102,13 @@ export default function GrowthPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white">
-      <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="max-w-7xl mx-auto px-6 md:px-12 py-12">
         {/* Page Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-serif text-red-800 mb-3">Practical Love Growth</h1>
-          <p className="text-gray-600 max-w-2xl mx-auto">
-            Transform your capacity to love through daily challenges, practical tips, 
-            self-reflection, and guided spiritual journeys.
+        <div className="text-center mb-10">
+          <h1 className="text-4xl md:text-5xl font-serif text-red-800 mb-4">Your Love Growth Journey</h1>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+            Grow in your capacity to love through daily challenges, practical wisdom,
+            guided reflection, and transformative spiritual journeys.
           </p>
         </div>
 

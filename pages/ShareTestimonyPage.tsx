@@ -122,8 +122,8 @@ export default function ShareTestimonyPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50 py-8 px-4 sm:px-6">
-      <div className="max-w-5xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50 py-24 px-6">
+      <div className="max-w-7xl mx-auto">
         {/* Enhanced Header */}
         <div className="text-center mb-16">
           <div className="relative mb-8">
@@ -280,11 +280,10 @@ export default function ShareTestimonyPage() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className={`w-full py-5 px-8 rounded-xl font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center justify-center ${
-                      isSubmitting
+                    className={`w-full py-5 px-8 rounded-xl font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center justify-center ${isSubmitting
                         ? 'bg-gray-400 cursor-not-allowed'
                         : 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white'
-                    }`}
+                      }`}
                   >
                     {isSubmitting ? (
                       <>

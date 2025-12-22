@@ -92,7 +92,7 @@ export default function LoveInNigeria() {
         </div>
 
         {/* Key Principles */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
           <div className="bg-white p-8 rounded-xl shadow-lg text-center">
             <DollarSign className="w-12 h-12 text-red-600 mx-auto mb-4" />
             <h4 className="text-xl font-semibold text-gray-800 mb-3">The Problem</h4>

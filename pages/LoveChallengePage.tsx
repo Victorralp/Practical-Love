@@ -1,113 +1,100 @@
-import { useState } from 'react';
-import { Heart, Target, Award, CheckCircle } from 'lucide-react';
+import { useState, useEffect, useCallback } from 'react';
+import { Heart, Target, Award, CheckCircle, Download, Printer } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import {
+  loadChallengeProgress,
+  saveChallengeProgress,
+  toggleDayCompletion,
+  updateCurrentDay,
+  ChallengeProgress,
+} from '../services/challengeProgressService';
+import { getChallengeDayContent, ChallengeDay } from '../data/challengeDays';
+import { downloadCertificate, printCertificate } from '../services/certificateService';
 
 export default function LoveChallengePage() {
-  const [currentDay] = useState(1);
-  const [completedDays, setCompletedDays] = useState<number[]>([]);
+  const [progress, setProgress] = useState<ChallengeProgress>(() => loadChallengeProgress());
 
-  const toggleDay = (day: number) => {
-    if (completedDays.includes(day)) {
-      setCompletedDays(completedDays.filter(d => d !== day));
-    } else {
-      setCompletedDays([...completedDays, day]);
-    }
-  };
+  // Persist progress to localStorage whenever it changes
+  useEffect(() => {
+    saveChallengeProgress(progress);
+  }, [progress]);
 
-  const characteristics = [
-    "Love is patient, love is kind.",
-    "It does not envy, it does not boast, it is not proud.",
-    "It does not dishonor others, it is not self-seeking, it is not easily angered, it keeps no record of wrongs.",
-    "Love does not delight in evil but rejoices with the truth.",
-    "It always protects, always trusts, always hopes, always perseveres.",
-    "Love never fails."
+  const toggleDay = useCallback((day: number) => {
+    setProgress((prev) => toggleDayCompletion(prev, day));
+  }, []);
+
+  const handleDaySelect = useCallback((day: number) => {
+    setProgress((prev) => updateCurrentDay(prev, day));
+  }, []);
+
+  // Derived state for easier access
+  const { completedDays, currentDay } = progress;
+
+  // Get the current day's content
+  const currentDayContent: ChallengeDay | undefined = getChallengeDayContent(currentDay);
+
+  // Fallback values if day content not found
+  const dayCharacteristic = currentDayContent?.characteristic ?? 'Love is patient';
+  const dayFocus = currentDayContent?.focus ?? 'Practicing love daily';
+  const dayScripture = currentDayContent?.scriptureReference ?? '1 Corinthians 13:4';
+  const dayReflectionQuestions = currentDayContent?.reflectionQuestions ?? [
+    'How did I demonstrate this characteristic today?',
+    'In what moment could I have shown more love?',
+    'What is one way I will practice this tomorrow?',
   ];
 
-  const dailyFocus = [
-    "Patience in difficult situations",
-    "Kindness to strangers and family",
-    "Avoiding jealousy and comparison",
-    "Humble service to others",
-    "Forgiving those who wrong you",
-    "Truthful communication",
-    "Protecting and supporting loved ones",
-    "Trusting others even when uncertain",
-    "Maintaining hope during challenges",
-    "Persevering through difficulties",
-    "Unfailing commitment to relationships",
-    "Selfless acts of service",
-    "Active listening in conversations",
-    "Generosity with time and resources",
-    "Encouraging others' success",
-    "Managing anger constructively",
-    "Letting go of grudges",
-    "Celebrating truth and goodness",
-    "Standing up for others",
-    "Building others up instead of tearing them down",
-    "Showing respect to everyone",
-    "Being content with what you have",
-    "Demonstrating loyalty",
-    "Offering comfort to those in pain",
-    "Maintaining integrity under pressure",
-    "Choosing peace over conflict",
-    "Extending grace to others",
-    "Sacrificing personal desires for others' good",
-    "Remaining faithful in relationships",
-    "Being slow to judge",
-    "Quick to forgive"
-  ];
-
-  const getDailyFocus = (day: number) => {
-    return dailyFocus[(day - 1) % dailyFocus.length];
-  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-red-50 to-orange-100 py-8 px-4 sm:px-6">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-b from-red-50 to-orange-100 py-24 px-6">
+      <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-red-500 to-orange-500 rounded-full mb-6 shadow-lg">
-            <Heart className="w-8 h-8 text-white fill-current" />
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-red-500 to-orange-500 rounded-full mb-8 shadow-xl animate-pulse">
+            <Heart className="w-10 h-10 text-white fill-current" />
           </div>
-          <h1 className="text-4xl md:text-5xl font-serif text-red-800 mb-4">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif text-red-800 mb-6 font-bold">
             30-Day Love Challenge
           </h1>
-          <p className="text-xl text-gray-700 max-w-2xl mx-auto leading-relaxed">
-            Transform your relationships and character through daily practice of practical love
+          <p className="text-xl md:text-2xl text-gray-700 max-w-3xl mx-auto leading-relaxed">
+            Transform your relationships, your character, and your life through the daily intentional practice of practical love.
           </p>
         </div>
 
         {/* Challenge Progress */}
-        <div className="bg-white rounded-2xl p-8 shadow-xl mb-12">
-          <div className="flex flex-col md:flex-row gap-8">
-            <div className="md:w-1/2">
-              <h2 className="text-2xl font-serif text-red-800 mb-4">Your Progress</h2>
-              <div className="mb-6">
-                <div className="flex justify-between mb-2">
+        <div className="bg-white rounded-2xl p-8 md:p-12 shadow-xl mb-16 border border-gray-100">
+          <div className="flex flex-col lg:flex-row gap-12">
+            <div className="lg:w-1/2">
+              <h2 className="text-3xl font-serif text-red-800 mb-6">Your Transformation Journey</h2>
+              <div className="mb-8">
+                <div className="flex justify-between mb-3 text-lg">
                   <span className="text-gray-700 font-medium">Days Completed</span>
                   <span className="text-red-600 font-bold">{completedDays.length}/30</span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-4">
-                  <div 
-                    className="bg-gradient-to-r from-red-500 to-orange-500 h-4 rounded-full transition-all duration-500"
+                <div className="w-full bg-gray-100 rounded-full h-6 shadow-inner">
+                  <div
+                    className="bg-gradient-to-r from-red-500 to-orange-500 h-6 rounded-full transition-all duration-700 ease-out shadow-sm"
                     style={{ width: `${(completedDays.length / 30) * 100}%` }}
                   ></div>
                 </div>
               </div>
 
-              <div className="grid grid-cols-7 gap-2 mb-6">
+              <div className="grid grid-cols-6 sm:grid-cols-7 gap-3 mb-8">
                 {Array.from({ length: 30 }).map((_, index) => {
                   const day = index + 1;
                   const isCompleted = completedDays.includes(day);
+                  const isSelected = day === currentDay;
                   return (
                     <button
                       key={day}
-                      onClick={() => toggleDay(day)}
-                      className={`h-10 rounded-lg flex items-center justify-center font-medium transition-all ${
-                        isCompleted 
-                          ? 'bg-gradient-to-r from-red-500 to-orange-500 text-white shadow-md' 
-                          : 'bg-white border-2 border-gray-300 text-gray-700 hover:border-red-400'
-                      }`}
+                      onClick={() => handleDaySelect(day)}
+                      onDoubleClick={() => toggleDay(day)}
+                      title={`Day ${day} - Click to view, double-click to ${isCompleted ? 'unmark' : 'mark'} complete`}
+                      className={`aspect-square rounded-xl flex items-center justify-center font-bold text-lg transition-all duration-300 transform hover:scale-105 ${isCompleted
+                        ? 'bg-gradient-to-br from-red-500 to-orange-500 text-white shadow-lg border-none'
+                        : isSelected
+                          ? 'bg-orange-100 border-2 border-orange-400 text-orange-600 shadow-md'
+                          : 'bg-white border-2 border-gray-200 text-gray-400 hover:border-orange-300 hover:text-orange-500 hover:shadow-md'
+                        } ${isSelected && !isCompleted ? 'ring-2 ring-orange-300 ring-offset-2' : ''}`}
                     >
                       {day}
                     </button>
@@ -115,48 +102,50 @@ export default function LoveChallengePage() {
                 })}
               </div>
 
-              <div className="bg-gradient-to-r from-red-50 to-orange-50 rounded-xl p-4 border border-red-100">
-                <h3 className="font-semibold text-red-800 mb-2">Today's Focus</h3>
-                <p className="text-gray-700">
-                  Day {currentDay}: <span className="font-medium text-red-600">{getDailyFocus(currentDay)}</span>
+              <div className="bg-gradient-to-r from-red-50 to-orange-50 rounded-xl p-6 border border-red-100 shadow-sm">
+                <div className="flex justify-between items-start mb-2">
+                  <h3 className="font-bold text-red-800 text-lg">Day {currentDay} Focus</h3>
+                  <button
+                    onClick={() => toggleDay(currentDay)}
+                    className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
+                      completedDays.includes(currentDay)
+                        ? 'bg-green-100 text-green-700 hover:bg-green-200'
+                        : 'bg-red-100 text-red-700 hover:bg-red-200'
+                    }`}
+                  >
+                    {completedDays.includes(currentDay) ? '✓ Completed' : 'Mark Complete'}
+                  </button>
+                </div>
+                <p className="text-xl text-gray-800 font-medium">
+                  {dayFocus}
                 </p>
               </div>
             </div>
 
-            <div className="md:w-1/2">
-              <h2 className="text-2xl font-serif text-red-800 mb-4">Today's Love Practice</h2>
-              <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-xl p-6 border border-yellow-200 mb-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-3">Characteristic of Love</h3>
-                <p className="text-gray-700 mb-4">
-                  "{characteristics[(currentDay - 1) % characteristics.length]}"
+            <div className="lg:w-1/2">
+              <h2 className="text-3xl font-serif text-red-800 mb-6">Day {currentDay} Love Practice</h2>
+              <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-2xl p-8 border border-yellow-200 mb-8 shadow-sm">
+                <h3 className="text-lg font-bold text-orange-800 uppercase tracking-wide mb-3">Characteristic of Love</h3>
+                <p className="text-2xl font-serif text-gray-800 mb-5 leading-snug italic">
+                  "{dayCharacteristic}"
                 </p>
-                <div className="flex items-center text-red-600">
+                <div className="flex items-center text-red-600 font-semibold bg-white/80 inline-flex px-4 py-2 rounded-lg shadow-sm">
                   <CheckCircle className="w-5 h-5 mr-2" />
-                  <span>1 Corinthians 13:{((currentDay - 1) % 8) + 4}</span>
+                  <span>{dayScripture}</span>
                 </div>
               </div>
 
-              <div className="bg-white border border-gray-200 rounded-xl p-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-3">Reflection Questions</h3>
-                <ul className="space-y-3">
-                  <li className="flex items-start">
-                    <div className="w-6 h-6 bg-red-100 text-red-600 rounded-full flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">
-                      1
-                    </div>
-                    <span className="text-gray-700">How did I demonstrate this characteristic today?</span>
-                  </li>
-                  <li className="flex items-start">
-                    <div className="w-6 h-6 bg-red-100 text-red-600 rounded-full flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">
-                      2
-                    </div>
-                    <span className="text-gray-700">Where could I have shown more love?</span>
-                  </li>
-                  <li className="flex items-start">
-                    <div className="w-6 h-6 bg-red-100 text-red-600 rounded-full flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">
-                      3
-                    </div>
-                    <span className="text-gray-700">How will I practice this tomorrow?</span>
-                  </li>
+              <div className="bg-white border-2 border-gray-100 rounded-2xl p-8 shadow-sm">
+                <h3 className="text-xl font-bold text-gray-800 mb-4">Daily Reflection</h3>
+                <ul className="space-y-4">
+                  {dayReflectionQuestions.map((question, index) => (
+                    <li key={index} className="flex items-start">
+                      <div className="w-8 h-8 bg-red-100 text-red-600 rounded-full flex items-center justify-center mr-4 mt-0.5 flex-shrink-0 font-bold">
+                        {index + 1}
+                      </div>
+                      <span className="text-gray-700 text-lg">{question}</span>
+                    </li>
+                  ))}
                 </ul>
               </div>
             </div>
@@ -164,72 +153,93 @@ export default function LoveChallengePage() {
         </div>
 
         {/* Challenge Benefits */}
-        <div className="mb-12">
-          <h2 className="text-3xl font-serif text-center text-red-800 mb-4">Benefits of the Challenge</h2>
-          <p className="text-gray-600 text-center mb-10 max-w-2xl mx-auto">
-            Discover the transformative power of practicing love consistently
+        <div className="mb-16">
+          <h2 className="text-3xl md:text-4xl font-serif text-center text-red-800 mb-6">Benefits of the Challenge</h2>
+          <p className="text-xl text-gray-600 text-center mb-12 max-w-2xl mx-auto">
+            Discover the transformative power of consistently practicing God's kind of love.
           </p>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white rounded-xl p-6 shadow-lg text-center">
-              <div className="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Heart className="w-8 h-8" />
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="bg-white rounded-2xl p-8 shadow-lg text-center border-t-4 border-red-500 hover:shadow-2xl transition-shadow duration-300">
+              <div className="w-20 h-20 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Heart className="w-10 h-10" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-2">Stronger Relationships</h3>
-              <p className="text-gray-600">Build deeper connections with family, friends, and colleagues</p>
+              <h3 className="text-2xl font-bold text-gray-800 mb-3">Stronger Relationships</h3>
+              <p className="text-gray-600 leading-relaxed">Build deeper, more resilient connections with family, friends, and colleagues through genuine care.</p>
             </div>
-            
-            <div className="bg-white rounded-xl p-6 shadow-lg text-center">
-              <div className="w-16 h-16 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Target className="w-8 h-8" />
+
+            <div className="bg-white rounded-2xl p-8 shadow-lg text-center border-t-4 border-orange-500 hover:shadow-2xl transition-shadow duration-300">
+              <div className="w-20 h-20 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Target className="w-10 h-10" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-2">Personal Growth</h3>
-              <p className="text-gray-600">Develop emotional maturity and character strength</p>
+              <h3 className="text-2xl font-bold text-gray-800 mb-3">Personal Growth</h3>
+              <p className="text-gray-600 leading-relaxed">Develop emotional maturity, patience, and character strength that withstands life's pressures.</p>
             </div>
-            
-            <div className="bg-white rounded-xl p-6 shadow-lg text-center">
-              <div className="w-16 h-16 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Award className="w-8 h-8" />
+
+            <div className="bg-white rounded-2xl p-8 shadow-lg text-center border-t-4 border-yellow-500 hover:shadow-2xl transition-shadow duration-300">
+              <div className="w-20 h-20 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Award className="w-10 h-10" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-2">Community Impact</h3>
-              <p className="text-gray-600">Create positive change in your neighborhood and workplace</p>
+              <h3 className="text-2xl font-bold text-gray-800 mb-3">Divine Blessing</h3>
+              <p className="text-gray-600 leading-relaxed">Experience God's mandatory blessing on your life and family as you align with His nature of love.</p>
             </div>
           </div>
         </div>
 
         {/* Completion Certificate */}
         {completedDays.length === 30 && (
-          <div className="bg-gradient-to-r from-red-500 to-orange-500 rounded-2xl p-8 text-white text-center mb-12 shadow-xl">
-            <Award className="w-16 h-16 mx-auto mb-4 fill-current" />
-            <h2 className="text-3xl font-serif mb-2">Congratulations!</h2>
-            <p className="text-orange-100 mb-6 max-w-2xl mx-auto text-lg">
-              You've completed the 30-Day Love Challenge! You've taken a significant step toward becoming a more loving person.
+          <div className="bg-gradient-to-r from-red-500 to-orange-500 rounded-2xl p-12 text-white text-center mb-16 shadow-2xl transform scale-100 animate-fade-in-up">
+            <Award className="w-24 h-24 mx-auto mb-6 fill-current text-yellow-300" />
+            <h2 className="text-4xl md:text-5xl font-serif mb-4 font-bold">Challenge Completed!</h2>
+            <p className="text-orange-100 mb-8 max-w-3xl mx-auto text-xl leading-relaxed">
+              Congratulations! You've faithfully completed the 30-Day Love Challenge. You have taken a monumental step toward a life transformed by love.
             </p>
-            <button className="bg-white text-red-600 px-8 py-3 rounded-lg font-medium hover:bg-orange-50 transition-colors shadow-lg">
-              Download Certificate
-            </button>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button
+                onClick={() => downloadCertificate({
+                  completionDate: new Date().toISOString(),
+                  startDate: progress.startDate,
+                  daysCompleted: 30,
+                })}
+                className="bg-white text-red-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-orange-50 transition-colors shadow-lg inline-flex items-center justify-center gap-2"
+              >
+                <Download className="w-5 h-5" />
+                Download Certificate
+              </button>
+              <button
+                onClick={() => printCertificate({
+                  completionDate: new Date().toISOString(),
+                  startDate: progress.startDate,
+                  daysCompleted: 30,
+                })}
+                className="bg-transparent border-2 border-white text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-white/10 transition-colors shadow-lg inline-flex items-center justify-center gap-2"
+              >
+                <Printer className="w-5 h-5" />
+                Print Certificate
+              </button>
+            </div>
           </div>
         )}
 
         {/* Call to Action */}
-        <div className="text-center bg-white rounded-2xl p-8 shadow-lg">
-          <h2 className="text-3xl font-serif text-red-800 mb-4">Continue Your Journey</h2>
-          <p className="text-gray-600 mb-8 max-w-2xl mx-auto text-lg">
-            Share your experience or explore more ways to practice practical love
+        <div className="text-center bg-white rounded-2xl p-12 shadow-xl border border-gray-100">
+          <h2 className="text-4xl font-serif text-red-800 mb-6">Continue Your Journey</h2>
+          <p className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
+            Don't stop here. Share your experience or dive deeper into the scriptures to keep your love growing.
           </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link 
-              to="/share-testimony" 
-              className="bg-gradient-to-r from-red-500 to-orange-500 text-white px-8 py-4 rounded-lg font-medium hover:from-red-600 hover:to-orange-600 transition-all shadow-lg"
+
+          <div className="flex flex-col sm:flex-row gap-6 justify-center">
+            <Link
+              to="/share-testimony"
+              className="bg-gradient-to-r from-red-600 to-orange-600 text-white px-10 py-4 rounded-xl font-bold text-lg hover:from-red-700 hover:to-orange-700 transition-all shadow-lg hover:shadow-xl"
             >
               Share Your Testimony
             </Link>
-            <Link 
-              to="/bible-passages" 
-              className="border-2 border-red-500 text-red-500 px-8 py-4 rounded-lg font-medium hover:bg-red-50 transition-colors shadow-lg"
+            <Link
+              to="/bible-passages"
+              className="bg-white border-2 border-red-600 text-red-600 px-10 py-4 rounded-xl font-bold text-lg hover:bg-red-50 transition-all shadow-md hover:shadow-lg"
             >
-              Explore More Scriptures
+              Explore 50 Love Passages
             </Link>
           </div>
         </div>

@@ -7,5 +7,7 @@
 			"path": "../../../../Pictures/pub"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "project"
+	}
 }

@@ -57,21 +57,21 @@ export default function YellowCardSeriesPage() {
     ];
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-orange-100 py-8 px-4 sm:px-6">
+        <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-orange-100 py-24 px-6 md:px-8">
             <div className="max-w-[1400px] mx-auto">
 
                 {/* Header */}
-                <div className="text-center mb-10">
-                    <Link to="/" className="inline-flex items-center text-red-600 hover:text-red-700 font-medium mb-6 transition-colors">
+                <div className="text-center mb-16">
+                    <Link to="/" className="inline-flex items-center text-red-600 hover:text-red-700 font-bold mb-8 transition-colors bg-white px-6 py-3 rounded-full shadow-sm hover:shadow-md">
                         ← Back to Home
                     </Link>
-                    <div className="relative inline-block">
-                        <div className="absolute inset-0 bg-yellow-400 blur-xl opacity-20 rounded-full animate-pulse"></div>
-                        <h1 className="relative text-4xl md:text-5xl font-serif text-red-800 mb-4 tracking-wide">
+                    <div className="relative block mb-6">
+                        <div className="absolute inset-0 bg-yellow-400 blur-2xl opacity-20 rounded-full animate-pulse"></div>
+                        <h1 className="relative text-4xl md:text-5xl lg:text-6xl font-serif text-red-800 tracking-wide font-bold">
                             The Yellow Card Series
                         </h1>
                     </div>
-                    <p className="text-xl text-gray-700 max-w-2xl mx-auto leading-relaxed italic">
+                    <p className="text-xl md:text-2xl text-gray-700 max-w-2xl mx-auto leading-relaxed italic font-serif">
                         "God's Love Language"
                     </p>
                 </div>
@@ -79,77 +79,87 @@ export default function YellowCardSeriesPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
 
                     {/* Card 1: Characteristics */}
-                    <div className="bg-gradient-to-b from-yellow-300 to-yellow-400 rounded-2xl shadow-xl overflow-hidden transform hover:-translate-y-1 transition-transform duration-300">
-                        <div className="bg-gradient-to-r from-red-700 to-red-600 p-4 text-center text-white border-b-4 border-yellow-500">
-                            <h2 className="text-2xl font-bold font-serif uppercase tracking-wider">Characteristics of Love</h2>
-                            <p className="text-xs font-semibold opacity-90 mt-1 text-yellow-100">INSERT YOUR NAME WHEREVER YOU SEE LOVE</p>
+                    <div className="bg-gradient-to-b from-yellow-300 to-yellow-400 rounded-3xl shadow-xl overflow-hidden transform hover:-translate-y-2 transition-transform duration-500 border border-yellow-400/50">
+                        <div className="bg-gradient-to-r from-red-700 to-red-600 p-6 text-center text-white border-b-4 border-yellow-500 shadow-md">
+                            <h2 className="text-2xl font-bold font-serif uppercase tracking-wider mb-2">Characteristics of Love</h2>
+                            <div className="inline-block bg-white/10 px-4 py-1 rounded-full border border-white/20">
+                                <p className="text-xs font-bold uppercase tracking-widest text-yellow-100">Insert Your Name</p>
+                            </div>
                         </div>
-                        <div className="p-4 bg-yellow-100 min-h-[600px]">
-                            <div className="space-y-2">
+                        <div className="p-6 bg-yellow-50/80 backdrop-blur-sm min-h-[600px]">
+                            <div className="space-y-3">
                                 {characteristics.map((item) => (
-                                    <div key={item.num} className="flex items-start p-2 bg-white/60 rounded border border-yellow-200 shadow-sm hover:shadow-md transition-shadow">
-                                        <span className="flex-shrink-0 w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-bold mr-2 mt-0.5">{item.num}</span>
-                                        <p className="text-sm text-gray-800 font-medium leading-tight">{item.text}</p>
+                                    <div key={item.num} className="flex items-start p-3 bg-white/80 rounded-xl border border-yellow-200/60 shadow-sm hover:shadow-md transition-all hover:bg-white">
+                                        <span className="flex-shrink-0 w-7 h-7 bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-bold mr-3 mt-0.5 shadow-sm">{item.num}</span>
+                                        <p className="text-sm text-gray-800 font-medium leading-relaxed">{item.text}</p>
                                     </div>
                                 ))}
-                                <div className="mt-6 pt-4 border-t-2 border-yellow-400/50 text-center">
-                                    <p className="text-red-800 font-bold text-sm mb-1 uppercase">1 Corinthians 13 (Amplified Version)</p>
+                                <div className="mt-8 pt-6 border-t-2 border-yellow-400/30 text-center">
+                                    <p className="text-red-800 font-bold text-sm mb-1 uppercase tracking-wider bg-yellow-200/50 inline-block px-4 py-2 rounded-lg">1 Corinthians 13 (Amplified)</p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     {/* Card 2: Passages */}
-                    <div className="bg-gradient-to-b from-yellow-300 to-yellow-400 rounded-2xl shadow-xl overflow-hidden transform hover:-translate-y-1 transition-transform duration-300">
-                        <div className="bg-gradient-to-r from-red-700 to-red-600 p-4 text-center text-white border-b-4 border-yellow-500">
-                            <div className="flex justify-center items-center gap-2">
-                                <Heart className="w-5 h-5 text-yellow-300 fill-current" />
-                                <h2 className="text-xl font-bold font-serif uppercase tracking-wider">Love Passages in New Testament</h2>
-                                <Heart className="w-5 h-5 text-yellow-300 fill-current" />
+                    <div className="bg-gradient-to-b from-yellow-300 to-yellow-400 rounded-3xl shadow-xl overflow-hidden transform hover:-translate-y-2 transition-transform duration-500 border border-yellow-400/50">
+                        <div className="bg-gradient-to-r from-red-700 to-red-600 p-6 text-center text-white border-b-4 border-yellow-500 shadow-md">
+                            <div className="flex justify-center items-center gap-3">
+                                <Heart className="w-6 h-6 text-yellow-300 fill-current animate-pulse" />
+                                <h2 className="text-xl font-bold font-serif uppercase tracking-wider">Love Passages</h2>
+                                <Heart className="w-6 h-6 text-yellow-300 fill-current animate-pulse" />
                             </div>
+                            <p className="text-xs font-bold uppercase tracking-widest text-yellow-100 mt-2">New Testament</p>
                         </div>
-                        <div className="p-4 bg-yellow-100 min-h-[600px]">
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 text-sm">
+                        <div className="p-6 bg-yellow-50/80 backdrop-blur-sm min-h-[600px]">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 text-sm max-h-[800px] overflow-y-auto pr-2 custom-scrollbar">
                                 {passages.map((text, i) => (
-                                    <div key={i} className="py-1 border-b border-yellow-200/50 text-gray-900 font-medium hover:bg-white/40 px-2 rounded transition-colors">
+                                    <div key={i} className="py-2 px-3 border border-yellow-200/50 bg-white/60 rounded-lg text-gray-900 font-medium hover:bg-white hover:shadow-sm transition-all text-xs">
                                         {text}
                                     </div>
                                 ))}
                             </div>
-                            <div className="mt-8 bg-white/70 p-4 rounded-lg border border-yellow-300 text-center text-xs text-gray-800 font-semibold shadow-inner">
-                                <p className="mb-2">Study each verse above (1-50) using LIFE Application Bible Commentary</p>
-                                <p className="text-red-700">We are to reproduce and give to every NIGERIAN</p>
+                            <div className="mt-8 bg-white p-5 rounded-xl border-l-4 border-red-500 shadow-md">
+                                <p className="mb-3 text-sm font-medium text-gray-700">Study each verse above (1-50) using LIFE Application Bible Commentary</p>
+                                <p className="text-red-700 font-bold text-sm uppercase">We are to reproduce and give to every NIGERIAN</p>
                             </div>
                         </div>
                     </div>
 
                     {/* Card 3: Summary */}
-                    <div className="bg-gradient-to-b from-yellow-300 to-yellow-400 rounded-2xl shadow-xl overflow-hidden transform hover:-translate-y-1 transition-transform duration-300">
-                        <div className="bg-gradient-to-r from-red-700 to-red-600 p-4 text-center text-white border-b-4 border-yellow-500">
-                            <h2 className="text-xl font-bold font-serif uppercase tracking-wider">Summary of Love Message</h2>
-                            <p className="text-xs font-semibold opacity-90 mt-1 text-yellow-100">IN "LOVE MINISTRY" FOR NIGERIA AND NIGERIANS</p>
+                    <div className="bg-gradient-to-b from-yellow-300 to-yellow-400 rounded-3xl shadow-xl overflow-hidden transform hover:-translate-y-2 transition-transform duration-500 border border-yellow-400/50">
+                        <div className="bg-gradient-to-r from-red-700 to-red-600 p-6 text-center text-white border-b-4 border-yellow-500 shadow-md">
+                            <h2 className="text-xl font-bold font-serif uppercase tracking-wider mb-2">Summary of Message</h2>
+                            <div className="inline-block bg-white/10 px-4 py-1 rounded-full border border-white/20">
+                                <p className="text-xs font-bold uppercase tracking-widest text-yellow-100">Love Ministry for Nigeria</p>
+                            </div>
                         </div>
-                        <div className="p-4 bg-yellow-100 min-h-[600px] text-sm hidden-scrollbar overflow-y-auto max-h-[900px]">
-                            {/* Scrollable content if needed, but fitting broadly */}
-                            <div className="space-y-4">
-                                <div className="space-y-3">
+                        <div className="p-6 bg-yellow-50/80 backdrop-blur-sm min-h-[600px] text-sm md:text-base">
+                            <div className="space-y-6">
+                                <div className="space-y-4">
                                     {summaryPoints.map((point, i) => (
-                                        <p key={i} className="text-gray-900 leading-snug font-medium pl-2 border-l-2 border-red-400">
-                                            {point}
-                                        </p>
+                                        <div key={i} className="flex gap-3">
+                                            <div className="w-1 bg-red-400 rounded-full h-auto flex-shrink-0"></div>
+                                            <p className="text-gray-900 leading-relaxed font-medium">
+                                                {point}
+                                            </p>
+                                        </div>
                                     ))}
                                 </div>
 
-                                <div className="my-4 border-t border-yellow-400"></div>
+                                <div className="my-6 border-t-2 border-dashed border-yellow-400/50"></div>
 
-                                <div className="space-y-3">
+                                <div className="space-y-4">
                                     {familyPoints.map((point, i) => (
-                                        <p key={i} className="text-gray-900 leading-snug font-medium pl-2 border-l-2 border-orange-400">
-                                            {point}
-                                        </p>
+                                        <div key={i} className="flex gap-3">
+                                            <div className="w-1 bg-orange-400 rounded-full h-auto flex-shrink-0"></div>
+                                            <p className="text-gray-900 leading-relaxed font-medium">
+                                                {point}
+                                            </p>
+                                        </div>
                                     ))}
                                 </div>
-                                <div className="mt-6 text-center">
+                                <div className="mt-8 text-center bg-red-50 p-3 rounded-lg border border-red-100">
                                     <p className="font-bold text-red-800 uppercase text-xs tracking-widest">Please Turn Over</p>
                                 </div>
                             </div>
@@ -159,17 +169,17 @@ export default function YellowCardSeriesPage() {
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex flex-col sm:flex-row gap-4 justify-center mt-12 mb-8 print:hidden">
+                <div className="flex flex-col sm:flex-row gap-6 justify-center mt-16 mb-8 print:hidden">
                     <button
                         onClick={() => window.print()}
-                        className="bg-white text-red-600 px-8 py-4 rounded-lg font-medium hover:bg-orange-50 transition-colors flex items-center justify-center shadow-lg border border-red-100"
+                        className="bg-white text-red-600 px-10 py-4 rounded-xl font-bold hover:bg-red-50 hover:scale-105 transition-all flex items-center justify-center shadow-lg border-2 border-red-100"
                     >
                         <Download className="w-5 h-5 mr-2" />
                         Download PDF
                     </button>
                     <button
                         onClick={() => window.print()}
-                        className="bg-red-600 text-white px-8 py-4 rounded-lg font-medium hover:bg-red-700 transition-colors flex items-center justify-center shadow-lg"
+                        className="bg-gradient-to-r from-red-600 to-red-700 text-white px-10 py-4 rounded-xl font-bold hover:from-red-700 hover:to-red-800 hover:scale-105 transition-all flex items-center justify-center shadow-lg shadow-red-200"
                     >
                         <Printer className="w-5 h-5 mr-2" />
                         Print Version
