@@ -13,6 +13,7 @@ import GrowthPage from './pages/GrowthPage'
 import YellowCardSeriesPage from './pages/YellowCardSeriesPage'
 import PublicationsPage from './pages/PublicationsPage'
 import BookReaderPage from './pages/BookReaderPage'
+import ContactPage from './pages/ContactPage'
 
 export default function App() {
   return (
@@ -32,6 +33,7 @@ export default function App() {
           <Route path="/growth" element={<GrowthPage />} />
           <Route path="/publications" element={<PublicationsPage />} />
           <Route path="/read/:id" element={<BookReaderPage />} />
+          <Route path="/contact" element={<ContactPage />} />
         </Routes>
       </main>
       <Footer />

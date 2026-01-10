@@ -1,175 +1,203 @@
-import { Target, Eye, Heart, Users, Globe, ChevronRight, Sparkles } from 'lucide-react';
+import { Target, Eye, Heart, Users, Globe, BookOpen, Sparkles, ArrowRight, CheckCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const strategySteps = [
-  { number: 1, content: 'Equip every believer with the "Yellow Card"' },
-  { number: 2, content: 'Teach the 17 Characteristics of Love' },
-  { number: 3, content: 'Launch the 30-Day Love Challenge' },
-];
-
-const visionPoints = [
-  "Marriages restored through sacrificial love",
-  "Leaders serving with integrity and compassion",
-  "Communities united beyond tribal lines"
-];
-
 export default function MissionVisionPage() {
+  const visionPoints = [
+    "Marriages restored through sacrificial love",
+    "Leaders serving with integrity and compassion",
+    "Communities united beyond tribal lines",
+    "Children raised in loving, God-fearing homes"
+  ];
+
+  const strategySteps = [
+    { 
+      number: 1, 
+      title: 'Equip with the Yellow Card',
+      description: 'Distribute the 17 Characteristics of Love to every believer as a daily reminder and guide.'
+    },
+    { 
+      number: 2, 
+      title: 'Teach the Characteristics',
+      description: 'Help families memorize and understand each characteristic through practical teaching.'
+    },
+    { 
+      number: 3, 
+      title: 'Launch the 30-Day Challenge',
+      description: 'Guide participants through daily practice until love becomes second nature.'
+    },
+  ];
+
+  const coreBeliefs = [
+    {
+      icon: <Users className="w-6 h-6" />,
+      title: "Family First",
+      description: "Every corrupt leader comes from a family. Heal the family, heal the nation."
+    },
+    {
+      icon: <Globe className="w-6 h-6" />,
+      title: "Love Transforms",
+      description: "Love is the only force capable of turning an enemy into a friend."
+    },
+    {
+      icon: <BookOpen className="w-6 h-6" />,
+      title: "God's Promise",
+      description: "Families who practice love are guaranteed God's blessing — it's mandatory."
+    }
+  ];
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-yellow-50">
-      {/* Hero Section */}
-      <section className="relative py-20 px-6 md:px-12 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-red-600 to-red-800" />
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-10 right-10 w-64 h-64 bg-yellow-400 rounded-full blur-3xl" />
-          <div className="absolute bottom-10 left-10 w-48 h-48 bg-orange-400 rounded-full blur-3xl" />
-        </div>
-        
-        <div className="relative max-w-6xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-white/90 text-sm mb-6">
+    <section className="py-24 px-6 md:px-12 bg-gradient-to-b from-orange-50 to-yellow-100 min-h-screen">
+      <div className="max-w-7xl mx-auto">
+        {/* Page Header */}
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-red-100 border border-red-200 text-red-700 rounded-full text-sm font-semibold mb-6">
             <Sparkles className="w-4 h-4" />
             Our Purpose & Direction
           </div>
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-serif text-white mb-6">
-            Our <span className="text-yellow-300">Manifesto</span>
+          <h1 className="text-4xl md:text-5xl font-serif text-red-800 mb-6">
+            Mission & Vision
           </h1>
-          <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed">
-            Transforming Nigeria through the overwhelming, winning power of God's practical love.
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            Transforming Nigeria through the overwhelming, winning power of God's practical love — one family at a time.
           </p>
         </div>
-      </section>
 
-      {/* Main Content */}
-      <section className="max-w-6xl mx-auto px-6 md:px-12 py-16 space-y-12">
-        
-        {/* Vision Card */}
-        <div className="bg-white rounded-3xl shadow-xl overflow-hidden">
-          <div className="bg-gradient-to-r from-yellow-500 to-orange-500 p-6 flex items-center gap-4">
-            <div className="p-3 bg-white/20 rounded-xl">
-              <Eye className="w-8 h-8 text-white" />
-            </div>
-            <div>
-              <span className="text-white/80 text-sm font-medium">01</span>
-              <h2 className="text-2xl md:text-3xl font-serif text-white">The Vision</h2>
-            </div>
+        {/* Mission Statement - Featured */}
+        <div className="bg-white rounded-2xl p-8 md:p-12 shadow-xl border border-orange-100 mb-12 text-center">
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Target className="w-8 h-8 text-red-600" />
           </div>
-          <div className="p-8 md:p-10">
-            <p className="text-xl md:text-2xl text-gray-800 font-medium mb-6">
-              To see every Nigerian family transformed by the power of God's love.
-            </p>
-            <p className="text-gray-600 mb-8 leading-relaxed">
-              We envision a nation breaking the cycle of corruption, wickedness, and materialism 
-              through the root of all change: <span className="text-red-600 font-medium italic">the heart.</span>
-            </p>
-            <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-6 border border-green-100">
-              <h3 className="text-sm font-bold text-green-800 uppercase tracking-wide mb-4">What We See</h3>
-              <ul className="space-y-4">
-                {visionPoints.map((item, i) => (
-                  <li key={i} className="flex items-start gap-3">
-                    <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                    <span className="text-gray-700">{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
+          <span className="text-sm font-bold text-red-600 uppercase tracking-wider">Our Mission</span>
+          <h2 className="text-2xl md:text-3xl font-serif text-gray-800 mt-3 mb-4">
+            To equip every Nigerian family with the practical tools to love like God loves
+          </h2>
+          <p className="text-gray-600 max-w-2xl mx-auto leading-relaxed">
+            We believe that when families learn and practice the 17 Characteristics of Love from 1 Corinthians 13, 
+            transformation is inevitable — in homes, communities, and the entire nation.
+          </p>
         </div>
 
-        {/* Logic Card */}
-        <div className="bg-gradient-to-br from-red-700 to-red-900 rounded-3xl shadow-xl overflow-hidden text-white">
-          <div className="p-6 border-b border-white/10 flex items-center gap-4">
-            <div className="p-3 bg-white/10 rounded-xl">
-              <Target className="w-8 h-8 text-white" />
-            </div>
-            <div>
-              <span className="text-white/60 text-sm font-medium">02</span>
-              <h2 className="text-2xl md:text-3xl font-serif">The Logic</h2>
-            </div>
-          </div>
-          <div className="p-8 md:p-10">
-            <p className="text-xl md:text-2xl font-medium mb-8">Why focus on Love?</p>
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-                <div className="flex items-center gap-3 mb-3">
-                  <Users className="w-6 h-6 text-yellow-400" />
-                  <h3 className="font-bold text-yellow-400">Family Roots</h3>
-                </div>
-                <p className="text-white/80">
-                  Every corrupt leader comes from a family. Heal the family, heal the leader.
-                </p>
+        {/* Vision Section */}
+        <div className="grid lg:grid-cols-2 gap-8 mb-12">
+          <div className="bg-white rounded-2xl p-8 shadow-lg border-t-4 border-yellow-500">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
+                <Eye className="w-6 h-6 text-yellow-600" />
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-                <div className="flex items-center gap-3 mb-3">
-                  <Globe className="w-6 h-6 text-yellow-400" />
-                  <h3 className="font-bold text-yellow-400">National Impact</h3>
-                </div>
-                <p className="text-white/80">
-                  Love is the only force capable of turning an enemy into a friend.
-                </p>
+              <div>
+                <span className="text-xs font-bold text-yellow-600 uppercase tracking-wider">The Vision</span>
+                <h3 className="text-xl font-serif text-gray-800">What We See</h3>
               </div>
             </div>
-          </div>
-        </div>
-
-        {/* Strategy Card */}
-        <div className="bg-white rounded-3xl shadow-xl overflow-hidden">
-          <div className="bg-gradient-to-r from-red-600 to-orange-500 p-6 flex items-center gap-4">
-            <div className="p-3 bg-white/20 rounded-xl">
-              <Heart className="w-8 h-8 text-white" />
-            </div>
-            <div>
-              <span className="text-white/80 text-sm font-medium">03</span>
-              <h2 className="text-2xl md:text-3xl font-serif text-white">Our Strategy</h2>
-            </div>
-          </div>
-          <div className="p-8 md:p-10">
-            <p className="text-xl text-gray-600 font-serif italic mb-8">
-              "Reproduction & Distribution"
+            <p className="text-gray-700 mb-6 leading-relaxed">
+              To see every Nigerian family transformed by the power of God's love — breaking the cycle of 
+              corruption, wickedness, and materialism through the root of all change: 
+              <span className="text-red-600 font-semibold italic"> the heart.</span>
             </p>
-            <ol className="space-y-4">
-              {strategySteps.map((step, index) => (
-                <li key={step.number} className="flex items-center gap-4 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl border border-yellow-100">
-                  <span className="flex-shrink-0 w-12 h-12 flex items-center justify-center bg-gradient-to-br from-yellow-500 to-orange-500 text-white font-bold rounded-full text-lg shadow-lg">
-                    {index + 1}
-                  </span>
-                  <span className="text-lg text-gray-800 font-medium">{step.content}</span>
+            <ul className="space-y-3">
+              {visionPoints.map((point, index) => (
+                <li key={index} className="flex items-start gap-3">
+                  <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-600">{point}</span>
                 </li>
               ))}
-            </ol>
+            </ul>
+          </div>
+
+          <div className="bg-white rounded-2xl p-8 shadow-lg border-t-4 border-red-500">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                <Heart className="w-6 h-6 text-red-600" />
+              </div>
+              <div>
+                <span className="text-xs font-bold text-red-600 uppercase tracking-wider">The Why</span>
+                <h3 className="text-xl font-serif text-gray-800">Why Focus on Love?</h3>
+              </div>
+            </div>
+            <div className="space-y-4">
+              {coreBeliefs.map((belief, index) => (
+                <div key={index} className="bg-orange-50 rounded-xl p-4 border border-orange-100">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center text-red-600 shadow-sm">
+                      {belief.icon}
+                    </div>
+                    <h4 className="font-semibold text-gray-800">{belief.title}</h4>
+                  </div>
+                  <p className="text-gray-600 text-sm pl-11">{belief.description}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
-      </section>
+        {/* Strategy Section */}
+        <div className="bg-white rounded-2xl p-8 md:p-10 shadow-xl border border-orange-100 mb-12">
+          <div className="text-center mb-10">
+            <span className="text-sm font-bold text-green-600 uppercase tracking-wider">Our Strategy</span>
+            <h2 className="text-2xl md:text-3xl font-serif text-gray-800 mt-2">
+              Reproduction & Distribution
+            </h2>
+            <p className="text-gray-600 mt-3 max-w-2xl mx-auto">
+              A simple, reproducible approach that any believer can follow to spread practical love.
+            </p>
+          </div>
 
-      {/* CTA Section */}
-      <section className="bg-gradient-to-r from-red-600 to-red-800 py-16 px-6">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-serif text-white mb-4">
+          <div className="grid md:grid-cols-3 gap-6">
+            {strategySteps.map((step) => (
+              <div key={step.number} className="relative">
+                <div className="bg-gradient-to-br from-orange-50 to-yellow-50 rounded-xl p-6 border border-orange-200 h-full">
+                  <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center text-white font-bold text-xl mb-4 shadow-lg">
+                    {step.number}
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-2">{step.title}</h3>
+                  <p className="text-gray-600 text-sm leading-relaxed">{step.description}</p>
+                </div>
+                {step.number < 3 && (
+                  <div className="hidden md:block absolute top-1/2 -right-3 transform -translate-y-1/2 z-10">
+                    <ArrowRight className="w-6 h-6 text-orange-300" />
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Scripture Quote */}
+        <div className="bg-gradient-to-r from-red-700 to-red-800 rounded-2xl p-8 md:p-10 text-center mb-12 shadow-xl">
+          <BookOpen className="w-10 h-10 text-yellow-400 mx-auto mb-4" />
+          <blockquote className="text-xl md:text-2xl font-serif text-white mb-4 italic max-w-3xl mx-auto">
+            "For God so loved the world that He gave His only begotten Son, that whoever believes in Him 
+            should not perish but have everlasting life."
+          </blockquote>
+          <cite className="text-yellow-400 font-medium">— John 3:16</cite>
+        </div>
+
+        {/* CTA Section */}
+        <div className="bg-white rounded-2xl p-8 md:p-12 shadow-xl border border-orange-100 text-center">
+          <Heart className="w-16 h-16 mx-auto mb-6 text-red-500 fill-current" />
+          <h2 className="text-2xl md:text-3xl font-serif text-gray-800 mb-4">
             Ready to Join the Movement?
           </h2>
-          <p className="text-white/90 text-lg mb-8 max-w-2xl mx-auto">
+          <p className="text-gray-600 text-lg mb-8 max-w-2xl mx-auto leading-relaxed">
             Be part of the transformation. Start practicing love today and help us change Nigeria one heart at a time.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link 
               to="/love-challenge" 
-              className="inline-flex items-center justify-center gap-2 bg-white text-red-700 px-8 py-4 rounded-full font-bold hover:bg-yellow-50 transition-colors shadow-lg"
+              className="inline-flex items-center justify-center gap-2 bg-red-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-red-700 transition-all hover:shadow-lg"
             >
               Start the 30-Day Challenge
-              <ChevronRight className="w-5 h-5" />
+              <ArrowRight className="w-5 h-5" />
             </Link>
             <Link 
               to="/yellow-card" 
-              className="inline-flex items-center justify-center gap-2 bg-transparent text-white px-8 py-4 rounded-full font-bold border-2 border-white/50 hover:bg-white/10 transition-colors"
+              className="inline-flex items-center justify-center gap-2 bg-gray-100 text-gray-700 px-8 py-4 rounded-lg font-semibold hover:bg-gray-200 transition-all"
             >
               Get the Yellow Card
             </Link>
           </div>
         </div>
-      </section>
-    </div>
+      </div>
+    </section>
   );
 }

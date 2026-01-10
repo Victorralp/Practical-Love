@@ -61,6 +61,11 @@ export default function Footer() {
                   Publications
                 </Link>
               </li>
+              <li>
+                <Link to="/contact" className="text-orange-100 hover:text-white transition-colors">
+                  Contact
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -70,7 +75,7 @@ export default function Footer() {
             <div className="space-y-4">
               <div className="flex items-center">
                 <Mail className="w-5 h-5 text-orange-300 mr-3" />
-                <span className="text-orange-100">info@practicallove.org</span>
+                <span className="text-orange-100">practicallove.logosrhema.org.ng</span>
               </div>
               <div className="flex items-center">
                 <Phone className="w-5 h-5 text-orange-300 mr-3" />

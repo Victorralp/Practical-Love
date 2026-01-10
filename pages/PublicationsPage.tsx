@@ -4,18 +4,18 @@ import { publications } from '../data/publications'
 
 export default function PublicationsPage() {
     return (
-        <section className="min-h-screen bg-gradient-to-b from-orange-50 via-white to-red-50 py-24 px-6 md:px-12">
-            <div className="max-w-7xl mx-auto">
+        <section className="min-h-screen bg-gradient-to-b from-orange-50 to-white">
+            <div className="max-w-7xl mx-auto px-6 md:px-12 py-12">
                 {/* Header */}
-                <div className="text-center mb-16">
+                <div className="text-center mb-10">
                     <div className="flex items-center justify-center mb-6">
                         <BookOpen className="w-14 h-14 text-red-600 mr-4" />
                         <Heart className="w-14 h-14 text-orange-600 animate-pulse" />
                     </div>
-                    <h1 className="text-4xl md:text-6xl font-serif text-red-800 mb-6">
+                    <h1 className="text-4xl md:text-5xl font-serif text-red-800 mb-4">
                         Free <span className="text-orange-600">Publications</span>
                     </h1>
-                    <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                    <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
                         Download our free books and discover the transformative power of love in your nation.
                         <br />
                         <span className="text-sm font-semibold text-orange-600 mt-2 block">
@@ -25,7 +25,7 @@ export default function PublicationsPage() {
                 </div>
 
                 {/* Publications Grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-20">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
                     {publications.map((book) => (
                         <div 
                             key={book.id} 
@@ -95,7 +95,7 @@ export default function PublicationsPage() {
                 </div>
 
                 {/* Call to Action */}
-                <div className="bg-gradient-to-r from-red-600 to-orange-600 rounded-3xl p-10 md:p-16 text-center shadow-2xl">
+                <div className="bg-gradient-to-r from-red-600 to-orange-600 rounded-xl p-8 md:p-10 text-center shadow-xl mb-10">
                     <h2 className="text-3xl md:text-4xl font-serif text-white mb-6">
                         Share the Message of Love
                     </h2>
@@ -121,7 +121,7 @@ export default function PublicationsPage() {
                 </div>
 
                 {/* Additional Info */}
-                <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
                     <div className="p-6 bg-white rounded-2xl shadow-md border border-orange-100">
                         <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
                             <BookOpen className="w-8 h-8 text-red-600" />
