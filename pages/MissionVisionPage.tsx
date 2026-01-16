@@ -71,10 +71,22 @@ export default function MissionVisionPage() {
           <h2 className="text-2xl md:text-3xl font-serif text-gray-800 mt-3 mb-4">
             To equip every Nigerian family with the practical tools to love like God loves
           </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-gray-600 max-w-2xl mx-auto leading-relaxed mb-6">
             We believe that when families learn and practice the 17 Characteristics of Love from 1 Corinthians 13, 
             transformation is inevitable — in homes, communities, and the entire nation.
           </p>
+          <div className="bg-orange-50 border-l-4 border-orange-500 rounded-r-xl p-6 text-left max-w-3xl mx-auto">
+            <p className="text-gray-700 leading-relaxed mb-3">
+              <span className="font-semibold text-red-700">This Love Ministry</span>, using the Love Card, aims to remain in the heart of every Nigerian — 
+              the heart of flesh — so that God can write His commandments in our hearts, starting with every family.
+            </p>
+            <p className="text-gray-600 italic text-sm">
+              <span className="font-semibold">"I will give you a new heart and put a new spirit in you; I will remove from you your heart of stone and give you a heart of flesh."</span> — Ezekiel 36:26
+            </p>
+            <p className="text-gray-600 italic text-sm mt-2">
+              <span className="font-semibold">"I will put my law in their minds and write it on their hearts. I will be their God, and they will be my people."</span> — Jeremiah 31:33
+            </p>
+          </div>
         </div>
 
         {/* Vision Section */}

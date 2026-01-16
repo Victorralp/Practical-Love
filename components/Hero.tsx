@@ -69,6 +69,8 @@ export default function Hero() {
                 We want to hand you the key to unlocking the life you were made for. It starts with a simple whisper. Take 1 Corinthians 13 and put your name in place of the word "love." Say it: <span className="italic text-orange-200 font-medium">"I am patient... I am kind..."</span>
                 <br /><br />
                 Do you feel that? That is your soul finally taking a breath. Come home to Love.
+                <br /><br />
+                <span className="font-semibold text-orange-200">The only sure way God can answer your prayer is at the family level</span> — not in your church, not in the mosque, and not at the herbalist shrine. Why at the family level? Because the scripture says: <span className="italic text-orange-200">"Where two or three are gathered in my name, there am I among them"</span> (Matthew 18:20). Once daddy and mommy are children of God, the Holy Spirit's power is in the family.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4">

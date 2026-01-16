@@ -1,8 +1,19 @@
 import { ArrowRight, BookOpen, Download, Heart } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { publications } from '../data/publications'
+import { FocusRail, type FocusRailItem } from '../components/ui/focus-rail'
 
 export default function PublicationsPage() {
+    // Transform publications to FocusRailItem format
+    const railItems: FocusRailItem[] = publications.map((book) => ({
+        id: book.id,
+        title: book.title,
+        description: book.description,
+        imageSrc: book.coverImage || 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=1000&auto=format&fit=crop',
+        href: `/read/${book.id}`,
+        meta: `${book.type} • ${book.author}`,
+    }));
+
     return (
         <section className="min-h-screen bg-gradient-to-b from-orange-50 to-white">
             <div className="max-w-7xl mx-auto px-6 md:px-12 py-12">
@@ -24,7 +35,17 @@ export default function PublicationsPage() {
                     </p>
                 </div>
 
+                {/* Focus Rail Carousel */}
+                <div className="mb-12 rounded-2xl overflow-hidden shadow-2xl">
+                    <FocusRail 
+                        items={railItems} 
+                        autoPlay={true} 
+                        interval={5000}
+                        loop={true} 
+                    />
+                </div>
                 {/* Publications Grid */}
+                <h2 className="text-2xl font-serif text-red-800 mb-6 text-center">All Publications</h2>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
                     {publications.map((book) => (
                         <div 
