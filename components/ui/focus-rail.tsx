@@ -37,20 +37,9 @@ function wrap(min: number, max: number, v: number) {
  * Base spring for spatial movement (x/z)
  */
 const BASE_SPRING = {
-  type: "spring",
+  type: "spring" as const,
   stiffness: 300,
   damping: 30,
-  mass: 1,
-};
-
-/**
- * Scale Spring
- * Bouncier spring specifically for the visual "Click/Tap" feedback on the center card
- */
-const TAP_SPRING = {
-  type: "spring",
-  stiffness: 450,
-  damping: 18,
   mass: 1,
 };
 
@@ -120,7 +109,7 @@ export function FocusRail({
   };
 
   const onDragEnd = (
-    e: MouseEvent | TouchEvent | PointerEvent,
+    _e: MouseEvent | TouchEvent | PointerEvent,
     { offset, velocity }: PanInfo
   ) => {
     const swipe = swipePower(offset.x, velocity.x);
