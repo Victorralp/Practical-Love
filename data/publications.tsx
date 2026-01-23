@@ -12,7 +12,10 @@ export interface PublicationProps {
     pages?: { title?: string; content: React.ReactNode }[];
 }
 
+import { happyHomeDigest } from './happyhome-digest';
+
 export const publications: PublicationProps[] = [
+    happyHomeDigest,
     {
         id: "love-nigerians",
         title: "Love Nigerians Or Live On Curses",
