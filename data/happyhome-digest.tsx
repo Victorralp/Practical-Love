@@ -1,5 +1,4 @@
-import React from 'react';
-import { Book, Heart, Users, Star, AlertTriangle, Shield, Crown } from 'lucide-react';
+import { Users, Star, AlertTriangle, Shield, Crown } from 'lucide-react';
 import { PublicationProps } from './publications';
 
 export const happyHomeDigest: PublicationProps = {
