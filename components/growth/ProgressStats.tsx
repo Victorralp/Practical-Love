@@ -22,9 +22,7 @@ interface StatCardProps {
 function StatCard({ icon, label, value, color }: StatCardProps) {
   return (
     <div className="bg-white rounded-xl shadow-md p-6 flex items-center gap-4">
-      <div className={`p-3 rounded-full ${color}`}>
-        {icon}
-      </div>
+      <div className={`p-3 rounded-full ${color}`}>{icon}</div>
       <div>
         <p className="text-3xl font-bold text-gray-800">{value}</p>
         <p className="text-sm text-gray-500">{label}</p>
@@ -56,22 +54,22 @@ export default function ProgressStats({ progress }: ProgressStatsProps) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       <StatCard
-        icon={<CheckCircle className="w-6 h-6 text-green-600" />}
+        icon={<CheckCircle className="w-6 h-6 text-orange-600" />}
         label="Challenges Completed"
         value={completedChallenges}
-        color="bg-green-100"
+        color="bg-amber-100"
       />
       <StatCard
-        icon={<BookOpen className="w-6 h-6 text-purple-600" />}
+        icon={<BookOpen className="w-6 h-6 text-red-600" />}
         label="Reflection Sessions"
         value={reflectionSessions}
-        color="bg-purple-100"
+        color="bg-orange-100"
       />
       <StatCard
-        icon={<MapPin className="w-6 h-6 text-blue-600" />}
+        icon={<MapPin className="w-6 h-6 text-red-600" />}
         label="Journey Milestones"
         value={journeyMilestones}
-        color="bg-blue-100"
+        color="bg-orange-100"
       />
       <StatCard
         icon={<Trophy className="w-6 h-6 text-amber-600" />}
@@ -82,3 +80,5 @@ export default function ProgressStats({ progress }: ProgressStatsProps) {
     </div>
   );
 }
+
+

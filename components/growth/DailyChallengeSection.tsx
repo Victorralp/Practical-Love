@@ -12,6 +12,7 @@ import { progressService } from '../../services/progressService';
 import type { Challenge, ChallengeCompletion } from '../../types/growth';
 
 export default function DailyChallengeSection() {
+  // State management for challenge completion
   const [completedChallenges, setCompletedChallenges] = useState<ChallengeCompletion[]>([]);
   const [justCompleted, setJustCompleted] = useState(false);
 
@@ -30,7 +31,7 @@ export default function DailyChallengeSection() {
   const isTodayCompleted = useMemo(() => {
     const today = new Date().toISOString().split('T')[0];
     return completedChallenges.some(
-      (c) => c.challengeId === todayChallenge.id && c.completedAt.startsWith(today)
+      c => c.challengeId === todayChallenge.id && c.completedAt.startsWith(today)
     );
   }, [completedChallenges, todayChallenge.id]);
 
@@ -67,7 +68,9 @@ export default function DailyChallengeSection() {
           {totalCompleted > 0 && (
             <div className="flex items-center bg-orange-100 text-orange-800 px-4 py-2 rounded-full">
               <Trophy className="w-5 h-5 mr-2" />
-              <span className="font-medium">{totalCompleted} challenge{totalCompleted !== 1 ? 's' : ''} completed</span>
+              <span className="font-medium">
+                {totalCompleted} challenge{totalCompleted !== 1 ? 's' : ''} completed
+              </span>
             </div>
           )}
         </div>
@@ -75,11 +78,11 @@ export default function DailyChallengeSection() {
 
       {/* Success Message */}
       {justCompleted && (
-        <div className="mb-6 bg-green-100 border border-green-300 rounded-lg p-4 flex items-center">
-          <Trophy className="w-6 h-6 text-green-600 mr-3" />
+        <div className="mb-6 bg-amber-100 border border-amber-300 rounded-lg p-4 flex items-center">
+          <Trophy className="w-6 h-6 text-orange-600 mr-3" />
           <div>
-            <p className="font-medium text-green-800">Challenge Completed!</p>
-            <p className="text-green-700 text-sm">
+            <p className="font-medium text-orange-800">Challenge Completed!</p>
+            <p className="text-orange-700 text-sm">
               Great job! Come back tomorrow for a new challenge.
             </p>
           </div>
@@ -111,3 +114,4 @@ export default function DailyChallengeSection() {
     </section>
   );
 }
+

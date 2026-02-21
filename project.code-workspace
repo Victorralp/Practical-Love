@@ -1,13 +1,13 @@
 {
-	"folders": [
-		{
-			"path": "."
-		},
-		{
-			"path": "../../../../Pictures/pub"
-		}
-	],
-	"settings": {
-		"liveServer.settings.multiRootWorkspaceName": "project"
-	}
+  "folders": [
+    {
+      "path": ".",
+    },
+    {
+      "path": "../../../../Pictures/pub",
+    },
+  ],
+  "settings": {
+    "liveServer.settings.multiRootWorkspaceName": "project",
+  },
 }

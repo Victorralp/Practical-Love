@@ -1,23 +1,38 @@
-import { Routes, Route } from 'react-router-dom';
-import Header from './components/Header'
-import Hero from './components/Hero'
-import Footer from './components/Footer'
-import CharacteristicsPage from './pages/CharacteristicsPage'
-import BiblePassagesPage from './pages/BiblePassagesPage'
-import LoveInNigeriaPage from './pages/LoveInNigeriaPage'
-import MissionVisionPage from './pages/MissionVisionPage'
-import YellowCardPage from './pages/YellowCardPage'
-import LoveChallengePage from './pages/LoveChallengePage'
-import ShareTestimonyPage from './pages/ShareTestimonyPage'
-import GrowthPage from './pages/GrowthPage'
-import YellowCardSeriesPage from './pages/YellowCardSeriesPage'
-import PublicationsPage from './pages/PublicationsPage'
-import BookReaderPage from './pages/BookReaderPage'
-import ContactPage from './pages/ContactPage'
+import { useEffect } from 'react';
+import { Routes, Route, useLocation } from 'react-router-dom';
+import Header from './components/Header';
+import Hero from './components/Hero';
+import Footer from './components/Footer';
+import CharacteristicsPage from './pages/CharacteristicsPage';
+import BiblePassagesPage from './pages/BiblePassagesPage';
+import LoveInNigeriaPage from './pages/LoveInNigeriaPage';
+import MissionVisionPage from './pages/MissionVisionPage';
+import YellowCardPage from './pages/YellowCardPage';
+import LoveChallengePage from './pages/LoveChallengePage';
+import ShareTestimonyPage from './pages/ShareTestimonyPage';
+import GrowthPage from './pages/GrowthPage';
+import YellowCardSeriesPage from './pages/YellowCardSeriesPage';
+import PublicationsPage from './pages/PublicationsPage';
+import BookReaderPage from './pages/BookReaderPage';
+import ContactPage from './pages/ContactPage';
+import TestimoniesPage from './pages/TestimoniesPage';
+import CloudinaryDemoPage from './pages/CloudinaryDemoPage';
+import EnvTestPage from './pages/EnvTestPage';
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }, [pathname]);
+
+  return null;
+}
 
 export default function App() {
   return (
     <div className="flex flex-col min-h-screen">
+      <ScrollToTop />
       <Header />
       <main className="flex-grow">
         <Routes>
@@ -34,9 +49,12 @@ export default function App() {
           <Route path="/publications" element={<PublicationsPage />} />
           <Route path="/read/:id" element={<BookReaderPage />} />
           <Route path="/contact" element={<ContactPage />} />
+          <Route path="/testimonies" element={<TestimoniesPage />} />
+          <Route path="/cloudinary-demo" element={<CloudinaryDemoPage />} />
+          <Route path="/env-test" element={<EnvTestPage />} />
         </Routes>
       </main>
       <Footer />
     </div>
-  )
+  );
 }

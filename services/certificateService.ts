@@ -220,7 +220,7 @@ export function downloadCertificate(data: CertificateData): void {
   const html = generateCertificateHTML(data);
   const blob = new Blob([html], { type: 'text/html' });
   const url = URL.createObjectURL(blob);
-  
+
   const link = document.createElement('a');
   link.href = url;
   link.download = 'love-challenge-certificate.html';
@@ -236,7 +236,7 @@ export function downloadCertificate(data: CertificateData): void {
 export function printCertificate(data: CertificateData): void {
   const html = generateCertificateHTML(data);
   const printWindow = window.open('', '_blank');
-  
+
   if (printWindow) {
     printWindow.document.write(html);
     printWindow.document.close();

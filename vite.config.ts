@@ -1,5 +1,5 @@
 // c:\Users\Raphael\Downloads\Compressed\Practical-Love-vanquish\project\vite.config.ts
-import { defineConfig } from 'vite';          // <-- use Vite's defineConfig
+import { defineConfig } from 'vite'; // <-- use Vite's defineConfig
 import react from '@vitejs/plugin-react';
 
 export default defineConfig({

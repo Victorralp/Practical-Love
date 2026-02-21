@@ -14,12 +14,7 @@ interface JourneyCardProps {
   onContinue?: (journeyId: string) => void;
 }
 
-export default function JourneyCard({
-  journey,
-  progress,
-  onStart,
-  onContinue,
-}: JourneyCardProps) {
+export default function JourneyCard({ journey, progress, onStart, onContinue }: JourneyCardProps) {
   const isStarted = !!progress;
   const isCompleted = progress?.completedAt !== undefined;
   const completedSteps = progress?.completedSteps.length || 0;
@@ -28,10 +23,10 @@ export default function JourneyCard({
 
   const getCategoryColor = (category: string) => {
     const colors: Record<string, string> = {
-      patience: 'bg-blue-100 text-blue-800 border-blue-200',
-      kindness: 'bg-green-100 text-green-800 border-green-200',
-      forgiveness: 'bg-purple-100 text-purple-800 border-purple-200',
-      empathy: 'bg-pink-100 text-pink-800 border-pink-200',
+      patience: 'bg-orange-100 text-red-800 border-orange-200',
+      kindness: 'bg-amber-100 text-orange-800 border-amber-200',
+      forgiveness: 'bg-orange-100 text-red-800 border-orange-200',
+      empathy: 'bg-red-100 text-red-800 border-red-200',
       humility: 'bg-amber-100 text-amber-800 border-amber-200',
       trust: 'bg-cyan-100 text-cyan-800 border-cyan-200',
       perseverance: 'bg-orange-100 text-orange-800 border-orange-200',
@@ -51,7 +46,7 @@ export default function JourneyCard({
   return (
     <div
       className={`bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl ${
-        isCompleted ? 'ring-2 ring-green-500' : ''
+        isCompleted ? 'ring-2 ring-amber-500' : ''
       }`}
     >
       <div className="p-6">
@@ -74,7 +69,7 @@ export default function JourneyCard({
             <h3 className="text-xl font-semibold text-gray-800">{journey.title}</h3>
           </div>
           {isCompleted && (
-            <div className="flex items-center text-green-600">
+            <div className="flex items-center text-orange-600">
               <CheckCircle className="w-6 h-6" />
             </div>
           )}
@@ -95,7 +90,7 @@ export default function JourneyCard({
             <div className="w-full bg-gray-200 rounded-full h-2.5">
               <div
                 className={`h-2.5 rounded-full transition-all duration-500 ${
-                  isCompleted ? 'bg-green-500' : 'bg-orange-500'
+                  isCompleted ? 'bg-amber-500' : 'bg-orange-500'
                 }`}
                 style={{ width: `${progressPercent}%` }}
               />
@@ -115,10 +110,10 @@ export default function JourneyCard({
           disabled={isCompleted}
           className={`w-full py-3 px-4 rounded-lg font-medium transition-colors flex items-center justify-center ${
             isCompleted
-              ? 'bg-green-100 text-green-700 cursor-default'
+              ? 'bg-amber-100 text-orange-700 cursor-default'
               : isStarted
-              ? 'bg-orange-600 hover:bg-orange-700 text-white'
-              : 'bg-gray-800 hover:bg-gray-900 text-white'
+                ? 'bg-orange-600 hover:bg-orange-700 text-white'
+                : 'bg-gray-800 hover:bg-gray-900 text-white'
           }`}
         >
           {isCompleted ? (
@@ -142,3 +137,5 @@ export default function JourneyCard({
     </div>
   );
 }
+
+

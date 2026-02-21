@@ -63,7 +63,6 @@ class ProgressServiceImpl implements ProgressService {
     this.storage.save(PROGRESS_STORAGE_KEY, stored);
   }
 
-
   completeChallenge(challengeId: string, reflection?: string): void {
     const progress = this.getProgress();
     const completion: ChallengeCompletion = {
@@ -83,7 +82,7 @@ class ProgressServiceImpl implements ProgressService {
 
   startJourney(journeyId: string): void {
     const progress = this.getProgress();
-    
+
     // Check if journey already started
     const existing = progress.journeyProgress.find(jp => jp.journeyId === journeyId);
     if (existing) {
@@ -103,7 +102,7 @@ class ProgressServiceImpl implements ProgressService {
   completeJourneyStep(journeyId: string, stepIndex: number): void {
     const progress = this.getProgress();
     const journeyProgress = progress.journeyProgress.find(jp => jp.journeyId === journeyId);
-    
+
     if (!journeyProgress) {
       return; // Journey not started
     }

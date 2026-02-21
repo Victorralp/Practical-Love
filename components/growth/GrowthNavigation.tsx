@@ -27,12 +27,15 @@ const navItems: NavItem[] = [
   { id: 'progress', label: 'Progress', icon: <TrendingUp className="w-5 h-5" /> },
 ];
 
-export default function GrowthNavigation({ activeSection, onSectionChange }: GrowthNavigationProps) {
+export default function GrowthNavigation({
+  activeSection,
+  onSectionChange,
+}: GrowthNavigationProps) {
   return (
-    <nav className="bg-white rounded-xl shadow-md mb-8 overflow-hidden">
+    <nav className="bg-white/90 backdrop-blur rounded-2xl shadow-sm border border-orange-100 mb-8 overflow-hidden">
       {/* Desktop Navigation */}
       <div className="hidden sm:flex">
-        {navItems.map((item) => {
+        {navItems.map(item => {
           const isActive = activeSection === item.id;
           return (
             <button
@@ -40,8 +43,8 @@ export default function GrowthNavigation({ activeSection, onSectionChange }: Gro
               onClick={() => onSectionChange(item.id)}
               className={`flex-1 flex items-center justify-center gap-2 px-4 py-4 font-medium transition-all duration-200 border-b-2 ${
                 isActive
-                  ? 'text-orange-600 border-orange-600 bg-orange-50'
-                  : 'text-gray-600 border-transparent hover:text-orange-500 hover:bg-gray-50'
+                  ? 'text-red-700 border-red-600 bg-gradient-to-b from-orange-50 to-white'
+                  : 'text-gray-600 border-transparent hover:text-red-700 hover:bg-orange-50/40'
               }`}
             >
               {item.icon}
@@ -53,7 +56,7 @@ export default function GrowthNavigation({ activeSection, onSectionChange }: Gro
 
       {/* Mobile Navigation - Scrollable tabs */}
       <div className="sm:hidden flex overflow-x-auto scrollbar-hide">
-        {navItems.map((item) => {
+        {navItems.map(item => {
           const isActive = activeSection === item.id;
           return (
             <button
@@ -61,7 +64,7 @@ export default function GrowthNavigation({ activeSection, onSectionChange }: Gro
               onClick={() => onSectionChange(item.id)}
               className={`flex-shrink-0 flex flex-col items-center gap-1 px-4 py-3 font-medium transition-all duration-200 border-b-2 min-w-[80px] ${
                 isActive
-                  ? 'text-orange-600 border-orange-600 bg-orange-50'
+                  ? 'text-red-700 border-red-600 bg-gradient-to-b from-orange-50 to-white'
                   : 'text-gray-600 border-transparent'
               }`}
             >
@@ -74,3 +77,4 @@ export default function GrowthNavigation({ activeSection, onSectionChange }: Gro
     </nav>
   );
 }
+

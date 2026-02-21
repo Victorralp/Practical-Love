@@ -35,7 +35,7 @@ export default function GrowthTipsSection() {
   const getCategoryButtonStyle = (category: LoveCategory | 'all') => {
     const isSelected = selectedCategory === category;
     const baseStyle = 'px-4 py-2 rounded-full text-sm font-medium transition-all duration-200';
-    
+
     if (isSelected) {
       return `${baseStyle} bg-orange-600 text-white shadow-md`;
     }
@@ -51,7 +51,8 @@ export default function GrowthTipsSection() {
           <h2 className="text-3xl font-serif text-red-800">Growth Tips</h2>
         </div>
         <p className="text-gray-600">
-          Practical advice and exercises to help you grow in love and develop stronger relationships.
+          Practical advice and exercises to help you grow in love and develop stronger
+          relationships.
         </p>
       </div>
 
@@ -62,7 +63,7 @@ export default function GrowthTipsSection() {
           <span className="text-sm font-medium text-gray-700">Filter by category:</span>
         </div>
         <div className="flex flex-wrap gap-2">
-          {CATEGORIES.map((category) => (
+          {CATEGORIES.map(category => (
             <button
               key={category.value}
               onClick={() => setSelectedCategory(category.value)}
@@ -85,7 +86,7 @@ export default function GrowthTipsSection() {
       {/* Tips List */}
       {tips.length > 0 ? (
         <div className="space-y-6">
-          {tips.map((tip) => (
+          {tips.map(tip => (
             <TipCard key={tip.id} tip={tip} />
           ))}
         </div>
@@ -120,3 +121,4 @@ export default function GrowthTipsSection() {
     </section>
   );
 }
+

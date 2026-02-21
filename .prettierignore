@@ -1,0 +1,37 @@
+# Build artifacts
+dist
+build
+.out
+
+# Dependencies
+node_modules
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE and editor files
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Coverage
+coverage
+
+# Temporary files
+*.tmp
+*.temp
+
+# Kiro specs
+.kiro

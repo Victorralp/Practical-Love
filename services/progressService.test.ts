@@ -5,11 +5,7 @@
  */
 import { describe, it, expect, beforeEach } from 'vitest';
 import * as fc from 'fast-check';
-import type { 
-  ReflectionSession, 
-  ReflectionEntry,
-  LoveCategory 
-} from '../types/growth';
+import type { ReflectionSession, ReflectionEntry, LoveCategory } from '../types/growth';
 import { StorageService } from './storageService';
 import { createProgressService, ProgressService } from './progressService';
 
@@ -57,10 +53,12 @@ class TestStorage implements StorageService {
 const loveCategoryArb = fc.constantFrom(...LOVE_CATEGORIES);
 
 // Valid date arbitrary that filters out NaN dates
-const validDateArb = fc.date({
-  min: new Date('2020-01-01'),
-  max: new Date('2030-12-31'),
-}).filter(d => !isNaN(d.getTime()));
+const validDateArb = fc
+  .date({
+    min: new Date('2020-01-01'),
+    max: new Date('2030-12-31'),
+  })
+  .filter(d => !isNaN(d.getTime()));
 
 const reflectionEntryArb: fc.Arbitrary<ReflectionEntry> = fc.record({
   id: fc.uuid(),
@@ -68,7 +66,6 @@ const reflectionEntryArb: fc.Arbitrary<ReflectionEntry> = fc.record({
   response: fc.string({ minLength: 1 }),
   createdAt: validDateArb.map(d => d.toISOString()),
 });
-
 
 const reflectionSessionArb: fc.Arbitrary<ReflectionSession> = fc.record({
   id: fc.uuid(),
@@ -108,9 +105,7 @@ describe('Storage Round-Trip Properties', () => {
           const progress = progressService.getProgress();
 
           // Verify the completion exists with matching data
-          const completion = progress.completedChallenges.find(
-            c => c.challengeId === challengeId
-          );
+          const completion = progress.completedChallenges.find(c => c.challengeId === challengeId);
 
           expect(completion).toBeDefined();
           expect(completion!.challengeId).toBe(challengeId);
@@ -122,7 +117,6 @@ describe('Storage Round-Trip Properties', () => {
     );
   });
 
-
   /**
    * **Feature: practical-love-growth, Property 6: Reflection session round-trip**
    * *For any* ReflectionSession saved via saveReflectionSession, retrieving progress
@@ -131,7 +125,7 @@ describe('Storage Round-Trip Properties', () => {
    */
   it('Property 6: Reflection session round-trip', () => {
     fc.assert(
-      fc.property(reflectionSessionArb, (session) => {
+      fc.property(reflectionSessionArb, session => {
         // Clear storage before each test
         testStorage.clear();
         progressService = createProgressService(testStorage);
@@ -143,9 +137,7 @@ describe('Storage Round-Trip Properties', () => {
         const progress = progressService.getProgress();
 
         // Verify the session exists with all entries preserved
-        const savedSession = progress.reflectionSessions.find(
-          s => s.id === session.id
-        );
+        const savedSession = progress.reflectionSessions.find(s => s.id === session.id);
 
         expect(savedSession).toBeDefined();
         expect(savedSession!.id).toBe(session.id);
@@ -209,7 +201,7 @@ describe('Storage Round-Trip Properties', () => {
    */
   it('Property 9: Journey progress persistence', () => {
     fc.assert(
-      fc.property(fc.uuid(), (journeyId) => {
+      fc.property(fc.uuid(), journeyId => {
         // Clear storage before each test
         testStorage.clear();
         progressService = createProgressService(testStorage);

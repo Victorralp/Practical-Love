@@ -1,37 +1,41 @@
 import { useState } from 'react';
-import { Menu, X, Heart, ChevronDown } from 'lucide-react';
+import { Menu, X, ChevronDown } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
+import Logo from './Logo';
 
 export default function Header() {
+  // State management for mobile menu and dropdowns
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const location = useLocation();
 
+  // Navigation menu structure
   const navItems = [
     { name: 'Home', href: '/' },
-    { 
-      name: 'About Love', 
+    {
+      name: 'About Love',
       href: '#',
       children: [
         { name: 'Characteristics of Love', href: '/characteristics' },
         { name: 'Bible Passages', href: '/bible-passages' },
         { name: 'Mission & Vision', href: '/mission-vision' },
-      ]
+      ],
     },
-    { 
-      name: 'Resources', 
+    {
+      name: 'Resources',
       href: '#',
       children: [
         { name: 'Yellow Card', href: '/yellow-card' },
         { name: 'Yellow Card Series', href: '/yellow-card-series' },
         { name: 'Publications', href: '/publications' },
-      ]
+      ],
     },
     { name: 'Love in Nigeria', href: '/love-in-nigeria' },
     { name: 'Growth', href: '/growth' },
     { name: 'Contact', href: '/contact' },
   ];
 
+  // Helper functions for navigation state
   const isActive = (href: string) => location.pathname === href;
 
   const isChildActive = (children?: { href: string }[]) => {
@@ -39,23 +43,22 @@ export default function Header() {
     return children.some(child => location.pathname === child.href);
   };
 
+  // Main render function
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center">
-              <Heart className="w-5 h-5 text-white fill-current" />
-            </div>
-            <span className="text-xl font-serif font-bold text-red-800">
+          <Link to="/" className="flex items-center gap-3">
+            <Logo className="w-11 h-11" />
+            <span className="text-xl font-serif font-bold text-red-800 tracking-tight">
               Practical Love
             </span>
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-1">
-            {navItems.map((item) => (
+            {navItems.map(item => (
               <div key={item.name} className="relative group">
                 {item.children ? (
                   <>
@@ -78,7 +81,7 @@ export default function Header() {
                       onMouseEnter={() => setOpenDropdown(item.name)}
                       onMouseLeave={() => setOpenDropdown(null)}
                     >
-                      {item.children.map((child) => (
+                      {item.children.map(child => (
                         <Link
                           key={child.name}
                           to={child.href}
@@ -107,10 +110,7 @@ export default function Header() {
                 )}
               </div>
             ))}
-            <Link
-              to="/love-challenge"
-              className="ml-2 px-5 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white text-sm font-semibold rounded-lg hover:from-red-600 hover:to-red-700 transition-all shadow-sm"
-            >
+            <Link to="/love-challenge" className="ml-2 btn-brand text-sm px-5 py-2.5">
               Start Challenge
             </Link>
           </nav>
@@ -130,24 +130,24 @@ export default function Header() {
       {isMenuOpen && (
         <div className="lg:hidden bg-white border-t border-gray-100">
           <div className="px-4 py-3 space-y-1">
-            {navItems.map((item) => (
+            {navItems.map(item => (
               <div key={item.name}>
                 {item.children ? (
                   <>
                     <button
                       onClick={() => setOpenDropdown(openDropdown === item.name ? null : item.name)}
                       className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium ${
-                        isChildActive(item.children)
-                          ? 'text-red-600 bg-red-50'
-                          : 'text-gray-700'
+                        isChildActive(item.children) ? 'text-red-600 bg-red-50' : 'text-gray-700'
                       }`}
                     >
                       {item.name}
-                      <ChevronDown className={`w-4 h-4 transition-transform ${openDropdown === item.name ? 'rotate-180' : ''}`} />
+                      <ChevronDown
+                        className={`w-4 h-4 transition-transform ${openDropdown === item.name ? 'rotate-180' : ''}`}
+                      />
                     </button>
                     {openDropdown === item.name && (
                       <div className="ml-4 mt-1 space-y-1">
-                        {item.children.map((child) => (
+                        {item.children.map(child => (
                           <Link
                             key={child.name}
                             to={child.href}
@@ -182,7 +182,7 @@ export default function Header() {
             <Link
               to="/love-challenge"
               onClick={() => setIsMenuOpen(false)}
-              className="block mt-3 px-4 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white text-sm font-semibold rounded-lg text-center"
+              className="block mt-3 btn-brand text-sm py-3"
             >
               Start the 30-Day Challenge
             </Link>
@@ -192,3 +192,4 @@ export default function Header() {
     </header>
   );
 }
+

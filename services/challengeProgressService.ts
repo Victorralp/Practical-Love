@@ -55,12 +55,9 @@ export function saveChallengeProgress(progress: ChallengeProgress): void {
 /**
  * Toggle a day's completion status
  */
-export function toggleDayCompletion(
-  progress: ChallengeProgress,
-  day: number
-): ChallengeProgress {
+export function toggleDayCompletion(progress: ChallengeProgress, day: number): ChallengeProgress {
   const completedDays = progress.completedDays.includes(day)
-    ? progress.completedDays.filter((d) => d !== day)
+    ? progress.completedDays.filter(d => d !== day)
     : [...progress.completedDays, day].sort((a, b) => a - b);
 
   return {
@@ -73,10 +70,7 @@ export function toggleDayCompletion(
 /**
  * Update the current day being viewed
  */
-export function updateCurrentDay(
-  progress: ChallengeProgress,
-  day: number
-): ChallengeProgress {
+export function updateCurrentDay(progress: ChallengeProgress, day: number): ChallengeProgress {
   return {
     ...progress,
     currentDay: Math.max(1, Math.min(30, day)),

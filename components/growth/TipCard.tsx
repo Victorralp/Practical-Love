@@ -18,10 +18,10 @@ export default function TipCard({ tip }: TipCardProps) {
 
   const getCategoryColor = (category: string) => {
     const colors: Record<string, string> = {
-      patience: 'bg-blue-100 text-blue-800 border-blue-200',
-      kindness: 'bg-green-100 text-green-800 border-green-200',
-      forgiveness: 'bg-purple-100 text-purple-800 border-purple-200',
-      empathy: 'bg-pink-100 text-pink-800 border-pink-200',
+      patience: 'bg-orange-100 text-red-800 border-orange-200',
+      kindness: 'bg-amber-100 text-orange-800 border-amber-200',
+      forgiveness: 'bg-orange-100 text-red-800 border-orange-200',
+      empathy: 'bg-red-100 text-red-800 border-red-200',
       humility: 'bg-amber-100 text-amber-800 border-amber-200',
       trust: 'bg-cyan-100 text-cyan-800 border-cyan-200',
       perseverance: 'bg-orange-100 text-orange-800 border-orange-200',
@@ -32,14 +32,13 @@ export default function TipCard({ tip }: TipCardProps) {
   return (
     <div className="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl">
       {/* Header - Always visible */}
-      <div
-        className="p-6 cursor-pointer"
-        onClick={() => setIsExpanded(!isExpanded)}
-      >
+      <div className="p-6 cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <div className="flex items-center gap-3 mb-2">
-              <span className={`px-3 py-1 rounded-full text-sm font-medium border ${getCategoryColor(tip.category)}`}>
+              <span
+                className={`px-3 py-1 rounded-full text-sm font-medium border ${getCategoryColor(tip.category)}`}
+              >
                 {tip.category.charAt(0).toUpperCase() + tip.category.slice(1)}
               </span>
               <span className="flex items-center text-sm text-gray-500">
@@ -77,7 +76,7 @@ export default function TipCard({ tip }: TipCardProps) {
                   Practical Exercises
                 </h4>
                 <div className="space-y-4">
-                  {tip.exercises.map((exercise) => (
+                  {tip.exercises.map(exercise => (
                     <ExerciseSteps key={exercise.id} exercise={exercise} />
                   ))}
                 </div>
@@ -89,3 +88,5 @@ export default function TipCard({ tip }: TipCardProps) {
     </div>
   );
 }
+
+

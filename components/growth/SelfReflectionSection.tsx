@@ -6,7 +6,12 @@
 
 import { useState, useMemo } from 'react';
 import { Sparkles, History, Play, CheckCircle, RotateCcw } from 'lucide-react';
-import type { ReflectionPrompt as ReflectionPromptType, ReflectionEntry, ReflectionSession, LoveCategory } from '../../types/growth';
+import type {
+  ReflectionPrompt as ReflectionPromptType,
+  ReflectionEntry,
+  ReflectionSession,
+  LoveCategory,
+} from '../../types/growth';
 import { reflectionPrompts } from '../../data/reflectionPrompts';
 import { progressService } from '../../services/progressService';
 import ReflectionPrompt from './ReflectionPrompt';
@@ -40,13 +45,12 @@ export default function SelfReflectionSection() {
   // Get user progress for history
   const progress = progressService.getProgress();
 
-
   // Filter prompts by category
   const filteredPrompts = useMemo(() => {
     if (selectedCategory === 'all') {
       return reflectionPrompts;
     }
-    return reflectionPrompts.filter((p) => p.category === selectedCategory);
+    return reflectionPrompts.filter(p => p.category === selectedCategory);
   }, [selectedCategory]);
 
   // Get random prompts for a session (3 prompts)
@@ -129,10 +133,10 @@ export default function SelfReflectionSection() {
             </label>
             <select
               value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value as LoveCategory | 'all')}
+              onChange={e => setSelectedCategory(e.target.value as LoveCategory | 'all')}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
             >
-              {categoryOptions.map((option) => (
+              {categoryOptions.map(option => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
@@ -176,7 +180,6 @@ export default function SelfReflectionSection() {
     );
   }
 
-
   // Session View
   if (viewMode === 'session' && currentPrompt) {
     return (
@@ -204,10 +207,7 @@ export default function SelfReflectionSection() {
         </div>
 
         {/* Current Prompt */}
-        <ReflectionPrompt
-          prompt={currentPrompt}
-          onSubmit={handlePromptSubmit}
-        />
+        <ReflectionPrompt prompt={currentPrompt} onSubmit={handlePromptSubmit} />
       </div>
     );
   }
@@ -218,8 +218,8 @@ export default function SelfReflectionSection() {
       <div className="space-y-6">
         {/* Success Header */}
         <div className="bg-white rounded-xl shadow-lg p-8 text-center">
-          <div className="bg-green-100 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-            <CheckCircle className="w-8 h-8 text-green-600" />
+          <div className="bg-amber-100 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+            <CheckCircle className="w-8 h-8 text-orange-600" />
           </div>
           <h3 className="text-2xl font-bold text-gray-800 mb-2">Session Complete!</h3>
           <p className="text-gray-600 mb-6">
@@ -230,24 +230,20 @@ export default function SelfReflectionSection() {
         {/* Summary of Responses */}
         <div className="space-y-4">
           {sessionEntries.map((entry, index) => {
-            const prompt = sessionPrompts.find((p) => p.id === entry.promptId);
+            const prompt = sessionPrompts.find(p => p.id === entry.promptId);
             return (
               <div key={entry.id} className="bg-white rounded-xl shadow-lg p-6">
                 <div className="mb-3">
                   <span className="text-xs font-medium text-gray-400 uppercase">
                     Question {index + 1}
                   </span>
-                  <p className="text-gray-700 font-medium mt-1">
-                    {prompt?.question}
-                  </p>
+                  <p className="text-gray-700 font-medium mt-1">{prompt?.question}</p>
                 </div>
                 <div className="bg-orange-50 rounded-lg p-4 border border-orange-100">
                   <span className="text-xs font-medium text-orange-600 uppercase">
                     Your Response
                   </span>
-                  <p className="text-gray-700 mt-1 whitespace-pre-wrap">
-                    {entry.response}
-                  </p>
+                  <p className="text-gray-700 mt-1 whitespace-pre-wrap">{entry.response}</p>
                 </div>
               </div>
             );
@@ -294,10 +290,7 @@ export default function SelfReflectionSection() {
         </button>
 
         {/* History Component */}
-        <ReflectionHistory
-          sessions={progress.reflectionSessions}
-          prompts={reflectionPrompts}
-        />
+        <ReflectionHistory sessions={progress.reflectionSessions} prompts={reflectionPrompts} />
 
         {/* Start New Session Button */}
         <div className="text-center">
@@ -315,3 +308,4 @@ export default function SelfReflectionSection() {
 
   return null;
 }
+

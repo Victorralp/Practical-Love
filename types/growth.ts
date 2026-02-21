@@ -4,13 +4,13 @@
  */
 
 // Love Category Types
-export type LoveCategory = 
-  | 'patience' 
-  | 'kindness' 
-  | 'forgiveness' 
-  | 'empathy' 
-  | 'humility' 
-  | 'trust' 
+export type LoveCategory =
+  | 'patience'
+  | 'kindness'
+  | 'forgiveness'
+  | 'empathy'
+  | 'humility'
+  | 'trust'
   | 'perseverance';
 
 // Challenge Types

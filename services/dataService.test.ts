@@ -23,13 +23,16 @@ const LOVE_CATEGORIES: LoveCategory[] = [
 const loveCategoryArb = fc.constantFrom(...LOVE_CATEGORIES);
 
 // Date arbitrary that generates valid dates (filter out NaN dates)
-const dateArb = fc.date({
-  min: new Date('2020-01-01'),
-  max: new Date('2030-12-31'),
-}).filter(d => !isNaN(d.getTime()));
+const dateArb = fc
+  .date({
+    min: new Date('2020-01-01'),
+    max: new Date('2030-12-31'),
+  })
+  .filter(d => !isNaN(d.getTime()));
 
 // Search query arbitrary - non-empty strings that could match content
-const searchQueryArb = fc.string({ minLength: 1, maxLength: 20 })
+const searchQueryArb = fc
+  .string({ minLength: 1, maxLength: 20 })
   .filter(s => /^[a-zA-Z ]+$/.test(s) && s.trim().length > 0);
 
 describe('DataService Properties', () => {
@@ -47,7 +50,7 @@ describe('DataService Properties', () => {
    */
   it('Property 2: Daily challenge determinism', () => {
     fc.assert(
-      fc.property(dateArb, (date) => {
+      fc.property(dateArb, date => {
         // Call getDailyChallenge multiple times with the same date
         const challenge1 = dataService.getDailyChallenge(date);
         const challenge2 = dataService.getDailyChallenge(date);
@@ -63,7 +66,6 @@ describe('DataService Properties', () => {
     );
   });
 
-
   /**
    * **Feature: practical-love-growth, Property 4: Growth tips category validity**
    * *For any* GrowthTip object, its category SHALL be one of the valid LoveCategory
@@ -72,7 +74,7 @@ describe('DataService Properties', () => {
    */
   it('Property 4: Growth tips category validity', () => {
     fc.assert(
-      fc.property(loveCategoryArb, (category) => {
+      fc.property(loveCategoryArb, category => {
         // Get tips filtered by category
         const filteredTips = dataService.getTipsByCategory(category);
 
@@ -106,7 +108,7 @@ describe('DataService Properties', () => {
     const allPrompts = dataService.getReflectionPrompts();
 
     fc.assert(
-      fc.property(searchQueryArb, (query) => {
+      fc.property(searchQueryArb, query => {
         const results = dataService.searchContent(query);
         const lowerQuery = query.toLowerCase().trim();
 
@@ -117,7 +119,7 @@ describe('DataService Properties', () => {
           if (result.type === 'challenge') {
             const challenge = allChallenges.find(c => c.id === result.id);
             if (challenge) {
-              foundMatch = 
+              foundMatch =
                 challenge.title.toLowerCase().includes(lowerQuery) ||
                 challenge.description.toLowerCase().includes(lowerQuery) ||
                 challenge.actionStep.toLowerCase().includes(lowerQuery);
@@ -125,7 +127,7 @@ describe('DataService Properties', () => {
           } else if (result.type === 'tip') {
             const tip = allTips.find(t => t.id === result.id);
             if (tip) {
-              foundMatch = 
+              foundMatch =
                 tip.title.toLowerCase().includes(lowerQuery) ||
                 tip.summary.toLowerCase().includes(lowerQuery) ||
                 tip.content.toLowerCase().includes(lowerQuery);
@@ -133,14 +135,14 @@ describe('DataService Properties', () => {
           } else if (result.type === 'journey') {
             const journey = allJourneys.find(j => j.id === result.id);
             if (journey) {
-              foundMatch = 
+              foundMatch =
                 journey.title.toLowerCase().includes(lowerQuery) ||
                 journey.description.toLowerCase().includes(lowerQuery);
             }
           } else if (result.type === 'reflection') {
             const prompt = allPrompts.find(p => p.id === result.id);
             if (prompt) {
-              foundMatch = 
+              foundMatch =
                 prompt.question.toLowerCase().includes(lowerQuery) ||
                 (prompt.followUp?.toLowerCase().includes(lowerQuery) ?? false);
             }
@@ -169,7 +171,7 @@ describe('DataService Properties', () => {
    */
   it('Filtered tips are subset of all tips', () => {
     fc.assert(
-      fc.property(loveCategoryArb, (category) => {
+      fc.property(loveCategoryArb, category => {
         const allTips = dataService.getTips();
         const filteredTips = dataService.getTipsByCategory(category);
 

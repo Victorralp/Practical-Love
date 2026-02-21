@@ -5,7 +5,7 @@
  */
 
 import { useState, useMemo, useCallback } from 'react';
-import { Map as MapIcon, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Map as MapIcon, ArrowLeft, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
 import JourneyCard from './JourneyCard';
 import JourneyStep from './JourneyStep';
 import { dataService } from '../../services/dataService';
@@ -27,7 +27,7 @@ export default function GuidedJourneysSection() {
   // Get progress for all journeys
   const journeyProgressMap = useMemo(() => {
     const map = new Map<string, JourneyProgress | null>();
-    journeys.forEach((journey) => {
+    journeys.forEach(journey => {
       map.set(journey.id, progressService.getJourneyProgress(journey.id));
     });
     return map;
@@ -50,7 +50,7 @@ export default function GuidedJourneysSection() {
     progressService.startJourney(journeyId);
     setActiveJourneyId(journeyId);
     setViewMode('active');
-    setRefreshKey((k) => k + 1);
+    setRefreshKey(k => k + 1);
   }, []);
 
   // Handle continuing a journey
@@ -64,7 +64,7 @@ export default function GuidedJourneysSection() {
     (stepIndex: number) => {
       if (!activeJourneyId) return;
       progressService.completeJourneyStep(activeJourneyId, stepIndex);
-      setRefreshKey((k) => k + 1);
+      setRefreshKey(k => k + 1);
     },
     [activeJourneyId]
   );
@@ -102,19 +102,18 @@ export default function GuidedJourneysSection() {
             {journeys.length} journey{journeys.length !== 1 ? 's' : ''} available
           </span>
         </div>
-        {Array.from(journeyProgressMap.values()).filter((p) => p && !p.completedAt).length > 0 && (
-          <div className="bg-blue-50 rounded-lg px-4 py-2 border border-blue-100">
-            <span className="text-sm text-blue-700">
-              {Array.from(journeyProgressMap.values()).filter((p) => p && !p.completedAt).length} in
+        {Array.from(journeyProgressMap.values()).filter(p => p && !p.completedAt).length > 0 && (
+          <div className="bg-orange-50 rounded-lg px-4 py-2 border border-orange-100">
+            <span className="text-sm text-red-700">
+              {Array.from(journeyProgressMap.values()).filter(p => p && !p.completedAt).length} in
               progress
             </span>
           </div>
         )}
-        {Array.from(journeyProgressMap.values()).filter((p) => p?.completedAt).length > 0 && (
-          <div className="bg-green-50 rounded-lg px-4 py-2 border border-green-100">
-            <span className="text-sm text-green-700">
-              {Array.from(journeyProgressMap.values()).filter((p) => p?.completedAt).length}{' '}
-              completed
+        {Array.from(journeyProgressMap.values()).filter(p => p?.completedAt).length > 0 && (
+          <div className="bg-amber-50 rounded-lg px-4 py-2 border border-amber-100">
+            <span className="text-sm text-orange-700">
+              {Array.from(journeyProgressMap.values()).filter(p => p?.completedAt).length} completed
             </span>
           </div>
         )}
@@ -123,7 +122,7 @@ export default function GuidedJourneysSection() {
       {/* Journeys Grid */}
       {journeys.length > 0 ? (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {journeys.map((journey) => (
+          {journeys.map(journey => (
             <JourneyCard
               key={journey.id}
               journey={journey}
@@ -157,7 +156,6 @@ export default function GuidedJourneysSection() {
       </div>
     </>
   );
-
 
   // Render active journey view
   const renderActiveView = () => {
@@ -197,7 +195,7 @@ export default function GuidedJourneysSection() {
             <div className="w-full bg-gray-200 rounded-full h-3">
               <div
                 className={`h-3 rounded-full transition-all duration-500 ${
-                  isJourneyCompleted ? 'bg-green-500' : 'bg-orange-500'
+                  isJourneyCompleted ? 'bg-amber-500' : 'bg-orange-500'
                 }`}
                 style={{ width: `${(completedSteps / totalSteps) * 100}%` }}
               />
@@ -205,9 +203,10 @@ export default function GuidedJourneysSection() {
           </div>
 
           {isJourneyCompleted && (
-            <div className="mt-4 bg-green-50 rounded-lg p-4 border border-green-200">
-              <p className="text-green-700 font-medium text-center">
-                🎉 Congratulations! You've completed this journey!
+            <div className="mt-4 bg-amber-50 rounded-lg p-4 border border-amber-200">
+              <p className="text-orange-700 font-medium text-center inline-flex items-center justify-center gap-2 w-full">
+                <Sparkles className="w-4 h-4" />
+                Congratulations! You've completed this journey!
               </p>
             </div>
           )}
@@ -216,10 +215,13 @@ export default function GuidedJourneysSection() {
         {/* Step Navigation */}
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-lg font-semibold text-gray-800">
-            {isJourneyCompleted ? 'Review Your Journey' : `Day ${currentStepIndex + 1} of ${totalSteps}`}
+            {isJourneyCompleted
+              ? 'Review Your Journey'
+              : `Day ${currentStepIndex + 1} of ${totalSteps}`}
           </h3>
           <div className="flex items-center gap-2">
             <button
+              type="button"
               onClick={() => {
                 const newIndex = Math.max(0, currentStepIndex - 1);
                 if (activeProgress && newIndex !== currentStepIndex) {
@@ -236,6 +238,7 @@ export default function GuidedJourneysSection() {
               Step {currentStepIndex + 1}
             </span>
             <button
+              type="button"
               onClick={() => {
                 const newIndex = Math.min(totalSteps - 1, currentStepIndex + 1);
                 if (activeProgress && newIndex !== currentStepIndex) {
@@ -276,17 +279,17 @@ export default function GuidedJourneysSection() {
                     isCurrentStep
                       ? 'bg-orange-50 border border-orange-200'
                       : isStepCompleted
-                      ? 'bg-green-50 border border-green-200'
-                      : 'bg-gray-50 border border-gray-200'
+                        ? 'bg-amber-50 border border-amber-200'
+                        : 'bg-gray-50 border border-gray-200'
                   }`}
                 >
                   <div
                     className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium mr-3 ${
                       isStepCompleted
-                        ? 'bg-green-500 text-white'
+                        ? 'bg-amber-500 text-white'
                         : isCurrentStep
-                        ? 'bg-orange-500 text-white'
-                        : 'bg-gray-300 text-gray-600'
+                          ? 'bg-orange-500 text-white'
+                          : 'bg-gray-300 text-gray-600'
                     }`}
                   >
                     {isStepCompleted ? '✓' : index + 1}
@@ -294,7 +297,11 @@ export default function GuidedJourneysSection() {
                   <div className="flex-1">
                     <p
                       className={`font-medium ${
-                        isStepCompleted ? 'text-green-700' : isCurrentStep ? 'text-orange-700' : 'text-gray-600'
+                        isStepCompleted
+                          ? 'text-orange-700'
+                          : isCurrentStep
+                            ? 'text-orange-700'
+                            : 'text-gray-600'
                       }`}
                     >
                       Day {step.dayNumber}: {step.title}
@@ -320,3 +327,5 @@ export default function GuidedJourneysSection() {
     </section>
   );
 }
+
+

@@ -30,10 +30,10 @@ export default function JourneyStep({
     <div
       className={`bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 ${
         isCompleted
-          ? 'ring-2 ring-green-500 bg-green-50'
+          ? 'ring-2 ring-amber-500 bg-amber-50'
           : isActive
-          ? 'ring-2 ring-orange-500'
-          : 'opacity-75'
+            ? 'ring-2 ring-orange-500'
+            : 'opacity-75'
       }`}
     >
       <div className="p-6">
@@ -43,17 +43,13 @@ export default function JourneyStep({
             <div
               className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${
                 isCompleted
-                  ? 'bg-green-500 text-white'
+                  ? 'bg-amber-500 text-white'
                   : isActive
-                  ? 'bg-orange-500 text-white'
-                  : 'bg-gray-200 text-gray-600'
+                    ? 'bg-orange-500 text-white'
+                    : 'bg-gray-200 text-gray-600'
               }`}
             >
-              {isCompleted ? (
-                <CheckCircle className="w-5 h-5" />
-              ) : (
-                step.dayNumber
-              )}
+              {isCompleted ? <CheckCircle className="w-5 h-5" /> : step.dayNumber}
             </div>
             <div>
               <div className="flex items-center text-sm text-gray-500 mb-1">
@@ -64,7 +60,7 @@ export default function JourneyStep({
             </div>
           </div>
           {isCompleted && (
-            <span className="flex items-center text-sm text-green-600 font-medium">
+            <span className="flex items-center text-sm text-orange-600 font-medium">
               <CheckCircle className="w-4 h-4 mr-1" />
               Completed
             </span>
@@ -77,12 +73,12 @@ export default function JourneyStep({
 
           {/* Scripture Reference */}
           {step.scriptureReference && (
-            <div className="bg-blue-50 rounded-lg p-4 border border-blue-100">
-              <h4 className="font-semibold text-blue-800 mb-2 flex items-center">
+            <div className="bg-orange-50 rounded-lg p-4 border border-orange-100">
+              <h4 className="font-semibold text-red-800 mb-2 flex items-center">
                 <BookOpen className="w-4 h-4 mr-2" />
                 Scripture
               </h4>
-              <p className="text-blue-700 text-sm italic">{step.scriptureReference}</p>
+              <p className="text-red-700 text-sm italic">{step.scriptureReference}</p>
             </div>
           )}
 
@@ -99,7 +95,7 @@ export default function JourneyStep({
           {isActive && !isCompleted && onComplete && (
             <button
               onClick={handleComplete}
-              className="w-full bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-lg font-medium transition-colors flex items-center justify-center"
+              className="w-full bg-amber-600 hover:bg-amber-700 text-white py-3 px-4 rounded-lg font-medium transition-colors flex items-center justify-center"
             >
               <CheckCircle className="w-5 h-5 mr-2" />
               Mark Day {step.dayNumber} Complete
@@ -107,7 +103,7 @@ export default function JourneyStep({
           )}
 
           {isCompleted && (
-            <div className="text-center py-2 text-green-600 font-medium">
+            <div className="text-center py-2 text-orange-600 font-medium">
               ✓ You've completed this day's journey
             </div>
           )}
@@ -116,3 +112,5 @@ export default function JourneyStep({
     </div>
   );
 }
+
+

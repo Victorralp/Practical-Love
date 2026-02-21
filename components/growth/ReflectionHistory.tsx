@@ -40,13 +40,12 @@ export default function ReflectionHistory({ sessions, prompts }: ReflectionHisto
   };
 
   const getPromptById = (promptId: string): ReflectionPrompt | undefined => {
-    return prompts.find((p) => p.id === promptId);
+    return prompts.find(p => p.id === promptId);
   };
 
   const toggleSession = (sessionId: string) => {
     setExpandedSession(expandedSession === sessionId ? null : sessionId);
   };
-
 
   if (sortedSessions.length === 0) {
     return (
@@ -68,7 +67,7 @@ export default function ReflectionHistory({ sessions, prompts }: ReflectionHisto
         <span className="text-sm text-gray-500">({sortedSessions.length} sessions)</span>
       </div>
 
-      {sortedSessions.map((session) => (
+      {sortedSessions.map(session => (
         <div
           key={session.id}
           className="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300"
@@ -84,9 +83,7 @@ export default function ReflectionHistory({ sessions, prompts }: ReflectionHisto
                   <MessageSquare className="w-5 h-5 text-orange-600" />
                 </div>
                 <div>
-                  <p className="font-medium text-gray-800">
-                    {formatDate(session.completedAt)}
-                  </p>
+                  <p className="font-medium text-gray-800">{formatDate(session.completedAt)}</p>
                   <p className="text-sm text-gray-500 flex items-center gap-1">
                     <Clock className="w-3 h-3" />
                     {formatTime(session.completedAt)} • {session.entries.length} reflection
@@ -110,10 +107,7 @@ export default function ReflectionHistory({ sessions, prompts }: ReflectionHisto
               {session.entries.map((entry, index) => {
                 const prompt = getPromptById(entry.promptId);
                 return (
-                  <div
-                    key={entry.id}
-                    className="bg-white rounded-lg p-4 border border-gray-200"
-                  >
+                  <div key={entry.id} className="bg-white rounded-lg p-4 border border-gray-200">
                     <div className="mb-3">
                       <span className="text-xs font-medium text-gray-400 uppercase">
                         Question {index + 1}
@@ -126,9 +120,7 @@ export default function ReflectionHistory({ sessions, prompts }: ReflectionHisto
                       <span className="text-xs font-medium text-orange-600 uppercase">
                         Your Response
                       </span>
-                      <p className="text-gray-700 mt-1 whitespace-pre-wrap">
-                        {entry.response}
-                      </p>
+                      <p className="text-gray-700 mt-1 whitespace-pre-wrap">{entry.response}</p>
                     </div>
                   </div>
                 );
@@ -140,3 +132,4 @@ export default function ReflectionHistory({ sessions, prompts }: ReflectionHisto
     </div>
   );
 }
+

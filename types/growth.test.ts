@@ -70,7 +70,7 @@ function isValidExercise(exercise: Exercise): boolean {
   return (
     exercise.title.length > 0 &&
     exercise.steps.length > 0 &&
-    exercise.steps.every((step) => step.length > 0)
+    exercise.steps.every(step => step.length > 0)
   );
 }
 
@@ -92,7 +92,7 @@ describe('Data Model Validation Properties', () => {
    */
   it('Property 1: Challenge data completeness', () => {
     fc.assert(
-      fc.property(challengeArb, (challenge) => {
+      fc.property(challengeArb, challenge => {
         expect(isValidChallenge(challenge)).toBe(true);
         expect(challenge.title.length).toBeGreaterThan(0);
         expect(challenge.description.length).toBeGreaterThan(0);
@@ -111,11 +111,11 @@ describe('Data Model Validation Properties', () => {
    */
   it('Property 5: Exercise steps completeness', () => {
     fc.assert(
-      fc.property(exerciseArb, (exercise) => {
+      fc.property(exerciseArb, exercise => {
         expect(isValidExercise(exercise)).toBe(true);
         expect(exercise.title.length).toBeGreaterThan(0);
         expect(exercise.steps.length).toBeGreaterThan(0);
-        expect(exercise.steps.every((step) => step.length > 0)).toBe(true);
+        expect(exercise.steps.every(step => step.length > 0)).toBe(true);
       }),
       { numRuns: 100 }
     );
@@ -129,7 +129,7 @@ describe('Data Model Validation Properties', () => {
    */
   it('Property 7: Journey data completeness', () => {
     fc.assert(
-      fc.property(journeyArb, (journey) => {
+      fc.property(journeyArb, journey => {
         expect(isValidJourney(journey)).toBe(true);
         expect(journey.title.length).toBeGreaterThan(0);
         expect(journey.description.length).toBeGreaterThan(0);

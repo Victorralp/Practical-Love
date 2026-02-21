@@ -1,56 +1,67 @@
 import { useState } from 'react';
-import { Mail, Phone, MapPin, Send, Heart } from 'lucide-react';
+import { Mail, Phone, MapPin, Send } from 'lucide-react';
+import { PageHero, PageShell } from '../components/ui';
+import Logo from '../components/Logo';
 
 const CONTACT_EMAIL = 'info@example.com'; // Change this to your actual email
 
 export default function ContactPage() {
+  // Form state management
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     subject: '',
-    message: ''
+    message: '',
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  // Handle form input changes
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Helper function to get subject label
   const getSubjectLabel = (value: string) => {
     const subjects: Record<string, string> = {
-      'general': 'General Inquiry',
-      'partnership': 'Partnership Opportunity',
+      general: 'General Inquiry',
+      partnership: 'Partnership Opportunity',
       'yellow-card': 'Yellow Card Request',
-      'testimony': 'Share a Testimony',
-      'prayer': 'Prayer Request',
-      'other': 'Other'
+      testimony: 'Share a Testimony',
+      prayer: 'Prayer Request',
+      other: 'Other',
     };
     return subjects[value] || value;
   };
 
+  // Handle form submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const subject = encodeURIComponent(`[Practical Love] ${getSubjectLabel(formData.subject)}`);
     const body = encodeURIComponent(
       `Name: ${formData.name}\n` +
-      `Email: ${formData.email}\n` +
-      `Subject: ${getSubjectLabel(formData.subject)}\n\n` +
-      `Message:\n${formData.message}`
+        `Email: ${formData.email}\n` +
+        `Subject: ${getSubjectLabel(formData.subject)}\n\n` +
+        `Message:\n${formData.message}`
     );
-    
+
     window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
   };
 
+  // Main render function
   return (
-    <section className="min-h-screen bg-gradient-to-b from-orange-50 to-white">
-      <div className="max-w-7xl mx-auto px-6 md:px-12 py-12">
-        {/* Header */}
-        <div className="text-center mb-10">
-          <h1 className="text-4xl md:text-5xl font-serif text-red-800 mb-4">Contact Us</h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            Have questions about the Love Ministry? Want to partner with us? We'd love to hear from you.
-          </p>
-        </div>
+    <PageShell>
+      <PageHero
+        badge={
+          <>
+            <Logo className="w-4 h-4" />
+            Get In Touch
+          </>
+        }
+        title="Contact Us"
+        subtitle="Have questions about the Love Ministry? Want to partner with us? We’d love to hear from you."
+      />
 
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Contact Info */}
@@ -62,7 +73,12 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-800">Email</h3>
-                  <p className="text-gray-600 text-sm">info@example.com</p>
+                  <a
+                    href={`mailto:${CONTACT_EMAIL}`}
+                    className="text-gray-600 text-sm hover:text-red-700 hover:underline underline-offset-4"
+                  >
+                    {CONTACT_EMAIL}
+                  </a>
                 </div>
               </div>
             </div>
@@ -74,15 +90,20 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-800">Phone</h3>
-                  <p className="text-gray-600 text-sm">+234 000 000 0000</p>
+                  <a
+                    href="tel:+2340000000000"
+                    className="text-gray-600 text-sm hover:text-red-700 hover:underline underline-offset-4"
+                  >
+                    +234 000 000 0000
+                  </a>
                 </div>
               </div>
             </div>
 
             <div className="bg-white rounded-xl p-6 shadow-md border border-orange-100">
               <div className="flex items-center gap-4 mb-4">
-                <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                  <MapPin className="w-6 h-6 text-green-600" />
+                <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center">
+                  <MapPin className="w-6 h-6 text-orange-600" />
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-800">Location</h3>
@@ -93,11 +114,13 @@ export default function ContactPage() {
 
             {/* Ministry Hours */}
             <div className="bg-gradient-to-br from-red-600 to-red-700 rounded-xl p-6 text-white">
-              <Heart className="w-8 h-8 mb-3 text-red-200" />
+              <Logo className="w-8 h-8 mb-3" />
               <h3 className="font-semibold mb-2">Ministry Hours</h3>
               <p className="text-red-100 text-sm">
-                Monday - Friday: 9am - 5pm<br />
-                Saturday: 10am - 2pm<br />
+                Monday - Friday: 9am - 5pm
+                <br />
+                Saturday: 10am - 2pm
+                <br />
                 Sunday: Closed
               </p>
             </div>
@@ -189,7 +212,7 @@ export default function ContactPage() {
             </div>
           </div>
         </div>
-      </div>
-    </section>
+    </PageShell>
   );
 }
+

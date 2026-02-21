@@ -92,3 +92,7 @@ jspm_packages/
 # Temporary folders
 tmp/
 temp/
+# Firebase service account keys
+*.json
+firebase-key.json
+service-account-key.json

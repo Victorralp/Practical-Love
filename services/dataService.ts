@@ -53,7 +53,6 @@ class DataServiceImpl implements DataService {
     return challenges[index];
   }
 
-
   /**
    * Get all challenges
    */

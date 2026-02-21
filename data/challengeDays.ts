@@ -1,7 +1,7 @@
 /**
  * 30-Day Love Challenge Daily Content
  * Requirements: 4.3
- * 
+ *
  * Each day maps to a specific love characteristic from 1 Corinthians 13
  * with reflection questions to guide daily practice.
  */
@@ -72,7 +72,7 @@ export const challengeDays: ChallengeDay[] = [
     reflectionQuestions: [
       'Did I compare myself to others today? How did it affect me?',
       'What blessings in my own life am I grateful for?',
-      'How can I celebrate others\' success without feeling diminished?',
+      "How can I celebrate others' success without feeling diminished?",
     ],
   },
   {
@@ -95,7 +95,7 @@ export const challengeDays: ChallengeDay[] = [
     scriptureReference: '1 Corinthians 13:4e',
     reflectionQuestions: [
       'Was there a moment today when pride affected my interactions?',
-      'How can I put others\' needs before my own ego?',
+      "How can I put others' needs before my own ego?",
       'What would it look like to approach tomorrow with genuine humility?',
     ],
   },
@@ -121,7 +121,7 @@ export const challengeDays: ChallengeDay[] = [
     reflectionQuestions: [
       'Did I prioritize my own interests over others today?',
       'What opportunity did I have to put someone else first?',
-      'How can I be more aware of others\' needs tomorrow?',
+      "How can I be more aware of others' needs tomorrow?",
     ],
   },
   {
@@ -155,7 +155,7 @@ export const challengeDays: ChallengeDay[] = [
     focus: 'Choosing good over evil',
     scriptureReference: '1 Corinthians 13:6a',
     reflectionQuestions: [
-      'Did I take pleasure in anyone\'s misfortune today?',
+      "Did I take pleasure in anyone's misfortune today?",
       'How do I respond when I hear negative news about others?',
       'What does it mean to actively reject evil in my daily life?',
     ],
@@ -255,7 +255,7 @@ export const challengeDays: ChallengeDay[] = [
     reflectionQuestions: [
       'Who is the most difficult person for me to be patient with?',
       'How can I extend patience to them specifically?',
-      'What does God\'s patience with me teach me about patience with others?',
+      "What does God's patience with me teach me about patience with others?",
     ],
   },
   {
@@ -274,7 +274,7 @@ export const challengeDays: ChallengeDay[] = [
     day: 20,
     characteristic: 'Love does not envy',
     characteristicNumber: 3,
-    focus: 'Celebrating others\' success genuinely',
+    focus: "Celebrating others' success genuinely",
     scriptureReference: '1 Corinthians 13:4c',
     reflectionQuestions: [
       'Can I genuinely celebrate when others succeed?',
@@ -313,7 +313,7 @@ export const challengeDays: ChallengeDay[] = [
     focus: 'Speaking well of others always',
     scriptureReference: '1 Corinthians 13:5a',
     reflectionQuestions: [
-      'Did I speak positively about others today, even when they weren\'t present?',
+      "Did I speak positively about others today, even when they weren't present?",
       'How can I build others up with my words?',
       'What would change if I only spoke honorably about everyone?',
     ],
@@ -350,7 +350,7 @@ export const challengeDays: ChallengeDay[] = [
     focus: 'Complete forgiveness',
     scriptureReference: '1 Corinthians 13:5d',
     reflectionQuestions: [
-      'Is there an old wound I\'m still carrying?',
+      "Is there an old wound I'm still carrying?",
       'What would complete forgiveness look like in that situation?',
       'How can I release the past and embrace freedom?',
     ],
@@ -364,7 +364,7 @@ export const challengeDays: ChallengeDay[] = [
     reflectionQuestions: [
       'Am I living authentically in all areas of my life?',
       'Where might I be hiding behind a mask?',
-      'How can I embrace truth even when it\'s uncomfortable?',
+      "How can I embrace truth even when it's uncomfortable?",
     ],
   },
   {
@@ -409,7 +409,7 @@ export const challengeDays: ChallengeDay[] = [
  * Get the challenge day content for a specific day
  */
 export function getChallengeDayContent(day: number): ChallengeDay | undefined {
-  return challengeDays.find((d) => d.day === day);
+  return challengeDays.find(d => d.day === day);
 }
 
 /**
@@ -425,11 +425,13 @@ export function getDayCharacteristic(day: number): string {
  */
 export function getDayReflectionQuestions(day: number): string[] {
   const dayContent = getChallengeDayContent(day);
-  return dayContent?.reflectionQuestions ?? [
-    'How did I demonstrate this characteristic today?',
-    'In what moment could I have shown more love?',
-    'What is one way I will practice this tomorrow?',
-  ];
+  return (
+    dayContent?.reflectionQuestions ?? [
+      'How did I demonstrate this characteristic today?',
+      'In what moment could I have shown more love?',
+      'What is one way I will practice this tomorrow?',
+    ]
+  );
 }
 
 export default challengeDays;

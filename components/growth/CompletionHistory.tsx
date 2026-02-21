@@ -5,7 +5,12 @@
  */
 
 import { CheckCircle, BookOpen, MapPin, Calendar } from 'lucide-react';
-import type { UserProgress, ChallengeCompletion, ReflectionSession, JourneyProgress } from '../../types/growth';
+import type {
+  UserProgress,
+  ChallengeCompletion,
+  ReflectionSession,
+  JourneyProgress,
+} from '../../types/growth';
 
 interface CompletionHistoryProps {
   progress: UserProgress;
@@ -67,7 +72,7 @@ function buildTimelineItems(progress: UserProgress): TimelineItem[] {
       description: completion.reflection || undefined,
       date: completion.completedAt,
       icon: <CheckCircle className="w-5 h-5" />,
-      color: 'bg-green-500',
+      color: 'bg-amber-500',
     });
   });
 
@@ -80,7 +85,7 @@ function buildTimelineItems(progress: UserProgress): TimelineItem[] {
       description: `${session.entries.length} reflection${session.entries.length !== 1 ? 's' : ''} completed`,
       date: session.completedAt,
       icon: <BookOpen className="w-5 h-5" />,
-      color: 'bg-purple-500',
+      color: 'bg-orange-500',
     });
   });
 
@@ -119,20 +124,22 @@ export default function CompletionHistory({ progress, maxItems = 10 }: Completio
         <Calendar className="w-5 h-5 mr-2 text-gray-500" />
         Recent Activity
       </h3>
-      
+
       <div className="relative">
         {/* Timeline line */}
         <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-200" />
-        
+
         {/* Timeline items */}
         <div className="space-y-4">
-          {timelineItems.map((item) => (
+          {timelineItems.map(item => (
             <div key={item.id} className="relative flex items-start gap-4 pl-10">
               {/* Timeline dot */}
-              <div className={`absolute left-2 w-5 h-5 rounded-full ${item.color} text-white flex items-center justify-center -translate-x-1/2`}>
+              <div
+                className={`absolute left-2 w-5 h-5 rounded-full ${item.color} text-white flex items-center justify-center -translate-x-1/2`}
+              >
                 {item.icon}
               </div>
-              
+
               {/* Content */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between gap-2">
@@ -152,3 +159,5 @@ export default function CompletionHistory({ progress, maxItems = 10 }: Completio
     </div>
   );
 }
+
+

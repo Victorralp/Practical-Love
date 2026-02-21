@@ -24,10 +24,10 @@ export default function ReflectionPrompt({
 
   const getCategoryColor = (category: string) => {
     const colors: Record<string, string> = {
-      patience: 'bg-blue-100 text-blue-800 border-blue-200',
-      kindness: 'bg-green-100 text-green-800 border-green-200',
-      forgiveness: 'bg-purple-100 text-purple-800 border-purple-200',
-      empathy: 'bg-pink-100 text-pink-800 border-pink-200',
+      patience: 'bg-orange-100 text-red-800 border-orange-200',
+      kindness: 'bg-amber-100 text-orange-800 border-amber-200',
+      forgiveness: 'bg-orange-100 text-red-800 border-orange-200',
+      empathy: 'bg-red-100 text-red-800 border-red-200',
       humility: 'bg-amber-100 text-amber-800 border-amber-200',
       trust: 'bg-cyan-100 text-cyan-800 border-cyan-200',
       perseverance: 'bg-orange-100 text-orange-800 border-orange-200',
@@ -48,7 +48,9 @@ export default function ReflectionPrompt({
       {/* Header */}
       <div className="p-6 border-b border-gray-100">
         <div className="flex items-center gap-3 mb-4">
-          <span className={`px-3 py-1 rounded-full text-sm font-medium border ${getCategoryColor(prompt.category)}`}>
+          <span
+            className={`px-3 py-1 rounded-full text-sm font-medium border ${getCategoryColor(prompt.category)}`}
+          >
             {prompt.category.charAt(0).toUpperCase() + prompt.category.slice(1)}
           </span>
           <span className="flex items-center text-sm text-gray-500">
@@ -58,16 +60,14 @@ export default function ReflectionPrompt({
         </div>
 
         {/* Main Question */}
-        <h3 className="text-xl font-semibold text-gray-800 leading-relaxed">
-          {prompt.question}
-        </h3>
+        <h3 className="text-xl font-semibold text-gray-800 leading-relaxed">{prompt.question}</h3>
       </div>
 
       {/* Response Input */}
       <div className="p-6 space-y-4">
         <textarea
           value={response}
-          onChange={(e) => setResponse(e.target.value)}
+          onChange={e => setResponse(e.target.value)}
           placeholder="Take your time to reflect and write your thoughts..."
           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 resize-none min-h-[150px]"
           rows={5}
@@ -111,3 +111,5 @@ export default function ReflectionPrompt({
     </div>
   );
 }
+
+

@@ -11,8 +11,10 @@ export const tips: GrowthTip[] = [
     id: 'tip-patience-1',
     title: 'The Art of Waiting Well',
     category: 'patience',
-    summary: 'Learn to transform frustrating wait times into opportunities for growth and reflection.',
-    content: 'Patience is not simply waiting—it is how we behave while waiting. When we learn to wait well, we develop inner strength and emotional resilience. The key is to shift our perspective from seeing delays as obstacles to viewing them as opportunities.',
+    summary:
+      'Learn to transform frustrating wait times into opportunities for growth and reflection.',
+    content:
+      'Patience is not simply waiting—it is how we behave while waiting. When we learn to wait well, we develop inner strength and emotional resilience. The key is to shift our perspective from seeing delays as obstacles to viewing them as opportunities.',
     exercises: [
       {
         id: 'ex-patience-1a',
@@ -22,9 +24,9 @@ export const tips: GrowthTip[] = [
           'Notice your surroundings - what do you see, hear, smell?',
           'Think of one thing you are grateful for in this moment',
           'If frustration arises, acknowledge it without judgment',
-          'Return your focus to your breath until the wait is over'
+          'Return your focus to your breath until the wait is over',
         ],
-        duration: '5-10 minutes'
+        duration: '5-10 minutes',
       },
       {
         id: 'ex-patience-1b',
@@ -33,18 +35,19 @@ export const tips: GrowthTip[] = [
           'At the end of each day, write down one situation where you had to wait',
           'Note how you felt during the wait',
           'Reflect on what you could have done differently',
-          'Write one positive thing that came from the waiting period'
+          'Write one positive thing that came from the waiting period',
         ],
-        duration: '10 minutes daily'
-      }
-    ]
+        duration: '10 minutes daily',
+      },
+    ],
   },
   {
     id: 'tip-patience-2',
     title: 'Responding vs Reacting',
     category: 'patience',
     summary: 'Develop the skill of thoughtful response rather than impulsive reaction.',
-    content: 'There is a crucial difference between reacting and responding. Reacting is instant and emotional; responding is thoughtful and intentional. By creating space between stimulus and response, we gain control over our actions and build stronger relationships.',
+    content:
+      'There is a crucial difference between reacting and responding. Reacting is instant and emotional; responding is thoughtful and intentional. By creating space between stimulus and response, we gain control over our actions and build stronger relationships.',
     exercises: [
       {
         id: 'ex-patience-2a',
@@ -53,19 +56,21 @@ export const tips: GrowthTip[] = [
           'S - Stop what you are doing when triggered',
           'T - Take a breath and feel your feet on the ground',
           'O - Observe your thoughts and emotions without judgment',
-          'P - Proceed with awareness and intention'
+          'P - Proceed with awareness and intention',
         ],
-        duration: '1-2 minutes per situation'
-      }
-    ]
+        duration: '1-2 minutes per situation',
+      },
+    ],
   },
   // Kindness Tips
   {
     id: 'tip-kindness-1',
     title: 'Small Acts, Big Impact',
     category: 'kindness',
-    summary: 'Discover how small, consistent acts of kindness can transform relationships and communities.',
-    content: 'Kindness does not require grand gestures. Often, the smallest acts of consideration have the greatest impact. A smile, a word of encouragement, or a moment of attention can change someone\'s entire day. The key is consistency and genuine intention.',
+    summary:
+      'Discover how small, consistent acts of kindness can transform relationships and communities.',
+    content:
+      "Kindness does not require grand gestures. Often, the smallest acts of consideration have the greatest impact. A smile, a word of encouragement, or a moment of attention can change someone's entire day. The key is consistency and genuine intention.",
     exercises: [
       {
         id: 'ex-kindness-1a',
@@ -75,18 +80,19 @@ export const tips: GrowthTip[] = [
           'Look for opportunities throughout the day - hold doors, offer compliments, help with tasks',
           'Notice how the recipient responds',
           'Reflect on how performing kindness made you feel',
-          'Share one act of kindness with a friend or family member'
+          'Share one act of kindness with a friend or family member',
         ],
-        duration: 'Throughout the day'
-      }
-    ]
+        duration: 'Throughout the day',
+      },
+    ],
   },
   {
     id: 'tip-kindness-2',
     title: 'The Language of Appreciation',
     category: 'kindness',
     summary: 'Learn to express genuine appreciation in ways that resonate with others.',
-    content: 'Everyone wants to feel valued and appreciated. Learning to express appreciation effectively is a powerful form of kindness. The key is being specific, sincere, and timely with your words of affirmation.',
+    content:
+      'Everyone wants to feel valued and appreciated. Learning to express appreciation effectively is a powerful form of kindness. The key is being specific, sincere, and timely with your words of affirmation.',
     exercises: [
       {
         id: 'ex-kindness-2a',
@@ -96,11 +102,11 @@ export const tips: GrowthTip[] = [
           'Write down three specific things they have done that you appreciate',
           'Explain how their actions affected you',
           'Express your gratitude in a handwritten note or heartfelt message',
-          'Deliver the message in person if possible'
+          'Deliver the message in person if possible',
         ],
-        duration: '20-30 minutes'
-      }
-    ]
+        duration: '20-30 minutes',
+      },
+    ],
   },
   // Forgiveness Tips
   {
@@ -108,7 +114,8 @@ export const tips: GrowthTip[] = [
     title: 'Understanding Forgiveness',
     category: 'forgiveness',
     summary: 'Learn what forgiveness truly means and why it is essential for your own wellbeing.',
-    content: 'Forgiveness is not about excusing harmful behavior or forgetting what happened. It is about releasing the hold that resentment has on your heart. When we forgive, we free ourselves from the burden of bitterness and open space for healing and growth.',
+    content:
+      'Forgiveness is not about excusing harmful behavior or forgetting what happened. It is about releasing the hold that resentment has on your heart. When we forgive, we free ourselves from the burden of bitterness and open space for healing and growth.',
     exercises: [
       {
         id: 'ex-forgiveness-1a',
@@ -119,11 +126,11 @@ export const tips: GrowthTip[] = [
           'Acknowledge the hurt you experienced without minimizing it',
           'Consider what holding onto this resentment costs you',
           'Speak aloud or write: "I choose to release this burden for my own peace"',
-          'Repeat this process as needed - forgiveness is often a journey, not a single event'
+          'Repeat this process as needed - forgiveness is often a journey, not a single event',
         ],
-        duration: '15-20 minutes'
-      }
-    ]
+        duration: '15-20 minutes',
+      },
+    ],
   },
   // Empathy Tips
   {
@@ -131,7 +138,8 @@ export const tips: GrowthTip[] = [
     title: 'Deep Listening',
     category: 'empathy',
     summary: 'Master the art of listening to understand rather than to respond.',
-    content: 'True empathy begins with listening—not just to words, but to emotions, body language, and what is left unsaid. When we listen deeply, we create a safe space for others to be vulnerable and feel truly understood.',
+    content:
+      'True empathy begins with listening—not just to words, but to emotions, body language, and what is left unsaid. When we listen deeply, we create a safe space for others to be vulnerable and feel truly understood.',
     exercises: [
       {
         id: 'ex-empathy-1a',
@@ -142,18 +150,19 @@ export const tips: GrowthTip[] = [
           'Reflect back what you hear: "It sounds like you are feeling..."',
           'Ask clarifying questions: "Can you tell me more about that?"',
           'Resist the urge to share your own similar experiences',
-          'Thank the person for sharing with you'
+          'Thank the person for sharing with you',
         ],
-        duration: '10-15 minutes per conversation'
-      }
-    ]
+        duration: '10-15 minutes per conversation',
+      },
+    ],
   },
   {
     id: 'tip-empathy-2',
     title: 'Perspective Taking',
     category: 'empathy',
-    summary: 'Develop the ability to see situations from others\' points of view.',
-    content: 'Empathy requires us to step outside our own experience and imagine life from another\'s perspective. This does not mean agreeing with everyone, but understanding why they might think, feel, or act as they do.',
+    summary: "Develop the ability to see situations from others' points of view.",
+    content:
+      "Empathy requires us to step outside our own experience and imagine life from another's perspective. This does not mean agreeing with everyone, but understanding why they might think, feel, or act as they do.",
     exercises: [
       {
         id: 'ex-empathy-2a',
@@ -163,11 +172,11 @@ export const tips: GrowthTip[] = [
           'Write down what you know about their background, experiences, and circumstances',
           'Consider what fears, hopes, or needs might drive their behavior',
           'Imagine explaining their perspective to someone else as if you were them',
-          'Notice if your feelings toward this person shift'
+          'Notice if your feelings toward this person shift',
         ],
-        duration: '15-20 minutes'
-      }
-    ]
+        duration: '15-20 minutes',
+      },
+    ],
   },
   // Humility Tips
   {
@@ -175,7 +184,8 @@ export const tips: GrowthTip[] = [
     title: 'The Strength of Humility',
     category: 'humility',
     summary: 'Discover how humility is not weakness but a source of genuine strength.',
-    content: 'Humility is not thinking less of yourself—it is thinking of yourself less. It means having an accurate view of your strengths and weaknesses, being open to learning, and valuing others\' contributions. Humble people are often the most confident because they do not need external validation.',
+    content:
+      "Humility is not thinking less of yourself—it is thinking of yourself less. It means having an accurate view of your strengths and weaknesses, being open to learning, and valuing others' contributions. Humble people are often the most confident because they do not need external validation.",
     exercises: [
       {
         id: 'ex-humility-1a',
@@ -185,11 +195,11 @@ export const tips: GrowthTip[] = [
           'Reflect: "Did I acknowledge someone else\'s contribution or idea?"',
           'Consider: "Did I admit when I did not know something?"',
           'Note one thing you learned from someone else today',
-          'Identify one area where you can grow or improve'
+          'Identify one area where you can grow or improve',
         ],
-        duration: '5-10 minutes daily'
-      }
-    ]
+        duration: '5-10 minutes daily',
+      },
+    ],
   },
   // Trust Tips
   {
@@ -197,7 +207,8 @@ export const tips: GrowthTip[] = [
     title: 'Building Trust Through Consistency',
     category: 'trust',
     summary: 'Learn how small, consistent actions build deep trust over time.',
-    content: 'Trust is built in drops and lost in buckets. It is the accumulation of small, consistent actions over time that creates deep trust. Being reliable, keeping confidences, and following through on commitments are the building blocks of trustworthy relationships.',
+    content:
+      'Trust is built in drops and lost in buckets. It is the accumulation of small, consistent actions over time that creates deep trust. Being reliable, keeping confidences, and following through on commitments are the building blocks of trustworthy relationships.',
     exercises: [
       {
         id: 'ex-trust-1a',
@@ -208,18 +219,19 @@ export const tips: GrowthTip[] = [
           'Evaluate: Have you been consistent in keeping this commitment?',
           'If not, identify what has prevented you from following through',
           'Create a specific plan to improve your reliability with each person',
-          'Follow up with them to acknowledge any past inconsistencies'
+          'Follow up with them to acknowledge any past inconsistencies',
         ],
-        duration: '20-30 minutes'
-      }
-    ]
+        duration: '20-30 minutes',
+      },
+    ],
   },
   {
     id: 'tip-trust-2',
     title: 'Vulnerability and Trust',
     category: 'trust',
     summary: 'Understand how appropriate vulnerability deepens trust in relationships.',
-    content: 'Trust grows when we allow ourselves to be seen—imperfections and all. Sharing our struggles, fears, and failures with safe people creates connection and invites others to do the same. Vulnerability is not weakness; it is the birthplace of trust.',
+    content:
+      'Trust grows when we allow ourselves to be seen—imperfections and all. Sharing our struggles, fears, and failures with safe people creates connection and invites others to do the same. Vulnerability is not weakness; it is the birthplace of trust.',
     exercises: [
       {
         id: 'ex-trust-2a',
@@ -230,11 +242,11 @@ export const tips: GrowthTip[] = [
           'Start small—share something mildly vulnerable first',
           'Notice how they respond and how you feel',
           'Gradually increase vulnerability as trust builds',
-          'Reciprocate when they share vulnerably with you'
+          'Reciprocate when they share vulnerably with you',
         ],
-        duration: 'Ongoing practice'
-      }
-    ]
+        duration: 'Ongoing practice',
+      },
+    ],
   },
   // Perseverance Tips
   {
@@ -242,7 +254,8 @@ export const tips: GrowthTip[] = [
     title: 'The Power of Persistence',
     category: 'perseverance',
     summary: 'Develop mental resilience to keep going when things get difficult.',
-    content: 'Perseverance is not about never falling—it is about getting up every time you fall. It is the quiet determination to keep moving forward despite obstacles, setbacks, and discouragement. This quality is developed through practice and intentional mindset shifts.',
+    content:
+      'Perseverance is not about never falling—it is about getting up every time you fall. It is the quiet determination to keep moving forward despite obstacles, setbacks, and discouragement. This quality is developed through practice and intentional mindset shifts.',
     exercises: [
       {
         id: 'ex-perseverance-1a',
@@ -253,18 +266,19 @@ export const tips: GrowthTip[] = [
           'Ask: "What can I learn from this situation?"',
           'Ask: "How might this challenge make me stronger?"',
           'Rewrite your thoughts with a growth mindset',
-          'Identify one small step you can take today despite the obstacle'
+          'Identify one small step you can take today despite the obstacle',
         ],
-        duration: '15-20 minutes'
-      }
-    ]
+        duration: '15-20 minutes',
+      },
+    ],
   },
   {
     id: 'tip-perseverance-2',
     title: 'Celebrating Small Wins',
     category: 'perseverance',
     summary: 'Learn to recognize and celebrate progress to maintain motivation.',
-    content: 'Long journeys are completed one step at a time. Recognizing and celebrating small wins along the way provides the motivation to keep going. This is not about lowering standards but about acknowledging progress and building momentum.',
+    content:
+      'Long journeys are completed one step at a time. Recognizing and celebrating small wins along the way provides the motivation to keep going. This is not about lowering standards but about acknowledging progress and building momentum.',
     exercises: [
       {
         id: 'ex-perseverance-2a',
@@ -274,12 +288,12 @@ export const tips: GrowthTip[] = [
           'Break it down into small, measurable milestones',
           'Each day, write down one small step you took toward your goal',
           'Celebrate each milestone, no matter how small',
-          'When you face setbacks, review your progress to remember how far you have come'
+          'When you face setbacks, review your progress to remember how far you have come',
         ],
-        duration: '5-10 minutes daily'
-      }
-    ]
-  }
+        duration: '5-10 minutes daily',
+      },
+    ],
+  },
 ];
 
 export default tips;

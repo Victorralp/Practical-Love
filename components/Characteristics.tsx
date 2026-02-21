@@ -24,38 +24,41 @@ export default function Characteristics() {
   const characteristics = [
     {
       icon: <Sprout className="w-8 h-8" />,
-      title: "Endures long and",
-      description: "is patient and kind"
+      title: 'Endures long and',
+      description: 'is patient and kind',
     },
     {
       icon: <Bird className="w-8 h-8" />,
-      title: "Is never envious or",
-      description: "boils over with jealousy"
+      title: 'Is never envious or',
+      description: 'boils over with jealousy',
     },
     {
       icon: <Scale className="w-8 h-8" />,
-      title: "Is not boastful",
-      description: "or vainglorious"
+      title: 'Is not boastful',
+      description: 'or vainglorious',
     },
     {
       icon: <Handshake className="w-8 h-8" />,
-      title: "Does not display",
-      description: "itself haughtily"
+      title: 'Does not display',
+      description: 'itself haughtily',
     },
     {
       icon: <Crown className="w-8 h-8" />,
-      title: "Is not conceited",
-      description: "(arrogant and inflated with pride)"
+      title: 'Is not conceited',
+      description: '(arrogant and inflated with pride)',
     },
     {
       icon: <Zap className="w-8 h-8" />,
-      title: "Is not rude",
-      description: "or unmannerly"
-    }
+      title: 'Is not rude',
+      description: 'or unmannerly',
+    },
   ];
 
   return (
-    <section id="characteristics" className="py-20 px-6 bg-gradient-to-b from-orange-50 to-yellow-100">
+    <section
+      id="characteristics"
+      className="py-20 px-6 bg-gradient-to-b from-orange-50 to-yellow-100"
+    >
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-serif text-red-800 mb-6">
@@ -77,3 +80,4 @@ export default function Characteristics() {
     </section>
   );
 }
+
