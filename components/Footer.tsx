@@ -90,6 +90,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link to="/donate" className="text-orange-100 hover:text-white transition-colors">
+                  Donate
+                </Link>
+              </li>
+              <li>
                 <Link to="/contact" className="text-orange-100 hover:text-white transition-colors">
                   Contact
                 </Link>
@@ -104,7 +109,12 @@ export default function Footer() {
                 <div className="w-9 h-9 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center">
                   <Mail className="w-4 h-4 text-orange-200" />
                 </div>
-                <span>practicallove.logosrhema.org.ng</span>
+                <a
+                  href="mailto:logosrhema842@gmail.com"
+                  className="hover:text-white hover:underline underline-offset-4 transition-colors"
+                >
+                  logosrhema842@gmail.com
+                </a>
               </div>
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center">
@@ -151,15 +161,15 @@ export default function Footer() {
         <div className="pt-6 border-t border-white/20 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <p className="text-orange-100 text-sm">© 2024 Practical Love. All rights reserved.</p>
           <div className="flex items-center gap-5 text-sm">
-            <a href="#" className="text-orange-100 hover:text-white transition-colors">
+            <Link to="/privacy-policy" className="text-orange-100 hover:text-white transition-colors">
               Privacy Policy
-            </a>
-            <a href="#" className="text-orange-100 hover:text-white transition-colors">
+            </Link>
+            <Link to="/terms-of-service" className="text-orange-100 hover:text-white transition-colors">
               Terms of Service
-            </a>
-            <a href="#" className="text-orange-100 hover:text-white transition-colors">
+            </Link>
+            <Link to="/cookie-policy" className="text-orange-100 hover:text-white transition-colors">
               Cookie Policy
-            </a>
+            </Link>
           </div>
         </div>
       </div>

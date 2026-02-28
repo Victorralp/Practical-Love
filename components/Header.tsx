@@ -32,6 +32,7 @@ export default function Header() {
     },
     { name: 'Love in Nigeria', href: '/love-in-nigeria' },
     { name: 'Growth', href: '/growth' },
+    { name: 'Donate', href: '/donate' },
     { name: 'Contact', href: '/contact' },
   ];
 

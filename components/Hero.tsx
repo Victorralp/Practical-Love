@@ -82,14 +82,17 @@ export default function Hero() {
                   <br />
                   <span className="font-semibold text-orange-200">
                     The only sure way God can answer your prayer is at the family level
-                  </span>{' '}
-                  — not in your church, not in the mosque, and not at the herbalist shrine. Why at
-                  the family level? Because the scripture says:{' '}
+                  </span>
+                  , not in your church, not in the mosque, and not at the herbalist shrine. Why the
+                  family level? Because Scripture says:{' '}
                   <span className="italic text-orange-200">
                     "Where two or three are gathered in my name, there am I among them"
                   </span>{' '}
-                  (Matthew 18:20). Once daddy and mommy are children of God, the Holy Spirit's power
-                  is in the family.
+                  (Matthew 18:20). In the home, pretense does not last. Children, from early years
+                  through their teens, are like chameleons: they absorb what parents say and what
+                  they do, both in public and in private. A child is often the reflection of the
+                  parent. So when daddy and mommy become true children of God, the power of the Holy
+                  Spirit begins to shape the whole family.
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-4">
@@ -108,13 +111,13 @@ export default function Hero() {
                 </div>
               </div>
 
-              {/* Family Love Image (desktop) */}
-              <div className="hidden lg:block justify-self-end">
-                <div className="overflow-hidden rounded-2xl shadow-2xl border-4 border-white/20">
+              {/* Family Love Image */}
+              <div className="justify-self-center lg:justify-self-end mt-6 lg:mt-0">
+                <div className="overflow-hidden rounded-2xl shadow-2xl border-4 border-white/20 bg-white/10">
                   <img
-                    src="/love-hero-v2.png"
+                    src="/love-hero.png"
                     alt="Family embracing in warm light"
-                    className="w-[420px] xl:w-[480px] h-auto object-cover opacity-90 hover:opacity-100 transition-opacity duration-500"
+                    className="w-[320px] sm:w-[420px] lg:w-[520px] xl:w-[600px] h-auto object-cover opacity-95 hover:opacity-100 transition-all duration-500"
                   />
                 </div>
               </div>

@@ -18,6 +18,10 @@ import ContactPage from './pages/ContactPage';
 import TestimoniesPage from './pages/TestimoniesPage';
 import CloudinaryDemoPage from './pages/CloudinaryDemoPage';
 import EnvTestPage from './pages/EnvTestPage';
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
+import TermsOfServicePage from './pages/TermsOfServicePage';
+import CookiePolicyPage from './pages/CookiePolicyPage';
+import DonationPage from './pages/DonationPage';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -52,6 +56,10 @@ export default function App() {
           <Route path="/testimonies" element={<TestimoniesPage />} />
           <Route path="/cloudinary-demo" element={<CloudinaryDemoPage />} />
           <Route path="/env-test" element={<EnvTestPage />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+          <Route path="/terms-of-service" element={<TermsOfServicePage />} />
+          <Route path="/cookie-policy" element={<CookiePolicyPage />} />
+          <Route path="/donate" element={<DonationPage />} />
         </Routes>
       </main>
       <Footer />

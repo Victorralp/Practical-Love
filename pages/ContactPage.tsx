@@ -3,7 +3,13 @@ import { Mail, Phone, MapPin, Send } from 'lucide-react';
 import { PageHero, PageShell } from '../components/ui';
 import Logo from '../components/Logo';
 
-const CONTACT_EMAIL = 'info@example.com'; // Change this to your actual email
+const CONTACT_EMAIL = 'logosrhema842@gmail.com';
+const WEB3FORMS_ENDPOINT = 'https://api.web3forms.com/submit';
+
+type SubmitState = {
+  status: 'idle' | 'success' | 'error';
+  message: string;
+};
 
 export default function ContactPage() {
   // Form state management
@@ -13,12 +19,17 @@ export default function ContactPage() {
     subject: '',
     message: '',
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitState, setSubmitState] = useState<SubmitState>({ status: 'idle', message: '' });
 
   // Handle form input changes
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (submitState.status !== 'idle') {
+      setSubmitState({ status: 'idle', message: '' });
+    }
   };
 
   // Helper function to get subject label
@@ -35,18 +46,60 @@ export default function ContactPage() {
   };
 
   // Handle form submission
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const subject = encodeURIComponent(`[Practical Love] ${getSubjectLabel(formData.subject)}`);
-    const body = encodeURIComponent(
-      `Name: ${formData.name}\n` +
-        `Email: ${formData.email}\n` +
-        `Subject: ${getSubjectLabel(formData.subject)}\n\n` +
-        `Message:\n${formData.message}`
-    );
+    const accessKey = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY;
+    if (!accessKey) {
+      setSubmitState({
+        status: 'error',
+        message: 'Contact form is not configured yet. Please add VITE_WEB3FORMS_ACCESS_KEY.',
+      });
+      return;
+    }
 
-    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
+    setIsSubmitting(true);
+    setSubmitState({ status: 'idle', message: '' });
+
+    try {
+      const response = await fetch(WEB3FORMS_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          access_key: accessKey,
+          name: formData.name,
+          email: formData.email,
+          subject: `[Practical Love] ${getSubjectLabel(formData.subject)}`,
+          message: formData.message,
+          from_name: 'Practical Love Website',
+          replyto: formData.email,
+          botcheck: '',
+        }),
+      });
+
+      const result = (await response.json()) as { success?: boolean; message?: string };
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || 'Unable to send message right now.');
+      }
+
+      setSubmitState({
+        status: 'success',
+        message: 'Your message has been sent successfully. We will get back to you soon.',
+      });
+      setFormData({
+        name: '',
+        email: '',
+        subject: '',
+        message: '',
+      });
+    } catch (error) {
+      setSubmitState({
+        status: 'error',
+        message: error instanceof Error ? error.message : 'Something went wrong. Please try again.',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // Main render function
@@ -130,6 +183,18 @@ export default function ContactPage() {
           <div className="lg:col-span-2">
             <div className="bg-white rounded-xl shadow-md p-6 md:p-8 border border-orange-100">
               <form onSubmit={handleSubmit} className="space-y-6">
+                {submitState.status !== 'idle' ? (
+                  <div
+                    className={`rounded-xl px-4 py-3 text-sm font-medium ${
+                      submitState.status === 'success'
+                        ? 'bg-green-50 text-green-800 border border-green-200'
+                        : 'bg-red-50 text-red-800 border border-red-200'
+                    }`}
+                  >
+                    {submitState.message}
+                  </div>
+                ) : null}
+
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
                     <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
@@ -203,10 +268,11 @@ export default function ContactPage() {
 
                 <button
                   type="submit"
+                  disabled={isSubmitting}
                   className="w-full md:w-auto inline-flex items-center justify-center gap-2 bg-red-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-red-700 transition-all"
                 >
                   <Send className="w-5 h-5" />
-                  Send Message
+                  {isSubmitting ? 'Sending...' : 'Send Message'}
                 </button>
               </form>
             </div>

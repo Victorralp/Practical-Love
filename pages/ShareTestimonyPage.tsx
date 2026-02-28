@@ -13,6 +13,13 @@ import CloudinaryImageUpload from '../components/CloudinaryImageUpload';
 import { PageShell, PageHero, CTASection } from '../components/ui';
 import Logo from '../components/Logo';
 
+const WEB3FORMS_ENDPOINT = 'https://api.web3forms.com/submit';
+
+type SubmitState = {
+  status: 'idle' | 'error';
+  message: string;
+};
+
 export default function ShareTestimonyPage() {
   const [formData, setFormData] = useState({
     name: '',
@@ -28,6 +35,7 @@ export default function ShareTestimonyPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [charCount, setCharCount] = useState(0);
+  const [submitState, setSubmitState] = useState<SubmitState>({ status: 'idle', message: '' });
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -64,14 +72,56 @@ export default function ShareTestimonyPage() {
     e.preventDefault();
     if (!validateForm()) return;
 
+    const accessKey = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY;
+    if (!accessKey) {
+      setSubmitState({
+        status: 'error',
+        message: 'Submission is not configured yet. Please add VITE_WEB3FORMS_ACCESS_KEY.',
+      });
+      return;
+    }
+
     setIsSubmitting(true);
+    setSubmitState({ status: 'idle', message: '' });
 
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    try {
+      const response = await fetch(WEB3FORMS_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          access_key: accessKey,
+          subject: '[Practical Love] New Testimony Submission',
+          from_name: 'Practical Love Website',
+          replyto: formData.email,
+          name: formData.name,
+          email: formData.email,
+          role: formData.role,
+          location: formData.location || 'Not provided',
+          rating,
+          testimony: formData.testimony,
+          image_url: formData.imageUrl || 'No image provided',
+          image_public_id: formData.imagePublicId || 'N/A',
+          botcheck: '',
+        }),
+      });
 
-    console.log({ ...formData, rating, hasImage: !!formData.imageUrl, imagePublicId: formData.imagePublicId });
-    setIsSubmitted(true);
-    setIsSubmitting(false);
+      const result = (await response.json()) as { success?: boolean; message?: string };
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || 'Unable to submit testimony right now.');
+      }
+
+      setIsSubmitted(true);
+    } catch (error) {
+      setSubmitState({
+        status: 'error',
+        message:
+          error instanceof Error
+            ? error.message
+            : 'Submission failed. Please try again in a moment.',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (isSubmitted) {
@@ -143,6 +193,12 @@ export default function ShareTestimonyPage() {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
+              {submitState.status === 'error' ? (
+                <div className="rounded-xl px-4 py-3 text-sm font-medium bg-red-50 text-red-800 border border-red-200">
+                  {submitState.message}
+                </div>
+              ) : null}
+
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Your Name *</label>

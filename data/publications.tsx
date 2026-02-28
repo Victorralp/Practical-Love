@@ -19,7 +19,7 @@ export const publications: PublicationProps[] = [
   {
     id: 'love-nigerians',
     title: 'Love Nigerians Or Live On Curses',
-    author: 'Moses Remi Owoeyemi',
+    author: 'MOSES ADEREMI OWOEYE',
     description:
       'Discover the solution to corruption and the path to national blessing through the practical application of love.',
     type: 'Book',
@@ -44,7 +44,7 @@ export const publications: PublicationProps[] = [
             </div>
             <div className="pt-8 border-t border-gray-200 mt-8">
               <p className="font-bold text-gray-900">
-                MOSES REMI OWOEYEMI, B.Sc. (Lagos), M.A.Th. (California, USA)
+                MOSES ADEREMI OWOEYE, MB;BS (Lagos), M.A.Th. (California, USA)
               </p>
               <p className="text-gray-600 uppercase text-sm mt-1">
                 Logos-Rhema Human Services Inc. (USA & Nigeria)
@@ -385,7 +385,7 @@ export const publications: PublicationProps[] = [
   {
     id: 'love-americans',
     title: 'Love Americans Or Live On Curses',
-    author: 'Moses Remi Owoeyemi',
+    author: 'MOSES ADEREMI OWOEYE',
     description:
       'Discover the solution to division and the path to national blessing through the practical application of love in America.',
     type: 'Book',
@@ -409,7 +409,7 @@ export const publications: PublicationProps[] = [
             </div>
             <div className="pt-8 border-t border-gray-200 mt-8">
               <p className="font-bold text-gray-900">
-                MOSES REMI OWOEYEMI, B.Sc. (Lagos), M.A.Th. (California, USA)
+                MOSES ADEREMI OWOEYE, MB;BS (Lagos), M.A.Th. (California, USA)
               </p>
               <p className="text-gray-600 uppercase text-sm mt-1">
                 Logos-Rhema Human Services Inc. (USA & Nigeria)
