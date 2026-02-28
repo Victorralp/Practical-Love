@@ -1,14 +1,53 @@
 import { useMemo, useState } from 'react';
-import { HeartHandshake, ShieldCheck, Wallet, ArrowRight } from 'lucide-react';
+import {
+  HeartHandshake,
+  ShieldCheck,
+  Wallet,
+  ArrowRight,
+  Landmark,
+  Smartphone,
+  CheckCircle2,
+} from 'lucide-react';
 import { PageHero, PageShell } from '../components/ui';
 import Logo from '../components/Logo';
 
 const PRESET_AMOUNTS = [5000, 10000, 25000, 50000];
+const FUND_OPTIONS = [
+  {
+    id: 'family-outreach',
+    label: 'Family Outreach',
+    description: 'Supports marriage and parenting practical-love programs.',
+  },
+  {
+    id: 'youth-discipleship',
+    label: 'Youth Discipleship',
+    description: 'Funds youth mentoring and character training sessions.',
+  },
+  {
+    id: 'publications',
+    label: 'Publications',
+    description: 'Prints and distributes ministry resources and cards.',
+  },
+  {
+    id: 'general',
+    label: 'General Ministry',
+    description: 'Used where support is needed most across operations.',
+  },
+] as const;
+
+const PAYMENT_METHODS = [
+  { id: 'card', label: 'Card', icon: <Wallet className="w-4 h-4" /> },
+  { id: 'bank-transfer', label: 'Bank Transfer', icon: <Landmark className="w-4 h-4" /> },
+  { id: 'ussd', label: 'USSD / Mobile', icon: <Smartphone className="w-4 h-4" /> },
+] as const;
 
 export default function DonationPage() {
   const [frequency, setFrequency] = useState<'one-time' | 'monthly'>('one-time');
   const [amount, setAmount] = useState<number>(PRESET_AMOUNTS[1]);
   const [customAmount, setCustomAmount] = useState('');
+  const [fund, setFund] = useState<(typeof FUND_OPTIONS)[number]['id']>('general');
+  const [paymentMethod, setPaymentMethod] = useState<(typeof PAYMENT_METHODS)[number]['id']>('card');
+  const [isAnonymous, setIsAnonymous] = useState(false);
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -23,15 +62,22 @@ export default function DonationPage() {
     return amount;
   }, [amount, customAmount]);
 
+  const projectedYearly = useMemo(
+    () => (frequency === 'monthly' ? finalAmount * 12 : finalAmount),
+    [frequency, finalAmount]
+  );
+
+  const selectedFund = useMemo(() => FUND_OPTIONS.find(option => option.id === fund), [fund]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitMessage(
-      'Donation checkout is ready for backend integration. A backend developer can now connect payment processing and receipt delivery.'
+      'Donation form is ready. Backend can now connect payment checkout, webhook verification, and receipt emails.'
     );
   };
 
   return (
-    <PageShell className="bg-gradient-to-b from-red-50 via-orange-50 to-white">
+    <PageShell className="bg-gradient-to-b from-red-50 via-orange-50 to-amber-50">
       <div className="space-y-8">
         <PageHero
           badge={
@@ -42,7 +88,8 @@ export default function DonationPage() {
           }
           icon={<HeartHandshake className="w-10 h-10 text-red-700" />}
           title="Donate to Practical Love"
-          subtitle="Your giving helps us spread practical love resources, strengthen families, and equip communities across Nigeria."
+          subtitle="Your giving equips families, empowers youth, and spreads practical love resources across Nigeria."
+          className="shadow-lg"
         />
 
         <div className="grid lg:grid-cols-3 gap-6">
@@ -75,6 +122,29 @@ export default function DonationPage() {
                   >
                     Monthly
                   </button>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Give To A Specific Cause
+                </label>
+                <div className="grid md:grid-cols-2 gap-3">
+                  {FUND_OPTIONS.map(option => (
+                    <button
+                      key={option.id}
+                      type="button"
+                      onClick={() => setFund(option.id)}
+                      className={`text-left rounded-xl px-4 py-3 border-2 transition ${
+                        fund === option.id
+                          ? 'border-red-500 bg-red-50'
+                          : 'border-orange-100 hover:border-orange-200'
+                      }`}
+                    >
+                      <p className="text-sm font-semibold text-gray-800">{option.label}</p>
+                      <p className="text-xs text-gray-600 mt-1">{option.description}</p>
+                    </button>
+                  ))}
                 </div>
               </div>
 
@@ -117,6 +187,29 @@ export default function DonationPage() {
                 />
               </div>
 
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Payment Method (Placeholder)
+                </label>
+                <div className="grid md:grid-cols-3 gap-3">
+                  {PAYMENT_METHODS.map(method => (
+                    <button
+                      key={method.id}
+                      type="button"
+                      onClick={() => setPaymentMethod(method.id)}
+                      className={`rounded-xl px-4 py-3 border-2 text-sm font-semibold transition inline-flex items-center justify-center gap-2 ${
+                        paymentMethod === method.id
+                          ? 'border-red-500 bg-red-50 text-red-700'
+                          : 'border-orange-100 text-gray-700 hover:border-orange-200'
+                      }`}
+                    >
+                      {method.icon}
+                      {method.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="full-name" className="block text-sm font-semibold text-gray-700 mb-2">
@@ -126,9 +219,10 @@ export default function DonationPage() {
                     id="full-name"
                     type="text"
                     required
+                    disabled={isAnonymous}
                     value={formData.fullName}
                     onChange={e => setFormData(prev => ({ ...prev, fullName: e.target.value }))}
-                    className="w-full px-4 py-3 rounded-xl border-2 border-orange-100 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition"
+                    className="w-full px-4 py-3 rounded-xl border-2 border-orange-100 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition disabled:bg-gray-100"
                     placeholder="Your full name"
                   />
                 </div>
@@ -162,6 +256,16 @@ export default function DonationPage() {
                 />
               </div>
 
+              <label className="flex items-center gap-3 rounded-xl border border-orange-100 bg-orange-50/60 p-3 text-sm text-gray-700">
+                <input
+                  type="checkbox"
+                  checked={isAnonymous}
+                  onChange={e => setIsAnonymous(e.target.checked)}
+                  className="h-4 w-4 accent-red-600"
+                />
+                Donate anonymously (your name will not be displayed publicly).
+              </label>
+
               <div>
                 <label htmlFor="note" className="block text-sm font-semibold text-gray-700 mb-2">
                   Prayer / Support Note (Optional)
@@ -186,6 +290,10 @@ export default function DonationPage() {
                   {submitMessage}
                 </div>
               ) : null}
+
+              <p className="text-xs text-gray-500">
+                Backend TODO: connect this form to payment provider and persist donor records.
+              </p>
             </form>
           </section>
 
@@ -194,11 +302,24 @@ export default function DonationPage() {
               <h3 className="text-lg font-semibold text-red-800 mb-3">Donation Summary</h3>
               <div className="space-y-2 text-sm text-gray-700">
                 <p>
-                  <span className="font-semibold">Frequency:</span> {frequency === 'monthly' ? 'Monthly' : 'One-time'}
+                  <span className="font-semibold">Frequency:</span>{' '}
+                  {frequency === 'monthly' ? 'Monthly' : 'One-time'}
                 </p>
                 <p>
                   <span className="font-semibold">Amount:</span> NGN {finalAmount.toLocaleString()}
                 </p>
+                <p>
+                  <span className="font-semibold">Fund:</span> {selectedFund?.label}
+                </p>
+                <p>
+                  <span className="font-semibold">Method:</span>{' '}
+                  {PAYMENT_METHODS.find(item => item.id === paymentMethod)?.label}
+                </p>
+                {frequency === 'monthly' ? (
+                  <p>
+                    <span className="font-semibold">12-Month Impact:</span> NGN {projectedYearly.toLocaleString()}
+                  </p>
+                ) : null}
               </div>
             </div>
 
@@ -223,6 +344,24 @@ export default function DonationPage() {
                 This page now captures donation intent and donor details. Backend can connect
                 payment processing, transaction storage, and confirmation emails.
               </p>
+            </div>
+
+            <div className="bg-white rounded-2xl border border-orange-100 shadow-sm p-6">
+              <h3 className="text-lg font-semibold text-red-800 mb-3">What Your Gift Can Do</h3>
+              <div className="space-y-2 text-sm text-gray-700">
+                <p className="flex items-start gap-2">
+                  <CheckCircle2 className="w-4 h-4 mt-0.5 text-green-600" />
+                  NGN 5,000 can support one family resource pack.
+                </p>
+                <p className="flex items-start gap-2">
+                  <CheckCircle2 className="w-4 h-4 mt-0.5 text-green-600" />
+                  NGN 10,000 can sponsor a small-group teaching session.
+                </p>
+                <p className="flex items-start gap-2">
+                  <CheckCircle2 className="w-4 h-4 mt-0.5 text-green-600" />
+                  NGN 25,000+ can help expand community outreach coverage.
+                </p>
+              </div>
             </div>
           </aside>
         </div>
