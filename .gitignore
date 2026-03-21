@@ -94,5 +94,7 @@ tmp/
 temp/
 # Firebase service account keys
 *.json
+!data/medicine-without-medication-pages.json
+!src/seo/routes.json
 firebase-key.json
 service-account-key.json

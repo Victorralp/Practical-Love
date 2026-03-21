@@ -1,0 +1,516 @@
+[
+  {
+    "path": "/",
+    "name": "Home",
+    "title": "Practical Love | Biblical Love Ministry for Families in Nigeria",
+    "description": "Practical Love teaches biblical love through 1 Corinthians 13, family discipleship, the Yellow Card, and daily practice for homes, churches, and communities in Nigeria.",
+    "keywords": [
+      "Practical Love",
+      "biblical love ministry",
+      "1 Corinthians 13",
+      "family ministry Nigeria",
+      "Christian family discipleship",
+      "Yellow Card love ministry"
+    ],
+    "changefreq": "weekly",
+    "priority": 1,
+    "indexable": true,
+    "schemaType": "WebPage",
+    "headline": "A biblical love ministry helping families in Nigeria practice 1 Corinthians 13 through daily discipline.",
+    "qa": [
+      {
+        "question": "What is Practical Love?",
+        "answer": "Practical Love is a biblical love ministry that teaches families, churches, and communities how to practice the character of love described in 1 Corinthians 13."
+      },
+      {
+        "question": "Who is Practical Love for?",
+        "answer": "Practical Love is for individuals, couples, parents, churches, and communities that want to turn biblical love into daily behavior, especially in the home."
+      },
+      {
+        "question": "How does Practical Love teach love in practice?",
+        "answer": "The ministry uses the 17 characteristics of love, scripture passages, printable Yellow Cards, guided publications, and a 30-day love challenge to move love from theory into daily action."
+      }
+    ]
+  },
+  {
+    "path": "/about-love",
+    "name": "About Love",
+    "title": "About Practical Love | What Biblical Love Looks Like in Daily Life",
+    "description": "Learn what Practical Love teaches about biblical love, visible character, family reform, and why love must become measurable behavior instead of abstract language.",
+    "keywords": [
+      "about Practical Love",
+      "what is biblical love",
+      "Christian love teaching",
+      "family reform ministry",
+      "visible character"
+    ],
+    "changefreq": "monthly",
+    "priority": 0.86,
+    "indexable": true,
+    "schemaType": "AboutPage",
+    "headline": "Practical Love explains biblical love as measurable, repeatable character rooted in scripture."
+  },
+  {
+    "path": "/resources",
+    "name": "Resources",
+    "title": "Practical Love Resources | Yellow Card, Publications, and Love Challenge",
+    "description": "Access Practical Love resources including the Yellow Card, printable study materials, free publications, and a guided 30-day challenge for practicing biblical love.",
+    "keywords": [
+      "Practical Love resources",
+      "Yellow Card",
+      "Christian publications",
+      "love challenge",
+      "biblical love tools"
+    ],
+    "changefreq": "weekly",
+    "priority": 0.84,
+    "indexable": true,
+    "schemaType": "CollectionPage",
+    "headline": "A practical library of printable and readable tools for teaching biblical love."
+  },
+  {
+    "path": "/family-first",
+    "name": "Family First",
+    "title": "Family First | Why Practical Love Starts in the Home",
+    "description": "Discover why Practical Love begins with the family, where private conduct becomes culture and where biblical love is tested in marriage, parenting, and daily household life.",
+    "keywords": [
+      "family first ministry",
+      "Christian family values",
+      "biblical love in the home",
+      "family discipleship Nigeria",
+      "marriage and parenting"
+    ],
+    "changefreq": "monthly",
+    "priority": 0.82,
+    "indexable": true,
+    "schemaType": "WebPage",
+    "headline": "The home is the first place where biblical love becomes believable and repeatable.",
+    "qa": [
+      {
+        "question": "Why does Practical Love focus on the family first?",
+        "answer": "Practical Love starts with the family because the home is where habits, tone, correction, forgiveness, and character are repeated until they become culture."
+      },
+      {
+        "question": "How can families practice biblical love together?",
+        "answer": "Families can practice biblical love by reading the characteristics of love aloud, correcting daily speech and reactions, and using the Yellow Card and challenge resources consistently."
+      }
+    ]
+  },
+  {
+    "path": "/characteristics",
+    "name": "Characteristics of Love",
+    "title": "17 Characteristics of Love | 1 Corinthians 13 Study Guide",
+    "description": "Study the 17 characteristics of love from 1 Corinthians 13 and learn how to practice patience, kindness, humility, truthfulness, forgiveness, and endurance in daily life.",
+    "keywords": [
+      "17 characteristics of love",
+      "1 Corinthians 13 study",
+      "biblical love characteristics",
+      "love is patient love is kind",
+      "Christian character guide"
+    ],
+    "changefreq": "weekly",
+    "priority": 0.96,
+    "indexable": true,
+    "schemaType": "Article",
+    "headline": "A practical study guide to the 17 characteristics of love in 1 Corinthians 13.",
+    "qa": [
+      {
+        "question": "What are the 17 characteristics of love?",
+        "answer": "The 17 characteristics of love are the practical qualities described in 1 Corinthians 13, including patience, kindness, humility, truthfulness, forgiveness, endurance, and love that never fails."
+      },
+      {
+        "question": "How do you use the characteristics of love in real life?",
+        "answer": "You use them by taking one characteristic at a time, testing it in your speech and relationships, and repeating it until it becomes daily behavior."
+      }
+    ]
+  },
+  {
+    "path": "/bible-passages",
+    "name": "Bible Passages",
+    "title": "Bible Passages About Love | 50 Scriptures for Daily Practice",
+    "description": "Read curated Bible passages about love, including commands, examples, promises, and warnings that help believers practice biblical love in everyday relationships.",
+    "keywords": [
+      "Bible passages about love",
+      "scriptures on love",
+      "Christian love verses",
+      "daily Bible reading on love",
+      "biblical love commands"
+    ],
+    "changefreq": "weekly",
+    "priority": 0.92,
+    "indexable": true,
+    "schemaType": "Article",
+    "headline": "A practical scripture collection for believers who want to live out biblical love every day."
+  },
+  {
+    "path": "/love-in-nigeria",
+    "name": "Love in Nigeria",
+    "title": "Love in Nigeria | Practical Love and National Transformation",
+    "description": "Explore Practical Love’s call to transform Nigeria through biblical love, family restoration, character formation, and a direct response to corruption and materialism.",
+    "keywords": [
+      "love in Nigeria",
+      "Nigeria family reform",
+      "Christian social transformation",
+      "corruption and biblical love",
+      "Practical Love Nigeria"
+    ],
+    "changefreq": "monthly",
+    "priority": 0.9,
+    "indexable": true,
+    "schemaType": "Article",
+    "headline": "Practical Love frames national renewal in Nigeria as a family and character issue before it becomes a political one.",
+    "qa": [
+      {
+        "question": "How does Practical Love connect family life and national change in Nigeria?",
+        "answer": "Practical Love teaches that nations inherit the values repeated in homes, so lasting change in Nigeria starts with biblical love, repentance, and healthy family culture."
+      },
+      {
+        "question": "What problem does Practical Love identify in Nigeria?",
+        "answer": "The ministry identifies the replacement of godly love with materialism, selfishness, and corruption, and answers it with practical biblical love taught in the family first."
+      }
+    ]
+  },
+  {
+    "path": "/mission-vision",
+    "name": "Mission and Vision",
+    "title": "Mission and Vision | Practical Love Ministry Purpose",
+    "description": "Read the mission and vision of Practical Love: equipping Nigerian families with practical tools for biblical love so homes, communities, and the nation can be transformed.",
+    "keywords": [
+      "Practical Love mission",
+      "Practical Love vision",
+      "Christian ministry Nigeria",
+      "family transformation mission",
+      "biblical love ministry purpose"
+    ],
+    "changefreq": "monthly",
+    "priority": 0.82,
+    "indexable": true,
+    "schemaType": "AboutPage",
+    "headline": "Practical Love exists to equip families with visible, repeatable patterns of biblical love."
+  },
+  {
+    "path": "/yellow-card",
+    "name": "Yellow Card",
+    "title": "The Yellow Card | Printable 17 Characteristics of Love",
+    "description": "Download or review the Yellow Card, a printable guide that helps families and individuals memorize and practice the 17 characteristics of love from 1 Corinthians 13.",
+    "keywords": [
+      "Yellow Card love",
+      "printable characteristics of love",
+      "1 Corinthians 13 card",
+      "Christian family tool",
+      "Practical Love card"
+    ],
+    "changefreq": "weekly",
+    "priority": 0.92,
+    "indexable": true,
+    "schemaType": "CreativeWork",
+    "headline": "The Yellow Card is a portable guide for memorizing and practicing the 17 characteristics of love.",
+    "qa": [
+      {
+        "question": "What is the Yellow Card?",
+        "answer": "The Yellow Card is a printable Practical Love resource that lists the 17 characteristics of love so people can carry them, memorize them, and practice them daily."
+      },
+      {
+        "question": "How should you use the Yellow Card?",
+        "answer": "Use the Yellow Card in the morning for reflection, during the day for self-checking, and in the evening for review so love becomes a repeated discipline."
+      }
+    ]
+  },
+  {
+    "path": "/yellow-card-series",
+    "name": "Yellow Card Series",
+    "title": "Yellow Card Series | Printable Love Study Cards and Summary Message",
+    "description": "Explore the Yellow Card Series with the 17 characteristics of love, 50 Bible passages, and the summary message designed for easy printing, teaching, and distribution.",
+    "keywords": [
+      "Yellow Card series",
+      "printable Christian cards",
+      "Bible passages on love",
+      "love ministry handout",
+      "Practical Love printable resources"
+    ],
+    "changefreq": "monthly",
+    "priority": 0.84,
+    "indexable": true,
+    "schemaType": "CollectionPage",
+    "headline": "A printable three-card set built for teaching, sharing, and daily remembrance."
+  },
+  {
+    "path": "/love-challenge",
+    "name": "Love Challenge",
+    "title": "30-Day Love Challenge | Daily Biblical Love Practice Plan",
+    "description": "Start the 30-day love challenge with daily scriptures, reflections, progress tracking, and practical actions designed to turn biblical love into lasting habits.",
+    "keywords": [
+      "30 day love challenge",
+      "biblical love challenge",
+      "Christian growth plan",
+      "daily love practice",
+      "Practical Love challenge"
+    ],
+    "changefreq": "weekly",
+    "priority": 0.95,
+    "indexable": true,
+    "schemaType": "HowTo",
+    "headline": "A structured 30-day plan for building the habits of biblical love in personal, family, and group settings.",
+    "qa": [
+      {
+        "question": "What is the 30-day love challenge?",
+        "answer": "The 30-day love challenge is a step-by-step Practical Love program that gives each day a focus, reflection prompts, and practical actions for building the habits of biblical love."
+      },
+      {
+        "question": "Who can use the love challenge?",
+        "answer": "The challenge can be used personally, in families, or in groups such as churches, fellowships, and mentorship circles."
+      }
+    ]
+  },
+  {
+    "path": "/share-testimony",
+    "name": "Share Testimony",
+    "title": "Share Your Testimony | Practical Love Stories and Prayer Requests",
+    "description": "Submit a Practical Love testimony, prayer request, or ministry story to encourage others with real experiences of growth, healing, and family transformation.",
+    "keywords": [
+      "share testimony",
+      "Christian testimony submission",
+      "prayer request form",
+      "Practical Love stories",
+      "family transformation testimony"
+    ],
+    "changefreq": "monthly",
+    "priority": 0.72,
+    "indexable": true,
+    "schemaType": "ContactPage",
+    "headline": "A page for sharing testimonies, prayer requests, and stories connected to Practical Love."
+  },
+  {
+    "path": "/growth",
+    "name": "Growth",
+    "title": "Spiritual Growth Hub | Practical Love Reflection and Progress Tools",
+    "description": "Use the Practical Love growth hub for reflections, guided journeys, progress tracking, daily challenges, and spiritual formation focused on the character of love.",
+    "keywords": [
+      "spiritual growth hub",
+      "Christian growth tools",
+      "love reflection prompts",
+      "discipleship progress tracker",
+      "Practical Love growth"
+    ],
+    "changefreq": "weekly",
+    "priority": 0.88,
+    "indexable": true,
+    "schemaType": "WebApplication",
+    "headline": "A guided discipleship workspace for practicing and tracking the growth of love."
+  },
+  {
+    "path": "/publications",
+    "name": "Publications",
+    "title": "Free Christian Publications | Practical Love Books and Ministry Resources",
+    "description": "Browse free Practical Love publications, booklets, and ministry resources focused on agape love, family formation, healing, and biblical love in action.",
+    "keywords": [
+      "free Christian publications",
+      "Practical Love books",
+      "agape love booklet",
+      "family ministry resources",
+      "download Christian booklets"
+    ],
+    "changefreq": "weekly",
+    "priority": 0.89,
+    "indexable": true,
+    "schemaType": "CollectionPage",
+    "headline": "A free digital library of Practical Love ministry resources, booklets, and books.",
+    "qa": [
+      {
+        "question": "Are Practical Love publications free?",
+        "answer": "Yes. Practical Love publications on this page are free to read, download, and distribute where the ministry has made them available."
+      },
+      {
+        "question": "What kind of publications are available?",
+        "answer": "The publications include readable booklets, books, and practical ministry resources on agape love, family issues, and national transformation through biblical love."
+      }
+    ]
+  },
+  {
+    "path": "/read/happy-home-digest-vol-1-no-4",
+    "name": "Happy Home Digest",
+    "title": "Happy Home Digest Vol. 1 No. 4 | Free Family Ministry Publication",
+    "description": "Read Happy Home Digest Vol. 1 No. 4, a family ministry publication covering marital storms, barrenness, wise womanhood, and youth formation.",
+    "keywords": [
+      "Happy Home Digest",
+      "Christian family publication",
+      "marriage ministry booklet",
+      "family intercessors ministry",
+      "Practical Love publication"
+    ],
+    "changefreq": "monthly",
+    "priority": 0.76,
+    "indexable": true,
+    "schemaType": "Book",
+    "headline": "A free family ministry publication focused on wise homes, marriage trials, and youth formation."
+  },
+  {
+    "path": "/read/seven-characteristics-of-agape-love",
+    "name": "Seven Characteristics of Agape Love",
+    "title": "Seven Characteristics of Agape Love | Free Practical Love Booklet",
+    "description": "Read Seven Characteristics of Agape Love, a Practical Love booklet that expands the agape love message into a readable guide for reflection, teaching, and daily practice.",
+    "keywords": [
+      "agape love booklet",
+      "seven characteristics of agape love",
+      "Christian love booklet",
+      "Practical Love publication",
+      "agape love action guide"
+    ],
+    "changefreq": "monthly",
+    "priority": 0.8,
+    "indexable": true,
+    "schemaType": "Book",
+    "headline": "A readable booklet that turns agape love from a sheet into a practical study and teaching guide."
+  },
+  {
+    "path": "/read/love-nigerians",
+    "name": "Love Nigerians Or Live On Curses",
+    "title": "Love Nigerians Or Live On Curses | Practical Love Book",
+    "description": "Read Love Nigerians Or Live On Curses, a Practical Love publication about corruption, family roots, and the role of biblical love in national blessing and reform.",
+    "keywords": [
+      "Love Nigerians Or Live On Curses",
+      "Practical Love book",
+      "Nigeria corruption and love",
+      "Christian national reform",
+      "biblical love Nigeria"
+    ],
+    "changefreq": "monthly",
+    "priority": 0.79,
+    "indexable": true,
+    "schemaType": "Book",
+    "headline": "A Practical Love publication connecting national blessing in Nigeria to family culture and biblical love."
+  },
+  {
+    "path": "/contact",
+    "name": "Contact",
+    "title": "Contact Practical Love | Ministry Questions, Partnership, and Prayer",
+    "description": "Contact Practical Love for partnership requests, ministry questions, testimony follow-up, outreach conversations, and prayer-related messages.",
+    "keywords": [
+      "contact Practical Love",
+      "Christian ministry contact Nigeria",
+      "partnership inquiry",
+      "prayer request contact",
+      "ministry outreach contact"
+    ],
+    "changefreq": "monthly",
+    "priority": 0.78,
+    "indexable": true,
+    "schemaType": "ContactPage",
+    "headline": "A contact page for ministry questions, prayer requests, partnerships, and testimonies.",
+    "qa": [
+      {
+        "question": "How can I contact Practical Love?",
+        "answer": "You can contact Practical Love through the website form, by email at logosrhema842@gmail.com, or through the ministry contact details listed on the contact page."
+      }
+    ]
+  },
+  {
+    "path": "/testimonies",
+    "name": "Testimonies",
+    "title": "Practical Love Testimonies | Stories of Family and Personal Transformation",
+    "description": "Read or submit Practical Love testimonies that highlight family healing, personal growth, and the impact of biblical love in everyday relationships.",
+    "keywords": [
+      "Practical Love testimonies",
+      "Christian transformation stories",
+      "family healing testimony",
+      "biblical love stories",
+      "Christian growth testimony"
+    ],
+    "changefreq": "monthly",
+    "priority": 0.74,
+    "indexable": true,
+    "schemaType": "CollectionPage",
+    "headline": "A growing library of real-life stories shaped by practical biblical love."
+  },
+  {
+    "path": "/privacy-policy",
+    "name": "Privacy Policy",
+    "title": "Privacy Policy | Practical Love",
+    "description": "Review the Practical Love privacy policy, including how information is collected, used, and protected across the website and its forms.",
+    "keywords": [
+      "Practical Love privacy policy",
+      "website privacy policy"
+    ],
+    "changefreq": "yearly",
+    "priority": 0.3,
+    "indexable": true,
+    "schemaType": "WebPage",
+    "headline": "The privacy policy for the Practical Love website."
+  },
+  {
+    "path": "/terms-of-service",
+    "name": "Terms of Service",
+    "title": "Terms of Service | Practical Love",
+    "description": "Read the Practical Love terms of service covering use of the website, testimony submissions, and content-related responsibilities.",
+    "keywords": [
+      "Practical Love terms of service",
+      "website terms"
+    ],
+    "changefreq": "yearly",
+    "priority": 0.3,
+    "indexable": true,
+    "schemaType": "WebPage",
+    "headline": "The terms governing the use of the Practical Love website."
+  },
+  {
+    "path": "/cookie-policy",
+    "name": "Cookie Policy",
+    "title": "Cookie Policy | Practical Love",
+    "description": "Read how Practical Love uses cookies and related technologies for essential functionality, analytics, and website performance.",
+    "keywords": [
+      "Practical Love cookie policy",
+      "website cookies"
+    ],
+    "changefreq": "yearly",
+    "priority": 0.3,
+    "indexable": true,
+    "schemaType": "WebPage",
+    "headline": "The cookie policy for the Practical Love website."
+  },
+  {
+    "path": "/donate",
+    "name": "Donate",
+    "title": "Support Practical Love | Prayer, Outreach, and Donation",
+    "description": "Support Practical Love through prayer, outreach participation, love card distribution, and giving that helps the ministry reach more families and communities.",
+    "keywords": [
+      "donate Practical Love",
+      "support Christian ministry Nigeria",
+      "love card outreach",
+      "family ministry donation",
+      "support ministry outreach"
+    ],
+    "changefreq": "monthly",
+    "priority": 0.76,
+    "indexable": true,
+    "schemaType": "DonateAction",
+    "headline": "A page for supporting Practical Love through prayer, outreach, and giving."
+  },
+  {
+    "path": "/cloudinary-demo",
+    "name": "Cloudinary Demo",
+    "title": "Cloudinary Demo | Practical Love",
+    "description": "Internal image upload and integration demo for the Practical Love website.",
+    "keywords": [
+      "internal demo"
+    ],
+    "changefreq": "yearly",
+    "priority": 0.1,
+    "indexable": false,
+    "schemaType": "WebPage",
+    "headline": "Internal demo page."
+  },
+  {
+    "path": "/env-test",
+    "name": "Environment Test",
+    "title": "Environment Test | Practical Love",
+    "description": "Internal environment test page for the Practical Love website.",
+    "keywords": [
+      "internal test"
+    ],
+    "changefreq": "yearly",
+    "priority": 0.1,
+    "indexable": false,
+    "schemaType": "WebPage",
+    "headline": "Internal environment test page."
+  }
+]
