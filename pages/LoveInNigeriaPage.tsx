@@ -1,199 +1,356 @@
-import { DollarSign, Shield, Users, BookOpen, Sparkles, MapPin } from 'lucide-react';
-import { PageHero, SectionCard, CTASection, FeatureCard, NumberedList, PageShell } from '../components/ui';
+import {
+  BookOpen,
+  Building2,
+  DollarSign,
+  HeartHandshake,
+  Home,
+  Landmark,
+  MapPin,
+  Shield,
+  Sparkles,
+  Users,
+} from 'lucide-react';
+import { Link } from 'react-router-dom';
+import {
+  CTASection,
+  FeatureCard,
+  NumberedList,
+  PageHero,
+  PageShell,
+  SectionCard,
+} from '../components/ui';
 import Logo from '../components/Logo';
 
+const DIAGNOSIS_POINTS = [
+  { number: 1, content: 'We do not love ourselves in Nigeria.', highlight: true },
+  {
+    number: 2,
+    content: 'To make this worse, we can become stubborn in wickedness when love is absent.',
+    highlight: true,
+  },
+  {
+    number: 3,
+    content: 'The crisis begins at the family level. No home is above the need for repentance and change.',
+    highlight: true,
+  },
+  {
+    number: 4,
+    content: 'Money and materialism have become the language of love in many homes.',
+    highlight: true,
+  },
+  {
+    number: 5,
+    content: 'When love of money rules a heart, corruption, injustice, and every other evil can grow from it.',
+    highlight: true,
+  },
+] as const;
+
+const RESTORATION_POINTS = [
+  {
+    number: 1,
+    content:
+      'There is a thin line between love of God and love of money. You must work daily to stay on the side of God.',
+  },
+  {
+    number: 2,
+    content:
+      '“For God so loved the world” includes every Nigerian without exception, tribe, class, or religion.',
+  },
+  {
+    number: 3,
+    content:
+      'The idea of husband, wife, and family is from God. If family is healed, communities and institutions can also be healed.',
+  },
+  {
+    number: 4,
+    content:
+      'The yellow card gives a practical language of love that can be learned, memorized, and lived in every home.',
+  },
+  {
+    number: 5,
+    content:
+      'A family that truly practices the characteristics of love creates the kind of environment where blessing can grow.',
+  },
+  {
+    number: 6,
+    content:
+      'When husbands, wives, parents, and children honor one another with God’s kind of love, they honor God Himself.',
+  },
+  {
+    number: 7,
+    content:
+      'Loving and God-fearing homes produce a different kind of person, and that difference eventually touches society.',
+  },
+  {
+    number: 8,
+    content:
+      'Whatever is truly good in a loving family will not stay inside the house alone; it will influence the community, worship space, and nation.',
+  },
+] as const;
+
+const IMPACT_AREAS = [
+  {
+    title: 'Family life',
+    description:
+      'The first place Nigeria changes is the home. Marriage, parenting, and sibling relationships set the moral atmosphere for the future.',
+    icon: <Home className="w-6 h-6" />,
+    accentColor: 'red' as const,
+  },
+  {
+    title: 'Community life',
+    description:
+      'A loving household produces people who are less likely to exploit neighbors and more likely to serve their communities with integrity.',
+    icon: <Users className="w-6 h-6" />,
+    accentColor: 'orange' as const,
+  },
+  {
+    title: 'National life',
+    description:
+      'The tone of a nation is shaped by the people it raises. Heal the family, and leadership culture begins to change.',
+    icon: <Landmark className="w-6 h-6" />,
+    accentColor: 'yellow' as const,
+  },
+] as const;
+
+const RESPONSE_LANES = [
+  {
+    title: 'Teach it at home',
+    description:
+      'Read the 17 characteristics of love in the family, memorize them together, and bring them into daily conduct.',
+    icon: <BookOpen className="w-5 h-5" />,
+  },
+  {
+    title: 'Model it publicly',
+    description:
+      'Carry practical love into schools, workspaces, markets, churches, mosques, streets, and civic life.',
+    icon: <MapPin className="w-5 h-5" />,
+  },
+  {
+    title: 'Reproduce it consistently',
+    description:
+      'Use the yellow card and related materials to spread the message from one family to another, one community to another.',
+    icon: <HeartHandshake className="w-5 h-5" />,
+  },
+] as const;
+
+const EXAMPLES = [
+  {
+    name: 'Ngozi Okonjo-Iweala',
+    role: 'Public leadership example',
+    note:
+      'A reminder that disciplined, principled formation can produce national and global impact.',
+  },
+  {
+    name: 'Akinwumi Adesina',
+    role: 'Institutional leadership example',
+    note:
+      'A reminder that healthy values and strong formation can shape service at the highest level.',
+  },
+] as const;
+
 export default function LoveInNigeriaPage() {
-  const problemMessages = [
-    { number: 1, content: 'We do not Love ourselves in Nigeria.', highlight: true },
-    {
-      number: 2,
-      content: 'To make this worst as stated in (1) above WE ARE STUBBORN IN WICKEDNESS.',
-      highlight: true,
-    },
-    {
-      number: 3,
-      content: 'All families in Nigeria are guilty including my own and your own families.',
-      highlight: true,
-    },
-    {
-      number: 4,
-      content:
-        'Why? Because Money and Materialism is the language of Love in our homes and families.',
-      highlight: true,
-    },
-    {
-      number: 5,
-      content: 'Love of money is the root of all evils, name any evil you find it in Nigeria.',
-      highlight: true,
-    },
-  ];
-
-  const solutionMessages = [
-    {
-      number: 1,
-      content:
-        'There is a thin line between LOVE of God and LOVE of money; you need to work hard DAILY to be on the side of God, because LOVE of God is the root of all blessings while LOVE of money is the root of all evils.',
-    },
-    {
-      number: 2,
-      content:
-        'For God so loved the world... (John 3:16). But take note this includes every human being on this planet NO EXCEPTION.',
-    },
-    { number: 3, content: 'The idea of HUSBAND AND WIFE AND FAMILY is from God and God alone.' },
-    { number: 4, content: "God's Love language is in the yellow card in your hand." },
-    {
-      number: 5,
-      content:
-        'Any family who is able to memorize and practicalized the characteristics of Love in his or her family IT IS MANDATORY OR COMPULSORY FOR GOD TO BLESS THAT FAMILY.',
-    },
-    {
-      number: 6,
-      content:
-        'If you love your wife and/or wife Love your husband, parents Love their children and children Love your parents based on THIS LANGUAGE OF LOVE IN THE YELLOW CARD IN YOUR HAND, you are honouring God and God says those who honour me I will honour them.',
-    },
-    {
-      number: 7,
-      content:
-        "Any Nigerian deep or stubborn in corruption and wickedness, trace their roots, they usually don't come from a LOVING AND GODLY/GOD FEARING AND LOVING HOMES/FAMILIES.",
-    },
-    {
-      number: 8,
-      content:
-        'There is no way something good will come out of Loving and Godly family, that will not impact the family, community, church, mosque and society at large.',
-    },
-  ];
-
   return (
     <PageShell
-      className="bg-gradient-to-b from-orange-50 via-white to-red-50"
+      className="bg-[radial-gradient(circle_at_top_left,_rgba(254,215,170,0.24),_transparent_30%),radial-gradient(circle_at_top_right,_rgba(248,113,113,0.16),_transparent_34%),linear-gradient(180deg,_#fffaf5_0%,_#ffffff_48%,_#fff7ed_100%)]"
       containerClassName="py-16 section-gap"
     >
       <PageHero
-        badge="Love Ministry for Nigeria"
+        badge={
+          <>
+            <Logo className="w-4 h-4" />
+            Love Ministry for Nigeria
+          </>
+        }
         icon={
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-red-600 to-orange-500 flex items-center justify-center shadow-sm">
-            <Logo className="w-6 h-6" />
+          <div className="flex h-14 w-14 items-center justify-center rounded-[1.25rem] bg-gradient-to-br from-red-600 via-orange-500 to-amber-400 text-white shadow-lg">
+            <Building2 className="h-7 w-7" />
           </div>
         }
-        title="Transforming Nigeria through Practical Love"
-        subtitle="A clear call to heal families, renew communities, and restore integrity by living the 17 characteristics of love."
+        title="Transforming Nigeria through practical love"
+        subtitle="A national call to confront corruption at the root, restore the family as the training ground of character, and build a culture where God’s kind of love becomes visible in everyday Nigerian life."
         actions={
-          <div className="flex flex-col sm:flex-row gap-3">
-            <CTASection
-              title=""
-              description=""
-              primaryAction={{ label: 'Get the Yellow Card', href: '/yellow-card' }}
-              secondaryAction={{ label: 'Read 50 Love Passages', href: '/bible-passages' }}
-              variant="white"
-              className="p-0"
-            />
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <Link to="/yellow-card" className="btn-brand px-7 py-3">
+              Get the yellow card
+            </Link>
+            <Link to="/characteristics" className="btn-outline-brand px-7 py-3">
+              Start practicing love
+            </Link>
           </div>
         }
-      />
-
-      <SectionCard variant="gradient" className="section-gap">
-        <div className="grid md:grid-cols-3 gap-6">
-          <FeatureCard
-            icon={<Users className="w-6 h-6" />}
-            title="Families First"
-            description="Every corrupt or righteous leader is shaped at home. Heal the family, heal the nation."
-            accentColor="orange"
-          />
-          <FeatureCard
-            icon={<Sparkles className="w-6 h-6" />}
-            title="Love Transforms"
-            description="Practical, God-kind love turns selfishness into service and division into unity."
-            accentColor="red"
-          />
-          <FeatureCard
-            icon={<MapPin className="w-6 h-6" />}
-            title="Made for Nigeria"
-            description="A movement rooted in Scripture, tailored to Nigeria’s realities, and reproducible in every community."
-            accentColor="orange"
-          />
-        </div>
-      </SectionCard>
-
-      <div className="grid lg:grid-cols-2 gap-8">
-        <SectionCard className="h-full">
-          <div className="space-y-3 mb-4">
-            <span className="pill">The hard truth</span>
-            <h2 className="text-3xl font-serif text-red-800">Where we are</h2>
-            <p className="text-gray-600">Naming the problem is the first step to change.</p>
+      >
+        <div className="grid gap-4 md:grid-cols-4">
+          <div className="rounded-2xl border border-white/70 bg-white/85 p-4 backdrop-blur-sm">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-600">Root Issue</p>
+            <p className="mt-2 text-lg font-semibold text-gray-900">Love replaced by materialism</p>
           </div>
-          <NumberedList items={problemMessages} />
+          <div className="rounded-2xl border border-white/70 bg-white/85 p-4 backdrop-blur-sm">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-600">Starting Point</p>
+            <p className="mt-2 text-lg font-semibold text-gray-900">Heal the family first</p>
+          </div>
+          <div className="rounded-2xl border border-white/70 bg-white/85 p-4 backdrop-blur-sm">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-600">Tool</p>
+            <p className="mt-2 text-lg font-semibold text-gray-900">The 17 characteristics of love</p>
+          </div>
+          <div className="rounded-2xl border border-white/70 bg-white/85 p-4 backdrop-blur-sm">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-600">Goal</p>
+            <p className="mt-2 text-lg font-semibold text-gray-900">Homes that bless the nation</p>
+          </div>
+        </div>
+      </PageHero>
+
+      <section className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+        <SectionCard className="border-red-100 bg-white/95 shadow-lg">
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
+            National Diagnosis
+          </p>
+          <h2 className="mt-2 text-3xl font-serif text-red-800">Where the crisis begins</h2>
+          <p className="mt-3 leading-7 text-gray-700">
+            This message is direct on purpose. A nation cannot heal what it refuses to name.
+          </p>
+          <div className="mt-6">
+            <NumberedList items={[...DIAGNOSIS_POINTS]} />
+          </div>
         </SectionCard>
 
-        <SectionCard variant="default" className="h-full">
-          <div className="space-y-3 mb-4">
-            <span className="pill">The path forward</span>
-            <h2 className="text-3xl font-serif text-orange-800">What changes everything</h2>
-            <p className="text-gray-600">Practical steps rooted in Scripture for homes and communities.</p>
+        <SectionCard className="border-orange-200 bg-gradient-to-br from-orange-50 via-white to-red-50 shadow-lg">
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
+            Restoration Architecture
+          </p>
+          <h2 className="mt-2 text-3xl font-serif text-red-800">What changes everything</h2>
+          <p className="mt-3 leading-7 text-gray-700">
+            The answer is not vague sentiment. It is disciplined, repeatable, practical love
+            anchored in God and worked out inside real homes.
+          </p>
+          <div className="mt-6">
+            <NumberedList items={[...RESTORATION_POINTS]} />
           </div>
-          <NumberedList items={solutionMessages} />
         </SectionCard>
-      </div>
+      </section>
 
-      <SectionCard className="section-gap" variant="default">
-        <div className="text-center space-y-3">
-          <h2 className="text-3xl md:text-4xl font-serif text-gray-900">Key Principles</h2>
-          <p className="text-lg text-gray-600">Problem, solution, and promise at a glance.</p>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
-          <div className="surface-soft p-6 text-center border-t-4 border-red-600">
-            <div className="bg-red-50 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4">
-              <DollarSign className="w-7 h-7 text-red-600" />
-            </div>
-            <h4 className="text-xl font-serif text-gray-900 mb-3">The Problem</h4>
-            <p className="text-gray-600 text-sm">
-              Money and materialism have replaced love as the main language in many Nigerian homes.
-            </p>
-          </div>
-          <div className="surface-soft p-6 text-center border-t-4 border-orange-500">
-            <div className="bg-amber-50 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Logo className="w-7 h-7" />
-            </div>
-            <h4 className="text-xl font-serif text-gray-900 mb-3">The Solution</h4>
-            <p className="text-gray-600 text-sm">
-              Replace love of money with God’s love; live the 17 characteristics daily.
-            </p>
-          </div>
-          <div className="surface-soft p-6 text-center border-t-4 border-orange-500">
-            <div className="bg-orange-50 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Shield className="w-7 h-7 text-red-600" />
-            </div>
-            <h4 className="text-xl font-serif text-gray-900 mb-3">The Promise</h4>
-            <p className="text-gray-600 text-sm">
-              God honors families who honor Him by practicing love—blessing is guaranteed.
-            </p>
-          </div>
-        </div>
-      </SectionCard>
+      <section className="grid gap-6 md:grid-cols-3">
+        {IMPACT_AREAS.map(area => (
+          <FeatureCard
+            key={area.title}
+            icon={area.icon}
+            title={area.title}
+            description={area.description}
+            accentColor={area.accentColor}
+          />
+        ))}
+      </section>
 
-      <SectionCard variant="dark" className="text-center">
-        <BookOpen className="w-12 h-12 text-yellow-500 mx-auto mb-4" />
-        <blockquote className="text-2xl md:text-3xl font-serif text-white mb-4 italic">
-          "For God so loved the world that He gave His only begotten Son, that whoever believes in
-          Him should not perish but have everlasting life."
-        </blockquote>
-        <cite className="text-yellow-400 text-lg">— John 3:16</cite>
-      </SectionCard>
+      <section className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+        <SectionCard className="border-orange-200 bg-white/95 shadow-lg">
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
+            Response Lanes
+          </p>
+          <h2 className="mt-2 text-3xl font-serif text-red-800">How the message should move</h2>
+          <div className="mt-6 grid gap-4">
+            {RESPONSE_LANES.map(lane => (
+              <div
+                key={lane.title}
+                className="rounded-2xl border border-orange-100 bg-gradient-to-r from-white to-orange-50 p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm"
+              >
+                <div className="flex items-start gap-4">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-red-100 text-red-700">
+                    {lane.icon}
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-serif text-gray-900">{lane.title}</h3>
+                    <p className="mt-2 leading-7 text-gray-700">{lane.description}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </SectionCard>
+
+        <SectionCard
+          variant="dark"
+          className="border-red-900 bg-[linear-gradient(160deg,_rgba(127,29,29,1)_0%,_rgba(136,19,55,1)_45%,_rgba(154,52,18,1)_100%)] shadow-xl"
+        >
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-orange-200">
+            Three-Part Summary
+          </p>
+          <div className="mt-6 space-y-4">
+            <div className="rounded-2xl border border-white/10 bg-white/10 p-5">
+              <div className="flex items-center gap-3">
+                <DollarSign className="h-5 w-5 text-orange-200" />
+                <h3 className="text-xl font-serif text-white">The problem</h3>
+              </div>
+              <p className="mt-3 leading-7 text-orange-100">
+                Money and materialism have replaced real love in too many homes, and national life
+                reflects that distortion.
+              </p>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-white/10 p-5">
+              <div className="flex items-center gap-3">
+                <Logo className="h-5 w-5 text-orange-200" />
+                <h3 className="text-xl font-serif text-white">The solution</h3>
+              </div>
+              <p className="mt-3 leading-7 text-orange-100">
+                Replace love of money with the love of God, and train homes to live the 17
+                characteristics of love every day.
+              </p>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-white/10 p-5">
+              <div className="flex items-center gap-3">
+                <Shield className="h-5 w-5 text-orange-200" />
+                <h3 className="text-xl font-serif text-white">The promise</h3>
+              </div>
+              <p className="mt-3 leading-7 text-orange-100">
+                A nation shaped by loving and God-fearing families will not stay broken forever.
+                Blessing follows honor.
+              </p>
+            </div>
+          </div>
+        </SectionCard>
+      </section>
+
+      <section className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+        <SectionCard className="border-red-100 bg-gradient-to-br from-red-50 via-white to-orange-50 shadow-lg">
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
+            Leadership Examples
+          </p>
+          <h2 className="mt-2 text-3xl font-serif text-red-800">Why formation matters</h2>
+          <p className="mt-3 leading-7 text-gray-700">
+            The page’s core idea is that what is cultivated in a family eventually appears in
+            public life. Strong formation produces visible impact.
+          </p>
+          <div className="mt-6 grid gap-4">
+            {EXAMPLES.map(example => (
+              <div key={example.name} className="rounded-2xl border border-white/80 bg-white/90 p-5 shadow-sm">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-orange-700">
+                  {example.role}
+                </p>
+                <h3 className="mt-2 text-xl font-serif text-gray-900">{example.name}</h3>
+                <p className="mt-3 leading-7 text-gray-700">{example.note}</p>
+              </div>
+            ))}
+          </div>
+        </SectionCard>
+
+        <SectionCard className="border-orange-200 bg-white/95 shadow-lg text-center">
+          <Sparkles className="mx-auto h-12 w-12 text-red-600" />
+          <blockquote className="mt-6 text-2xl font-serif italic leading-relaxed text-gray-900 md:text-3xl">
+            &quot;For God so loved the world that He gave His only begotten Son, that whoever
+            believes in Him should not perish but have everlasting life.&quot;
+          </blockquote>
+          <cite className="mt-5 block text-lg font-medium text-red-700">John 3:16</cite>
+          <p className="mx-auto mt-6 max-w-2xl leading-7 text-gray-700">
+            This message is universal and practical. It includes every Nigerian, and it calls every
+            family to become a place where that love is translated into daily conduct.
+          </p>
+        </SectionCard>
+      </section>
 
       <CTASection
-        title="Transform Your Family Today"
-        description="Start practicing the 17 characteristics of love and watch God’s promise unfold in your home, community, and nation."
-        primaryAction={{
-          label: 'Get Your Yellow Card',
-          href: '/yellow-card',
-        }}
-        secondaryAction={{
-          label: 'Start Practicing Love',
-          href: '/characteristics',
-        }}
-        variant="gradient"
+        title="Start the transformation where it actually begins"
+        description="Begin inside the home, practice the 17 characteristics of love, and let that discipline move outward into the community and the nation."
+        primaryAction={{ label: 'Get Your Yellow Card', href: '/yellow-card' }}
+        secondaryAction={{ label: 'Read 50 Love Passages', href: '/bible-passages' }}
       />
     </PageShell>
   );
 }
-
-

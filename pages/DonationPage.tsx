@@ -1,370 +1,275 @@
-import { useMemo, useState } from 'react';
-import {
-  HeartHandshake,
-  ShieldCheck,
-  Wallet,
-  ArrowRight,
-  Landmark,
-  Smartphone,
-  CheckCircle2,
-} from 'lucide-react';
-import { PageHero, PageShell } from '../components/ui';
+import { HeartHandshake, HelpingHand, Landmark, MoveRight, Printer, Users } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { CTASection, PageHero, PageShell, SectionCard } from '../components/ui';
 import Logo from '../components/Logo';
 
-const PRESET_AMOUNTS = [5000, 10000, 25000, 50000];
-const FUND_OPTIONS = [
+const JOIN_US_STEPS = [
   {
-    id: 'family-outreach',
-    label: 'Family Outreach',
-    description: 'Supports marriage and parenting practical-love programs.',
+    number: '01',
+    title: 'Pray for the journey',
+    description:
+      'Pray for us as we embark on this journey to make Nigeria and the world a better place through practical love, healing, and truth.',
+    icon: <HeartHandshake className="w-6 h-6 text-red-700" />,
   },
   {
-    id: 'youth-discipleship',
-    label: 'Youth Discipleship',
-    description: 'Funds youth mentoring and character training sessions.',
+    number: '02',
+    title: 'Share love cards freely',
+    description:
+      'Join us in giving out love cards. You can print them, photocopy them, and place them in the hands of people who need encouragement.',
+    icon: <Printer className="w-6 h-6 text-red-700" />,
   },
   {
-    id: 'publications',
-    label: 'Publications',
-    description: 'Prints and distributes ministry resources and cards.',
+    number: '03',
+    title: 'Be present in the outreach',
+    description:
+      'Join us physically in sharing love cards in every place of life so practical love is seen, heard, and felt in daily communities.',
+    icon: <Users className="w-6 h-6 text-red-700" />,
   },
   {
-    id: 'general',
-    label: 'General Ministry',
-    description: 'Used where support is needed most across operations.',
+    number: '04',
+    title: 'Give to spread the blessing',
+    description:
+      'Feel free to donate so the full blessing can be shared across different places, people, and generations.',
+    icon: <Landmark className="w-6 h-6 text-red-700" />,
   },
 ] as const;
 
-const PAYMENT_METHODS = [
-  { id: 'card', label: 'Card', icon: <Wallet className="w-4 h-4" /> },
-  { id: 'bank-transfer', label: 'Bank Transfer', icon: <Landmark className="w-4 h-4" /> },
-  { id: 'ussd', label: 'USSD / Mobile', icon: <Smartphone className="w-4 h-4" /> },
+const OUTREACH_EXAMPLES = [
+  'Schools, campuses, and training centers',
+  'Markets, parks, and transport stations',
+  'Hospitals, care homes, and recovery spaces',
+  'Churches, fellowships, and neighborhood meetings',
+  'Workplaces, shops, and family gatherings',
+] as const;
+
+const DONATION_ACCOUNTS = [
+  {
+    currency: 'NGN',
+    label: 'Nigeria Naira',
+    accountName: 'Add verified account name',
+    bank: 'Add bank name',
+    accountNumber: '0000000000',
+  },
+  {
+    currency: 'USD',
+    label: 'US Dollar',
+    accountName: 'Add verified account name',
+    bank: 'Add bank name',
+    accountNumber: '0000000000',
+  },
+  {
+    currency: 'GBP',
+    label: 'British Pound',
+    accountName: 'Add verified account name',
+    bank: 'Add bank name',
+    accountNumber: '0000000000',
+  },
+  {
+    currency: 'EUR',
+    label: 'Euro',
+    accountName: 'Add verified account name',
+    bank: 'Add bank name',
+    accountNumber: '0000000000',
+  },
 ] as const;
 
 export default function DonationPage() {
-  const [frequency, setFrequency] = useState<'one-time' | 'monthly'>('one-time');
-  const [amount, setAmount] = useState<number>(PRESET_AMOUNTS[1]);
-  const [customAmount, setCustomAmount] = useState('');
-  const [fund, setFund] = useState<(typeof FUND_OPTIONS)[number]['id']>('general');
-  const [paymentMethod, setPaymentMethod] = useState<(typeof PAYMENT_METHODS)[number]['id']>('card');
-  const [isAnonymous, setIsAnonymous] = useState(false);
-  const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    phone: '',
-    note: '',
-  });
-  const [submitMessage, setSubmitMessage] = useState('');
-
-  const finalAmount = useMemo(() => {
-    const parsed = Number(customAmount);
-    if (Number.isFinite(parsed) && parsed > 0) return parsed;
-    return amount;
-  }, [amount, customAmount]);
-
-  const projectedYearly = useMemo(
-    () => (frequency === 'monthly' ? finalAmount * 12 : finalAmount),
-    [frequency, finalAmount]
-  );
-
-  const selectedFund = useMemo(() => FUND_OPTIONS.find(option => option.id === fund), [fund]);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitMessage(
-      'Donation form is ready. Backend can now connect payment checkout, webhook verification, and receipt emails.'
-    );
-  };
-
   return (
-    <PageShell className="bg-gradient-to-b from-red-50 via-orange-50 to-amber-50">
+    <PageShell className="bg-[radial-gradient(circle_at_top,_rgba(254,215,170,0.45),_transparent_36%),linear-gradient(180deg,_#fff7ed_0%,_#ffffff_55%,_#fff1f2_100%)]">
       <div className="space-y-8">
         <PageHero
           badge={
             <>
               <Logo className="w-4 h-4" />
-              Support The Mission
+              Join The Practical Love Mission
             </>
           }
-          icon={<HeartHandshake className="w-10 h-10 text-red-700" />}
-          title="Donate to Practical Love"
-          subtitle="Your giving equips families, empowers youth, and spreads practical love resources across Nigeria."
+          icon={<HelpingHand className="w-10 h-10 text-red-700" />}
+          title="Join us in making Nigeria and the world a better place"
+          subtitle="Stand with us in prayer, distribution, physical outreach, and giving so the blessing of practical love reaches lives, homes, and generations."
           className="shadow-lg"
-        />
-
-        <div className="grid lg:grid-cols-3 gap-6">
-          <section className="lg:col-span-2 bg-white rounded-2xl border border-orange-100 shadow-sm p-6 md:p-8">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Give Frequency
-                </label>
-                <div className="grid grid-cols-2 gap-3">
-                  <button
-                    type="button"
-                    onClick={() => setFrequency('one-time')}
-                    className={`rounded-xl px-4 py-3 border-2 text-sm font-semibold transition ${
-                      frequency === 'one-time'
-                        ? 'border-red-500 bg-red-50 text-red-700'
-                        : 'border-orange-100 text-gray-700 hover:border-orange-200'
-                    }`}
-                  >
-                    One-time
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setFrequency('monthly')}
-                    className={`rounded-xl px-4 py-3 border-2 text-sm font-semibold transition ${
-                      frequency === 'monthly'
-                        ? 'border-red-500 bg-red-50 text-red-700'
-                        : 'border-orange-100 text-gray-700 hover:border-orange-200'
-                    }`}
-                  >
-                    Monthly
-                  </button>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Give To A Specific Cause
-                </label>
-                <div className="grid md:grid-cols-2 gap-3">
-                  {FUND_OPTIONS.map(option => (
-                    <button
-                      key={option.id}
-                      type="button"
-                      onClick={() => setFund(option.id)}
-                      className={`text-left rounded-xl px-4 py-3 border-2 transition ${
-                        fund === option.id
-                          ? 'border-red-500 bg-red-50'
-                          : 'border-orange-100 hover:border-orange-200'
-                      }`}
-                    >
-                      <p className="text-sm font-semibold text-gray-800">{option.label}</p>
-                      <p className="text-xs text-gray-600 mt-1">{option.description}</p>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Select Amount</label>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  {PRESET_AMOUNTS.map(value => (
-                    <button
-                      key={value}
-                      type="button"
-                      onClick={() => {
-                        setAmount(value);
-                        setCustomAmount('');
-                      }}
-                      className={`rounded-xl px-4 py-3 border-2 text-sm font-semibold transition ${
-                        amount === value && !customAmount
-                          ? 'border-red-500 bg-red-50 text-red-700'
-                          : 'border-orange-100 text-gray-700 hover:border-orange-200'
-                      }`}
-                    >
-                      NGN {value.toLocaleString()}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="custom-amount" className="block text-sm font-semibold text-gray-700 mb-2">
-                  Or Enter Custom Amount (NGN)
-                </label>
-                <input
-                  id="custom-amount"
-                  type="number"
-                  min="100"
-                  step="100"
-                  value={customAmount}
-                  onChange={e => setCustomAmount(e.target.value)}
-                  placeholder="e.g. 15000"
-                  className="w-full px-4 py-3 rounded-xl border-2 border-orange-100 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Payment Method (Placeholder)
-                </label>
-                <div className="grid md:grid-cols-3 gap-3">
-                  {PAYMENT_METHODS.map(method => (
-                    <button
-                      key={method.id}
-                      type="button"
-                      onClick={() => setPaymentMethod(method.id)}
-                      className={`rounded-xl px-4 py-3 border-2 text-sm font-semibold transition inline-flex items-center justify-center gap-2 ${
-                        paymentMethod === method.id
-                          ? 'border-red-500 bg-red-50 text-red-700'
-                          : 'border-orange-100 text-gray-700 hover:border-orange-200'
-                      }`}
-                    >
-                      {method.icon}
-                      {method.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <label htmlFor="full-name" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Full Name
-                  </label>
-                  <input
-                    id="full-name"
-                    type="text"
-                    required
-                    disabled={isAnonymous}
-                    value={formData.fullName}
-                    onChange={e => setFormData(prev => ({ ...prev, fullName: e.target.value }))}
-                    className="w-full px-4 py-3 rounded-xl border-2 border-orange-100 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition disabled:bg-gray-100"
-                    placeholder="Your full name"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Email Address
-                  </label>
-                  <input
-                    id="email"
-                    type="email"
-                    required
-                    value={formData.email}
-                    onChange={e => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                    className="w-full px-4 py-3 rounded-xl border-2 border-orange-100 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition"
-                    placeholder="you@example.com"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="phone" className="block text-sm font-semibold text-gray-700 mb-2">
-                  Phone Number (Optional)
-                </label>
-                <input
-                  id="phone"
-                  type="tel"
-                  value={formData.phone}
-                  onChange={e => setFormData(prev => ({ ...prev, phone: e.target.value }))}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-orange-100 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition"
-                  placeholder="+234 ..."
-                />
-              </div>
-
-              <label className="flex items-center gap-3 rounded-xl border border-orange-100 bg-orange-50/60 p-3 text-sm text-gray-700">
-                <input
-                  type="checkbox"
-                  checked={isAnonymous}
-                  onChange={e => setIsAnonymous(e.target.checked)}
-                  className="h-4 w-4 accent-red-600"
-                />
-                Donate anonymously (your name will not be displayed publicly).
-              </label>
-
-              <div>
-                <label htmlFor="note" className="block text-sm font-semibold text-gray-700 mb-2">
-                  Prayer / Support Note (Optional)
-                </label>
-                <textarea
-                  id="note"
-                  rows={4}
-                  value={formData.note}
-                  onChange={e => setFormData(prev => ({ ...prev, note: e.target.value }))}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-orange-100 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition resize-none"
-                  placeholder="Share what you want this donation to support."
-                />
-              </div>
-
-              <button type="submit" className="w-full md:w-auto btn-brand px-8 py-4 inline-flex items-center gap-2">
-                Continue to Secure Checkout
-                <ArrowRight className="w-5 h-5" />
-              </button>
-
-              {submitMessage ? (
-                <div className="rounded-xl border border-amber-200 bg-amber-50 text-amber-900 px-4 py-3 text-sm">
-                  {submitMessage}
-                </div>
-              ) : null}
-
-              <p className="text-xs text-gray-500">
-                Backend TODO: connect this form to payment provider and persist donor records.
+          actions={
+            <div className="flex flex-col sm:flex-row gap-3">
+              <a
+                href="#donation-accounts"
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-red-700 px-6 py-3 text-sm font-semibold text-white transition hover:bg-red-800"
+              >
+                View Donation Accounts
+                <MoveRight className="w-4 h-4" />
+              </a>
+              <Link
+                to="/yellow-card"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-red-200 bg-white/80 px-6 py-3 text-sm font-semibold text-red-700 transition hover:border-red-300 hover:bg-white"
+              >
+                View Love Cards
+              </Link>
+            </div>
+          }
+        >
+          <div className="grid gap-4 md:grid-cols-3">
+            <div className="rounded-2xl border border-white/70 bg-white/80 p-4 backdrop-blur-sm">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-600">
+                Prayer
               </p>
-            </form>
-          </section>
-
-          <aside className="space-y-4">
-            <div className="bg-white rounded-2xl border border-orange-100 shadow-sm p-6">
-              <h3 className="text-lg font-semibold text-red-800 mb-3">Donation Summary</h3>
-              <div className="space-y-2 text-sm text-gray-700">
-                <p>
-                  <span className="font-semibold">Frequency:</span>{' '}
-                  {frequency === 'monthly' ? 'Monthly' : 'One-time'}
-                </p>
-                <p>
-                  <span className="font-semibold">Amount:</span> NGN {finalAmount.toLocaleString()}
-                </p>
-                <p>
-                  <span className="font-semibold">Fund:</span> {selectedFund?.label}
-                </p>
-                <p>
-                  <span className="font-semibold">Method:</span>{' '}
-                  {PAYMENT_METHODS.find(item => item.id === paymentMethod)?.label}
-                </p>
-                {frequency === 'monthly' ? (
-                  <p>
-                    <span className="font-semibold">12-Month Impact:</span> NGN {projectedYearly.toLocaleString()}
-                  </p>
-                ) : null}
-              </div>
-            </div>
-
-            <div className="bg-gradient-to-br from-red-700 to-orange-600 text-white rounded-2xl p-6 shadow-lg">
-              <div className="flex items-center gap-2 mb-3">
-                <ShieldCheck className="w-5 h-5 text-orange-200" />
-                <h3 className="font-semibold">Integration Notes</h3>
-              </div>
-              <ul className="text-sm text-orange-100 space-y-2">
-                <li>Payment gateway endpoint pending backend setup.</li>
-                <li>Webhook verification and receipts pending.</li>
-                <li>Donor records and analytics pending.</li>
-              </ul>
-            </div>
-
-            <div className="bg-white rounded-2xl border border-orange-100 shadow-sm p-6">
-              <div className="flex items-center gap-2 mb-3">
-                <Wallet className="w-5 h-5 text-red-700" />
-                <h3 className="font-semibold text-red-800">Ready for Backend</h3>
-              </div>
-              <p className="text-sm text-gray-700">
-                This page now captures donation intent and donor details. Backend can connect
-                payment processing, transaction storage, and confirmation emails.
+              <p className="mt-2 text-sm text-gray-700">
+                Cover the mission in prayer as the work grows across Nigeria.
               </p>
             </div>
-
-            <div className="bg-white rounded-2xl border border-orange-100 shadow-sm p-6">
-              <h3 className="text-lg font-semibold text-red-800 mb-3">What Your Gift Can Do</h3>
-              <div className="space-y-2 text-sm text-gray-700">
-                <p className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 mt-0.5 text-green-600" />
-                  NGN 5,000 can support one family resource pack.
-                </p>
-                <p className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 mt-0.5 text-green-600" />
-                  NGN 10,000 can sponsor a small-group teaching session.
-                </p>
-                <p className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 mt-0.5 text-green-600" />
-                  NGN 25,000+ can help expand community outreach coverage.
-                </p>
-              </div>
+            <div className="rounded-2xl border border-white/70 bg-white/80 p-4 backdrop-blur-sm">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-600">
+                Distribution
+              </p>
+              <p className="mt-2 text-sm text-gray-700">
+                Print, photocopy, and pass love cards into everyday spaces.
+              </p>
             </div>
-          </aside>
+            <div className="rounded-2xl border border-white/70 bg-white/80 p-4 backdrop-blur-sm">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-600">
+                Donation
+              </p>
+              <p className="mt-2 text-sm text-gray-700">
+                Give so the blessing can be shared by you and through your generation.
+              </p>
+            </div>
+          </div>
+        </PageHero>
+
+        <section className="grid gap-5 lg:grid-cols-2">
+          {JOIN_US_STEPS.map(step => (
+            <SectionCard
+              key={step.number}
+              className="relative overflow-hidden border-orange-200 bg-white/95 shadow-md"
+            >
+              <div className="absolute right-4 top-4 text-5xl font-serif text-red-100">{step.number}</div>
+              <div className="relative">
+                <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-red-50">
+                  {step.icon}
+                </div>
+                <h2 className="mt-5 max-w-sm text-2xl font-serif text-red-800">{step.title}</h2>
+                <p className="mt-3 text-base leading-7 text-gray-700">{step.description}</p>
+              </div>
+            </SectionCard>
+          ))}
+        </section>
+
+        <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
+          <SectionCard
+            title="Where you can share the love cards physically"
+            className="border-orange-200 bg-white/95 shadow-md"
+          >
+            <p className="max-w-2xl text-gray-700 leading-7">
+              If you want to join physically, start where people already live and move. These are
+              simple places where love cards can open conversations, comfort hearts, and remind
+              people that love is still active in the world.
+            </p>
+            <div className="mt-6 grid gap-3 sm:grid-cols-2">
+              {OUTREACH_EXAMPLES.map(example => (
+                <div
+                  key={example}
+                  className="rounded-2xl border border-orange-100 bg-gradient-to-br from-orange-50 to-rose-50 p-4"
+                >
+                  <p className="text-sm font-semibold text-gray-800">{example}</p>
+                </div>
+              ))}
+            </div>
+          </SectionCard>
+
+          <SectionCard
+            title="How to distribute them"
+            variant="gradient"
+            className="border-orange-300 shadow-md"
+          >
+            <div className="space-y-4 text-gray-800">
+              <p className="leading-7">
+                Print the cards in batches, photocopy them when needed, and hand them out with
+                gentleness and respect.
+              </p>
+              <p className="leading-7">
+                You can share them one-to-one, leave them in welcome packs, or distribute them
+                during gatherings and outreach moments.
+              </p>
+              <p className="leading-7">
+                If you need a starting point, use the current yellow card resource and spread it
+                consistently in your area.
+              </p>
+              <Link
+                to="/yellow-card"
+                className="inline-flex items-center gap-2 rounded-xl bg-red-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-red-800"
+              >
+                Open The Love Card
+                <MoveRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </SectionCard>
         </div>
+
+        <section
+          id="donation-accounts"
+          className="rounded-[2rem] border border-orange-200 bg-gradient-to-br from-red-950 via-red-900 to-orange-900 p-6 text-white shadow-xl md:p-8"
+        >
+          <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-orange-200">
+                Donation
+              </p>
+              <h2 className="mt-3 text-3xl font-serif">
+                Share the blessing with yourself and your generation
+              </h2>
+              <p className="mt-4 max-w-xl text-base leading-7 text-orange-100">
+                Feel free to donate in order to help us share the full blessing more widely. Use
+                the right account and currency below once your verified payment details are added.
+              </p>
+              <div className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-orange-100">
+                Replace the placeholder account details below with your real verified ministry
+                accounts before publishing this page live.
+              </div>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              {DONATION_ACCOUNTS.map(account => (
+                <div
+                  key={account.currency}
+                  className="rounded-2xl border border-white/10 bg-white/10 p-5 backdrop-blur-sm"
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-orange-200">
+                        {account.currency}
+                      </p>
+                      <h3 className="mt-2 text-xl font-serif text-white">{account.label}</h3>
+                    </div>
+                    <div className="rounded-full border border-white/15 px-3 py-1 text-xs font-semibold text-orange-100">
+                      Active Soon
+                    </div>
+                  </div>
+                  <dl className="mt-5 space-y-3 text-sm">
+                    <div>
+                      <dt className="text-orange-200">Account name</dt>
+                      <dd className="mt-1 text-white">{account.accountName}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-orange-200">Bank</dt>
+                      <dd className="mt-1 text-white">{account.bank}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-orange-200">Account number</dt>
+                      <dd className="mt-1 font-semibold tracking-[0.16em] text-white">
+                        {account.accountNumber}
+                      </dd>
+                    </div>
+                  </dl>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <CTASection
+          title="Join us with prayer, presence, and practical support"
+          description="Every prayer, every love card, every visit, and every gift helps carry this work further across Nigeria and beyond."
+          primaryAction={{ label: 'Contact The Team', href: '/contact' }}
+          secondaryAction={{ label: 'Read The Mission', href: '/mission-vision' }}
+        />
       </div>
     </PageShell>
   );

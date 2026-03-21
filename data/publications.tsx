@@ -1,5 +1,12 @@
 import React from 'react';
 import { Book } from 'lucide-react';
+import { agapeLoveBook } from './agape-love-book';
+
+export interface PublicationPage {
+  title?: string;
+  sourcePageNumber?: number;
+  content: React.ReactNode;
+}
 
 export interface PublicationProps {
   id: string; // Added ID for routing
@@ -8,14 +15,18 @@ export interface PublicationProps {
   description: string;
   type: 'Book' | 'E-Book' | 'Audiobook';
   coverImage?: string;
+  pdfUrl?: string;
+  pageCount?: number;
   images?: string[];
-  pages?: { title?: string; content: React.ReactNode }[];
+  pages?: PublicationPage[];
+  loadPages?: () => Promise<PublicationPage[]>;
 }
 
 import { happyHomeDigest } from './happyhome-digest';
 
 export const publications: PublicationProps[] = [
   happyHomeDigest,
+  agapeLoveBook,
   {
     id: 'love-nigerians',
     title: 'Love Nigerians Or Live On Curses',
@@ -746,5 +757,18 @@ export const publications: PublicationProps[] = [
         ),
       },
     ],
+  },
+  {
+    id: 'medicine-without-medication',
+    title: 'Medicine Without Medication',
+    author: 'MOSES ADEREMI AKANBI OWOEYE',
+    description:
+      'A readable text edition of Medicine Without Medication, available online with the original PDF for download.',
+    type: 'E-Book',
+    coverImage: '/publications/universal-cover.png',
+    pageCount: 95,
+    loadPages: async () =>
+      (await import('./medicine-without-medication-pages.json')).default as PublicationPage[],
+    pdfUrl: '/publications/medicine-without-medication.pdf',
   },
 ];

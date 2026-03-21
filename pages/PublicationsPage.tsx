@@ -56,11 +56,14 @@ export default function PublicationsPage() {
         {/* Publications Grid */}
         <h2 className="text-2xl font-serif text-red-800 mb-6 text-center">All Publications</h2>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
-          {publications.map(book => (
-            <div
-              key={book.id}
-              className="bg-white rounded-3xl shadow-xl overflow-hidden border-2 border-orange-100 hover:shadow-2xl hover:border-orange-300 transition-all duration-300 transform hover:-translate-y-2"
-            >
+          {publications.map(book => {
+            const readablePageCount = book.pageCount ?? book.pages?.length;
+
+            return (
+              <div
+                key={book.id}
+                className="bg-white rounded-3xl shadow-xl overflow-hidden border-2 border-orange-100 hover:shadow-2xl hover:border-orange-300 transition-all duration-300 transform hover:-translate-y-2"
+              >
               {/* Book Cover */}
               <div className="relative h-80 bg-gradient-to-br from-red-900 to-orange-800 overflow-hidden">
                 {book.coverImage ? (
@@ -94,9 +97,14 @@ export default function PublicationsPage() {
                   <span className="px-3 py-1 bg-orange-100 text-orange-700 rounded-full font-medium">
                     {book.type}
                   </span>
-                  {book.pages && (
+                  {readablePageCount ? (
                     <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full font-medium">
-                      {book.pages.length} Pages
+                      {readablePageCount} Pages
+                    </span>
+                  ) : null}
+                  {book.pdfUrl && (
+                    <span className="px-3 py-1 bg-red-100 text-red-700 rounded-full font-medium">
+                      PDF
                     </span>
                   )}
                 </div>
@@ -108,21 +116,34 @@ export default function PublicationsPage() {
                     className="flex-1 inline-flex items-center justify-center gap-2 bg-gradient-to-r from-red-600 to-orange-600 text-white font-bold px-6 py-3 rounded-xl hover:from-red-700 hover:to-orange-700 transition-all shadow-md hover:shadow-lg"
                   >
                     <BookOpen className="w-5 h-5" />
-                    Read Online
+                    {readablePageCount ? 'Read Book' : book.pdfUrl ? 'Open PDF' : 'Read Online'}
                   </Link>
-                  <button
-                    type="button"
-                    onClick={() => window.print()}
-                    className="flex-1 inline-flex items-center justify-center gap-2 bg-white border-2 border-orange-600 text-orange-600 font-bold px-6 py-3 rounded-xl hover:bg-orange-50 transition-all"
-                    title="Print to PDF using your browser"
-                  >
-                    <Download className="w-5 h-5" />
-                    Print / Save PDF
-                  </button>
+                  {book.pdfUrl ? (
+                    <a
+                      href={book.pdfUrl}
+                      download
+                      className="flex-1 inline-flex items-center justify-center gap-2 bg-white border-2 border-orange-600 text-orange-600 font-bold px-6 py-3 rounded-xl hover:bg-orange-50 transition-all"
+                      title="Download PDF"
+                    >
+                      <Download className="w-5 h-5" />
+                      Download PDF
+                    </a>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => window.print()}
+                      className="flex-1 inline-flex items-center justify-center gap-2 bg-white border-2 border-orange-600 text-orange-600 font-bold px-6 py-3 rounded-xl hover:bg-orange-50 transition-all"
+                      title="Print to PDF using your browser"
+                    >
+                      <Download className="w-5 h-5" />
+                      Print / Save PDF
+                    </button>
+                  )}
                 </div>
               </div>
-            </div>
-          ))}
+              </div>
+            );
+          })}
         </div>
 
         {/* Call to Action */}

@@ -4,12 +4,14 @@ import { cn } from './utils';
 import { Link } from 'react-router-dom';
 
 const ctaSectionVariants = cva(
-  'rounded-2xl p-8 md:p-10 text-center shadow-xl transition-all duration-300',
+  'rounded-[2rem] p-8 text-center shadow-[0_26px_56px_rgba(63,25,14,0.16)] transition-all duration-300 md:p-10',
   {
     variants: {
       variant: {
-        gradient: 'bg-gradient-to-r from-red-600 to-orange-600 text-white',
-        white: 'bg-white border border-orange-200 text-gray-900',
+        gradient:
+          'bg-[linear-gradient(135deg,_#2b1511_0%,_#5d2015_42%,_#8f351f_72%,_#d67d3e_100%)] text-white',
+        white:
+          'border border-[rgba(176,111,74,0.16)] bg-[linear-gradient(135deg,_rgba(255,255,255,0.94)_0%,_rgba(248,238,227,0.96)_100%)] text-gray-900',
       },
     },
     defaultVariants: {
@@ -51,28 +53,28 @@ export function CTASection({
   const isGradient = variant === 'gradient' || variant === undefined;
 
   const primaryButtonClasses = cn(
-    'px-8 py-4 rounded-xl font-bold text-lg transition-all duration-200 shadow-lg min-w-[44px] min-h-[44px]',
+    'min-h-[44px] min-w-[44px] rounded-full px-8 py-4 text-lg font-bold transition-all duration-300 shadow-lg',
     isGradient
-      ? 'bg-white text-red-600 hover:bg-orange-50'
-      : 'bg-gradient-to-r from-red-600 to-orange-600 text-white hover:from-red-700 hover:to-orange-700'
+      ? 'bg-white text-red-700 hover:-translate-y-0.5 hover:bg-orange-50'
+      : 'bg-gradient-to-r from-red-600 to-orange-600 text-white hover:-translate-y-0.5 hover:from-red-700 hover:to-orange-700'
   );
 
   const secondaryButtonClasses = cn(
-    'px-8 py-4 rounded-xl font-bold text-lg transition-all duration-200 min-w-[44px] min-h-[44px]',
+    'min-h-[44px] min-w-[44px] rounded-full px-8 py-4 text-lg font-bold transition-all duration-300',
     isGradient
-      ? 'bg-transparent border-2 border-white text-white hover:bg-white/10'
-      : 'bg-transparent border-2 border-red-600 text-red-600 hover:bg-red-50'
+      ? 'border border-white/40 bg-transparent text-white hover:-translate-y-0.5 hover:bg-white/10'
+      : 'border border-red-600 text-red-600 hover:-translate-y-0.5 hover:bg-red-50'
   );
 
   return (
     <div className={cn(ctaSectionVariants({ variant }), className)} {...props}>
-      <h3 className={cn('text-3xl font-serif mb-4', isGradient ? 'text-white' : 'text-red-800')}>
+      <h3 className={cn('mb-4 text-3xl font-serif', isGradient ? 'text-white' : 'text-[#3d1d17]')}>
         {title}
       </h3>
       <p
         className={cn(
-          'text-xl mb-8 max-w-2xl mx-auto',
-          isGradient ? 'text-orange-100' : 'text-gray-600'
+          'mx-auto mb-8 max-w-2xl text-xl',
+          isGradient ? 'text-orange-100' : 'text-[#6e4737]'
         )}
       >
         {description}

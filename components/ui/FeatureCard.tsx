@@ -3,15 +3,18 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from './utils';
 
 const accentColorVariants = cva(
-  'rounded-2xl p-6 md:p-8 shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1 bg-white border',
+  'rounded-[1.75rem] bg-white/92 p-6 shadow-[0_24px_48px_rgba(95,53,30,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_30px_56px_rgba(95,53,30,0.12)] md:p-8 backdrop-blur-sm border',
   {
     variants: {
       accentColor: {
-        red: 'border-l-4 border-l-red-500 border-red-100 hover:border-red-200',
-        orange: 'border-l-4 border-l-orange-500 border-orange-100 hover:border-orange-200',
-        yellow: 'border-l-4 border-l-yellow-500 border-yellow-100 hover:border-yellow-200',
-        green: 'border-l-4 border-l-amber-500 border-amber-100 hover:border-amber-200',
-        blue: 'border-l-4 border-l-orange-500 border-orange-100 hover:border-orange-200',
+        red: 'border-l-4 border-l-red-500 border-[rgba(185,28,28,0.12)] hover:border-[rgba(185,28,28,0.2)]',
+        orange:
+          'border-l-4 border-l-orange-500 border-[rgba(234,88,12,0.12)] hover:border-[rgba(234,88,12,0.2)]',
+        yellow:
+          'border-l-4 border-l-yellow-500 border-[rgba(245,158,11,0.12)] hover:border-[rgba(245,158,11,0.2)]',
+        green:
+          'border-l-4 border-l-amber-500 border-[rgba(217,119,6,0.12)] hover:border-[rgba(217,119,6,0.2)]',
+        blue: 'border-l-4 border-l-orange-500 border-[rgba(234,88,12,0.12)] hover:border-[rgba(234,88,12,0.2)]',
       },
     },
     defaultVariants: {
@@ -60,8 +63,8 @@ export function FeatureCard({
   return (
     <div className={cn(accentColorVariants({ accentColor }), className)} {...props}>
       <div className={iconBackgroundVariants({ accentColor })}>{icon}</div>
-      <h4 className="text-xl font-serif text-gray-900 mb-3">{title}</h4>
-      <p className="text-gray-600 leading-relaxed">{description}</p>
+      <h4 className="mb-3 text-xl font-serif text-[#3d1d17]">{title}</h4>
+      <p className="leading-relaxed text-[#6e4737]">{description}</p>
     </div>
   );
 }

@@ -1,206 +1,646 @@
-import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Sun, Leaf, BookOpen, Users, Globe } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
+import { animate, createTimeline, stagger } from 'animejs';
+import type { LucideIcon } from 'lucide-react';
+import {
+  ArrowRight,
+  BadgeCheck,
+  BookHeart,
+  BookOpen,
+  Globe,
+  HandHeart,
+  HeartHandshake,
+  House,
+  MoveRight,
+  Quote,
+  ScrollText,
+  Sparkles,
+  SunMedium,
+  Target,
+  Users,
+} from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import Logo from './Logo';
+
+const IMPACT_SIGNALS = [
+  { label: '17 characteristics', value: 'A visible pattern of love you can practice at home.' },
+  { label: '30 day challenge', value: 'A disciplined rhythm for hearts that want change, not hype.' },
+  { label: 'Nationwide burden', value: 'Heal the family first, then watch communities change.' },
+] as const;
+
+const PILLARS: Array<{
+  step: string;
+  title: string;
+  description: string;
+  icon: LucideIcon;
+}> = [
+  {
+    step: '01',
+    title: 'Start where pretending cannot survive',
+    description:
+      'Transformation begins at the family level, where words, habits, and private behavior are impossible to fake for long.',
+    icon: House,
+  },
+  {
+    step: '02',
+    title: 'Speak scripture until it becomes personal',
+    description:
+      'Put your name inside 1 Corinthians 13 and let the standard of love expose what must change in you first.',
+    icon: ScrollText,
+  },
+  {
+    step: '03',
+    title: 'Train love like a daily discipline',
+    description:
+      'Love is not vague inspiration. It is patience, kindness, restraint, humility, honesty, and courage practiced repeatedly.',
+    icon: HandHeart,
+  },
+  {
+    step: '04',
+    title: 'Send the change outward',
+    description:
+      'Homes formed by practical love raise different children, shape different leaders, and eventually influence the nation.',
+    icon: Globe,
+  },
+] as const;
+
+const ROUTES: Array<{
+  title: string;
+  description: string;
+  href: string;
+  cta: string;
+  icon: LucideIcon;
+}> = [
+  {
+    title: 'The 17 characteristics of love',
+    description: 'Study the pattern of biblical love until it becomes visible in speech, attitude, and action.',
+    href: '/characteristics',
+    cta: 'Study the pattern',
+    icon: BookOpen,
+  },
+  {
+    title: 'Bible passages for daily renewal',
+    description: 'Walk through scriptural anchors that keep love from turning into sentiment or empty language.',
+    href: '/bible-passages',
+    cta: 'Read the passages',
+    icon: BookHeart,
+  },
+  {
+    title: 'The Yellow Card movement',
+    description: 'Carry the message in a practical format you can remember, share, and return to during pressure.',
+    href: '/yellow-card-series',
+    cta: 'Get the yellow card',
+    icon: BadgeCheck,
+  },
+  {
+    title: 'A guided love challenge',
+    description: 'Build a daily rhythm with reflection, accountability, and applied acts of love in real life.',
+    href: '/love-challenge',
+    cta: 'Enter the challenge',
+    icon: Target,
+  },
+] as const;
+
+const TESTIMONIES = [
+  'When love of money leads a home, peace disappears quietly before anyone notices.',
+  'When the love of God leads a home, children absorb a different language and future.',
+  'The first place a nation changes is the private life of the family.',
+] as const;
 
 export default function Hero() {
   const navigate = useNavigate();
+  const rootRef = useRef<HTMLDivElement | null>(null);
 
-  const handleStartWithLove = () => {
-    navigate('/bible-passages');
-  };
+  useEffect(() => {
+    const root = rootRef.current;
 
-  const features = [
-    {
-      icon: <BookOpen className="w-8 h-8" />,
-      title: 'Love Ministry for Nigeria',
-      description:
-        "God's love is the root of all blessings, while love of money is the root of all evils in our families",
-    },
-    {
-      icon: <Users className="w-8 h-8" />,
-      title: 'Transform Nigerian Families',
-      description: 'Break the cycle of corruption and wickedness through loving, God-fearing homes',
-    },
-    {
-      icon: <Globe className="w-8 h-8" />,
-      title: 'Yellow Card Revolution',
-      description:
-        'Get your Yellow Card and practice the 17 characteristics of love in your daily life',
-    },
-  ];
+    if (!root) {
+      return;
+    }
 
-  // Main render function
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const revertibles: Array<{ revert: () => void }> = [];
+    const revealGroups = Array.from(root.querySelectorAll<HTMLElement>('[data-reveal-group]'));
+    const pushAnimation = (target: Element | null, animation: Parameters<typeof animate>[1]) => {
+      if (!target) {
+        return;
+      }
+
+      revertibles.push(animate(target, animation));
+    };
+
+    const showImmediately = () => {
+      root.querySelectorAll<HTMLElement>('.hero-line, .reveal-item').forEach(element => {
+        element.classList.add('is-visible');
+        element.style.opacity = '1';
+        element.style.transform = 'none';
+      });
+    };
+
+    if (prefersReducedMotion) {
+      showImmediately();
+      return;
+    }
+
+    const introTimeline = createTimeline({
+      defaults: {
+        duration: 1100,
+        ease: 'spring(1, 82, 12, 0)',
+      },
+    });
+
+    introTimeline
+      .add(root.querySelectorAll('.ambient-orb'), {
+        opacity: [0, 1],
+        scale: [0.72, 1],
+        delay: stagger(140),
+        duration: 1500,
+      })
+      .add(
+        root.querySelectorAll('[data-hero-badge]'),
+        {
+          opacity: [0, 1],
+          y: [24, 0],
+          scale: [0.95, 1],
+          duration: 800,
+        },
+        120
+      )
+      .add(
+        root.querySelectorAll('.hero-line'),
+        {
+          opacity: [0, 1],
+          y: [56, 0],
+          delay: stagger(130),
+          duration: 1000,
+        },
+        '-=640'
+      )
+      .add(
+        root.querySelectorAll('[data-hero-copy]'),
+        {
+          opacity: [0, 1],
+          y: [26, 0],
+          delay: stagger(120),
+          duration: 860,
+        },
+        '-=760'
+      )
+      .add(
+        root.querySelectorAll('[data-hero-panel]'),
+        {
+          opacity: [0, 1],
+          y: [42, 0],
+          scale: [0.96, 1],
+          delay: stagger(120),
+          duration: 980,
+        },
+        '-=840'
+      );
+
+    revertibles.push(introTimeline);
+
+    pushAnimation(root.querySelector('.ambient-orb-a'), {
+        x: [0, 42],
+        y: [0, -34],
+        scale: [1, 1.1],
+        duration: 4200,
+        ease: 'inOutSine',
+        loop: true,
+        alternate: true,
+      });
+    pushAnimation(root.querySelector('.ambient-orb-b'), {
+        x: [0, -48],
+        y: [0, 28],
+        scale: [1.08, 0.94],
+        duration: 5600,
+        ease: 'inOutQuad',
+        loop: true,
+        alternate: true,
+      });
+    pushAnimation(root.querySelector('.ambient-orb-c'), {
+        x: [0, 26],
+        y: [0, 18],
+        scale: [0.96, 1.12],
+        duration: 5100,
+        ease: 'inOutQuad',
+        loop: true,
+        alternate: true,
+      });
+    pushAnimation(root.querySelector('[data-float-panel]'), {
+        y: [0, -14],
+        rotate: [0, -1.25],
+        duration: 5200,
+        ease: 'inOutSine',
+        loop: true,
+        alternate: true,
+      });
+
+    revertibles.push(
+      animate(root.querySelectorAll('[data-floating-chip]'), {
+        y: [0, -10],
+        duration: 2400,
+        delay: stagger(180),
+        ease: 'inOutSine',
+        loop: true,
+        alternate: true,
+      })
+    );
+
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) {
+            return;
+          }
+
+          const group = entry.target as HTMLElement;
+
+          if (group.dataset.revealed === 'true') {
+            observer.unobserve(group);
+            return;
+          }
+
+          group.dataset.revealed = 'true';
+
+          const items = group.querySelectorAll<HTMLElement>('[data-reveal-item]');
+
+          const revealAnimation = animate(items, {
+            opacity: [0, 1],
+            y: [36, 0],
+            scale: [0.97, 1],
+            delay: stagger(110),
+            duration: 920,
+            ease: 'spring(1, 80, 10, 0)',
+            onComplete: () => {
+              items.forEach(item => item.classList.add('is-visible'));
+            },
+          });
+
+          revertibles.push(revealAnimation);
+          observer.unobserve(group);
+        });
+      },
+      {
+        threshold: 0.18,
+        rootMargin: '0px 0px -10% 0px',
+      }
+    );
+
+    revealGroups.forEach(group => observer.observe(group));
+
+    return () => {
+      observer.disconnect();
+      revertibles.forEach(item => item.revert());
+    };
+  }, []);
+
   return (
-    <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="relative min-h-screen bg-gradient-to-br from-red-600 via-orange-500 to-red-700 overflow-hidden">
-        {/* Decorative Background Elements */}
-        <div className="absolute inset-0">
-          {/* Sun icon */}
-          <Sun className="absolute top-20 right-20 w-16 h-16 text-yellow-300 opacity-60" />
+    <div ref={rootRef} className="relative overflow-hidden bg-[#f6eadb] text-[#2a1712]">
+      <section className="texture-noise warm-grid relative isolate overflow-hidden bg-[radial-gradient(circle_at_top,_rgba(255,244,234,0.42),_transparent_24%),linear-gradient(150deg,_#2f1713_0%,_#5f2116_34%,_#8e331f_68%,_#d27a3f_100%)] px-4 pb-20 pt-10 sm:px-6 lg:px-8 lg:pb-28 lg:pt-14">
+        <div className="ambient-orb ambient-orb-a absolute left-[-8%] top-[10%] h-72 w-72 rounded-full bg-[#ffd9a6]/18 blur-3xl" />
+        <div className="ambient-orb ambient-orb-b absolute right-[-4%] top-[18%] h-96 w-96 rounded-full bg-[#f3a061]/18 blur-3xl" />
+        <div className="ambient-orb ambient-orb-c absolute bottom-[-8%] left-[34%] h-80 w-80 rounded-full bg-[#fff1df]/10 blur-3xl" />
 
-          {/* Brand icon */}
-          <div className="absolute bottom-32 right-32 w-12 h-12 opacity-50">
-            <Logo className="w-full h-full" />
-          </div>
+        <div className="relative mx-auto max-w-7xl">
+          <div className="grid gap-14 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
+            <div className="max-w-4xl pt-10 lg:pt-16">
+              <div
+                data-hero-badge
+                className="pill glass-border inline-flex items-center gap-2 bg-white/10 text-[#fff3e7]"
+              >
+                <Logo className="h-4 w-4" />
+                Practical Love for homes, churches, and communities that want reform.
+              </div>
 
-          {/* Leaf icon */}
-          <Leaf className="absolute bottom-40 left-20 w-10 h-10 text-orange-300 opacity-40" />
-        </div>
-
-        <div className="relative z-10 flex items-start min-h-screen px-4 sm:px-6 lg:px-8 pt-24 pb-16">
-          <div className="max-w-6xl mx-auto w-full">
-            <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-12 items-center">
-              <div className="max-w-3xl">
-                <h1 className="text-5xl md:text-6xl lg:text-7xl font-serif text-white mb-6 leading-tight">
-                  Practical
-                  <br />
-                  Love
-                </h1>
-
-                <h2 className="text-xl md:text-3xl text-white mb-8 tracking-wide font-medium">
-                  Can we be honest for a moment? You are tired.
-                </h2>
-
-                <p className="text-lg text-white mb-10 max-w-2xl leading-relaxed">
-                  Behind the smile, behind the hustle, there is a secret weight you carry. You've
-                  chased success, status, and security, yet the deep hunger in your heart remains
-                  unfed.
-                  <br />
-                  <br />
-                  We want to hand you the key to unlocking the life you were made for. It starts
-                  with a simple whisper. Take 1 Corinthians 13 and put your name in place of the
-                  word "love." Say it:{' '}
-                  <span className="italic text-orange-200 font-medium">
-                    "I am patient... I am kind..."
-                  </span>
-                  <br />
-                  <br />
-                  Do you feel that? That is your soul finally taking a breath. Come home to Love.
-                  <br />
-                  <br />
-                  <span className="font-semibold text-orange-200">
-                    The only sure way God can answer your prayer is at the family level
-                  </span>
-                  , not in your church, not in the mosque, and not at the herbalist shrine. Why the
-                  family level? Because Scripture says:{' '}
-                  <span className="italic text-orange-200">
-                    "Where two or three are gathered in my name, there am I among them"
-                  </span>{' '}
-                  (Matthew 18:20). In the home, pretense does not last. Children, from early years
-                  through their teens, are like chameleons: they absorb what parents say and what
-                  they do, both in public and in private. A child is often the reflection of the
-                  parent. So when daddy and mommy become true children of God, the power of the Holy
-                  Spirit begins to shape the whole family.
-                </p>
-
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <button onClick={handleStartWithLove} className="btn-brand text-lg px-8 py-4">
-                    <span className="flex items-center gap-2">
-                      Begin Your Journey
-                      <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
-                    </span>
-                  </button>
-                  <Link
-                    to="/yellow-card-series"
-                    className="btn-outline-brand text-lg px-8 py-4"
-                  >
-                    <span className="flex items-center gap-2">Get Your Yellow Card</span>
-                  </Link>
+              <div className="mt-7 space-y-2 text-[#fff6ec]">
+                <div className="hero-line font-serif text-[clamp(3.6rem,10vw,7.4rem)] leading-[0.86] tracking-[-0.04em]">
+                  Come home
+                </div>
+                <div className="hero-line font-serif text-[clamp(3.4rem,9vw,6.8rem)] leading-[0.88] tracking-[-0.04em] text-[#ffd8bb]">
+                  to practical
+                </div>
+                <div className="hero-line font-serif text-[clamp(3.8rem,11vw,8.2rem)] leading-[0.82] tracking-[-0.05em]">
+                  love
                 </div>
               </div>
 
-              {/* Family Love Image */}
-              <div className="justify-self-center lg:justify-self-end mt-6 lg:mt-0">
-                <div className="overflow-hidden rounded-2xl shadow-2xl border-4 border-white/20 bg-white/10">
+              <p
+                data-hero-copy
+                className="reveal-item mt-8 max-w-2xl text-lg leading-8 text-[#fff0e3] opacity-90 md:text-xl"
+              >
+                Behind the hustle, status, and survival instinct, many homes are carrying silent
+                exhaustion. Practical Love exists to move people from rhetoric into a disciplined,
+                biblical pattern of love that restores the family and reaches the nation.
+              </p>
+
+              <div data-hero-copy className="reveal-item mt-10 flex flex-col gap-4 sm:flex-row">
+                <button
+                  onClick={() => navigate('/bible-passages')}
+                  className="btn-brand group px-8 py-4 text-base md:text-lg"
+                >
+                  Begin with scripture
+                  <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+                </button>
+
+                <Link
+                  to="/love-challenge"
+                  className="btn-outline-light group px-8 py-4 text-base md:text-lg"
+                >
+                  Take the 30 day challenge
+                  <MoveRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+                </Link>
+              </div>
+
+              <div
+                data-hero-copy
+                className="reveal-item mt-12 grid gap-3 sm:grid-cols-3"
+              >
+                {IMPACT_SIGNALS.map(signal => (
+                  <div
+                    key={signal.label}
+                    className="glass-border rounded-[1.5rem] bg-white/8 p-4 text-[#fff3e7]"
+                  >
+                    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#ffcfa8]">
+                      {signal.label}
+                    </p>
+                    <p className="mt-3 text-sm leading-6 text-[#fff3e7] opacity-80">
+                      {signal.value}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="relative lg:pt-10">
+              <div
+                data-hero-panel
+                data-float-panel
+                className="editorial-panel reveal-item mx-auto max-w-[34rem] p-4 sm:p-5"
+              >
+                <div className="overflow-hidden rounded-[1.6rem] border border-white/10">
                   <img
-                    src="/love-hero.png"
+                    src="/love-hero-v2.png"
                     alt="Family embracing in warm light"
-                    className="w-[320px] sm:w-[420px] lg:w-[520px] xl:w-[600px] h-auto object-cover opacity-95 hover:opacity-100 transition-all duration-500"
+                    className="h-[28rem] w-full object-cover sm:h-[34rem]"
                   />
                 </div>
+
+                <div className="grid gap-3 p-3 sm:grid-cols-[1.15fr_0.85fr]">
+                  <div className="rounded-[1.35rem] bg-[#1f0f0b]/48 p-5 text-[#fff3e7]">
+                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#ffca9e]">
+                      Daily whisper
+                    </p>
+                    <p className="mt-3 font-serif text-3xl leading-none">
+                      &quot;I am patient. I am kind.&quot;
+                    </p>
+                    <p className="mt-4 text-sm leading-6 text-[#fff3e7] opacity-80">
+                      Put your name into the text until love stops being poetry and becomes a
+                      mirror.
+                    </p>
+                  </div>
+
+                  <div className="rounded-[1.35rem] bg-white/10 p-5 text-[#fff3e7]">
+                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#ffca9e]">
+                      Starting point
+                    </p>
+                    <p className="mt-3 text-lg font-semibold">The family level.</p>
+                    <p className="mt-3 text-sm leading-6 text-[#fff3e7] opacity-80">
+                      Where private conduct, marriage, parenting, and tone reveal what truly rules a
+                      heart.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                data-hero-panel
+                data-floating-chip
+                className="reveal-item glass-border absolute -left-12 top-14 hidden max-w-[12rem] rounded-[1.5rem] bg-[#fff5ea]/92 p-4 text-[#5b2d21] shadow-[0_24px_48px_rgba(39,18,12,0.22)] min-[1680px]:block"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#f6dfc6]">
+                    <SunMedium className="h-5 w-5 text-[#9d4a27]" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#b55b32]">
+                      Hidden burden
+                    </p>
+                    <p className="mt-1 text-sm leading-5">
+                      Homes look fine in public while breaking quietly in private.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                data-hero-panel
+                data-floating-chip
+                className="reveal-item glass-border absolute -bottom-4 -right-10 hidden max-w-[13rem] rounded-[1.5rem] bg-[#20100c]/74 p-4 text-[#fff6eb] shadow-[0_24px_48px_rgba(39,18,12,0.28)] min-[1680px]:block"
+              >
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#ffca9e]">
+                  Mission pulse
+                </p>
+                <p className="mt-3 text-lg font-semibold">Heal the home. Raise the standard.</p>
+                <p className="mt-3 text-sm leading-6 text-[#fff6eb] opacity-80">
+                  The nation feels whatever the family rehearses long enough.
+                </p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Nigeria Focus Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
-        <div className="max-w-6xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-serif text-red-800 mb-6">
-            Love Ministry for Nigeria
-          </h2>
-          <div className="bg-red-50 rounded-xl p-8 border-2 border-red-200 shadow-lg">
-            <p className="text-lg text-gray-800 mb-4 leading-relaxed font-medium">
-              "We do not love ourselves in Nigeria. All families in Nigeria are guilty including my
-              own and your own families."
+      <section className="px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+        <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[0.96fr_1.04fr]" data-reveal-group>
+          <div
+            data-reveal-item
+            className="reveal-item surface relative overflow-hidden bg-[linear-gradient(145deg,_#f6ede1_0%,_#fff8f1_52%,_#f2e2ce_100%)] p-8 md:p-10"
+          >
+            <div className="absolute right-6 top-6 rounded-full bg-[#fff1df] p-3 text-[#9c4f2d]">
+              <Quote className="h-5 w-5" />
+            </div>
+            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#ab603c]">
+              A direct word
             </p>
-            <p className="text-lg text-gray-800 mb-4 leading-relaxed font-medium">
-              "Love of money is the root of all evils; name any evil you find in Nigeria."
-            </p>
-            <p className="text-xl text-red-700 font-bold bg-yellow-100 p-4 rounded-lg">
-              "There's a thin line between LOVE of God and LOVE of money; you need to work hard
-              DAILY to be on the side of God."
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-orange-50 to-red-50">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-serif text-red-800 mb-4">
-              Why Love Ministry for Nigeria?
+            <h2 className="mt-4 max-w-xl font-serif text-4xl leading-[0.92] text-[#3e1e17] md:text-5xl">
+              Love must become a household culture, not a public performance.
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              "For God so loved the world" (John 3:16) — This includes every Nigerian, NO EXCEPTION!
+            <p className="mt-6 max-w-2xl text-lg leading-8 text-[#6b4332]">
+              The crisis is not only political or economic. It is moral, relational, and domestic.
+              Homes teach a language long before society hears it out loud.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
-              <div
-                key={index}
-                className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 text-center"
+          <div className="grid gap-4 md:grid-cols-3">
+            {TESTIMONIES.map((statement, index) => (
+              <article
+                key={statement}
+                data-reveal-item
+                className="reveal-item surface bg-white/86 p-6"
               >
-                <div className="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                  {feature.icon}
-                </div>
-                <h3 className="text-xl font-semibold text-gray-800 mb-3">{feature.title}</h3>
-                <p className="text-gray-600 leading-relaxed">{feature.description}</p>
-              </div>
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#c17249]">
+                  Signal {index + 1}
+                </p>
+                <p className="mt-4 text-base leading-7 text-[#4c2b20]">{statement}</p>
+              </article>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Call to Action Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-red-600 to-orange-600">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-serif text-white mb-6">
-            Transform Nigeria Through Love
-          </h2>
-          <p className="text-xl text-orange-100 mb-10 max-w-2xl mx-auto">
-            "There is no way something good will come out of loving and godly families that will not
-            impact the family, community, church, mosque and society at large."
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button onClick={handleStartWithLove} className="btn-brand text-lg px-8 py-4">
-              Explore Bible Passages
-            </button>
-            <button
-              onClick={() => navigate('/mission-vision')}
-              className="btn-outline-light text-lg px-8 py-4"
-            >
-              Our Mission & Vision
-            </button>
+      <section className="px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
+        <div className="mx-auto max-w-7xl" data-reveal-group>
+          <div
+            data-reveal-item
+            className="reveal-item mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between"
+          >
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#b76840]">
+                The pathway
+              </p>
+              <h2 className="mt-3 max-w-2xl font-serif text-4xl leading-[0.94] text-[#341a15] md:text-5xl">
+                Four movements from exhaustion to order.
+              </h2>
+            </div>
+            <p className="max-w-xl text-base leading-7 text-[#6e4737]">
+              This is the shape of the message: return to the home, submit to scripture, practice
+              love daily, and let the result move outward.
+            </p>
+          </div>
+
+          <div className="grid gap-4 lg:grid-cols-4">
+            {PILLARS.map(pillar => {
+              const Icon = pillar.icon;
+
+              return (
+                <article
+                  key={pillar.step}
+                  data-reveal-item
+                  className="reveal-item surface group bg-[linear-gradient(180deg,_rgba(255,255,255,0.94),_rgba(247,236,221,0.9))] p-6 transition-transform duration-300 hover:-translate-y-1"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-semibold uppercase tracking-[0.24em] text-[#b36c46]">
+                      Step {pillar.step}
+                    </span>
+                    <div className="rounded-2xl bg-[#f3dfcb] p-3 text-[#9d4b2a] transition-transform duration-300 group-hover:scale-105">
+                      <Icon className="h-5 w-5" />
+                    </div>
+                  </div>
+                  <h3 className="mt-6 font-serif text-3xl leading-[0.95] text-[#351913]">
+                    {pillar.title}
+                  </h3>
+                  <p className="mt-4 text-base leading-7 text-[#674132]">{pillar.description}</p>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <section className="px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+        <div className="mx-auto max-w-7xl" data-reveal-group>
+          <div
+            data-reveal-item
+            className="reveal-item mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between"
+          >
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#b76840]">
+                Build the rhythm
+              </p>
+              <h2 className="mt-3 max-w-3xl font-serif text-4xl leading-[0.94] text-[#341a15] md:text-5xl">
+                Enter the message through the route that fits your household right now.
+              </h2>
+            </div>
+            <div className="pill bg-white/70 text-[#8d4a2b]">
+              <Sparkles className="h-4 w-4" />
+              A sharper landing page means nothing if it does not lead to practice.
+            </div>
+          </div>
+
+          <div className="grid gap-5 lg:grid-cols-2">
+            {ROUTES.map(route => {
+              const Icon = route.icon;
+
+              return (
+                <Link
+                  key={route.href}
+                  to={route.href}
+                  data-reveal-item
+                  className="reveal-item surface group overflow-hidden bg-[linear-gradient(135deg,_rgba(255,255,255,0.96)_0%,_rgba(249,239,228,0.96)_100%)] p-7 transition-transform duration-300 hover:-translate-y-1"
+                >
+                  <div className="flex items-start justify-between gap-6">
+                    <div>
+                      <div className="flex h-14 w-14 items-center justify-center rounded-[1.4rem] bg-[#f3dfcb] text-[#9a4a29] shadow-[inset_0_1px_0_rgba(255,255,255,0.6)]">
+                        <Icon className="h-6 w-6" />
+                      </div>
+                      <h3 className="mt-6 max-w-md font-serif text-3xl leading-[0.96] text-[#301814]">
+                        {route.title}
+                      </h3>
+                    </div>
+                    <ArrowRight className="mt-1 h-5 w-5 text-[#a55b37] transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
+                  </div>
+                  <p className="mt-4 max-w-xl text-base leading-7 text-[#684132]">
+                    {route.description}
+                  </p>
+                  <p className="mt-6 text-sm font-semibold uppercase tracking-[0.2em] text-[#b86b43]">
+                    {route.cta}
+                  </p>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <section className="px-4 pb-20 sm:px-6 lg:px-8 lg:pb-24">
+        <div
+          className="texture-noise relative mx-auto max-w-7xl overflow-hidden rounded-[2.2rem] bg-[linear-gradient(135deg,_#2b1511_0%,_#5d2015_42%,_#8f351f_72%,_#d67d3e_100%)] px-8 py-10 text-[#fff3e7] shadow-[0_36px_80px_rgba(63,25,14,0.26)] sm:px-10 lg:px-14 lg:py-14"
+          data-reveal-group
+        >
+          <div className="absolute -left-8 top-8 h-36 w-36 rounded-full bg-white/10 blur-3xl" />
+          <div className="absolute bottom-0 right-0 h-44 w-44 rounded-full bg-[#ffd2a4]/18 blur-3xl" />
+
+          <div className="relative grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
+            <div data-reveal-item className="reveal-item">
+              <div className="pill glass-border bg-white/10 text-[#ffe2ca]">
+                <HeartHandshake className="h-4 w-4" />
+                One standard for private life and public life.
+              </div>
+              <h2 className="mt-6 max-w-3xl font-serif text-4xl leading-[0.92] text-white md:text-5xl">
+                If the home learns a different language, the future learns a different future.
+              </h2>
+              <p className="mt-5 max-w-2xl text-lg leading-8 text-[#fff1e3] opacity-85">
+                Let this site move people beyond admiration into practice. Study the message, bring
+                it into the family, and carry it outward with consistency.
+              </p>
+            </div>
+
+            <div data-reveal-item className="reveal-item grid gap-4 sm:grid-cols-2">
+              <button
+                onClick={() => navigate('/mission-vision')}
+                className="btn-brand px-7 py-4 text-base"
+              >
+                See the mission
+              </button>
+              <Link to="/growth" className="btn-outline-light px-7 py-4 text-base">
+                Enter the growth hub
+              </Link>
+              <div className="glass-border rounded-[1.6rem] bg-white/8 p-5 sm:col-span-2">
+                <div className="flex items-center gap-3 text-[#ffd1af]">
+                  <Users className="h-5 w-5" />
+                  <span className="text-xs font-semibold uppercase tracking-[0.22em]">
+                    Household focus
+                  </span>
+                </div>
+                <p className="mt-4 text-base leading-7 text-[#fff1e3] opacity-80">
+                  Practical Love is strongest when fathers, mothers, children, mentors, and young
+                  adults all hear the same call and practice the same discipline.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
     </div>
   );
 }
-

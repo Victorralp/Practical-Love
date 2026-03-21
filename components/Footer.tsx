@@ -1,173 +1,172 @@
-import { Mail, Phone, MapPin, Facebook, Twitter, Instagram, Youtube } from 'lucide-react';
+import { ArrowRight, Mail, MapPin, Phone } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Logo from './Logo';
 
+const QUICK_LINKS = [
+  { label: 'Characteristics', href: '/characteristics' },
+  { label: 'Bible Passages', href: '/bible-passages' },
+  { label: 'Yellow Card Series', href: '/yellow-card-series' },
+  { label: 'Growth Hub', href: '/growth' },
+  { label: 'Testimonies', href: '/testimonies' },
+  { label: 'Donate', href: '/donate' },
+] as const;
+
+const ACTION_LINKS = [
+  { label: 'Share a testimony', href: '/share-testimony' },
+  { label: 'Read the mission', href: '/mission-vision' },
+  { label: 'Browse publications', href: '/publications' },
+  { label: 'Enter the challenge', href: '/love-challenge' },
+] as const;
+
+const CONTACT_ITEMS = [
+  {
+    label: 'Email',
+    value: 'logosrhema842@gmail.com',
+    href: 'mailto:logosrhema842@gmail.com',
+    icon: Mail,
+  },
+  {
+    label: 'Phone',
+    value: '+234 123 456 7890',
+    href: 'tel:+2341234567890',
+    icon: Phone,
+  },
+  {
+    label: 'Location',
+    value: 'Lagos, Nigeria',
+    href: '/contact',
+    icon: MapPin,
+  },
+] as const;
+
 export default function Footer() {
+  const currentYear = new Date().getFullYear();
+
   return (
-    <footer className="relative overflow-hidden bg-gradient-to-br from-red-700 via-red-700 to-orange-700 text-white">
-      <div className="absolute -top-24 -right-24 w-72 h-72 rounded-full bg-orange-300/10 blur-3xl" />
-      <div className="absolute -bottom-20 -left-24 w-80 h-80 rounded-full bg-red-900/25 blur-3xl" />
+    <footer className="relative overflow-hidden bg-[linear-gradient(165deg,_#1d0f0c_0%,_#3f1911_42%,_#6b2617_72%,_#a34a24_100%)] px-4 pb-10 pt-6 text-[#fff4e7] sm:px-6 lg:px-8">
+      <div className="absolute -left-16 top-10 h-56 w-56 rounded-full bg-[#f7bc84]/10 blur-3xl" />
+      <div className="absolute bottom-0 right-0 h-64 w-64 rounded-full bg-white/8 blur-3xl" />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 md:py-16 space-y-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-10">
-          <div className="lg:col-span-5">
-            <div className="flex items-center mb-4">
-              <Logo className="w-8 h-8 mr-3" />
-              <h3 className="text-2xl font-serif">Practical Love</h3>
-            </div>
-            <p className="text-orange-100 leading-relaxed max-w-md mb-6">
-              Discover the winning power behind all human endeavours through practical, biblical
-              principles of love that transform lives, relationships, and communities.
-            </p>
-            <div className="flex gap-3">
-              <a
-                href="#"
-                aria-label="Facebook"
-                className="w-10 h-10 rounded-full bg-white/10 border border-white/20 flex items-center justify-center hover:bg-white/20 transition-all duration-200 hover:-translate-y-0.5"
-              >
-                <Facebook className="w-4 h-4" />
-              </a>
-              <a
-                href="#"
-                aria-label="Twitter"
-                className="w-10 h-10 rounded-full bg-white/10 border border-white/20 flex items-center justify-center hover:bg-white/20 transition-all duration-200 hover:-translate-y-0.5"
-              >
-                <Twitter className="w-4 h-4" />
-              </a>
-              <a
-                href="#"
-                aria-label="Instagram"
-                className="w-10 h-10 rounded-full bg-white/10 border border-white/20 flex items-center justify-center hover:bg-white/20 transition-all duration-200 hover:-translate-y-0.5"
-              >
-                <Instagram className="w-4 h-4" />
-              </a>
-              <a
-                href="#"
-                aria-label="YouTube"
-                className="w-10 h-10 rounded-full bg-white/10 border border-white/20 flex items-center justify-center hover:bg-white/20 transition-all duration-200 hover:-translate-y-0.5"
-              >
-                <Youtube className="w-4 h-4" />
-              </a>
-            </div>
-          </div>
-
-          <div className="lg:col-span-3">
-            <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
-            <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-y-2 gap-x-4">
-              <li>
-                <Link to="/" className="text-orange-100 hover:text-white transition-colors">
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link to="/testimonies" className="text-orange-100 hover:text-white transition-colors">
-                  Testimonies
-                </Link>
-              </li>
-              <li>
-                <Link to="/share-testimony" className="text-orange-100 hover:text-white transition-colors">
-                  Share Testimony
-                </Link>
-              </li>
-              <li>
-                <Link to="/characteristics" className="text-orange-100 hover:text-white transition-colors">
-                  Characteristics of Love
-                </Link>
-              </li>
-              <li>
-                <Link to="/bible-passages" className="text-orange-100 hover:text-white transition-colors">
-                  Bible Passages
-                </Link>
-              </li>
-              <li>
-                <Link to="/love-in-nigeria" className="text-orange-100 hover:text-white transition-colors">
-                  Love in Nigeria
-                </Link>
-              </li>
-              <li>
-                <Link to="/publications" className="text-orange-100 hover:text-white transition-colors">
-                  Publications
-                </Link>
-              </li>
-              <li>
-                <Link to="/donate" className="text-orange-100 hover:text-white transition-colors">
-                  Donate
-                </Link>
-              </li>
-              <li>
-                <Link to="/contact" className="text-orange-100 hover:text-white transition-colors">
-                  Contact
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <div className="lg:col-span-4">
-            <h4 className="text-lg font-semibold mb-4">Contact Us</h4>
-            <div className="space-y-3 text-orange-100">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center">
-                  <Mail className="w-4 h-4 text-orange-200" />
+      <div className="relative mx-auto max-w-7xl space-y-8">
+        <div className="rounded-[2rem] border border-white/12 bg-white/8 p-8 shadow-[0_24px_54px_rgba(13,5,4,0.22)] backdrop-blur-xl md:p-10">
+          <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
+            <div>
+              <div className="flex items-center gap-4">
+                <div className="flex h-14 w-14 items-center justify-center rounded-[1.4rem] bg-white/10">
+                  <Logo className="h-9 w-9" />
                 </div>
-                <a
-                  href="mailto:logosrhema842@gmail.com"
-                  className="hover:text-white hover:underline underline-offset-4 transition-colors"
-                >
-                  logosrhema842@gmail.com
-                </a>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center">
-                  <Phone className="w-4 h-4 text-orange-200" />
+                <div>
+                  <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#ffcea7]">
+                    Practical Love
+                  </p>
+                  <h2 className="font-serif text-3xl text-white md:text-4xl">
+                    A ministry for households that want reform, not performance.
+                  </h2>
                 </div>
-                <span>+234 123 456 7890</span>
               </div>
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center">
-                  <MapPin className="w-4 h-4 text-orange-200" />
-                </div>
-                <span>Lagos, Nigeria</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-2xl border border-white/20 bg-white/10 backdrop-blur p-6 md:p-7">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
-            <div className="max-w-xl">
-              <h4 className="text-xl font-semibold mb-1">Stay Connected</h4>
-              <p className="text-orange-100">
-                Get weekly insights on practical love delivered to your inbox.
+              <p className="mt-6 max-w-3xl text-base leading-8 text-[#ffeede] opacity-80 md:text-lg">
+                The message is simple and demanding: love God, reject the rule of money, practice
+                biblical love at home, and let the consequences reach the wider world.
               </p>
             </div>
-            <div className="w-full md:w-auto md:min-w-[420px]">
-              <div className="flex flex-col sm:flex-row gap-2">
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="flex-1 h-11 px-4 rounded-lg border border-white/30 bg-white/95 text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-300"
-                />
-                <button
-                  type="button"
-                  className="h-11 px-6 rounded-lg bg-gradient-to-r from-red-600 to-orange-500 text-white font-semibold hover:from-red-700 hover:to-orange-600 transition-all"
-                >
-                  Subscribe
-                </button>
-              </div>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Link to="/contact" className="btn-brand px-6 py-4 text-base">
+                Contact the ministry
+              </Link>
+              <Link to="/share-testimony" className="btn-outline-light px-6 py-4 text-base">
+                Share your testimony
+              </Link>
             </div>
           </div>
         </div>
 
-        <div className="pt-6 border-t border-white/20 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <p className="text-orange-100 text-sm">© 2024 Practical Love. All rights reserved.</p>
-          <div className="flex items-center gap-5 text-sm">
-            <Link to="/privacy-policy" className="text-orange-100 hover:text-white transition-colors">
+        <div className="grid gap-6 lg:grid-cols-[0.78fr_0.72fr_1fr]">
+          <div className="rounded-[1.8rem] border border-white/12 bg-black/10 p-6 backdrop-blur-xl">
+            <h3 className="font-serif text-2xl text-white">Quick routes</h3>
+            <div className="mt-5 grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
+              {QUICK_LINKS.map(link => (
+                <Link
+                  key={link.label}
+                  to={link.href}
+                  className="rounded-[1rem] px-3 py-2 text-sm text-[#ffe7d1] transition-colors hover:bg-white/8 hover:text-white"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          <div className="rounded-[1.8rem] border border-white/12 bg-black/10 p-6 backdrop-blur-xl">
+            <h3 className="font-serif text-2xl text-white">Next actions</h3>
+            <div className="mt-5 space-y-2">
+              {ACTION_LINKS.map(link => (
+                <Link
+                  key={link.label}
+                  to={link.href}
+                  className="flex items-center justify-between rounded-[1rem] px-3 py-3 text-sm text-[#ffe7d1] transition-colors hover:bg-white/8 hover:text-white"
+                >
+                  <span>{link.label}</span>
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          <div className="rounded-[1.8rem] border border-white/12 bg-black/10 p-6 backdrop-blur-xl">
+            <h3 className="font-serif text-2xl text-white">Stay reachable</h3>
+            <div className="mt-5 space-y-4">
+              {CONTACT_ITEMS.map(item => {
+                const Icon = item.icon;
+
+                return item.href.startsWith('/') ? (
+                  <Link
+                    key={item.label}
+                    to={item.href}
+                    className="flex items-start gap-4 rounded-[1rem] px-3 py-3 text-[#ffe7d1] transition-colors hover:bg-white/8 hover:text-white"
+                  >
+                    <div className="flex h-11 w-11 items-center justify-center rounded-[1rem] bg-white/8 text-[#ffca9d]">
+                      <Icon className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#ffca9d]">
+                        {item.label}
+                      </p>
+                      <p className="mt-1 text-sm leading-6">{item.value}</p>
+                    </div>
+                  </Link>
+                ) : (
+                  <a
+                    key={item.label}
+                    href={item.href}
+                    className="flex items-start gap-4 rounded-[1rem] px-3 py-3 text-[#ffe7d1] transition-colors hover:bg-white/8 hover:text-white"
+                  >
+                    <div className="flex h-11 w-11 items-center justify-center rounded-[1rem] bg-white/8 text-[#ffca9d]">
+                      <Icon className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#ffca9d]">
+                        {item.label}
+                      </p>
+                      <p className="mt-1 text-sm leading-6">{item.value}</p>
+                    </div>
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-4 border-t border-white/12 pt-6 text-sm text-[#ffe7d1] opacity-80 md:flex-row md:items-center md:justify-between">
+          <p>{currentYear} Practical Love. All rights reserved.</p>
+          <div className="flex flex-wrap items-center gap-5">
+            <Link to="/privacy-policy" className="transition-colors hover:text-white">
               Privacy Policy
             </Link>
-            <Link to="/terms-of-service" className="text-orange-100 hover:text-white transition-colors">
+            <Link to="/terms-of-service" className="transition-colors hover:text-white">
               Terms of Service
             </Link>
-            <Link to="/cookie-policy" className="text-orange-100 hover:text-white transition-colors">
+            <Link to="/cookie-policy" className="transition-colors hover:text-white">
               Cookie Policy
             </Link>
           </div>
@@ -176,4 +175,3 @@ export default function Footer() {
     </footer>
   );
 }
-

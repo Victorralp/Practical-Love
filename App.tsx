@@ -22,6 +22,10 @@ import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import TermsOfServicePage from './pages/TermsOfServicePage';
 import CookiePolicyPage from './pages/CookiePolicyPage';
 import DonationPage from './pages/DonationPage';
+import AboutLovePage from './pages/AboutLovePage';
+import ResourcesPage from './pages/ResourcesPage';
+import FamilyFirstPage from './pages/FamilyFirstPage';
+import SiteSeo from './components/SiteSeo';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -37,10 +41,14 @@ export default function App() {
   return (
     <div className="flex flex-col min-h-screen">
       <ScrollToTop />
+      <SiteSeo />
       <Header />
       <main className="flex-grow">
         <Routes>
           <Route path="/" element={<Hero />} />
+          <Route path="/about-love" element={<AboutLovePage />} />
+          <Route path="/resources" element={<ResourcesPage />} />
+          <Route path="/family-first" element={<FamilyFirstPage />} />
           <Route path="/characteristics" element={<CharacteristicsPage />} />
           <Route path="/bible-passages" element={<BiblePassagesPage />} />
           <Route path="/love-in-nigeria" element={<LoveInNigeriaPage />} />
