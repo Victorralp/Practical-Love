@@ -1,14 +1,38 @@
+import { useEffect, useMemo, useState } from 'react';
 import { ArrowRight, BookOpen, Download } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { publications } from '../data/publications';
 import { FocusRail, type FocusRailItem } from '../components/ui/focus-rail';
 import { PageHero, PageShell } from '../components/ui';
 import Logo from '../components/Logo';
+import {
+  mergePublicationCatalog,
+  subscribeToManagedPublications,
+  type ManagedPublicationRecord,
+} from '../services/publicationsService';
 
 export default function PublicationsPage() {
-  // Transform publications data for the carousel
-  // Transform publications to FocusRailItem format
-  const railItems: FocusRailItem[] = publications.map(book => ({
+  const [managedPublications, setManagedPublications] = useState<ManagedPublicationRecord[]>([]);
+
+  useEffect(() => {
+    const unsubscribe = subscribeToManagedPublications(
+      loadedPublications => {
+        setManagedPublications(loadedPublications);
+      },
+      error => {
+        console.error('Unable to load managed publications:', error);
+      }
+    );
+
+    return unsubscribe;
+  }, []);
+
+  const catalog = useMemo(
+    () => mergePublicationCatalog(publications, managedPublications),
+    [managedPublications]
+  );
+
+  const railItems: FocusRailItem[] = catalog.map(book => ({
     id: book.id,
     title: book.title,
     description: book.description,
@@ -49,21 +73,21 @@ export default function PublicationsPage() {
         }
       />
 
-        {/* Focus Rail Carousel */}
-        <div className="mb-12 rounded-2xl overflow-hidden shadow-2xl">
-          <FocusRail items={railItems} autoPlay={true} interval={5000} loop={true} />
-        </div>
-        {/* Publications Grid */}
-        <h2 className="text-2xl font-serif text-red-800 mb-6 text-center">All Publications</h2>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
-          {publications.map(book => {
-            const readablePageCount = book.pageCount ?? book.pages?.length;
+      {/* Focus Rail Carousel */}
+      <div className="mb-12 rounded-2xl overflow-hidden shadow-2xl">
+        <FocusRail items={railItems} autoPlay={true} interval={5000} loop={true} />
+      </div>
+      {/* Publications Grid */}
+      <h2 className="text-2xl font-serif text-red-800 mb-6 text-center">All Publications</h2>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
+        {catalog.map(book => {
+          const readablePageCount = book.pageCount ?? book.pages?.length;
 
-            return (
-              <div
-                key={book.id}
-                className="bg-white rounded-3xl shadow-xl overflow-hidden border-2 border-orange-100 hover:shadow-2xl hover:border-orange-300 transition-all duration-300 transform hover:-translate-y-2"
-              >
+          return (
+            <div
+              key={book.id}
+              className="bg-white rounded-3xl shadow-xl overflow-hidden border-2 border-orange-100 hover:shadow-2xl hover:border-orange-300 transition-all duration-300 transform hover:-translate-y-2"
+            >
               {/* Book Cover */}
               <div className="relative h-80 bg-gradient-to-br from-red-900 to-orange-800 overflow-hidden">
                 {book.coverImage ? (
@@ -141,69 +165,68 @@ export default function PublicationsPage() {
                   )}
                 </div>
               </div>
-              </div>
-            );
-          })}
-        </div>
+            </div>
+          );
+        })}
+      </div>
 
-        {/* Call to Action */}
-        <div className="bg-gradient-to-r from-red-600 to-orange-600 rounded-xl p-8 md:p-10 text-center shadow-xl mb-10">
-          <h2 className="text-3xl md:text-4xl font-serif text-white mb-6">
-            Share the Message of Love
-          </h2>
-          <p className="text-xl text-orange-100 mb-8 max-w-2xl mx-auto leading-relaxed">
-            These publications are free to reproduce and distribute. Help spread the message of love
-            and transformation to every corner of your nation.
+      {/* Call to Action */}
+      <div className="bg-gradient-to-r from-red-600 to-orange-600 rounded-xl p-8 md:p-10 text-center shadow-xl mb-10">
+        <h2 className="text-3xl md:text-4xl font-serif text-white mb-6">
+          Share the Message of Love
+        </h2>
+        <p className="text-xl text-orange-100 mb-8 max-w-2xl mx-auto leading-relaxed">
+          These publications are free to reproduce and distribute. Help spread the message of love
+          and transformation to every corner of your nation.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <Link
+            to="/bible-passages"
+            className="inline-flex items-center justify-center gap-2 bg-white text-red-600 font-bold px-8 py-4 rounded-xl hover:bg-orange-50 transition-all shadow-lg"
+          >
+            Explore Bible Passages
+            <ArrowRight className="w-5 h-5" />
+          </Link>
+          <Link
+            to="/characteristics"
+            className="inline-flex items-center justify-center gap-2 bg-orange-800 text-white font-bold px-8 py-4 rounded-xl hover:bg-orange-900 transition-all shadow-lg"
+          >
+            Learn About Love
+            <Logo className="w-5 h-5" />
+          </Link>
+        </div>
+      </div>
+
+      {/* Additional Info */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+        <div className="p-6 bg-white rounded-2xl shadow-md border border-orange-100">
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <BookOpen className="w-8 h-8 text-red-600" />
+          </div>
+          <h3 className="text-lg font-bold text-gray-800 mb-2">Free to Read</h3>
+          <p className="text-gray-600 text-sm">
+            All publications are completely free to read online or download.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              to="/bible-passages"
-              className="inline-flex items-center justify-center gap-2 bg-white text-red-600 font-bold px-8 py-4 rounded-xl hover:bg-orange-50 transition-all shadow-lg"
-            >
-              Explore Bible Passages
-              <ArrowRight className="w-5 h-5" />
-            </Link>
-            <Link
-              to="/characteristics"
-              className="inline-flex items-center justify-center gap-2 bg-orange-800 text-white font-bold px-8 py-4 rounded-xl hover:bg-orange-900 transition-all shadow-lg"
-            >
-              Learn About Love
-              <Logo className="w-5 h-5" />
-            </Link>
-          </div>
         </div>
-
-        {/* Additional Info */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-          <div className="p-6 bg-white rounded-2xl shadow-md border border-orange-100">
-            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <BookOpen className="w-8 h-8 text-red-600" />
-            </div>
-            <h3 className="text-lg font-bold text-gray-800 mb-2">Free to Read</h3>
-            <p className="text-gray-600 text-sm">
-              All publications are completely free to read online or download.
-            </p>
+        <div className="p-6 bg-white rounded-2xl shadow-md border border-orange-100">
+          <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Download className="w-8 h-8 text-orange-600" />
           </div>
-          <div className="p-6 bg-white rounded-2xl shadow-md border border-orange-100">
-            <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Download className="w-8 h-8 text-orange-600" />
-            </div>
-            <h3 className="text-lg font-bold text-gray-800 mb-2">Free to Share</h3>
-            <p className="text-gray-600 text-sm">
-              Reproduce and distribute these materials to anyone, anywhere.
-            </p>
-          </div>
-          <div className="p-6 bg-white rounded-2xl shadow-md border border-orange-100">
-            <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Logo className="w-8 h-8" />
-            </div>
-            <h3 className="text-lg font-bold text-gray-800 mb-2">Transform Lives</h3>
-            <p className="text-gray-600 text-sm">
-              Help spread the message of love and bring blessings to nations.
-            </p>
-          </div>
+          <h3 className="text-lg font-bold text-gray-800 mb-2">Free to Share</h3>
+          <p className="text-gray-600 text-sm">
+            Reproduce and distribute these materials to anyone, anywhere.
+          </p>
         </div>
+        <div className="p-6 bg-white rounded-2xl shadow-md border border-orange-100">
+          <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Logo className="w-8 h-8" />
+          </div>
+          <h3 className="text-lg font-bold text-gray-800 mb-2">Transform Lives</h3>
+          <p className="text-gray-600 text-sm">
+            Help spread the message of love and bring blessings to nations.
+          </p>
+        </div>
+      </div>
     </PageShell>
   );
 }
-

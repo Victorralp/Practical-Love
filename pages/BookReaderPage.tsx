@@ -1,15 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useParams, Navigate, useNavigate } from 'react-router-dom';
-import {
-  X,
-  ChevronLeft,
-  ChevronRight,
-  BookOpen,
-  Home,
-  Download,
-  ExternalLink,
-} from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, BookOpen, Home, Download, ExternalLink } from 'lucide-react';
 import { publications } from '../data/publications';
+import {
+  mergePublicationCatalog,
+  subscribeToManagedPublications,
+  type ManagedPublicationRecord,
+} from '../services/publicationsService';
 
 interface InternetIllustration {
   alt: string;
@@ -51,7 +48,8 @@ const medicineWithoutMedicationIllustrations: Record<number, InternetIllustratio
   40: {
     kicker: 'Care Through Seasons',
     alt: 'Pregnant woman photographed in profile outdoors.',
-    caption: 'This section turns toward protection, nourishment, and intentional care during pregnancy.',
+    caption:
+      'This section turns toward protection, nourishment, and intentional care during pregnancy.',
     creditLabel: 'PregnantWoman',
     creditHref: 'https://commons.wikimedia.org/wiki/File:PregnantWoman.jpg',
     imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/7/7c/PregnantWoman.jpg',
@@ -59,7 +57,8 @@ const medicineWithoutMedicationIllustrations: Record<number, InternetIllustratio
   50: {
     kicker: 'Steady Strength',
     alt: 'Older couple walking outdoors together.',
-    caption: 'An image of movement and companionship fits a chapter on sustainable body maintenance.',
+    caption:
+      'An image of movement and companionship fits a chapter on sustainable body maintenance.',
     creditLabel: 'OlderCoupleWalkg',
     creditHref: 'https://commons.wikimedia.org/wiki/File:OlderCoupleWalkg.jpg',
     imageUrl:
@@ -78,11 +77,40 @@ const medicineWithoutMedicationIllustrations: Record<number, InternetIllustratio
 
 export default function BookReaderPage() {
   const { id } = useParams();
-  const book = publications.find(p => p.id === id);
+  const [managedPublications, setManagedPublications] = useState<ManagedPublicationRecord[]>([]);
+  const [isLoadingCatalog, setIsLoadingCatalog] = useState(true);
+  const catalog = mergePublicationCatalog(publications, managedPublications);
+  const book = catalog.find(p => p.id === id);
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const [loadedPages, setLoadedPages] = useState(book?.pages ?? []);
   const [isLoadingPages, setIsLoadingPages] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const unsubscribe = subscribeToManagedPublications(
+      loadedPublications => {
+        setManagedPublications(loadedPublications);
+        setIsLoadingCatalog(false);
+      },
+      error => {
+        console.error('Unable to load managed publications:', error);
+        setIsLoadingCatalog(false);
+      }
+    );
+
+    return unsubscribe;
+  }, []);
+
+  if (isLoadingCatalog) {
+    return (
+      <div className="flex min-h-[50vh] items-center justify-center px-4">
+        <div className="inline-flex items-center gap-3 rounded-2xl border border-orange-100 bg-orange-50 px-6 py-4 text-gray-700">
+          <BookOpen className="h-5 w-5 text-red-700" />
+          Loading publication...
+        </div>
+      </div>
+    );
+  }
 
   if (!book) {
     return <Navigate to="/publications" replace />;

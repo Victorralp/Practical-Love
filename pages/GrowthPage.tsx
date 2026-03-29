@@ -208,10 +208,18 @@ export default function GrowthPage() {
           subtitle="Move through challenges, wisdom, reflection, journeys, and progress from one central growth hub that feels active, guided, and easy to navigate."
           actions={
             <div className="flex flex-col gap-3 sm:flex-row">
-              <button type="button" onClick={() => setActiveSection('challenges')} className="btn-brand">
+              <button
+                type="button"
+                onClick={() => setActiveSection('challenges')}
+                className="btn-brand"
+              >
                 Today&apos;s challenge
               </button>
-              <button type="button" onClick={() => setActiveSection('progress')} className="btn-outline-brand">
+              <button
+                type="button"
+                onClick={() => setActiveSection('progress')}
+                className="btn-outline-brand"
+              >
                 View progress
               </button>
               <Link to="/share-testimony" className="btn-outline-brand">
@@ -222,7 +230,9 @@ export default function GrowthPage() {
         >
           <div className="grid gap-4 md:grid-cols-4">
             <div className="rounded-2xl border border-white/70 bg-white/85 p-4 backdrop-blur-sm">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-600">Challenges</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-600">
+                Challenges
+              </p>
               <p className="mt-2 text-2xl font-bold text-gray-900">{counts.challenges}</p>
             </div>
             <div className="rounded-2xl border border-white/70 bg-white/85 p-4 backdrop-blur-sm">
@@ -230,11 +240,15 @@ export default function GrowthPage() {
               <p className="mt-2 text-2xl font-bold text-gray-900">{counts.tips}</p>
             </div>
             <div className="rounded-2xl border border-white/70 bg-white/85 p-4 backdrop-blur-sm">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-600">Journeys</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-600">
+                Journeys
+              </p>
               <p className="mt-2 text-2xl font-bold text-gray-900">{counts.journeys}</p>
             </div>
             <div className="rounded-2xl border border-white/70 bg-white/85 p-4 backdrop-blur-sm">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-600">Prompts</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-600">
+                Prompts
+              </p>
               <p className="mt-2 text-2xl font-bold text-gray-900">{counts.reflections}</p>
             </div>
           </div>
@@ -247,7 +261,9 @@ export default function GrowthPage() {
                 <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
                   Growth Atlas
                 </p>
-                <h2 className="mt-2 text-3xl font-serif text-red-800">Choose the lane you need now</h2>
+                <h2 className="mt-2 text-3xl font-serif text-red-800">
+                  Choose the lane you need now
+                </h2>
               </div>
               <div className="rounded-2xl border border-orange-100 bg-orange-50 px-4 py-3">
                 <p className="text-sm font-medium text-orange-700">Active now</p>
@@ -256,33 +272,36 @@ export default function GrowthPage() {
             </div>
 
             <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-              {(Object.entries(SECTION_DETAILS) as [GrowthSection, (typeof SECTION_DETAILS)[GrowthSection]][]).map(
-                ([section, meta]) => {
-                  const isActive = activeSection === section;
+              {(
+                Object.entries(SECTION_DETAILS) as [
+                  GrowthSection,
+                  (typeof SECTION_DETAILS)[GrowthSection],
+                ][]
+              ).map(([section, meta]) => {
+                const isActive = activeSection === section;
 
-                  return (
-                    <button
-                      key={section}
-                      type="button"
-                      onClick={() => setActiveSection(section)}
-                      className={`rounded-2xl border bg-gradient-to-br p-5 text-left transition-all duration-200 ${
-                        isActive
-                          ? `border-red-300 bg-gradient-to-br ${meta.accent} shadow-md`
-                          : 'border-orange-100 from-white to-orange-50 hover:-translate-y-0.5 hover:border-orange-200 hover:shadow-sm'
-                      }`}
-                    >
-                      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-red-100 text-red-700">
-                        {meta.icon}
-                      </div>
-                      <p className="mt-4 text-xs font-semibold uppercase tracking-[0.18em] text-orange-700">
-                        {meta.label}
-                      </p>
-                      <h3 className="mt-2 text-xl font-serif text-gray-900">{meta.title}</h3>
-                      <p className="mt-3 text-sm leading-6 text-gray-600">{meta.description}</p>
-                    </button>
-                  );
-                }
-              )}
+                return (
+                  <button
+                    key={section}
+                    type="button"
+                    onClick={() => setActiveSection(section)}
+                    className={`rounded-2xl border bg-gradient-to-br p-5 text-left transition-all duration-200 ${
+                      isActive
+                        ? `border-red-300 bg-gradient-to-br ${meta.accent} shadow-md`
+                        : 'border-orange-100 from-white to-orange-50 hover:-translate-y-0.5 hover:border-orange-200 hover:shadow-sm'
+                    }`}
+                  >
+                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-red-100 text-red-700">
+                      {meta.icon}
+                    </div>
+                    <p className="mt-4 text-xs font-semibold uppercase tracking-[0.18em] text-orange-700">
+                      {meta.label}
+                    </p>
+                    <h3 className="mt-2 text-xl font-serif text-gray-900">{meta.title}</h3>
+                    <p className="mt-3 text-sm leading-6 text-gray-600">{meta.description}</p>
+                  </button>
+                );
+              })}
             </div>
           </SectionCard>
 
@@ -293,10 +312,15 @@ export default function GrowthPage() {
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-orange-200">
               Growth Rhythm
             </p>
-            <h2 className="mt-2 text-3xl font-serif text-white">Use the hub like a practice cycle</h2>
+            <h2 className="mt-2 text-3xl font-serif text-white">
+              Use the hub like a practice cycle
+            </h2>
             <div className="mt-6 space-y-4">
               {RHYTHM_STEPS.map((step, index) => (
-                <div key={step.title} className="rounded-2xl border border-white/10 bg-white/10 p-4">
+                <div
+                  key={step.title}
+                  className="rounded-2xl border border-white/10 bg-white/10 p-4"
+                >
                   <p className="text-xs font-semibold uppercase tracking-[0.18em] text-orange-200">
                     Step {index + 1}
                   </p>
@@ -324,7 +348,7 @@ export default function GrowthPage() {
                 event.preventDefault();
                 handleSearch(searchQuery);
               }}
-              className="relative mt-6 space-y-4"
+              className="mt-6 space-y-4"
             >
               <div className="flex items-center gap-3 rounded-2xl border-2 border-orange-100 bg-white px-3 py-2 shadow-sm focus-within:border-orange-400 focus-within:ring-2 focus-within:ring-orange-400">
                 <Search className="h-5 w-5 text-gray-400" />
@@ -364,9 +388,9 @@ export default function GrowthPage() {
               </div>
 
               {isSearching ? (
-                <div className="absolute left-0 right-0 top-full z-50 mt-2 max-h-80 overflow-y-auto rounded-2xl border border-orange-100 bg-white shadow-xl">
+                <div className="max-h-80 overflow-y-auto rounded-2xl border border-orange-100 bg-white shadow-xl">
                   {searchResults.length > 0 ? (
-                    <div className="p-2 space-y-1">
+                    <div className="space-y-1 p-2">
                       <p className="px-3 py-1 text-xs text-gray-500">
                         {searchResults.length} result{searchResults.length !== 1 ? 's' : ''} found
                       </p>
@@ -384,7 +408,9 @@ export default function GrowthPage() {
                             <div className="min-w-0 flex-1">
                               <p className="truncate font-medium text-gray-800">{result.title}</p>
                               {result.description ? (
-                                <p className="truncate text-sm text-gray-500">{result.description}</p>
+                                <p className="truncate text-sm text-gray-500">
+                                  {result.description}
+                                </p>
                               ) : null}
                             </div>
                           </div>
@@ -427,7 +453,11 @@ export default function GrowthPage() {
             </div>
 
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-              <button type="button" onClick={() => setActiveSection('progress')} className="btn-brand">
+              <button
+                type="button"
+                onClick={() => setActiveSection('progress')}
+                className="btn-brand"
+              >
                 Open progress
               </button>
               <Link to="/love-challenge" className="btn-outline-brand">
@@ -437,17 +467,7 @@ export default function GrowthPage() {
           </SectionCard>
         </section>
 
-        <section className="grid gap-6 lg:grid-cols-[0.78fr_1.22fr]">
-          <SectionCard className="border-red-100 bg-white/95 shadow-lg">
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
-              Section Rail
-            </p>
-            <h2 className="mt-2 text-3xl font-serif text-red-800">Move across the growth system</h2>
-            <div className="mt-6">
-              <GrowthNavigation activeSection={activeSection} onSectionChange={setActiveSection} />
-            </div>
-          </SectionCard>
-
+        <section>
           <SectionCard className="border-orange-200 bg-white/95 shadow-lg">
             <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
               <div>
@@ -462,6 +482,10 @@ export default function GrowthPage() {
               </div>
             </div>
             <p className="mt-4 max-w-3xl leading-7 text-gray-700">{activeMeta.description}</p>
+
+            <div className="mt-6">
+              <GrowthNavigation activeSection={activeSection} onSectionChange={setActiveSection} />
+            </div>
 
             <div className="mt-8 rounded-[1.75rem] border border-orange-100 bg-gradient-to-br from-white to-orange-50 px-4 py-6 sm:px-6 md:px-8">
               {renderSection()}

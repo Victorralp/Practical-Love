@@ -69,6 +69,36 @@
     "headline": "A practical library of printable and readable tools for teaching biblical love."
   },
   {
+    "path": "/messages",
+    "name": "Messages",
+    "title": "Ministry Messages | Practical Love Updates, Notices, and Announcements",
+    "description": "Read current ministry messages, notices, event reminders, teaching updates, and prayer emphasis posts from Practical Love.",
+    "keywords": [
+      "Practical Love messages",
+      "ministry announcements",
+      "church notices",
+      "ministry updates",
+      "Christian message board"
+    ],
+    "changefreq": "weekly",
+    "priority": 0.7,
+    "indexable": true,
+    "schemaType": "CollectionPage",
+    "headline": "A page for posting current ministry updates, notices, and teaching messages."
+  },
+  {
+    "path": "/admin/messages",
+    "name": "Admin Messages",
+    "title": "Admin Messages | Practical Love",
+    "description": "Internal admin page for creating and managing Practical Love message feed posts.",
+    "keywords": ["internal admin"],
+    "changefreq": "yearly",
+    "priority": 0.1,
+    "indexable": false,
+    "schemaType": "WebPage",
+    "headline": "Internal admin page for ministry message management."
+  },
+  {
     "path": "/family-first",
     "name": "Family First",
     "title": "Family First | Why Practical Love Starts in the Home",
@@ -427,10 +457,7 @@
     "name": "Privacy Policy",
     "title": "Privacy Policy | Practical Love",
     "description": "Review the Practical Love privacy policy, including how information is collected, used, and protected across the website and its forms.",
-    "keywords": [
-      "Practical Love privacy policy",
-      "website privacy policy"
-    ],
+    "keywords": ["Practical Love privacy policy", "website privacy policy"],
     "changefreq": "yearly",
     "priority": 0.3,
     "indexable": true,
@@ -442,10 +469,7 @@
     "name": "Terms of Service",
     "title": "Terms of Service | Practical Love",
     "description": "Read the Practical Love terms of service covering use of the website, testimony submissions, and content-related responsibilities.",
-    "keywords": [
-      "Practical Love terms of service",
-      "website terms"
-    ],
+    "keywords": ["Practical Love terms of service", "website terms"],
     "changefreq": "yearly",
     "priority": 0.3,
     "indexable": true,
@@ -457,10 +481,7 @@
     "name": "Cookie Policy",
     "title": "Cookie Policy | Practical Love",
     "description": "Read how Practical Love uses cookies and related technologies for essential functionality, analytics, and website performance.",
-    "keywords": [
-      "Practical Love cookie policy",
-      "website cookies"
-    ],
+    "keywords": ["Practical Love cookie policy", "website cookies"],
     "changefreq": "yearly",
     "priority": 0.3,
     "indexable": true,
@@ -490,9 +511,7 @@
     "name": "Cloudinary Demo",
     "title": "Cloudinary Demo | Practical Love",
     "description": "Internal image upload and integration demo for the Practical Love website.",
-    "keywords": [
-      "internal demo"
-    ],
+    "keywords": ["internal demo"],
     "changefreq": "yearly",
     "priority": 0.1,
     "indexable": false,
@@ -504,9 +523,7 @@
     "name": "Environment Test",
     "title": "Environment Test | Practical Love",
     "description": "Internal environment test page for the Practical Love website.",
-    "keywords": [
-      "internal test"
-    ],
+    "keywords": ["internal test"],
     "changefreq": "yearly",
     "priority": 0.1,
     "indexable": false,

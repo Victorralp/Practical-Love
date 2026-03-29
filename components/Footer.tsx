@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Logo from './Logo';
 
 const QUICK_LINKS = [
+  { label: 'Messages', href: '/messages' },
   { label: 'Characteristics', href: '/characteristics' },
   { label: 'Bible Passages', href: '/bible-passages' },
   { label: 'Yellow Card Series', href: '/yellow-card-series' },

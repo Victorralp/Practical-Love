@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import Footer from './components/Footer';
@@ -25,7 +25,11 @@ import DonationPage from './pages/DonationPage';
 import AboutLovePage from './pages/AboutLovePage';
 import ResourcesPage from './pages/ResourcesPage';
 import FamilyFirstPage from './pages/FamilyFirstPage';
+import MessagesPage from './pages/MessagesPage';
+import AdminMessagesPage from './pages/AdminMessagesPage';
+import AdminPublicationsPage from './pages/AdminPublicationsPage';
 import SiteSeo from './components/SiteSeo';
+import AdminRoute from './components/AdminRoute';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -37,10 +41,42 @@ function ScrollToTop() {
   return null;
 }
 
+function AdminShortcut() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement | null;
+      const isTypingTarget =
+        target instanceof HTMLInputElement ||
+        target instanceof HTMLTextAreaElement ||
+        target?.isContentEditable;
+
+      if (isTypingTarget) {
+        return;
+      }
+
+      if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === 'a') {
+        event.preventDefault();
+        navigate('/admin/messages');
+      }
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, [navigate]);
+
+  return null;
+}
+
 export default function App() {
   return (
     <div className="flex flex-col min-h-screen">
       <ScrollToTop />
+      <AdminShortcut />
       <SiteSeo />
       <Header />
       <main className="flex-grow">
@@ -48,6 +84,23 @@ export default function App() {
           <Route path="/" element={<Hero />} />
           <Route path="/about-love" element={<AboutLovePage />} />
           <Route path="/resources" element={<ResourcesPage />} />
+          <Route path="/messages" element={<MessagesPage />} />
+          <Route
+            path="/admin/messages"
+            element={
+              <AdminRoute>
+                <AdminMessagesPage />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/publications"
+            element={
+              <AdminRoute>
+                <AdminPublicationsPage />
+              </AdminRoute>
+            }
+          />
           <Route path="/family-first" element={<FamilyFirstPage />} />
           <Route path="/characteristics" element={<CharacteristicsPage />} />
           <Route path="/bible-passages" element={<BiblePassagesPage />} />

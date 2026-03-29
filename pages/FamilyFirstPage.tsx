@@ -3,6 +3,7 @@ import {
   BookOpen,
   HeartHandshake,
   House,
+  Shield,
   Sparkles,
   Target,
   Users,
@@ -50,6 +51,20 @@ const PRACTICE_LANES = [
   },
 ] as const;
 
+const CHILD_FORMATION_SIGNALS = [
+  'Children between ages 3 and 13 are deeply impressionable and often absorb what is repeatedly modeled around them.',
+  'They do not learn only from public correction. They also learn from private tone, hidden habits, and repeated reactions inside the home.',
+  'What parents normalize in speech, anger, secrecy, honesty, forgiveness, and appetite often becomes what children later rehearse as adults.',
+] as const;
+
+const FLESH_WARNINGS = [
+  'fighting and harsh speech',
+  'cursing and bitterness',
+  'smoking, drunkenness, and lack of restraint',
+  'stealing, dishonesty, and hidden compromise',
+  'the love of money and materialism replacing love of God',
+] as const;
+
 export default function FamilyFirstPage() {
   return (
     <PageShell>
@@ -80,27 +95,114 @@ export default function FamilyFirstPage() {
       >
         <div className="grid gap-4 md:grid-cols-4">
           <div className="surface-soft p-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#a45f3c]">Starting point</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#a45f3c]">
+              Starting point
+            </p>
             <p className="mt-2 text-lg font-semibold text-[#3d1d17]">Reform begins at home.</p>
           </div>
           <div className="surface-soft p-4">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#a45f3c]">Why</p>
-            <p className="mt-2 text-lg font-semibold text-[#3d1d17]">Children absorb what is repeated.</p>
+            <p className="mt-2 text-lg font-semibold text-[#3d1d17]">
+              Children absorb what is repeated.
+            </p>
           </div>
           <div className="surface-soft p-4">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#a45f3c]">Test</p>
             <p className="mt-2 text-lg font-semibold text-[#3d1d17]">Love must survive pressure.</p>
           </div>
           <div className="surface-soft p-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#a45f3c]">Result</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#a45f3c]">
+              Result
+            </p>
             <p className="mt-2 text-lg font-semibold text-[#3d1d17]">Homes shape nations.</p>
           </div>
         </div>
       </PageHero>
 
+      <section className="grid gap-6 lg:grid-cols-[1.04fr_0.96fr]">
+        <SectionCard className="overflow-hidden">
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#a45f3c]">
+            Household picture
+          </p>
+          <h2 className="mt-2 font-serif text-3xl text-[#3d1d17]">
+            Family first must feel broad enough to include fathers, mothers, sons, and daughters.
+          </h2>
+          <p className="mt-4 max-w-3xl leading-8 text-[#6e4737]">
+            This page now frames family formation as a whole-household discipline, not a narrow
+            slogan. The ministry emphasis is on the atmosphere every member helps create.
+          </p>
+
+          <div className="mt-8 grid gap-4 lg:grid-cols-2">
+            <div className="overflow-hidden rounded-[1.5rem] border border-[rgba(176,111,74,0.16)] bg-[linear-gradient(145deg,_#fff8f1_0%,_#f5e3cf_100%)]">
+              <img
+                src="/love-hero-v2.png"
+                alt="Warm family embrace representing the Practical Love household vision"
+                className="h-64 w-full object-cover lg:h-[18.5rem]"
+              />
+            </div>
+            <div className="rounded-[1.5rem] border border-[rgba(176,111,74,0.16)] bg-[linear-gradient(160deg,_#2f1713_0%,_#5f2116_42%,_#8e331f_72%,_#d27a3f_100%)] p-5 text-[#fff4e7]">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#ffd2af]">
+                Visible now
+              </p>
+              <p className="mt-3 text-lg font-semibold">
+                Family first stands out with stronger contrast and clearer framing.
+              </p>
+              <p className="mt-3 text-sm leading-6 text-[#fff1e3] opacity-85">
+                The supporting content now emphasizes the full household instead of leaving the idea
+                visually under-explained.
+              </p>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2 lg:col-span-2">
+              <div className="rounded-[1.35rem] border border-[rgba(176,111,74,0.16)] bg-white/92 p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#a45f3c]">
+                  Formation
+                </p>
+                <p className="mt-2 text-sm leading-6 text-[#6e4737]">
+                  Fathers and mothers set the tone children absorb.
+                </p>
+              </div>
+              <div className="rounded-[1.35rem] border border-[rgba(176,111,74,0.16)] bg-white/92 p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#a45f3c]">
+                  Coverage
+                </p>
+                <p className="mt-2 text-sm leading-6 text-[#6e4737]">
+                  Sons and daughters are part of the ministry focus, not an afterthought.
+                </p>
+              </div>
+            </div>
+          </div>
+        </SectionCard>
+
+        <SectionCard variant="gradient">
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#a45f3c]">
+            Family first in practice
+          </p>
+          <h2 className="mt-2 font-serif text-3xl text-[#3d1d17]">
+            The question is not whether a home is busy, but what kind of culture it is rehearsing.
+          </h2>
+          <div className="mt-6 grid gap-4">
+            {[
+              'Marriage teaches what love sounds like under stress.',
+              'Parenting teaches what authority, correction, and tenderness feel like up close.',
+              'Children learn from atmosphere long before they can explain what they observed.',
+              'A home that practices practical love raises people who can carry that standard into society.',
+            ].map(point => (
+              <div
+                key={point}
+                className="rounded-[1.5rem] border border-[rgba(176,111,74,0.16)] bg-white/82 p-5"
+              >
+                <p className="leading-7 text-[#6e4737]">{point}</p>
+              </div>
+            ))}
+          </div>
+        </SectionCard>
+      </section>
+
       <section className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
         <SectionCard>
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#a45f3c]">Core idea</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#a45f3c]">
+            Core idea
+          </p>
           <h2 className="mt-2 font-serif text-3xl text-[#3d1d17]">
             The home is the first place where pretense fails.
           </h2>
@@ -112,7 +214,9 @@ export default function FamilyFirstPage() {
           </p>
 
           <div className="mt-8 rounded-[1.75rem] border border-[rgba(176,111,74,0.16)] bg-[linear-gradient(135deg,_rgba(255,255,255,0.9)_0%,_rgba(248,238,227,0.96)_100%)] p-6">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#a45f3c]">Household conviction</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#a45f3c]">
+              Household conviction
+            </p>
             <blockquote className="mt-4 font-serif text-2xl leading-relaxed text-[#3d1d17]">
               The standard of love is most believable when it rules marriage, parenting, speech,
               correction, forgiveness, and daily conduct inside the home.
@@ -121,8 +225,12 @@ export default function FamilyFirstPage() {
         </SectionCard>
 
         <SectionCard variant="gradient">
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#a45f3c]">Practice lanes</p>
-          <h2 className="mt-2 font-serif text-3xl text-[#3d1d17]">How to make “family first” visible</h2>
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#a45f3c]">
+            Practice lanes
+          </p>
+          <h2 className="mt-2 font-serif text-3xl text-[#3d1d17]">
+            How to make “family first” visible
+          </h2>
           <div className="mt-6 space-y-4">
             {PRACTICE_LANES.map((lane, index) => (
               <div
@@ -144,8 +252,74 @@ export default function FamilyFirstPage() {
         </SectionCard>
       </section>
 
+      <section className="grid gap-6 lg:grid-cols-[1.02fr_0.98fr]">
+        <SectionCard>
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#a45f3c]">
+            Children are watching
+          </p>
+          <h2 className="mt-2 font-serif text-3xl text-[#3d1d17]">
+            Ages 3 to 13 are not passive years inside the home.
+          </h2>
+          <p className="mt-4 max-w-3xl leading-8 text-[#6e4737]">
+            The ministry warning is simple: do not assume children are unaware because something is
+            done quietly. In the years when character is still forming, children often absorb more
+            than parents realize and later replay it as normal life.
+          </p>
+
+          <div className="mt-6 space-y-4">
+            {CHILD_FORMATION_SIGNALS.map(signal => (
+              <div
+                key={signal}
+                className="rounded-[1.5rem] border border-[rgba(176,111,74,0.16)] bg-[linear-gradient(135deg,_rgba(255,255,255,0.9)_0%,_rgba(248,238,227,0.96)_100%)] p-5"
+              >
+                <p className="leading-7 text-[#6e4737]">{signal}</p>
+              </div>
+            ))}
+          </div>
+        </SectionCard>
+
+        <SectionCard variant="gradient">
+          <div className="flex items-start gap-4">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#f3dfcb] text-[#9d4b2a]">
+              <Shield className="h-5 w-5" />
+            </div>
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#a45f3c]">
+                What to guard against
+              </p>
+              <h2 className="mt-2 font-serif text-3xl text-[#3d1d17]">
+                Works of the flesh are often taught by atmosphere before they are defended by words.
+              </h2>
+            </div>
+          </div>
+
+          <p className="mt-4 leading-8 text-[#6e4737]">
+            This is why parents must be careful not only with what they preach openly, but also with
+            what they permit privately. A child can be shaped by what a home repeatedly tolerates.
+          </p>
+
+          <div className="mt-6 grid gap-3 sm:grid-cols-2">
+            {FLESH_WARNINGS.map(item => (
+              <div
+                key={item}
+                className="rounded-[1.35rem] border border-[rgba(176,111,74,0.16)] bg-white/82 p-4"
+              >
+                <p className="text-sm leading-6 text-[#6e4737]">{item}</p>
+              </div>
+            ))}
+          </div>
+
+          <p className="mt-6 text-sm leading-7 text-[#6e4737]">
+            Read this alongside Galatians 5:19-23: the home must reject the works of the flesh and
+            make room for the fruit of the Spirit.
+          </p>
+        </SectionCard>
+      </section>
+
       <SectionCard>
-        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#a45f3c]">Why it matters</p>
+        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#a45f3c]">
+          Why it matters
+        </p>
         <h2 className="mt-2 font-serif text-3xl text-[#3d1d17]">
           Three reasons this ministry keeps returning to the household.
         </h2>
@@ -163,9 +337,29 @@ export default function FamilyFirstPage() {
       </SectionCard>
 
       <SectionCard variant="dark">
+        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#ffd2af]">
+          Spiritual power
+        </p>
+        <h2 className="mt-2 font-serif text-3xl text-white">
+          Families need more than advice. They need the power of the Holy Spirit.
+        </h2>
+        <p className="mt-4 max-w-3xl leading-8 text-[#fff1e3] opacity-85">
+          Practical Love does not teach moral effort without spiritual help. The ministry message is
+          that love, joy, peace, patience, kindness, goodness, faithfulness, gentleness, and
+          self-control are sustained by the Holy Spirit, not by human willpower alone.
+        </p>
+        <p className="mt-4 max-w-3xl leading-8 text-[#fff1e3] opacity-85">
+          That is why the call is not only to behave better, but to come to Christ sincerely, walk
+          by faith, and let the Spirit reshape the life of the home from the inside out.
+        </p>
+      </SectionCard>
+
+      <SectionCard variant="dark">
         <div className="grid gap-8 lg:grid-cols-[1.08fr_0.92fr] lg:items-end">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#ffd2af]">Next move</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#ffd2af]">
+              Next move
+            </p>
             <h2 className="mt-2 font-serif text-3xl text-white">
               If the family is first, the next question is simple: what should the family practice?
             </h2>

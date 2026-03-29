@@ -16,15 +16,9 @@ type NavItem = {
 
 const NAV_ITEMS: readonly NavItem[] = [
   { name: 'Home', href: '/' },
-  {
-    name: 'About Love',
-    href: '/about-love',
-    children: [
-      { name: 'Characteristics of Love', href: '/characteristics' },
-      { name: 'Bible Passages', href: '/bible-passages' },
-      { name: 'Mission and Vision', href: '/mission-vision' },
-    ],
-  },
+  { name: 'About', href: '/about-love' },
+  { name: 'Messages', href: '/messages' },
+  { name: 'Family First', href: '/family-first' },
   {
     name: 'Resources',
     href: '/resources',
@@ -32,11 +26,11 @@ const NAV_ITEMS: readonly NavItem[] = [
       { name: 'Yellow Card', href: '/yellow-card' },
       { name: 'Yellow Card Series', href: '/yellow-card-series' },
       { name: 'Publications', href: '/publications' },
+      { name: 'Bible Passages', href: '/bible-passages' },
+      { name: 'Characteristics', href: '/characteristics' },
     ],
   },
-  { name: 'Love in Nigeria', href: '/love-in-nigeria' },
   { name: 'Growth', href: '/growth' },
-  { name: 'Donate', href: '/donate' },
   { name: 'Contact', href: '/contact' },
 ] as const;
 
@@ -57,21 +51,29 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 px-3 py-3 sm:px-4">
       <div className="mx-auto max-w-7xl">
-        <div className="glass-border rounded-[1.9rem] bg-[rgba(26,14,11,0.76)] px-4 py-3 shadow-[0_18px_42px_rgba(17,8,6,0.18)] backdrop-blur-2xl sm:px-5">
+        <div className="glass-border rounded-[1.6rem] bg-[rgba(26,14,11,0.84)] px-4 py-2.5 shadow-[0_18px_42px_rgba(17,8,6,0.18)] backdrop-blur-2xl sm:px-5">
           <div className="flex items-center justify-between gap-4">
-            <Link to="/" className="flex min-w-0 items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-[1.25rem] bg-white/8">
-                <Logo className="h-8 w-8" />
+            <Link to="/" className="flex min-w-0 flex-1 items-center gap-3 xl:max-w-[18rem]">
+              <div className="flex h-10 w-10 items-center justify-center rounded-[1rem] bg-white/8">
+                <Logo className="h-7 w-7" />
               </div>
-              <div className="min-w-0">
-                <p className="truncate text-sm font-semibold uppercase tracking-[0.22em] text-[#ffcda7]">
+              <div className="min-w-0 leading-tight">
+                <p
+                  title="Practical Love"
+                  className="text-sm font-semibold uppercase tracking-[0.16em] text-[#ffcda7]"
+                >
                   Practical Love
                 </p>
-                <p className="truncate font-serif text-xl text-white">Come home to the standard</p>
+                <p
+                  title="Biblical love, practiced daily"
+                  className="mt-1 text-xs text-[#f6dfc6] sm:text-sm"
+                >
+                  Biblical love, practiced daily
+                </p>
               </div>
             </Link>
 
-            <nav className="hidden items-center gap-1 lg:flex">
+            <nav className="hidden flex-1 items-center justify-center gap-1 xl:flex">
               {NAV_ITEMS.map(item => {
                 const isCurrent = isActive(item.href) || isChildActive(item.children);
 
@@ -126,32 +128,34 @@ export default function Header() {
                     </div>
 
                     <div
-                      className={`absolute left-0 top-full mt-3 w-72 overflow-hidden rounded-[1.5rem] border border-white/10 bg-[rgba(31,16,12,0.94)] p-2 shadow-[0_24px_44px_rgba(17,8,6,0.28)] transition-all ${
+                      className={`absolute left-0 top-full w-72 pt-3 transition-all ${
                         openDropdown === item.name
                           ? 'visible translate-y-0 opacity-100'
-                          : 'invisible -translate-y-2 opacity-0'
+                          : 'invisible -translate-y-2 opacity-0 pointer-events-none'
                       }`}
                     >
-                      <Link
-                        to={item.href}
-                        className="block rounded-[1.1rem] border border-white/8 bg-white/6 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/10"
-                      >
-                        Open {item.name}
-                      </Link>
-                      <div className="mt-2 space-y-1">
-                        {item.children.map(child => (
-                          <Link
-                            key={child.name}
-                            to={child.href}
-                            className={`block rounded-[1.1rem] px-4 py-3 text-sm transition-colors ${
-                              isActive(child.href)
-                                ? 'bg-white/10 text-white'
-                                : 'text-[#f6dfc6] hover:bg-white/8 hover:text-white'
-                            }`}
-                          >
-                            {child.name}
-                          </Link>
-                        ))}
+                      <div className="overflow-hidden rounded-[1.5rem] border border-white/10 bg-[rgba(31,16,12,0.94)] p-2 shadow-[0_24px_44px_rgba(17,8,6,0.28)]">
+                        <Link
+                          to={item.href}
+                          className="block rounded-[1.1rem] border border-white/8 bg-white/6 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/10"
+                        >
+                          Open {item.name}
+                        </Link>
+                        <div className="mt-2 space-y-1">
+                          {item.children.map(child => (
+                            <Link
+                              key={child.name}
+                              to={child.href}
+                              className={`block rounded-[1.1rem] px-4 py-3 text-sm transition-colors ${
+                                isActive(child.href)
+                                  ? 'bg-white/10 text-white'
+                                  : 'text-[#f6dfc6] hover:bg-white/8 hover:text-white'
+                              }`}
+                            >
+                              {child.name}
+                            </Link>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -159,25 +163,16 @@ export default function Header() {
               })}
             </nav>
 
-            <div className="hidden items-center gap-3 lg:flex">
-              <Link
-                to="/family-first"
-                className={`pill border-white/10 bg-white/6 text-[#ffe0c2] transition-colors hover:bg-white/12 ${
-                  isActive('/family-first') ? 'bg-white/12 text-white' : ''
-                }`}
-              >
-                <Sparkles className="h-4 w-4" />
-                Family first.
-              </Link>
-              <Link to="/love-challenge" className="btn-brand px-5 py-2.5 text-sm">
-                Start challenge
+            <div className="hidden xl:flex">
+              <Link to="/contact" className="btn-brand px-5 py-2.5 text-sm">
+                Contact
               </Link>
             </div>
 
             <button
               type="button"
               onClick={() => setIsMenuOpen(current => !current)}
-              className="flex h-11 w-11 items-center justify-center rounded-full bg-white/8 text-[#f9e7d3] transition-colors hover:bg-white/12 lg:hidden"
+              className="flex h-11 w-11 items-center justify-center rounded-full bg-white/8 text-[#f9e7d3] transition-colors hover:bg-white/12 xl:hidden"
               aria-label="Toggle navigation menu"
             >
               {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -185,7 +180,7 @@ export default function Header() {
           </div>
 
           {isMenuOpen && (
-            <div className="mt-4 border-t border-white/10 pt-4 lg:hidden">
+            <div className="mt-4 border-t border-white/10 pt-4 xl:hidden">
               <div className="space-y-2">
                 {NAV_ITEMS.map(item => {
                   const isCurrent = isActive(item.href) || isChildActive(item.children);
@@ -260,15 +255,18 @@ export default function Header() {
               </div>
 
               <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                <Link to="/family-first" className="pill justify-center border-white/10 bg-white/6 py-3 text-[#ffe0c2]">
+                <Link
+                  to="/family-first"
+                  className="pill justify-center border-white/10 bg-white/6 py-3 text-[#ffe0c2]"
+                >
                   <Sparkles className="h-4 w-4" />
-                  Family first.
-                </Link>
-                <Link to="/love-challenge" className="btn-brand py-3 text-sm">
-                  Start the 30 day challenge
+                  Family first
                 </Link>
                 <Link to="/contact" className="btn-outline-light py-3 text-sm">
                   Contact the ministry
+                </Link>
+                <Link to="/love-challenge" className="btn-brand py-3 text-sm">
+                  Start challenge
                 </Link>
               </div>
             </div>

@@ -32,7 +32,7 @@ export default function GrowthNavigation({
   onSectionChange,
 }: GrowthNavigationProps) {
   return (
-    <nav className="bg-white/90 backdrop-blur rounded-2xl shadow-sm border border-orange-100 mb-8 overflow-hidden">
+    <nav className="overflow-hidden rounded-2xl border border-orange-100 bg-white/90 backdrop-blur shadow-sm">
       {/* Desktop Navigation */}
       <div className="hidden sm:flex">
         {navItems.map(item => {
@@ -41,7 +41,7 @@ export default function GrowthNavigation({
             <button
               key={item.id}
               onClick={() => onSectionChange(item.id)}
-              className={`flex-1 flex items-center justify-center gap-2 px-4 py-4 font-medium transition-all duration-200 border-b-2 ${
+              className={`flex flex-1 items-center justify-center gap-2 px-3 py-3 font-medium transition-all duration-200 border-b-2 ${
                 isActive
                   ? 'text-red-700 border-red-600 bg-gradient-to-b from-orange-50 to-white'
                   : 'text-gray-600 border-transparent hover:text-red-700 hover:bg-orange-50/40'
@@ -62,7 +62,7 @@ export default function GrowthNavigation({
             <button
               key={item.id}
               onClick={() => onSectionChange(item.id)}
-              className={`flex-shrink-0 flex flex-col items-center gap-1 px-4 py-3 font-medium transition-all duration-200 border-b-2 min-w-[80px] ${
+              className={`flex min-w-[74px] flex-shrink-0 flex-col items-center gap-1 px-3 py-3 font-medium transition-all duration-200 border-b-2 ${
                 isActive
                   ? 'text-red-700 border-red-600 bg-gradient-to-b from-orange-50 to-white'
                   : 'text-gray-600 border-transparent'
@@ -77,4 +77,3 @@ export default function GrowthNavigation({
     </nav>
   );
 }
-

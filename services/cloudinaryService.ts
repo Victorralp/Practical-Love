@@ -28,14 +28,15 @@ export interface CloudinaryUploadResponse {
   resource_type: string;
   created_at: string;
   bytes: number;
-  width: number;
-  height: number;
+  width?: number;
+  height?: number;
 }
 
 export interface CloudinaryUploadOptions {
   folder?: string;
   tags?: string[];
   transformation?: any;
+  resourceType?: 'image' | 'video' | 'raw' | 'auto';
 }
 
 /**
@@ -63,6 +64,7 @@ export const uploadToCloudinary = async (
     );
   }
 
+  const resourceType = options.resourceType || 'auto';
   const formData = new FormData();
   formData.append('file', file);
   formData.append('upload_preset', uploadPreset);
@@ -76,10 +78,13 @@ export const uploadToCloudinary = async (
   }
 
   try {
-    const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
-      method: 'POST',
-      body: formData,
-    });
+    const response = await fetch(
+      `https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`,
+      {
+        method: 'POST',
+        body: formData,
+      }
+    );
 
     if (!response.ok) {
       const errorData = await response.json();

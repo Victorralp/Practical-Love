@@ -9,6 +9,9 @@ export interface PageHeroProps {
   actions?: React.ReactNode;
   children?: React.ReactNode;
   className?: string;
+  compact?: boolean;
+  titleClassName?: string;
+  subtitleClassName?: string;
 }
 
 export function PageHero({
@@ -19,11 +22,15 @@ export function PageHero({
   actions,
   children,
   className,
+  compact = false,
+  titleClassName,
+  subtitleClassName,
 }: PageHeroProps) {
   return (
     <div
       className={cn(
-        'relative overflow-hidden rounded-[2rem] border border-[rgba(138,88,60,0.12)] bg-[linear-gradient(135deg,_rgba(255,255,255,0.92)_0%,_rgba(250,242,233,0.94)_52%,_rgba(247,231,214,0.94)_100%)] px-6 py-10 shadow-[0_24px_48px_rgba(95,53,30,0.08)] md:px-10 md:py-12',
+        'relative overflow-hidden rounded-[2rem] border border-[rgba(138,88,60,0.12)] bg-[linear-gradient(135deg,_rgba(255,255,255,0.92)_0%,_rgba(250,242,233,0.94)_52%,_rgba(247,231,214,0.94)_100%)] shadow-[0_24px_48px_rgba(95,53,30,0.08)]',
+        compact ? 'px-6 py-7 md:px-8 md:py-8' : 'px-6 py-10 md:px-10 md:py-12',
         className
       )}
     >
@@ -43,10 +50,26 @@ export function PageHero({
           </div>
         )}
 
-        <h1 className="mt-5 font-serif text-4xl text-[#3d1d17] md:text-5xl">{title}</h1>
+        <h1
+          className={cn(
+            'mt-5 font-serif text-[#3d1d17]',
+            compact ? 'text-3xl md:text-4xl' : 'text-4xl md:text-5xl',
+            titleClassName
+          )}
+        >
+          {title}
+        </h1>
 
         {subtitle ? (
-          <p className="mt-4 max-w-3xl text-lg leading-relaxed text-[#6e4737]">{subtitle}</p>
+          <p
+            className={cn(
+              'mt-4 max-w-3xl leading-relaxed text-[#6e4737]',
+              compact ? 'text-base md:text-lg' : 'text-lg',
+              subtitleClassName
+            )}
+          >
+            {subtitle}
+          </p>
         ) : null}
 
         {actions ? <div className="mt-7">{actions}</div> : null}
@@ -57,5 +80,3 @@ export function PageHero({
 }
 
 export default PageHero;
-
-

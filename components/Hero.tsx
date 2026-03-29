@@ -6,11 +6,14 @@ import {
   BadgeCheck,
   BookHeart,
   BookOpen,
+  Camera,
   Globe,
   HandHeart,
   HeartHandshake,
   House,
+  Mail,
   MoveRight,
+  PlayCircle,
   Quote,
   ScrollText,
   Sparkles,
@@ -23,7 +26,10 @@ import Logo from './Logo';
 
 const IMPACT_SIGNALS = [
   { label: '17 characteristics', value: 'A visible pattern of love you can practice at home.' },
-  { label: '30 day challenge', value: 'A disciplined rhythm for hearts that want change, not hype.' },
+  {
+    label: '30 day challenge',
+    value: 'A disciplined rhythm for hearts that want change, not hype.',
+  },
   { label: 'Nationwide burden', value: 'Heal the family first, then watch communities change.' },
 ] as const;
 
@@ -72,28 +78,32 @@ const ROUTES: Array<{
 }> = [
   {
     title: 'The 17 characteristics of love',
-    description: 'Study the pattern of biblical love until it becomes visible in speech, attitude, and action.',
+    description:
+      'Study the pattern of biblical love until it becomes visible in speech, attitude, and action.',
     href: '/characteristics',
     cta: 'Study the pattern',
     icon: BookOpen,
   },
   {
     title: 'Bible passages for daily renewal',
-    description: 'Walk through scriptural anchors that keep love from turning into sentiment or empty language.',
+    description:
+      'Walk through scriptural anchors that keep love from turning into sentiment or empty language.',
     href: '/bible-passages',
     cta: 'Read the passages',
     icon: BookHeart,
   },
   {
     title: 'The Yellow Card movement',
-    description: 'Carry the message in a practical format you can remember, share, and return to during pressure.',
+    description:
+      'Carry the message in a practical format you can remember, share, and return to during pressure.',
     href: '/yellow-card-series',
     cta: 'Get the yellow card',
     icon: BadgeCheck,
   },
   {
     title: 'A guided love challenge',
-    description: 'Build a daily rhythm with reflection, accountability, and applied acts of love in real life.',
+    description:
+      'Build a daily rhythm with reflection, accountability, and applied acts of love in real life.',
     href: '/love-challenge',
     cta: 'Enter the challenge',
     icon: Target,
@@ -102,8 +112,68 @@ const ROUTES: Array<{
 
 const TESTIMONIES = [
   'When love of money leads a home, peace disappears quietly before anyone notices.',
-  'When the love of God leads a home, children absorb a different language and future.',
+  'Between ages 3 and 13, children often absorb more than parents realize, including what is done behind closed doors.',
   'The first place a nation changes is the private life of the family.',
+] as const;
+
+const VISITOR_GUIDES: Array<{
+  title: string;
+  description: string;
+  href: string;
+  cta: string;
+  icon: LucideIcon;
+}> = [
+  {
+    title: 'Learn what this ministry is about',
+    description:
+      'Read the mission, vision, and scriptural foundation behind Practical Love and why the home is the starting point.',
+    href: '/mission-vision',
+    cta: 'Learn more',
+    icon: Sparkles,
+  },
+  {
+    title: 'Follow the teaching messages',
+    description:
+      'Move through the yellow card series, Bible passages, and publications to keep the message active in daily life.',
+    href: '/yellow-card-series',
+    cta: 'Read messages',
+    icon: PlayCircle,
+  },
+  {
+    title: 'Reach the ministry directly',
+    description:
+      'Use the contact page for prayer requests, partnership discussions, testimonies, and ministry questions.',
+    href: '/contact',
+    cta: 'Contact',
+    icon: Mail,
+  },
+] as const;
+
+const RECENT_ACTIVITY = [
+  {
+    label: 'Recent teaching',
+    title: 'Yellow Card Series',
+    description:
+      'A practical sequence for learning, remembering, and sharing the standard of love.',
+    href: '/yellow-card-series',
+    imageSrc: '/screencapture-127-0-0-1-3000-yellow-card-series-2026-02-21-13_26_48.png',
+  },
+  {
+    label: 'Recent growth tool',
+    title: '30 Day Love Challenge',
+    description:
+      'A guided rhythm of reflection, action, and accountability for households that want change.',
+    href: '/love-challenge',
+    imageSrc: '/screencapture-127-0-0-1-3000-love-challenge-2026-02-21-15_26_08.png',
+  },
+  {
+    label: 'Recent study path',
+    title: 'Bible Passages',
+    description:
+      'Scripture-based teaching that keeps the ministry rooted in God’s word rather than sentiment.',
+    href: '/bible-passages',
+    imageSrc: '/screencapture-127-0-0-1-3000-bible-passages-2026-02-21-13_25_43.png',
+  },
 ] as const;
 
 export default function Hero() {
@@ -200,40 +270,40 @@ export default function Hero() {
     revertibles.push(introTimeline);
 
     pushAnimation(root.querySelector('.ambient-orb-a'), {
-        x: [0, 42],
-        y: [0, -34],
-        scale: [1, 1.1],
-        duration: 4200,
-        ease: 'inOutSine',
-        loop: true,
-        alternate: true,
-      });
+      x: [0, 42],
+      y: [0, -34],
+      scale: [1, 1.1],
+      duration: 4200,
+      ease: 'inOutSine',
+      loop: true,
+      alternate: true,
+    });
     pushAnimation(root.querySelector('.ambient-orb-b'), {
-        x: [0, -48],
-        y: [0, 28],
-        scale: [1.08, 0.94],
-        duration: 5600,
-        ease: 'inOutQuad',
-        loop: true,
-        alternate: true,
-      });
+      x: [0, -48],
+      y: [0, 28],
+      scale: [1.08, 0.94],
+      duration: 5600,
+      ease: 'inOutQuad',
+      loop: true,
+      alternate: true,
+    });
     pushAnimation(root.querySelector('.ambient-orb-c'), {
-        x: [0, 26],
-        y: [0, 18],
-        scale: [0.96, 1.12],
-        duration: 5100,
-        ease: 'inOutQuad',
-        loop: true,
-        alternate: true,
-      });
+      x: [0, 26],
+      y: [0, 18],
+      scale: [0.96, 1.12],
+      duration: 5100,
+      ease: 'inOutQuad',
+      loop: true,
+      alternate: true,
+    });
     pushAnimation(root.querySelector('[data-float-panel]'), {
-        y: [0, -14],
-        rotate: [0, -1.25],
-        duration: 5200,
-        ease: 'inOutSine',
-        loop: true,
-        alternate: true,
-      });
+      y: [0, -14],
+      rotate: [0, -1.25],
+      duration: 5200,
+      ease: 'inOutSine',
+      loop: true,
+      alternate: true,
+    });
 
     revertibles.push(
       animate(root.querySelectorAll('[data-floating-chip]'), {
@@ -328,33 +398,48 @@ export default function Hero() {
                 data-hero-copy
                 className="reveal-item mt-8 max-w-2xl text-lg leading-8 text-[#fff0e3] opacity-90 md:text-xl"
               >
+                Welcome to Practical Love, a Christian ministry for individuals, families, churches,
+                and communities who want to practice biblical love in everyday life. Here you will
+                find scripture, teaching resources, practical challenges, and direct ways to stay
+                connected to the ministry.
+              </p>
+
+              <p
+                data-hero-copy
+                className="reveal-item mt-5 max-w-2xl text-base leading-7 text-[#ffe7d3] opacity-80"
+              >
                 Behind the hustle, status, and survival instinct, many homes are carrying silent
                 exhaustion. Practical Love exists to move people from rhetoric into a disciplined,
                 biblical pattern of love that restores the family and reaches the nation.
               </p>
 
-              <div data-hero-copy className="reveal-item mt-10 flex flex-col gap-4 sm:flex-row">
+              <div data-hero-copy className="reveal-item mt-10 flex flex-col gap-4 lg:flex-row">
                 <button
-                  onClick={() => navigate('/bible-passages')}
+                  onClick={() => navigate('/mission-vision')}
                   className="btn-brand group px-8 py-4 text-base md:text-lg"
                 >
-                  Begin with scripture
+                  Learn more
                   <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
                 </button>
 
                 <Link
-                  to="/love-challenge"
+                  to="/yellow-card-series"
                   className="btn-outline-light group px-8 py-4 text-base md:text-lg"
                 >
-                  Take the 30 day challenge
+                  Read messages
+                  <MoveRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+                </Link>
+
+                <Link
+                  to="/contact"
+                  className="btn-outline-light group px-8 py-4 text-base md:text-lg"
+                >
+                  Contact
                   <MoveRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
                 </Link>
               </div>
 
-              <div
-                data-hero-copy
-                className="reveal-item mt-12 grid gap-3 sm:grid-cols-3"
-              >
+              <div data-hero-copy className="reveal-item mt-12 grid gap-3 sm:grid-cols-3">
                 {IMPACT_SIGNALS.map(signal => (
                   <div
                     key={signal.label}
@@ -451,7 +536,10 @@ export default function Hero() {
       </section>
 
       <section className="px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
-        <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[0.96fr_1.04fr]" data-reveal-group>
+        <div
+          className="mx-auto grid max-w-7xl gap-6 lg:items-start lg:grid-cols-[0.96fr_1.04fr]"
+          data-reveal-group
+        >
           <div
             data-reveal-item
             className="reveal-item surface relative overflow-hidden bg-[linear-gradient(145deg,_#f6ede1_0%,_#fff8f1_52%,_#f2e2ce_100%)] p-8 md:p-10"
@@ -471,7 +559,7 @@ export default function Hero() {
             </p>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid content-start gap-4 md:grid-cols-3">
             {TESTIMONIES.map((statement, index) => (
               <article
                 key={statement}
@@ -484,6 +572,57 @@ export default function Hero() {
                 <p className="mt-4 text-base leading-7 text-[#4c2b20]">{statement}</p>
               </article>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
+        <div className="mx-auto max-w-7xl" data-reveal-group>
+          <div
+            data-reveal-item
+            className="reveal-item mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between"
+          >
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#b76840]">
+                Start here
+              </p>
+              <h2 className="mt-3 max-w-3xl font-serif text-4xl leading-[0.94] text-[#341a15] md:text-5xl">
+                What this ministry is, who it is for, and where to begin.
+              </h2>
+            </div>
+            <p className="max-w-2xl text-base leading-7 text-[#6e4737]">
+              Practical Love is for people who want the love of God to become visible in private
+              life, family culture, discipleship, and community influence.
+            </p>
+          </div>
+
+          <div className="grid gap-5 lg:grid-cols-3">
+            {VISITOR_GUIDES.map(guide => {
+              const Icon = guide.icon;
+
+              return (
+                <Link
+                  key={guide.href}
+                  to={guide.href}
+                  data-reveal-item
+                  className="reveal-item surface group overflow-hidden bg-[linear-gradient(135deg,_rgba(255,255,255,0.96)_0%,_rgba(249,239,228,0.96)_100%)] p-7 transition-transform duration-300 hover:-translate-y-1"
+                >
+                  <div className="flex items-start justify-between gap-6">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-[1.4rem] bg-[#f3dfcb] text-[#9a4a29] shadow-[inset_0_1px_0_rgba(255,255,255,0.6)]">
+                      <Icon className="h-6 w-6" />
+                    </div>
+                    <ArrowRight className="mt-1 h-5 w-5 text-[#a55b37] transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
+                  </div>
+                  <h3 className="mt-6 max-w-md font-serif text-3xl leading-[0.96] text-[#301814]">
+                    {guide.title}
+                  </h3>
+                  <p className="mt-4 text-base leading-7 text-[#684132]">{guide.description}</p>
+                  <p className="mt-6 text-sm font-semibold uppercase tracking-[0.2em] text-[#b86b43]">
+                    {guide.cta}
+                  </p>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -545,6 +684,60 @@ export default function Hero() {
           >
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#b76840]">
+                Recent activity
+              </p>
+              <h2 className="mt-3 max-w-3xl font-serif text-4xl leading-[0.94] text-[#341a15] md:text-5xl">
+                Recent messages and study paths visitors can step into now.
+              </h2>
+            </div>
+            <div className="pill bg-white/70 text-[#8d4a2b]">
+              <Camera className="h-4 w-4" />
+              Current ministry paths
+            </div>
+          </div>
+
+          <div className="grid gap-5 lg:grid-cols-3">
+            {RECENT_ACTIVITY.map(item => (
+              <Link
+                key={item.href}
+                to={item.href}
+                data-reveal-item
+                className="reveal-item surface group overflow-hidden bg-[linear-gradient(180deg,_rgba(255,255,255,0.97),_rgba(247,236,221,0.9))] transition-transform duration-300 hover:-translate-y-1"
+              >
+                <div className="overflow-hidden border-b border-[#ecd9c7]">
+                  <img
+                    src={item.imageSrc}
+                    alt={item.title}
+                    className="h-52 w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]"
+                  />
+                </div>
+                <div className="p-6">
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#b86b43]">
+                    {item.label}
+                  </p>
+                  <h3 className="mt-3 font-serif text-3xl leading-[0.96] text-[#301814]">
+                    {item.title}
+                  </h3>
+                  <p className="mt-4 text-base leading-7 text-[#684132]">{item.description}</p>
+                  <p className="mt-6 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.2em] text-[#b86b43]">
+                    Open now
+                    <ArrowRight className="h-4 w-4" />
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+        <div className="mx-auto max-w-7xl" data-reveal-group>
+          <div
+            data-reveal-item
+            className="reveal-item mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between"
+          >
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#b76840]">
                 Build the rhythm
               </p>
               <h2 className="mt-3 max-w-3xl font-serif text-4xl leading-[0.94] text-[#341a15] md:text-5xl">
@@ -552,8 +745,8 @@ export default function Hero() {
               </h2>
             </div>
             <div className="pill bg-white/70 text-[#8d4a2b]">
-              <Sparkles className="h-4 w-4" />
-              A sharper landing page means nothing if it does not lead to practice.
+              <Sparkles className="h-4 w-4" />A sharper landing page means nothing if it does not
+              lead to practice.
             </div>
           </div>
 
@@ -588,6 +781,110 @@ export default function Hero() {
                 </Link>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      <section className="px-4 pb-10 sm:px-6 lg:px-8 lg:pb-14">
+        <div className="mx-auto max-w-7xl" data-reveal-group>
+          <div className="grid gap-6 lg:items-start lg:grid-cols-[0.92fr_1.08fr]">
+            <div
+              data-reveal-item
+              className="reveal-item surface relative overflow-hidden bg-[linear-gradient(155deg,_#2d1612_0%,_#5a2015_44%,_#8e351f_76%,_#d07a40_100%)] p-8 text-[#fff3e7] md:p-10"
+            >
+              <div className="absolute -right-10 top-8 h-36 w-36 rounded-full bg-white/10 blur-3xl" />
+              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#ffd2ad]">
+                Personal welcome
+              </p>
+              <h2 className="mt-4 max-w-xl font-serif text-4xl leading-[0.92] text-white md:text-5xl">
+                A short word from Dr. Moses Aderemi Owoeye.
+              </h2>
+              <p className="mt-6 text-lg leading-8 text-[#fff0e1] opacity-90">
+                This ministry is built around one burden: that the love of God should become a daily
+                practice in homes, not only a message people admire from a distance.
+              </p>
+              <p className="mt-4 text-base leading-7 text-[#ffe7d3] opacity-80">
+                If you are new here, begin with the mission, study the scriptures, and take one
+                practical step that your household can repeat consistently.
+              </p>
+              <div className="mt-8 inline-flex items-center gap-3 rounded-full border border-white/12 bg-white/10 px-4 py-3">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/12 font-serif text-lg text-white">
+                  MO
+                </div>
+                <div>
+                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#ffd2ad]">
+                    Ministry voice
+                  </p>
+                  <p className="text-sm text-[#fff3e7]">
+                    Author and teacher behind Practical Love resources
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div data-reveal-item className="reveal-item grid content-start gap-4">
+              <div className="grid gap-4 md:grid-cols-2">
+                <article className="surface overflow-hidden bg-white/90">
+                  <img
+                    src="/love-hero.png"
+                    alt="Practical Love ministry visual for families and relationships"
+                    className="h-48 w-full object-cover"
+                  />
+                  <div className="p-5">
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#b86b43]">
+                      Ministry image
+                    </p>
+                    <h3 className="mt-3 font-serif text-2xl text-[#301814]">
+                      Family life is the first ministry field.
+                    </h3>
+                    <p className="mt-3 text-sm leading-6 text-[#684132]">
+                      The home is where the message proves whether it is real, repeated, and strong
+                      enough to shape the future.
+                    </p>
+                  </div>
+                </article>
+
+                <article className="surface bg-[linear-gradient(180deg,_rgba(255,255,255,0.96),_rgba(247,236,221,0.92))] p-6">
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#b86b43]">
+                    What visitors will find
+                  </p>
+                  <h3 className="mt-3 font-serif text-2xl text-[#301814]">
+                    Scripture, practical tools, and active ministry contact points.
+                  </h3>
+                  <ul className="mt-5 space-y-3 text-sm leading-6 text-[#684132]">
+                    <li>Shorter, clearer sections that explain the ministry quickly.</li>
+                    <li>Direct links to study resources, recent teaching, and contact routes.</li>
+                    <li>Visible ministry activity so the site feels current and lived-in.</li>
+                  </ul>
+                </article>
+              </div>
+
+              <article className="surface bg-[linear-gradient(135deg,_rgba(255,255,255,0.96)_0%,_rgba(249,239,228,0.96)_100%)] p-6">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#b86b43]">
+                  Start here next
+                </p>
+                <div className="mt-4 grid gap-4 sm:grid-cols-3">
+                  <div className="rounded-[1.35rem] border border-[rgba(176,111,74,0.16)] bg-white/80 p-4">
+                    <p className="text-sm font-semibold text-[#301814]">Mission</p>
+                    <p className="mt-2 text-sm leading-6 text-[#684132]">
+                      Read the burden and vision behind the ministry.
+                    </p>
+                  </div>
+                  <div className="rounded-[1.35rem] border border-[rgba(176,111,74,0.16)] bg-white/80 p-4">
+                    <p className="text-sm font-semibold text-[#301814]">Scripture</p>
+                    <p className="mt-2 text-sm leading-6 text-[#684132]">
+                      Study the passages and characteristics that define practical love.
+                    </p>
+                  </div>
+                  <div className="rounded-[1.35rem] border border-[rgba(176,111,74,0.16)] bg-white/80 p-4">
+                    <p className="text-sm font-semibold text-[#301814]">Practice</p>
+                    <p className="mt-2 text-sm leading-6 text-[#684132]">
+                      Move into challenges, testimony, and ministry contact routes.
+                    </p>
+                  </div>
+                </div>
+              </article>
+            </div>
           </div>
         </div>
       </section>
