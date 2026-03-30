@@ -80,6 +80,7 @@ export default function BookReaderPage() {
   const [managedPublications, setManagedPublications] = useState<ManagedPublicationRecord[]>([]);
   const [isLoadingCatalog, setIsLoadingCatalog] = useState(true);
   const catalog = mergePublicationCatalog(publications, managedPublications);
+  const staticBook = publications.find(publication => publication.id === id);
   const book = catalog.find(p => p.id === id);
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const [loadedPages, setLoadedPages] = useState(book?.pages ?? []);
@@ -101,23 +102,17 @@ export default function BookReaderPage() {
     return unsubscribe;
   }, []);
 
-  if (isLoadingCatalog) {
-    return (
-      <div className="flex min-h-[50vh] items-center justify-center px-4">
-        <div className="inline-flex items-center gap-3 rounded-2xl border border-orange-100 bg-orange-50 px-6 py-4 text-gray-700">
-          <BookOpen className="h-5 w-5 text-red-700" />
-          Loading publication...
-        </div>
-      </div>
-    );
-  }
-
-  if (!book) {
-    return <Navigate to="/publications" replace />;
-  }
-
   useEffect(() => {
     let cancelled = false;
+
+    if (!book) {
+      setCurrentPageIndex(0);
+      setLoadedPages([]);
+      setIsLoadingPages(false);
+      return () => {
+        cancelled = true;
+      };
+    }
 
     setCurrentPageIndex(0);
     setLoadedPages(book.pages ?? []);
@@ -129,6 +124,12 @@ export default function BookReaderPage() {
         .then(pages => {
           if (!cancelled) {
             setLoadedPages(pages);
+          }
+        })
+        .catch(error => {
+          console.error('Unable to load publication pages:', error);
+          if (!cancelled) {
+            setLoadedPages([]);
           }
         })
         .finally(() => {
@@ -144,6 +145,23 @@ export default function BookReaderPage() {
       cancelled = true;
     };
   }, [book]);
+
+  const shouldWaitForCatalog = isLoadingCatalog && !staticBook;
+
+  if (shouldWaitForCatalog) {
+    return (
+      <div className="flex min-h-[50vh] items-center justify-center px-4">
+        <div className="inline-flex items-center gap-3 rounded-2xl border border-orange-100 bg-orange-50 px-6 py-4 text-gray-700">
+          <BookOpen className="h-5 w-5 text-red-700" />
+          Loading publication...
+        </div>
+      </div>
+    );
+  }
+
+  if (!book) {
+    return <Navigate to="/publications" replace />;
+  }
 
   const hasTextContent = loadedPages.length > 0;
   const hasImages = !!(book.images && book.images.length > 0);
