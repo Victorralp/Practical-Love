@@ -7,7 +7,12 @@ import {
 } from 'firebase/auth';
 import { auth } from './firebaseService';
 
-export const ALLOWED_ADMIN_EMAIL = (import.meta.env.VITE_ADMIN_EMAIL ?? '').toLowerCase();
+export const ALLOWED_ADMIN_EMAILS = new Set(
+  (import.meta.env.VITE_ADMIN_EMAIL ?? '')
+    .split(',')
+    .map((e: string) => e.trim().toLowerCase())
+    .filter(Boolean)
+);
 
 const googleProvider = new GoogleAuthProvider();
 
@@ -17,7 +22,7 @@ export function subscribeToAdminAuth(
   return onAuthStateChanged(auth, user => {
     callback({
       user,
-      isAllowedAdmin: Boolean(user?.email && user.email.toLowerCase() === ALLOWED_ADMIN_EMAIL),
+      isAllowedAdmin: Boolean(user?.email && ALLOWED_ADMIN_EMAILS.has(user.email.toLowerCase())),
     });
   });
 }
