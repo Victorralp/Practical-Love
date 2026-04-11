@@ -2,6 +2,8 @@ import { onValue, push, ref, remove, set, update, type Unsubscribe } from 'fireb
 import type { PublicationProps } from '../data/publications';
 import { realtimeDb } from './firebaseService';
 
+export type PublicationStatus = 'draft' | 'published';
+
 export type ManagedPublicationRecord = {
   id: string;
   title: string;
@@ -13,6 +15,8 @@ export type ManagedPublicationRecord = {
   pdfUrl: string | null;
   pdfPublicId: string | null;
   pageCount: number | null;
+  status: PublicationStatus;
+  featured: boolean;
   createdAt: string;
   updatedAt: string;
 };
@@ -27,6 +31,8 @@ type ManagedPublicationPayload = {
   pdfUrl: string | null;
   pdfPublicId: string | null;
   pageCount: number | null;
+  status: PublicationStatus;
+  featured: boolean;
 };
 
 const PUBLICATIONS_PATH = 'publications';
@@ -101,5 +107,6 @@ export function mergePublicationCatalog(
   staticPublications: PublicationProps[],
   managedPublications: ManagedPublicationRecord[]
 ) {
-  return [...managedPublications.map(toPublicationProps), ...staticPublications];
+  const publishedOnly = managedPublications.filter(p => p.status === 'published');
+  return [...publishedOnly.map(toPublicationProps), ...staticPublications];
 }

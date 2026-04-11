@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
-import { getAnalytics, isSupported } from 'firebase/analytics';
+import { getAnalytics, isSupported, type Analytics } from 'firebase/analytics';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { getDatabase } from 'firebase/database';
@@ -23,7 +23,7 @@ const db = getFirestore(app);
 const realtimeDb = getDatabase(app);
 
 // Initialize Analytics only in browser environments
-let analytics = null;
+let analytics: Analytics | null = null;
 if (typeof window !== 'undefined') {
   isSupported().then(supported => {
     if (supported) {

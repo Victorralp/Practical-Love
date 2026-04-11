@@ -7,7 +7,7 @@ import {
 } from 'firebase/auth';
 import { auth } from './firebaseService';
 
-export const ALLOWED_ADMIN_EMAIL = 'victorralph407@gmail.com';
+export const ALLOWED_ADMIN_EMAIL = (import.meta.env.VITE_ADMIN_EMAIL ?? '').toLowerCase();
 
 const googleProvider = new GoogleAuthProvider();
 

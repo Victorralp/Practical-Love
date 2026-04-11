@@ -1,6 +1,7 @@
 import { get, onValue, push, ref, remove, set, update, type Unsubscribe } from 'firebase/database';
 import { realtimeDb } from './firebaseService';
 
+// ── Media ───────────────────────────────────────────────────────────
 export type MessageMedia = {
   url: string;
   publicId: string;
@@ -11,6 +12,20 @@ export type MessageMedia = {
   bytes?: number;
 };
 
+// ── Reactions ───────────────────────────────────────────────────────
+export type ReactionType = 'amen' | 'love' | 'insightful';
+
+export type ReactionsMap = Record<ReactionType, number>;
+
+export const REACTION_CONFIG: Record<ReactionType, { emoji: string; label: string }> = {
+  amen: { emoji: '🙏', label: 'Amen' },
+  love: { emoji: '❤️', label: 'Love' },
+  insightful: { emoji: '💡', label: 'Insightful' },
+};
+
+export const REACTION_TYPES = Object.keys(REACTION_CONFIG) as ReactionType[];
+
+// ── Comments ────────────────────────────────────────────────────────
 export type MessageComment = {
   id: string;
   author: string;
@@ -18,6 +33,7 @@ export type MessageComment = {
   createdAt: string;
 };
 
+// ── Message Posts ───────────────────────────────────────────────────
 export type MessagePostRecord = {
   id: string;
   title: string;
@@ -27,6 +43,7 @@ export type MessagePostRecord = {
   author: string;
   pinned: boolean;
   media: MessageMedia | null;
+  reactions: ReactionsMap;
   comments: MessageComment[];
   createdAt: string;
   updatedAt: string;
@@ -42,9 +59,55 @@ type MessagePostPayload = {
   media: MessageMedia | null;
 };
 
-const MESSAGES_PATH = 'messages';
+// ── Prayer Requests ─────────────────────────────────────────────────
+export type PrayerRequest = {
+  id: string;
+  body: string;
+  author: string;
+  prayedCount: number;
+  createdAt: string;
+  isActive: boolean;
+};
 
-function toArray(value: Record<string, MessagePostRecord> | null | undefined) {
+// ── Paths ───────────────────────────────────────────────────────────
+const MESSAGES_PATH = 'messages';
+const PRAYER_REQUESTS_PATH = 'prayerRequests';
+
+// ── Local reaction tracking (anonymous, localStorage) ───────────────
+const REACTIONS_STORAGE_KEY = 'pl_reactions';
+const PRAYED_STORAGE_KEY = 'pl_prayed';
+
+function getLocalSet(key: string): Set<string> {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? new Set(JSON.parse(raw) as string[]) : new Set();
+  } catch {
+    return new Set();
+  }
+}
+
+function saveLocalSet(key: string, items: Set<string>): void {
+  try {
+    localStorage.setItem(key, JSON.stringify([...items]));
+  } catch {
+    // localStorage unavailable — silently degrade
+  }
+}
+
+/** Check if current visitor already reacted with this type on this post */
+export function hasUserReacted(postId: string, reactionType: ReactionType): boolean {
+  return getLocalSet(REACTIONS_STORAGE_KEY).has(`${postId}:${reactionType}`);
+}
+
+/** Check if current visitor already prayed for this request */
+export function hasUserPrayed(requestId: string): boolean {
+  return getLocalSet(PRAYED_STORAGE_KEY).has(requestId);
+}
+
+// ── Helpers ─────────────────────────────────────────────────────────
+const DEFAULT_REACTIONS: ReactionsMap = { amen: 0, love: 0, insightful: 0 };
+
+function toPostArray(value: Record<string, MessagePostRecord> | null | undefined) {
   if (!value) {
     return [];
   }
@@ -53,6 +116,7 @@ function toArray(value: Record<string, MessagePostRecord> | null | undefined) {
     .map(([id, record]) => ({
       ...record,
       id,
+      reactions: { ...DEFAULT_REACTIONS, ...record.reactions },
       comments: Array.isArray(record.comments)
         ? [...record.comments].sort(
             (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
@@ -61,6 +125,21 @@ function toArray(value: Record<string, MessagePostRecord> | null | undefined) {
     }))
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 }
+
+function toPrayerArray(value: Record<string, PrayerRequest> | null | undefined) {
+  if (!value) {
+    return [];
+  }
+
+  return Object.entries(value)
+    .map(([id, record]) => ({ ...record, id, prayedCount: record.prayedCount || 0 }))
+    .filter(r => r.isActive !== false)
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// MESSAGE POSTS
+// ══════════════════════════════════════════════════════════════════════
 
 export function subscribeToMessagePosts(
   onData: (posts: MessagePostRecord[]) => void,
@@ -71,7 +150,7 @@ export function subscribeToMessagePosts(
   return onValue(
     messagesRef,
     snapshot => {
-      onData(toArray(snapshot.val() as Record<string, MessagePostRecord> | null));
+      onData(toPostArray(snapshot.val() as Record<string, MessagePostRecord> | null));
     },
     error => {
       onError?.(error);
@@ -86,6 +165,7 @@ export async function createMessagePost(payload: MessagePostPayload) {
 
   await set(newPostRef, {
     ...payload,
+    reactions: DEFAULT_REACTIONS,
     comments: [],
     createdAt: now,
     updatedAt: now,
@@ -110,6 +190,39 @@ export async function deleteMessagePost(id: string) {
   await remove(ref(realtimeDb, `${MESSAGES_PATH}/${id}`));
 }
 
+// ── Reactions ───────────────────────────────────────────────────────
+
+export async function toggleReaction(postId: string, reactionType: ReactionType) {
+  const localSet = getLocalSet(REACTIONS_STORAGE_KEY);
+  const key = `${postId}:${reactionType}`;
+  const postRef = ref(realtimeDb, `${MESSAGES_PATH}/${postId}`);
+  const snapshot = await get(postRef);
+  const existing = snapshot.val() as MessagePostRecord | null;
+
+  if (!existing) return;
+
+  const currentReactions: ReactionsMap = { ...DEFAULT_REACTIONS, ...existing.reactions };
+
+  if (localSet.has(key)) {
+    // Remove reaction
+    currentReactions[reactionType] = Math.max(0, currentReactions[reactionType] - 1);
+    localSet.delete(key);
+  } else {
+    // Add reaction
+    currentReactions[reactionType] += 1;
+    localSet.add(key);
+  }
+
+  saveLocalSet(REACTIONS_STORAGE_KEY, localSet);
+
+  await update(postRef, {
+    reactions: currentReactions,
+    updatedAt: new Date().toISOString(),
+  });
+}
+
+// ── Comments ────────────────────────────────────────────────────────
+
 export async function addCommentToMessagePost(
   id: string,
   payload: { author: string; body: string }
@@ -130,4 +243,100 @@ export async function addCommentToMessagePost(
     comments: nextComments,
     updatedAt: new Date().toISOString(),
   });
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// PRAYER REQUESTS
+// ══════════════════════════════════════════════════════════════════════
+
+export function subscribeToPrayerRequests(
+  onData: (requests: PrayerRequest[]) => void,
+  onError?: (error: Error) => void
+): Unsubscribe {
+  const prayerRef = ref(realtimeDb, PRAYER_REQUESTS_PATH);
+
+  return onValue(
+    prayerRef,
+    snapshot => {
+      onData(toPrayerArray(snapshot.val() as Record<string, PrayerRequest> | null));
+    },
+    error => {
+      onError?.(error);
+    }
+  );
+}
+
+export async function submitPrayerRequest(body: string, author?: string) {
+  const prayerRef = ref(realtimeDb, PRAYER_REQUESTS_PATH);
+  const newRef = push(prayerRef);
+
+  await set(newRef, {
+    body: body.trim().slice(0, 500),
+    author: author?.trim() || 'Anonymous',
+    prayedCount: 0,
+    createdAt: new Date().toISOString(),
+    isActive: true,
+  });
+}
+
+export async function incrementPrayedCount(requestId: string) {
+  const localSet = getLocalSet(PRAYED_STORAGE_KEY);
+
+  if (localSet.has(requestId)) return; // Already prayed
+
+  const requestRef = ref(realtimeDb, `${PRAYER_REQUESTS_PATH}/${requestId}`);
+  const snapshot = await get(requestRef);
+  const existing = snapshot.val() as PrayerRequest | null;
+
+  if (!existing) return;
+
+  localSet.add(requestId);
+  saveLocalSet(PRAYED_STORAGE_KEY, localSet);
+
+  await update(requestRef, {
+    prayedCount: (existing.prayedCount || 0) + 1,
+  });
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// PRAYER REQUEST MODERATION (Admin)
+// ══════════════════════════════════════════════════════════════════════
+
+/** Toggle the active state of a prayer request (admin moderation) */
+export async function togglePrayerRequestActive(requestId: string, isActive: boolean) {
+  const requestRef = ref(realtimeDb, `${PRAYER_REQUESTS_PATH}/${requestId}`);
+  await update(requestRef, { isActive });
+}
+
+/** Delete a prayer request permanently (admin action) */
+export async function deletePrayerRequest(requestId: string) {
+  await remove(ref(realtimeDb, `${PRAYER_REQUESTS_PATH}/${requestId}`));
+}
+
+/** Subscribe to ALL prayer requests including inactive (admin use) */
+export function subscribeToAllPrayerRequests(
+  onData: (requests: PrayerRequest[]) => void,
+  onError?: (error: Error) => void
+): Unsubscribe {
+  const prayerRef = ref(realtimeDb, PRAYER_REQUESTS_PATH);
+
+  return onValue(
+    prayerRef,
+    snapshot => {
+      const value = snapshot.val() as Record<string, PrayerRequest> | null;
+      if (!value) {
+        onData([]);
+        return;
+      }
+
+      const all = Object.entries(value)
+        .map(([id, record]) => ({ ...record, id, prayedCount: record.prayedCount || 0 }))
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+      onData(all);
+    },
+    error => {
+      onError?.(error);
+    }
+  );
 }

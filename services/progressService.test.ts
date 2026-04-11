@@ -5,20 +5,9 @@
  */
 import { describe, it, expect, beforeEach } from 'vitest';
 import * as fc from 'fast-check';
-import type { ReflectionSession, ReflectionEntry, LoveCategory } from '../types/growth';
+import type { ReflectionSession, ReflectionEntry } from '../types/growth';
 import { StorageService } from './storageService';
 import { createProgressService, ProgressService } from './progressService';
-
-// Valid LoveCategory values for generators
-const LOVE_CATEGORIES: LoveCategory[] = [
-  'patience',
-  'kindness',
-  'forgiveness',
-  'empathy',
-  'humility',
-  'trust',
-  'perseverance',
-];
 
 // In-memory storage for testing (avoids localStorage issues in test environment)
 class TestStorage implements StorageService {
@@ -49,8 +38,7 @@ class TestStorage implements StorageService {
   }
 }
 
-// Arbitraries (generators) for property-based testing
-const loveCategoryArb = fc.constantFrom(...LOVE_CATEGORIES);
+
 
 // Valid date arbitrary that filters out NaN dates
 const validDateArb = fc

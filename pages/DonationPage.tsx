@@ -2,6 +2,7 @@ import { HeartHandshake, HelpingHand, Landmark, MoveRight, Printer, Users } from
 import { Link } from 'react-router-dom';
 import { CTASection, PageHero, PageShell, SectionCard } from '../components/ui';
 import Logo from '../components/Logo';
+import GivingHeart from '../components/GivingHeart';
 
 const JOIN_US_STEPS = [
   {
@@ -133,6 +134,8 @@ export default function DonationPage() {
             </div>
           </div>
         </PageHero>
+
+        <GivingHeart />
 
         <section className="grid gap-5 lg:grid-cols-2">
           {JOIN_US_STEPS.map(step => (

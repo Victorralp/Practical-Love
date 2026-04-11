@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Logo from '../components/Logo';
+import FamilyRipple from '../components/FamilyRipple';
 import { CTASection, FeatureCard, PageHero, PageShell, SectionCard } from '../components/ui';
 
 const FAMILY_PILLARS = [
@@ -323,6 +324,9 @@ export default function FamilyFirstPage() {
         <h2 className="mt-2 font-serif text-3xl text-[#3d1d17]">
           Three reasons this ministry keeps returning to the household.
         </h2>
+
+        <FamilyRipple />
+
         <div className="mt-8 grid gap-5 md:grid-cols-3">
           {FAMILY_PILLARS.map(pillar => (
             <FeatureCard

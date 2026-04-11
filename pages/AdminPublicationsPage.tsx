@@ -7,12 +7,14 @@ import {
   PencilLine,
   Plus,
   Save,
+  Search,
+  Star,
   Trash2,
   Upload,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Logo from '../components/Logo';
-import { PageHero, PageShell, SectionCard } from '../components/ui';
+import { PageHero, SectionCard } from '../components/ui';
 import { uploadToCloudinary, type CloudinaryUploadResponse } from '../services/cloudinaryService';
 import {
   createManagedPublication,
@@ -20,6 +22,7 @@ import {
   subscribeToManagedPublications,
   updateManagedPublication,
   type ManagedPublicationRecord,
+  type PublicationStatus,
 } from '../services/publicationsService';
 
 type PublicationFormState = {
@@ -28,6 +31,8 @@ type PublicationFormState = {
   description: string;
   type: 'Book' | 'E-Book' | 'Audiobook';
   pageCount: string;
+  status: PublicationStatus;
+  featured: boolean;
 };
 
 type UploadedAsset = {
@@ -43,6 +48,8 @@ const INITIAL_FORM: PublicationFormState = {
   description: '',
   type: 'Book',
   pageCount: '',
+  status: 'draft',
+  featured: false,
 };
 
 function formatDate(isoDate: string) {
@@ -74,6 +81,7 @@ export default function AdminPublicationsPage() {
   const [isUploadingPdf, setIsUploadingPdf] = useState(false);
   const [coverAsset, setCoverAsset] = useState<UploadedAsset | null>(null);
   const [pdfAsset, setPdfAsset] = useState<UploadedAsset | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const unsubscribe = subscribeToManagedPublications(
@@ -90,13 +98,23 @@ export default function AdminPublicationsPage() {
     return unsubscribe;
   }, []);
 
-  const orderedPublications = useMemo(
-    () =>
-      [...publications].sort(
-        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-      ),
-    [publications]
-  );
+  const orderedPublications = useMemo(() => {
+    let result = [...publications].sort(
+      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      result = result.filter(
+        p =>
+          p.title.toLowerCase().includes(q) ||
+          p.author.toLowerCase().includes(q) ||
+          p.description.toLowerCase().includes(q)
+      );
+    }
+
+    return result;
+  }, [publications, searchQuery]);
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -168,6 +186,8 @@ export default function AdminPublicationsPage() {
       description: publication.description,
       type: publication.type,
       pageCount: publication.pageCount ? String(publication.pageCount) : '',
+      status: publication.status ?? 'draft',
+      featured: publication.featured ?? false,
     });
     setCoverAsset(
       publication.coverImage && publication.coverPublicId
@@ -230,6 +250,8 @@ export default function AdminPublicationsPage() {
         pdfUrl: pdfAsset.url,
         pdfPublicId: pdfAsset.publicId,
         pageCount: parsedPageCount ? Math.round(parsedPageCount) : null,
+        status: form.status,
+        featured: form.featured,
       };
 
       if (editingId) {
@@ -249,8 +271,7 @@ export default function AdminPublicationsPage() {
   };
 
   return (
-    <PageShell className="bg-[radial-gradient(circle_at_top_left,_rgba(254,215,170,0.28),_transparent_28%),radial-gradient(circle_at_top_right,_rgba(248,113,113,0.16),_transparent_34%),linear-gradient(180deg,_#fffaf5_0%,_#ffffff_50%,_#fff7ed_100%)]">
-      <div className="space-y-8">
+    <div className="space-y-8">
         <PageHero
           compact
           badge={
@@ -391,6 +412,51 @@ export default function AdminPublicationsPage() {
                   placeholder="Describe the publication and what readers should expect."
                   className="w-full resize-none rounded-2xl border border-orange-100 bg-white px-4 py-3 focus:border-red-500 focus:ring-2 focus:ring-red-500"
                 />
+              </div>
+
+              {/* Status & Featured */}
+              <div className="grid gap-5 md:grid-cols-2">
+                <div className="rounded-2xl border border-orange-100 bg-white p-4">
+                  <p className="text-sm font-semibold text-gray-900 mb-2">Publish Status</p>
+                  <div className="flex gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setForm(c => ({ ...c, status: 'draft' }))}
+                      className={`flex-1 rounded-xl px-4 py-2.5 text-sm font-medium transition ${
+                        form.status === 'draft'
+                          ? 'bg-amber-100 text-amber-800 ring-2 ring-amber-300'
+                          : 'border border-orange-100 bg-white text-gray-600 hover:bg-orange-50'
+                      }`}
+                    >
+                      📝 Draft
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setForm(c => ({ ...c, status: 'published' }))}
+                      className={`flex-1 rounded-xl px-4 py-2.5 text-sm font-medium transition ${
+                        form.status === 'published'
+                          ? 'bg-green-100 text-green-800 ring-2 ring-green-300'
+                          : 'border border-orange-100 bg-white text-gray-600 hover:bg-orange-50'
+                      }`}
+                    >
+                      ✅ Published
+                    </button>
+                  </div>
+                </div>
+
+                <div className="rounded-2xl border border-orange-100 bg-white p-4">
+                  <p className="text-sm font-semibold text-gray-900 mb-2">Featured</p>
+                  <label className="flex items-center gap-3 rounded-xl border border-orange-100 bg-orange-50/50 px-4 py-2.5 text-sm text-gray-700 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={form.featured}
+                      onChange={e => setForm(c => ({ ...c, featured: e.target.checked }))}
+                      className="h-4 w-4 rounded border-orange-300 text-red-700 focus:ring-red-500"
+                    />
+                    <Star className={`h-4 w-4 ${form.featured ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} />
+                    Highlight on public page
+                  </label>
+                </div>
               </div>
 
               <div className="grid gap-5 md:grid-cols-2">
@@ -563,11 +629,23 @@ export default function AdminPublicationsPage() {
               </p>
               <h2 className="mt-2 text-3xl font-serif text-red-800">Current admin publications</h2>
             </div>
-            <p className="text-sm text-gray-500">
-              {isLoading
-                ? 'Loading publications...'
-                : `${orderedPublications.length} publication(s) uploaded`}
-            </p>
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={e => setSearchQuery(e.target.value)}
+                  placeholder="Search publications..."
+                  className="rounded-2xl border border-orange-100 bg-white py-2 pl-10 pr-4 text-sm focus:border-red-500 focus:ring-2 focus:ring-red-500 w-56"
+                />
+              </div>
+              <p className="text-sm text-gray-500 whitespace-nowrap">
+                {isLoading
+                  ? 'Loading...'
+                  : `${orderedPublications.length} publication(s)`}
+              </p>
+            </div>
           </div>
 
           {isLoading ? (
@@ -588,10 +666,25 @@ export default function AdminPublicationsPage() {
                 >
                   <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                     <div className="min-w-0">
-                      <div className="flex flex-wrap items-center gap-3">
+                      <div className="flex flex-wrap items-center gap-2">
                         <span className="rounded-full bg-red-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-red-700">
                           {publication.type}
                         </span>
+                        <span
+                          className={`rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] ${
+                            publication.status === 'published'
+                              ? 'bg-green-100 text-green-700'
+                              : 'bg-amber-100 text-amber-700'
+                          }`}
+                        >
+                          {publication.status === 'published' ? '✅ Published' : '📝 Draft'}
+                        </span>
+                        {publication.featured && (
+                          <span className="inline-flex items-center gap-1 rounded-full bg-yellow-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-yellow-700">
+                            <Star className="h-3 w-3 fill-yellow-500" />
+                            Featured
+                          </span>
+                        )}
                         {publication.pageCount ? (
                           <span className="rounded-full bg-orange-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-orange-700">
                             {publication.pageCount} pages
@@ -643,7 +736,6 @@ export default function AdminPublicationsPage() {
             </div>
           )}
         </SectionCard>
-      </div>
-    </PageShell>
+    </div>
   );
 }

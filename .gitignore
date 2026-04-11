@@ -7,6 +7,11 @@ yarn-error.log*
 # Production builds
 dist/
 build/
+*.zip
+*.7z
+
+# Generated CSS
+styles/output.css
 
 # Environment variables
 .env

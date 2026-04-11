@@ -23,6 +23,7 @@ import {
 import { Link } from 'react-router-dom';
 import { CTASection, FeatureCard, PageHero, PageShell, SectionCard } from '../components/ui';
 import Logo from '../components/Logo';
+import LoveSelfAssessment from '../components/LoveSelfAssessment';
 
 const CHARACTERISTICS = [
   {
@@ -343,6 +344,8 @@ export default function CharacteristicsPage() {
           </div>
         </SectionCard>
       </section>
+
+      <LoveSelfAssessment />
 
       <SectionCard className="border-red-100 bg-white/95 shadow-lg">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">

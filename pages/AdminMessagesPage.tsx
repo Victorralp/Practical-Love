@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Logo from '../components/Logo';
-import { PageHero, PageShell, SectionCard } from '../components/ui';
+import { PageHero, SectionCard } from '../components/ui';
 import { uploadToCloudinary, type CloudinaryUploadResponse } from '../services/cloudinaryService';
 import {
   createMessagePost,
@@ -238,8 +238,7 @@ export default function AdminMessagesPage() {
   };
 
   return (
-    <PageShell className="bg-[radial-gradient(circle_at_top_left,_rgba(254,215,170,0.28),_transparent_28%),radial-gradient(circle_at_top_right,_rgba(248,113,113,0.16),_transparent_34%),linear-gradient(180deg,_#fffaf5_0%,_#ffffff_50%,_#fff7ed_100%)]">
-      <div className="space-y-8">
+    <div className="space-y-8">
         <PageHero
           compact
           badge={
@@ -598,8 +597,7 @@ export default function AdminMessagesPage() {
               ))}
             </div>
           )}
-        </SectionCard>
-      </div>
-    </PageShell>
+      </SectionCard>
+    </div>
   );
 }

@@ -360,6 +360,211 @@ html {
     border: 1px solid rgba(255, 246, 239, 0.18);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
   }
+
+  /* ── Ember Particles ────────────────────────────────────────────── */
+  .ember-particle {
+    background: radial-gradient(circle, #ffb347 0%, #ff8c1a 40%, transparent 70%);
+    box-shadow: 0 0 6px 2px rgba(255, 160, 60, 0.3);
+    animation: float-ember var(--ember-duration, 8s) ease-in-out infinite;
+  }
+
+  @keyframes float-ember {
+    0% {
+      opacity: 0;
+      transform: translateY(0) translateX(0) scale(0.4);
+    }
+    10% {
+      opacity: var(--ember-opacity, 0.5);
+    }
+    50% {
+      transform: translateY(-40vh) translateX(var(--ember-drift, 20px)) scale(1);
+    }
+    85% {
+      opacity: var(--ember-opacity, 0.5);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-80vh) translateX(calc(var(--ember-drift, 20px) * 1.5)) scale(0.2);
+    }
+  }
+
+  /* ── Candle Flame ───────────────────────────────────────────────── */
+  .candle-flame {
+    animation: flame-flicker 3s ease-in-out infinite alternate;
+    transform-origin: bottom center;
+    filter: drop-shadow(0 0 8px rgba(255, 170, 60, 0.5));
+  }
+
+  .candle-glow {
+    animation: candle-glow-pulse 4s ease-in-out infinite alternate;
+  }
+
+  @keyframes flame-flicker {
+    0% { transform: scaleX(1) scaleY(1) rotate(-1deg); }
+    25% { transform: scaleX(0.94) scaleY(1.04) rotate(0.5deg); }
+    50% { transform: scaleX(1.02) scaleY(0.97) rotate(-0.5deg); }
+    75% { transform: scaleX(0.97) scaleY(1.02) rotate(1deg); }
+    100% { transform: scaleX(1) scaleY(1) rotate(0deg); }
+  }
+
+  @keyframes candle-glow-pulse {
+    0% { opacity: 0.6; transform: translateX(-50%) scale(0.9); }
+    100% { opacity: 1; transform: translateX(-50%) scale(1.15); }
+  }
+
+  /* ── Prayer Button ─────────────────────────────────────────────── */
+  .prayer-ripple {
+    animation: prayer-ripple-expand 1.4s ease-out forwards;
+  }
+
+  .prayer-heart-icon {
+    animation: heartbeat-gentle 2s ease-in-out infinite;
+  }
+
+  @keyframes prayer-ripple-expand {
+    0% { width: 0; height: 0; opacity: 0.5; }
+    100% { width: 400px; height: 400px; opacity: 0; }
+  }
+
+  @keyframes heartbeat-gentle {
+    0%, 100% { transform: scale(1); }
+    14% { transform: scale(1.2); }
+    28% { transform: scale(1); }
+    42% { transform: scale(1.15); }
+    56% { transform: scale(1); }
+  }
+
+  /* ── Testimony Breathing ────────────────────────────────────────── */
+  .testimony-card {
+    animation: breathe-card 6s ease-in-out infinite;
+  }
+
+  .testimony-quote-icon {
+    animation: heartbeat-gentle 2.4s ease-in-out infinite;
+  }
+
+  @keyframes breathe-card {
+    0%, 100% { box-shadow: 0 24px 48px rgba(95, 53, 30, 0.08); }
+    50% { box-shadow: 0 28px 56px rgba(95, 53, 30, 0.12); }
+  }
+
+  /* ── Scripture Mirror Glow ─────────────────────────────────────── */
+  .scripture-name {
+    transition: all 0.5s ease;
+  }
+
+  .scripture-mirror-container {
+    transition: box-shadow 0.6s ease;
+  }
+
+  .scripture-mirror-container:has(input:focus) {
+    box-shadow: 0 28px 60px rgba(145, 32, 24, 0.1);
+  }
+
+  /* ── Love Letter ────────────────────────────────────────────────── */
+  .love-letter-body {
+    position: relative;
+  }
+
+  .love-letter-body::before {
+    content: '';
+    position: absolute;
+    left: 2rem;
+    top: 2rem;
+    bottom: 2rem;
+    width: 1px;
+    background: linear-gradient(180deg, rgba(193, 114, 73, 0.12) 0%, rgba(193, 114, 73, 0.04) 100%);
+  }
+
+  /* ── Altar Call — Beating Heart ─────────────────────────────────── */
+  .altar-heart-icon {
+    animation: altar-heartbeat 1.4s ease-in-out infinite;
+  }
+
+  .altar-pulse-ring {
+    animation: altar-pulse-expand 2.8s ease-out infinite;
+  }
+
+  .altar-pulse-ring-delayed {
+    animation: altar-pulse-expand 2.8s ease-out infinite 1.4s;
+  }
+
+  @keyframes altar-heartbeat {
+    0%, 100% { transform: scale(1); }
+    10% { transform: scale(1.18); }
+    20% { transform: scale(1); }
+    30% { transform: scale(1.12); }
+    40% { transform: scale(1); }
+  }
+
+  @keyframes altar-pulse-expand {
+    0% {
+      transform: scale(0.6);
+      opacity: 0.5;
+    }
+    100% {
+      transform: scale(2.2);
+      opacity: 0;
+    }
+  }
+
+  /* ── Altar Call — Shimmer Text ──────────────────────────────────── */
+  .altar-shimmer-text {
+    background: linear-gradient(
+      90deg,
+      #ffb380 0%,
+      #fff1e3 30%,
+      #ffb380 50%,
+      #fff1e3 70%,
+      #ffb380 100%
+    );
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: altar-shimmer 6s ease-in-out infinite;
+  }
+
+  @keyframes altar-shimmer {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  /* ── Floating Love Whispers ────────────────────────────────────── */
+  .love-whisper {
+    animation: whisper-float linear infinite;
+    white-space: nowrap;
+  }
+
+  @keyframes whisper-float {
+    0% {
+      opacity: 0;
+      transform: translateY(20px) rotate(-2deg);
+    }
+    15% {
+      opacity: 0.08;
+    }
+    50% {
+      transform: translateY(-20px) rotate(1deg);
+    }
+    85% {
+      opacity: 0.08;
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-60px) rotate(3deg);
+    }
+  }
+
+  /* ── Altar Pledge Response ─────────────────────────────────────── */
+  .altar-pledge-response {
+    animation: pledge-reveal 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  @keyframes pledge-reveal {
+    0% { opacity: 0; transform: translateY(20px) scale(0.97); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -377,8 +582,40 @@ html {
   }
 
   .reveal-item,
-  .hero-line {
+  .hero-line,
+  .love-letter-line,
+  .altar-pledge-response,
+  .love-assessment-question,
+  .giving-heart-icon,
+  .giving-pulse-ring,
+  .giving-pulse-ring-delayed {
     opacity: 1;
     transform: none;
+    animation: none !important;
   }
+}
+
+/* ── Assessment Quiz — Fade & Slide ─────────────────────────────── */
+@keyframes fadeSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Giving Heart — Pulse Rings ─────────────────────────────────── */
+.giving-heart-icon {
+  animation: altar-heartbeat 1.4s ease-in-out infinite;
+}
+
+.giving-pulse-ring {
+  animation: altar-pulse-expand 2.8s ease-out infinite;
+}
+
+.giving-pulse-ring-delayed {
+  animation: altar-pulse-expand 2.8s ease-out infinite 1.4s;
 }

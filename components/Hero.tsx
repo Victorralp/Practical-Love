@@ -1,5 +1,12 @@
 import { useEffect, useRef } from 'react';
 import { animate, createTimeline, stagger } from 'animejs';
+import EmberParticles from './EmberParticles';
+import ScriptureMirror from './ScriptureMirror';
+import PrayerPause from './PrayerPause';
+import TestimonyHeartbeat from './TestimonyHeartbeat';
+import LoveLetterToYou from './LoveLetterToYou';
+import TheWeightOfWords from './TheWeightOfWords';
+import AltarCall from './AltarCall';
 import type { LucideIcon } from 'lucide-react';
 import {
   ArrowRight,
@@ -110,11 +117,7 @@ const ROUTES: Array<{
   },
 ] as const;
 
-const TESTIMONIES = [
-  'When love of money leads a home, peace disappears quietly before anyone notices.',
-  'Between ages 3 and 13, children often absorb more than parents realize, including what is done behind closed doors.',
-  'The first place a nation changes is the private life of the family.',
-] as const;
+
 
 const VISITOR_GUIDES: Array<{
   title: string;
@@ -370,6 +373,7 @@ export default function Hero() {
         <div className="ambient-orb ambient-orb-a absolute left-[-8%] top-[10%] h-72 w-72 rounded-full bg-[#ffd9a6]/18 blur-3xl" />
         <div className="ambient-orb ambient-orb-b absolute right-[-4%] top-[18%] h-96 w-96 rounded-full bg-[#f3a061]/18 blur-3xl" />
         <div className="ambient-orb ambient-orb-c absolute bottom-[-8%] left-[34%] h-80 w-80 rounded-full bg-[#fff1df]/10 blur-3xl" />
+        <EmberParticles />
 
         <div className="relative mx-auto max-w-7xl">
           <div className="grid gap-14 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
@@ -535,6 +539,10 @@ export default function Hero() {
         </div>
       </section>
 
+      <ScriptureMirror />
+
+      <LoveLetterToYou />
+
       <section className="px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
         <div
           className="mx-auto grid max-w-7xl gap-6 lg:items-start lg:grid-cols-[0.96fr_1.04fr]"
@@ -559,22 +567,12 @@ export default function Hero() {
             </p>
           </div>
 
-          <div className="grid content-start gap-4 md:grid-cols-3">
-            {TESTIMONIES.map((statement, index) => (
-              <article
-                key={statement}
-                data-reveal-item
-                className="reveal-item surface bg-white/86 p-6"
-              >
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#c17249]">
-                  Signal {index + 1}
-                </p>
-                <p className="mt-4 text-base leading-7 text-[#4c2b20]">{statement}</p>
-              </article>
-            ))}
-          </div>
         </div>
       </section>
+
+      <TestimonyHeartbeat />
+
+      <TheWeightOfWords />
 
       <section className="px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
         <div className="mx-auto max-w-7xl" data-reveal-group>
@@ -889,55 +887,9 @@ export default function Hero() {
         </div>
       </section>
 
-      <section className="px-4 pb-20 sm:px-6 lg:px-8 lg:pb-24">
-        <div
-          className="texture-noise relative mx-auto max-w-7xl overflow-hidden rounded-[2.2rem] bg-[linear-gradient(135deg,_#2b1511_0%,_#5d2015_42%,_#8f351f_72%,_#d67d3e_100%)] px-8 py-10 text-[#fff3e7] shadow-[0_36px_80px_rgba(63,25,14,0.26)] sm:px-10 lg:px-14 lg:py-14"
-          data-reveal-group
-        >
-          <div className="absolute -left-8 top-8 h-36 w-36 rounded-full bg-white/10 blur-3xl" />
-          <div className="absolute bottom-0 right-0 h-44 w-44 rounded-full bg-[#ffd2a4]/18 blur-3xl" />
+      <PrayerPause />
 
-          <div className="relative grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
-            <div data-reveal-item className="reveal-item">
-              <div className="pill glass-border bg-white/10 text-[#ffe2ca]">
-                <HeartHandshake className="h-4 w-4" />
-                One standard for private life and public life.
-              </div>
-              <h2 className="mt-6 max-w-3xl font-serif text-4xl leading-[0.92] text-white md:text-5xl">
-                If the home learns a different language, the future learns a different future.
-              </h2>
-              <p className="mt-5 max-w-2xl text-lg leading-8 text-[#fff1e3] opacity-85">
-                Let this site move people beyond admiration into practice. Study the message, bring
-                it into the family, and carry it outward with consistency.
-              </p>
-            </div>
-
-            <div data-reveal-item className="reveal-item grid gap-4 sm:grid-cols-2">
-              <button
-                onClick={() => navigate('/mission-vision')}
-                className="btn-brand px-7 py-4 text-base"
-              >
-                See the mission
-              </button>
-              <Link to="/growth" className="btn-outline-light px-7 py-4 text-base">
-                Enter the growth hub
-              </Link>
-              <div className="glass-border rounded-[1.6rem] bg-white/8 p-5 sm:col-span-2">
-                <div className="flex items-center gap-3 text-[#ffd1af]">
-                  <Users className="h-5 w-5" />
-                  <span className="text-xs font-semibold uppercase tracking-[0.22em]">
-                    Household focus
-                  </span>
-                </div>
-                <p className="mt-4 text-base leading-7 text-[#fff1e3] opacity-80">
-                  Practical Love is strongest when fathers, mothers, children, mentors, and young
-                  adults all hear the same call and practice the same discipline.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <AltarCall />
     </div>
   );
 }

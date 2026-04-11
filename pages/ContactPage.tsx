@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Clock3,
   Handshake,
@@ -85,6 +85,22 @@ export default function ContactPage() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitState, setSubmitState] = useState<SubmitState>({ status: 'idle', message: '' });
+  const [warmPromptIndex, setWarmPromptIndex] = useState(0);
+
+  const WARM_PROMPTS = [
+    'Tell us what\'s on your heart...',
+    'Every prayer request is sacred to us...',
+    'Your story matters — share it here...',
+    'We\'re listening with love...',
+    'This space is safe. Speak freely...',
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setWarmPromptIndex(prev => (prev + 1) % 5);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, []);
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -301,14 +317,31 @@ export default function ContactPage() {
               </p>
             </div>
 
+            {/* Warm rotating prompt */}
+            <div className="mt-4 rounded-2xl border border-[rgba(176,111,74,0.12)] bg-[linear-gradient(135deg,_rgba(255,248,240,0.9)_0%,_rgba(255,243,231,0.9)_100%)] p-4 text-center">
+              <p
+                className="font-serif text-lg italic text-[#8d5339] transition-opacity duration-500"
+                key={warmPromptIndex}
+                style={{ animation: 'fadeSlideIn 0.6s ease' }}
+              >
+                {WARM_PROMPTS[warmPromptIndex]}
+              </p>
+            </div>
+
             <form onSubmit={handleSubmit} className="mt-6 space-y-6">
-              {submitState.status !== 'idle' ? (
+              {submitState.status === 'success' ? (
+                <div className="rounded-[1.75rem] border border-green-200 bg-[linear-gradient(135deg,_#f0fdf4_0%,_#ecfdf5_100%)] p-8 text-center">
+                  <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
+                    <svg className="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
+                  </div>
+                  <p className="font-serif text-2xl text-gray-900">Your words have reached us.</p>
+                  <p className="mt-2 text-base text-gray-600">We are praying already. God bless you.</p>
+                </div>
+              ) : submitState.status === 'error' ? (
                 <div
-                  className={`rounded-2xl px-4 py-3 text-sm font-medium ${
-                    submitState.status === 'success'
-                      ? 'border border-green-200 bg-green-50 text-green-800'
-                      : 'border border-red-200 bg-red-50 text-red-800'
-                  }`}
+                  className="rounded-2xl px-4 py-3 text-sm font-medium border border-red-200 bg-red-50 text-red-800"
                 >
                   {submitState.message}
                 </div>
