@@ -28,6 +28,7 @@ import {
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import Logo from './Logo';
+import { STARTING_POINTS, TODAY_LOVE_PRACTICES } from './homeContent';
 
 const IMPACT_SIGNALS = [
   { label: '17 characteristics', value: 'A visible pattern of love you can practice at home.' },
@@ -425,7 +426,7 @@ export default function Hero() {
                 </button>
 
                 <Link
-                  to="/yellow-card-series"
+                  to="/messages"
                   className="btn-outline-light group px-8 py-4 text-base md:text-lg"
                 >
                   Read messages
@@ -537,6 +538,45 @@ export default function Hero() {
         </div>
       </section>
 
+      <section className="px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+        <div
+          className="mx-auto max-w-7xl rounded-[2rem] border border-[rgba(176,111,74,0.16)] bg-[linear-gradient(135deg,_rgba(255,255,255,0.92)_0%,_rgba(248,238,227,0.96)_100%)] p-6 shadow-[0_24px_48px_rgba(95,53,30,0.08)] md:p-8"
+          data-reveal-group
+        >
+          <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+            <div data-reveal-item className="reveal-item">
+              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#b76840]">
+                Today's love practice
+              </p>
+              <h2 className="mt-3 max-w-xl font-serif text-4xl leading-[0.94] text-[#341a15] md:text-5xl">
+                Let the message become one small action.
+              </h2>
+              <p className="mt-4 max-w-2xl text-base leading-7 text-[#6e4737]">
+                Practical Love becomes real when a visitor leaves with something clear to practice
+                before the day ends.
+              </p>
+            </div>
+
+            <div className="grid gap-3 sm:grid-cols-3">
+              {TODAY_LOVE_PRACTICES.map((practice, index) => (
+                <div
+                  key={practice}
+                  data-reveal-item
+                  className="reveal-item rounded-[1.5rem] border border-[rgba(176,111,74,0.14)] bg-white/82 p-4"
+                >
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#f3dfcb] text-sm font-semibold text-[#9d4b2a]">
+                    {index + 1}
+                  </div>
+                  <p className="mt-4 text-sm font-semibold leading-6 text-[#3d1d17]">
+                    {practice}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       <ScriptureMirror />
 
       <LoveLetterToYou />
@@ -571,6 +611,56 @@ export default function Hero() {
       <TestimonyHeartbeat />
 
       <TheWeightOfWords />
+
+      <section className="px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
+        <div className="mx-auto max-w-7xl" data-reveal-group>
+          <div
+            data-reveal-item
+            className="reveal-item mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between"
+          >
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#b76840]">
+                Choose your starting point
+              </p>
+              <h2 className="mt-3 max-w-3xl font-serif text-4xl leading-[0.94] text-[#341a15] md:text-5xl">
+                Enter through the door that matches where your heart is today.
+              </h2>
+            </div>
+            <p className="max-w-xl text-base leading-7 text-[#6e4737]">
+              Some visitors need teaching. Some need household repair. Some need a heart check.
+              Practical Love gives each person a first step.
+            </p>
+          </div>
+
+          <div className="grid gap-5 lg:grid-cols-3">
+            {STARTING_POINTS.map((point, index) => (
+              <Link
+                key={point.href}
+                to={point.href}
+                data-reveal-item
+                className="reveal-item surface group overflow-hidden bg-[linear-gradient(135deg,_rgba(255,255,255,0.96)_0%,_rgba(249,239,228,0.96)_100%)] p-7 transition-transform duration-300 hover:-translate-y-1"
+              >
+                <div className="flex items-start justify-between gap-6">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-[1.4rem] bg-[#f3dfcb] font-serif text-2xl text-[#9a4a29] shadow-[inset_0_1px_0_rgba(255,255,255,0.6)]">
+                    {index + 1}
+                  </div>
+                  <ArrowRight className="mt-1 h-5 w-5 text-[#a55b37] transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
+                </div>
+                <p className="mt-6 text-xs font-semibold uppercase tracking-[0.22em] text-[#b86b43]">
+                  {point.label}
+                </p>
+                <h3 className="mt-3 max-w-md font-serif text-3xl leading-[0.96] text-[#301814]">
+                  {point.title}
+                </h3>
+                <p className="mt-4 text-base leading-7 text-[#684132]">{point.description}</p>
+                <p className="mt-6 text-sm font-semibold uppercase tracking-[0.2em] text-[#b86b43]">
+                  {point.cta}
+                </p>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
 
       <section className="px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
         <div className="mx-auto max-w-7xl" data-reveal-group>

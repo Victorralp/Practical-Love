@@ -1,16 +1,18 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, type ComponentType } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
+  BookOpen,
   CalendarDays,
-  ChevronDown,
   FileImage,
   Heart,
   Loader,
   Megaphone,
   MessageSquare,
   Pin,
+  ScrollText,
   Send,
   Share2,
+  Sparkles,
   Video,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -19,11 +21,17 @@ import { PageHero, PageShell, SectionCard } from '../components/ui';
 import ReactionBar from '../components/ReactionBar';
 import PrayerWall from '../components/PrayerWall';
 import PostSkeleton from '../components/PostSkeleton';
+import MessageVideoPlayer from '../components/MessageVideoPlayer';
 import {
   addCommentToMessagePost,
   subscribeToMessagePosts,
   type MessagePostRecord,
 } from '../services/messagePostsService';
+import {
+  countMessagePosts,
+  filterMessagePosts,
+  type MessageCategoryFilter,
+} from '../services/messagePostFilters';
 
 // ── Helpers ─────────────────────────────────────────────────────────
 
@@ -49,15 +57,24 @@ function formatFullDate(isoDate: string) {
 // ── Types ───────────────────────────────────────────────────────────
 
 type TabId = 'feed' | 'prayer';
-type CategoryFilter = 'all' | 'announcement' | 'teaching' | 'media' | 'pinned';
 
-const CATEGORY_TABS: { id: CategoryFilter; label: string; icon: string }[] = [
-  { id: 'all', label: 'All', icon: '📋' },
-  { id: 'announcement', label: 'Announcements', icon: '📢' },
-  { id: 'teaching', label: 'Teaching', icon: '📖' },
-  { id: 'media', label: 'Media', icon: '🎥' },
-  { id: 'pinned', label: 'Pinned', icon: '📌' },
+const CATEGORY_TABS: {
+  id: MessageCategoryFilter;
+  label: string;
+  icon: ComponentType<{ className?: string }>;
+}[] = [
+  { id: 'all', label: 'All', icon: ScrollText },
+  { id: 'announcement', label: 'Updates', icon: Megaphone },
+  { id: 'teaching', label: 'Teaching', icon: BookOpen },
+  { id: 'media', label: 'Media', icon: Video },
+  { id: 'pinned', label: 'Pinned', icon: Pin },
 ];
+
+const WEEKLY_PRACTICES = [
+  'Before you react, pause.',
+  'Before you answer, listen.',
+  'Before you correct, love.',
+] as const;
 
 // ── Share helper ────────────────────────────────────────────────────
 
@@ -95,16 +112,17 @@ export default function MessagesPage() {
   >({});
   const [submittingCommentId, setSubmittingCommentId] = useState<string | null>(null);
   const [openComments, setOpenComments] = useState<Record<string, boolean>>({});
+  const commentTextareas = useRef<Record<string, HTMLTextAreaElement | null>>({});
 
   // Tabs & filters
   const [activeTab, setActiveTab] = useState<TabId>('feed');
-  const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>('all');
+  const [categoryFilter, setCategoryFilter] = useState<MessageCategoryFilter>('all');
 
   useEffect(() => {
     const loadingTimeout = window.setTimeout(() => {
       setIsLoading(false);
       setStatusMessage(
-        'Firebase is taking too long to respond. Check Firestore rules, project status, or your internet connection.'
+        'Messages are still loading. Please wait a moment, then refresh if nothing appears.'
       );
     }, 8000);
 
@@ -116,12 +134,12 @@ export default function MessagesPage() {
         setStatusMessage(
           loadedPosts.length > 0
             ? 'Latest ministry posts loaded.'
-            : 'No posts yet. The feed is connected, but nothing has been published.'
+            : 'No messages have been published yet. Please check back soon.'
         );
       },
       error => {
         window.clearTimeout(loadingTimeout);
-        setStatusMessage(`Unable to load posts: ${error.message}`);
+        setStatusMessage(`We could not load the messages right now. ${error.message}`);
         setIsLoading(false);
       }
     );
@@ -146,23 +164,11 @@ export default function MessagesPage() {
   );
 
   const filteredPosts = useMemo(() => {
-    if (categoryFilter === 'all') return orderedPosts;
-    if (categoryFilter === 'pinned') return orderedPosts.filter(p => p.pinned);
-    if (categoryFilter === 'media') return orderedPosts.filter(p => p.media !== null);
-    return orderedPosts.filter(
-      p => p.category.toLowerCase() === categoryFilter
-    );
+    return filterMessagePosts(orderedPosts, categoryFilter);
   }, [orderedPosts, categoryFilter]);
 
   const categoryCounts = useMemo(() => {
-    const counts: Record<CategoryFilter, number> = {
-      all: orderedPosts.length,
-      announcement: orderedPosts.filter(p => p.category.toLowerCase() === 'announcement').length,
-      teaching: orderedPosts.filter(p => p.category.toLowerCase() === 'teaching').length,
-      media: orderedPosts.filter(p => p.media !== null).length,
-      pinned: orderedPosts.filter(p => p.pinned).length,
-    };
-    return counts;
+    return countMessagePosts(orderedPosts);
   }, [orderedPosts]);
 
   // ── Comment handlers ────────────────────────────────────────────────
@@ -218,11 +224,16 @@ export default function MessagesPage() {
     }
   };
 
-  const toggleComments = (postId: string) => {
+  const handleRespondToPost = (postId: string) => {
     setOpenComments(current => ({
       ...current,
-      [postId]: !current[postId],
+      [postId]: true,
     }));
+    setStatusMessage('Comment box opened. Share what you received from the message.');
+
+    window.setTimeout(() => {
+      commentTextareas.current[postId]?.focus();
+    }, 150);
   };
 
   // ══════════════════════════════════════════════════════════════════════
@@ -245,8 +256,8 @@ export default function MessagesPage() {
               <Logo className="h-7 w-7" />
             </div>
           }
-          title="Ministry posts, prayer & community"
-          subtitle="Stay connected with the Practical Love community. Read the latest ministry updates, share prayer requests, and encourage one another in love."
+          title="Messages for the Practical Love family"
+          subtitle="Read the latest teachings, ministry updates, and prayer focus. Then respond with one practical step of love."
           actions={
             <div className="flex flex-col gap-3 sm:flex-row">
               <Link to="/contact" className="btn-brand px-7 py-3">
@@ -261,15 +272,15 @@ export default function MessagesPage() {
           <div className="grid gap-4 md:grid-cols-3">
             <div className="rounded-2xl border border-white/70 bg-white/85 p-4 backdrop-blur-sm">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-600">
-                Community
+                Latest teaching
               </p>
               <p className="mt-2 text-lg font-semibold text-gray-900">
-                Posts, reactions & comments
+                Read, watch & reflect
               </p>
             </div>
             <div className="rounded-2xl border border-white/70 bg-white/85 p-4 backdrop-blur-sm">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-600">
-                Prayer Wall
+                Prayer focus
               </p>
               <p className="mt-2 text-lg font-semibold text-gray-900">
                 Share & intercede together
@@ -277,10 +288,10 @@ export default function MessagesPage() {
             </div>
             <div className="rounded-2xl border border-white/70 bg-white/85 p-4 backdrop-blur-sm">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-600">
-                Real-time
+                Community response
               </p>
               <p className="mt-2 text-lg font-semibold text-gray-900">
-                Updates appear instantly
+                Encourage one another
               </p>
             </div>
           </div>
@@ -314,6 +325,37 @@ export default function MessagesPage() {
           </button>
         </div>
 
+        <SectionCard className="border-orange-100 bg-white/92 shadow-lg">
+          <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
+                This week's love practice
+              </p>
+              <h2 className="mt-2 text-3xl font-serif text-red-800">
+                Let every message become a step.
+              </h2>
+              <p className="mt-3 max-w-2xl leading-7 text-gray-600">
+                The feed is not only for information. It is a place to pause, pray, and practice the
+                love of God in ordinary life.
+              </p>
+            </div>
+
+            <div className="grid gap-3 sm:grid-cols-3">
+              {WEEKLY_PRACTICES.map((practice, index) => (
+                <div
+                  key={practice}
+                  className="rounded-[1.35rem] border border-orange-100 bg-orange-50/80 p-4"
+                >
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-sm font-semibold text-red-700">
+                    {index + 1}
+                  </div>
+                  <p className="mt-3 text-sm font-semibold leading-6 text-gray-800">{practice}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </SectionCard>
+
         {/* ═══════════════════════════════════════════════════════════ */}
         {/* FEED TAB                                                    */}
         {/* ═══════════════════════════════════════════════════════════ */}
@@ -345,28 +387,31 @@ export default function MessagesPage() {
                 {/* Category Filter Tabs */}
                 {!isLoading && orderedPosts.length > 0 && (
                   <div className="mt-5 flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
-                    {CATEGORY_TABS.map(tab => (
-                      <button
-                        key={tab.id}
-                        type="button"
-                        onClick={() => setCategoryFilter(tab.id)}
-                        className={`inline-flex flex-shrink-0 items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-medium transition-all ${
-                          categoryFilter === tab.id
-                            ? 'border-red-200 bg-red-50 text-red-700 shadow-sm'
-                            : 'border-orange-100 bg-white text-gray-500 hover:border-orange-200 hover:text-gray-700'
-                        }`}
-                      >
-                        <span>{tab.icon}</span>
-                        {tab.label}
-                        {categoryCounts[tab.id] > 0 && (
-                          <span
-                            className={`ml-1 tabular-nums ${categoryFilter === tab.id ? 'text-red-500' : 'text-gray-400'}`}
-                          >
-                            {categoryCounts[tab.id]}
-                          </span>
-                        )}
-                      </button>
-                    ))}
+                    {CATEGORY_TABS.map(tab => {
+                      const Icon = tab.icon;
+                      return (
+                        <button
+                          key={tab.id}
+                          type="button"
+                          onClick={() => setCategoryFilter(tab.id)}
+                          className={`inline-flex flex-shrink-0 items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-medium transition-all ${
+                            categoryFilter === tab.id
+                              ? 'border-red-200 bg-red-50 text-red-700 shadow-sm'
+                              : 'border-orange-100 bg-white text-gray-500 hover:border-orange-200 hover:text-gray-700'
+                          }`}
+                        >
+                          <Icon className="h-4 w-4" />
+                          {tab.label}
+                          {categoryCounts[tab.id] > 0 && (
+                            <span
+                              className={`ml-1 tabular-nums ${categoryFilter === tab.id ? 'text-red-500' : 'text-gray-400'}`}
+                            >
+                              {categoryCounts[tab.id]}
+                            </span>
+                          )}
+                        </button>
+                      );
+                    })}
                   </div>
                 )}
 
@@ -457,17 +502,21 @@ export default function MessagesPage() {
 
                           {/* Media */}
                           {post.media ? (
-                            <div className="mt-5 overflow-hidden rounded-2xl border border-orange-100 bg-white">
+                            <div className="mt-5">
                               {post.media.resourceType === 'video' ? (
-                                <video controls className="max-h-[32rem] w-full bg-black">
-                                  <source src={post.media.url} />
-                                </video>
-                              ) : (
-                                <img
+                                <MessageVideoPlayer
                                   src={post.media.url}
-                                  alt={post.title}
-                                  className="max-h-[32rem] w-full object-cover"
+                                  title={post.title}
+                                  onRespond={() => handleRespondToPost(post.id)}
                                 />
+                              ) : (
+                                <div className="overflow-hidden rounded-2xl border border-orange-100 bg-white">
+                                  <img
+                                    src={post.media.url}
+                                    alt={post.title}
+                                    className="max-h-[32rem] w-full object-cover"
+                                  />
+                                </div>
                               )}
                             </div>
                           ) : null}
@@ -479,66 +528,77 @@ export default function MessagesPage() {
                             </p>
                           </div>
 
+                          <div className="mt-5 grid gap-3 rounded-2xl border border-red-100 bg-red-50/70 p-4 sm:grid-cols-[auto_1fr] sm:items-center">
+                            <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-red-700">
+                              <Sparkles className="h-5 w-5" />
+                            </div>
+                            <div>
+                              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-600">
+                                Practice this message
+                              </p>
+                              <p className="mt-1 text-sm leading-6 text-gray-700">
+                                Pause for one minute, pray over what you received, and choose one
+                                act of practical love today.
+                              </p>
+                            </div>
+                          </div>
+
                           {/* ── Reaction + Share Bar ────────────────── */}
                           <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
                             <ReactionBar postId={post.id} reactions={post.reactions} />
-                            <button
-                              type="button"
-                              onClick={() => sharePost(post)}
-                              className="inline-flex items-center gap-1.5 rounded-full border border-orange-100 bg-white px-3.5 py-1.5 text-sm font-medium text-gray-500 transition hover:border-orange-200 hover:bg-orange-50 hover:text-gray-700"
-                            >
-                              <Share2 className="h-4 w-4" />
-                              Share
-                            </button>
+                            <div className="flex flex-wrap items-center gap-2">
+                              <button
+                                type="button"
+                                onClick={() => handleRespondToPost(post.id)}
+                                className="inline-flex items-center gap-1.5 rounded-full border border-red-100 bg-red-50 px-3.5 py-1.5 text-sm font-medium text-red-700 transition hover:border-red-200 hover:bg-red-100"
+                              >
+                                <MessageSquare className="h-4 w-4" />
+                                Respond
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => sharePost(post)}
+                                className="inline-flex items-center gap-1.5 rounded-full border border-orange-100 bg-white px-3.5 py-1.5 text-sm font-medium text-gray-500 transition hover:border-orange-200 hover:bg-orange-50 hover:text-gray-700"
+                              >
+                                <Share2 className="h-4 w-4" />
+                                Share
+                              </button>
+                            </div>
                           </div>
 
                           {/* ── Comments Section ───────────────────── */}
-                          <div className="mt-5 rounded-2xl border border-orange-100 bg-[linear-gradient(180deg,_rgba(255,250,245,1),_rgba(255,255,255,1))]">
-                            {/* Inline comment preview (latest 2) */}
-                            {post.comments.length > 0 && !openComments[post.id] && (
-                              <div className="border-b border-orange-100 px-5 py-3">
-                                {post.comments.slice(-2).map(comment => (
-                                  <p
-                                    key={comment.id}
-                                    className="truncate text-sm text-gray-600"
-                                  >
-                                    <span className="font-semibold text-gray-800">
-                                      {comment.author}
-                                    </span>{' '}
-                                    {comment.body}
-                                  </p>
-                                ))}
-                              </div>
-                            )}
+                          <AnimatePresence>
+                            {openComments[post.id] && (
+                              <motion.div
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: 'auto', opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                transition={{ duration: 0.25 }}
+                                className="mt-5 overflow-hidden rounded-2xl border border-orange-100 bg-[linear-gradient(180deg,_rgba(255,250,245,1),_rgba(255,255,255,1))]"
+                              >
+                                <div className="px-5 py-4">
+                                  <div className="flex flex-wrap items-center justify-between gap-3">
+                                    <div className="flex items-center gap-2 text-[#9a5534]">
+                                      <MessageSquare className="h-5 w-5" />
+                                      <h4 className="text-lg font-semibold">
+                                        Respond ({post.comments.length})
+                                      </h4>
+                                    </div>
+                                    <button
+                                      type="button"
+                                      onClick={() =>
+                                        setOpenComments(current => ({
+                                          ...current,
+                                          [post.id]: false,
+                                        }))
+                                      }
+                                      className="rounded-full border border-orange-100 bg-white px-3 py-1.5 text-sm font-medium text-gray-500 transition hover:bg-orange-50"
+                                    >
+                                      Hide
+                                    </button>
+                                  </div>
 
-                            <button
-                              type="button"
-                              onClick={() => toggleComments(post.id)}
-                              className="flex w-full items-center justify-between gap-3 px-5 py-4 text-left"
-                            >
-                              <div className="flex items-center gap-2 text-[#9a5534]">
-                                <MessageSquare className="h-5 w-5" />
-                                <h4 className="text-lg font-semibold">
-                                  Comments ({post.comments.length})
-                                </h4>
-                              </div>
-                              <ChevronDown
-                                className={`h-5 w-5 text-[#9a5534] transition-transform ${
-                                  openComments[post.id] ? 'rotate-180' : ''
-                                }`}
-                              />
-                            </button>
-
-                            <AnimatePresence>
-                              {openComments[post.id] && (
-                                <motion.div
-                                  initial={{ height: 0, opacity: 0 }}
-                                  animate={{ height: 'auto', opacity: 1 }}
-                                  exit={{ height: 0, opacity: 0 }}
-                                  transition={{ duration: 0.25 }}
-                                  className="overflow-hidden"
-                                >
-                                  <div className="border-t border-orange-100 px-5 pb-5 pt-4">
+                                  <div className="mt-4 border-t border-orange-100 pt-4">
                                     <div className="space-y-3">
                                       {post.comments.length > 0 ? (
                                         post.comments.map(comment => (
@@ -594,6 +654,9 @@ export default function MessagesPage() {
                                         className="w-full rounded-2xl border border-orange-100 bg-white px-4 py-3 text-sm focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20"
                                       />
                                       <textarea
+                                        ref={element => {
+                                          commentTextareas.current[post.id] = element;
+                                        }}
                                         value={commentForms[post.id]?.body || ''}
                                         onChange={event =>
                                           handleCommentChange(
@@ -629,10 +692,10 @@ export default function MessagesPage() {
                                       </div>
                                     </div>
                                   </div>
-                                </motion.div>
-                              )}
-                            </AnimatePresence>
-                          </div>
+                                </div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
                         </motion.article>
                       ))}
                     </AnimatePresence>

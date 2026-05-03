@@ -127,6 +127,35 @@
     ]
   },
   {
+    "path": "/pride-and-humility",
+    "name": "Pride and Humility",
+    "title": "Pride and Humility | Recognize Pride and Choose a Teachable Heart",
+    "description": "Learn how to recognize pride, compare it with humility, examine your heart, and practice teachable biblical love in daily life.",
+    "keywords": [
+      "pride and humility",
+      "recognize pride",
+      "Christian humility",
+      "teachable heart",
+      "biblical love practice",
+      "Practical Love heart check"
+    ],
+    "changefreq": "monthly",
+    "priority": 0.84,
+    "indexable": true,
+    "schemaType": "Article",
+    "headline": "A practical heart check for recognizing pride and choosing humility before God and people.",
+    "qa": [
+      {
+        "question": "How can I recognize pride in my life?",
+        "answer": "You can recognize pride by noticing defensive reactions, refusal of correction, blame, the need for praise, hidden weakness, and difficulty apologizing plainly."
+      },
+      {
+        "question": "What does humility look like in daily life?",
+        "answer": "Humility receives correction, confesses quickly, listens before answering, serves quietly, honors others, and depends on God."
+      }
+    ]
+  },
+  {
     "path": "/characteristics",
     "name": "Characteristics of Love",
     "title": "17 Characteristics of Love | 1 Corinthians 13 Study Guide",

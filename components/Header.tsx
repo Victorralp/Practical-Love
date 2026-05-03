@@ -19,6 +19,7 @@ const NAV_ITEMS: readonly NavItem[] = [
   { name: 'About', href: '/about-love' },
   { name: 'Messages', href: '/messages' },
   { name: 'Family First', href: '/family-first' },
+  { name: 'Pride & Humility', href: '/pride-and-humility' },
   {
     name: 'Resources',
     href: '/resources',

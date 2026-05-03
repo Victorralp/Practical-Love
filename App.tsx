@@ -28,6 +28,7 @@ const DonationPage = lazy(() => import('./pages/DonationPage'));
 const AboutLovePage = lazy(() => import('./pages/AboutLovePage'));
 const ResourcesPage = lazy(() => import('./pages/ResourcesPage'));
 const FamilyFirstPage = lazy(() => import('./pages/FamilyFirstPage'));
+const PrideHumilityPage = lazy(() => import('./pages/PrideHumilityPage'));
 const MessagesPage = lazy(() => import('./pages/MessagesPage'));
 const AdminMessagesPage = lazy(() => import('./pages/AdminMessagesPage'));
 const AdminPublicationsPage = lazy(() => import('./pages/AdminPublicationsPage'));
@@ -160,6 +161,7 @@ function AppLayout() {
               }
             />
             <Route path="/family-first" element={<FamilyFirstPage />} />
+            <Route path="/pride-and-humility" element={<PrideHumilityPage />} />
             <Route path="/characteristics" element={<CharacteristicsPage />} />
             <Route path="/bible-passages" element={<BiblePassagesPage />} />
             <Route path="/love-in-nigeria" element={<LoveInNigeriaPage />} />
