@@ -1,4 +1,4 @@
-import { HeartHandshake, HelpingHand, Landmark, MoveRight, Printer, Users } from 'lucide-react';
+import { HeartHandshake, HelpingHand, MoveRight, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { CTASection, PageHero, PageShell, SectionCard } from '../components/ui';
 import Logo from '../components/Logo';
@@ -7,67 +7,26 @@ import GivingHeart from '../components/GivingHeart';
 const JOIN_US_STEPS = [
   {
     number: '01',
-    title: 'Pray for the journey',
+    title: 'Pray and share love cards',
     description:
-      'Pray for us as we embark on this journey to make Nigeria and the world a better place through practical love, healing, and truth.',
+      'Cover the mission in prayer and help distribute love cards — print them, photocopy them, and place them in the hands of people who need encouragement.',
     icon: <HeartHandshake className="w-6 h-6 text-red-700" />,
   },
   {
     number: '02',
-    title: 'Share love cards freely',
+    title: 'Be present and give',
     description:
-      'Join us in giving out love cards. You can print them, photocopy them, and place them in the hands of people who need encouragement.',
-    icon: <Printer className="w-6 h-6 text-red-700" />,
-  },
-  {
-    number: '03',
-    title: 'Be present in the outreach',
-    description:
-      'Join us physically in sharing love cards in every place of life so practical love is seen, heard, and felt in daily communities.',
+      'Join us physically in sharing love cards in everyday spaces, and feel free to donate so the full blessing can be shared across different places, people, and generations.',
     icon: <Users className="w-6 h-6 text-red-700" />,
-  },
-  {
-    number: '04',
-    title: 'Give to spread the blessing',
-    description:
-      'Feel free to donate so the full blessing can be shared across different places, people, and generations.',
-    icon: <Landmark className="w-6 h-6 text-red-700" />,
   },
 ] as const;
 
-const OUTREACH_EXAMPLES = [
-  'Schools, campuses, and training centers',
-  'Markets, parks, and transport stations',
-  'Hospitals, care homes, and recovery spaces',
-  'Churches, fellowships, and neighborhood meetings',
-  'Workplaces, shops, and family gatherings',
-] as const;
+
 
 const DONATION_ACCOUNTS = [
   {
     currency: 'NGN',
     label: 'Nigeria Naira',
-    accountName: 'Add verified account name',
-    bank: 'Add bank name',
-    accountNumber: '0000000000',
-  },
-  {
-    currency: 'USD',
-    label: 'US Dollar',
-    accountName: 'Add verified account name',
-    bank: 'Add bank name',
-    accountNumber: '0000000000',
-  },
-  {
-    currency: 'GBP',
-    label: 'British Pound',
-    accountName: 'Add verified account name',
-    bank: 'Add bank name',
-    accountNumber: '0000000000',
-  },
-  {
-    currency: 'EUR',
-    label: 'Euro',
     accountName: 'Add verified account name',
     bank: 'Add bank name',
     accountNumber: '0000000000',
@@ -106,38 +65,11 @@ export default function DonationPage() {
               </Link>
             </div>
           }
-        >
-          <div className="grid gap-4 md:grid-cols-3">
-            <div className="rounded-2xl border border-white/70 bg-white/80 p-4 backdrop-blur-sm">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-600">
-                Prayer
-              </p>
-              <p className="mt-2 text-sm text-gray-700">
-                Cover the mission in prayer as the work grows across Nigeria.
-              </p>
-            </div>
-            <div className="rounded-2xl border border-white/70 bg-white/80 p-4 backdrop-blur-sm">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-600">
-                Distribution
-              </p>
-              <p className="mt-2 text-sm text-gray-700">
-                Print, photocopy, and pass love cards into everyday spaces.
-              </p>
-            </div>
-            <div className="rounded-2xl border border-white/70 bg-white/80 p-4 backdrop-blur-sm">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-600">
-                Donation
-              </p>
-              <p className="mt-2 text-sm text-gray-700">
-                Give so the blessing can be shared by you and through your generation.
-              </p>
-            </div>
-          </div>
-        </PageHero>
+        />
 
         <GivingHeart />
 
-        <section className="grid gap-5 lg:grid-cols-2">
+        <section className="grid gap-5 grid-cols-1 md:grid-cols-2">
           {JOIN_US_STEPS.map(step => (
             <SectionCard
               key={step.number}
@@ -155,56 +87,25 @@ export default function DonationPage() {
           ))}
         </section>
 
-        <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
-          <SectionCard
-            title="Where you can share the love cards physically"
-            className="border-orange-200 bg-white/95 shadow-md"
-          >
-            <p className="max-w-2xl text-gray-700 leading-7">
-              If you want to join physically, start where people already live and move. These are
-              simple places where love cards can open conversations, comfort hearts, and remind
-              people that love is still active in the world.
-            </p>
-            <div className="mt-6 grid gap-3 sm:grid-cols-2">
-              {OUTREACH_EXAMPLES.map(example => (
-                <div
-                  key={example}
-                  className="rounded-2xl border border-orange-100 bg-gradient-to-br from-orange-50 to-rose-50 p-4"
-                >
-                  <p className="text-sm font-semibold text-gray-800">{example}</p>
-                </div>
-              ))}
-            </div>
-          </SectionCard>
-
-          <SectionCard
-            title="How to distribute them"
-            variant="gradient"
-            className="border-orange-300 shadow-md"
-          >
-            <div className="space-y-4 text-gray-800">
-              <p className="leading-7">
-                Print the cards in batches, photocopy them when needed, and hand them out with
-                gentleness and respect.
-              </p>
-              <p className="leading-7">
-                You can share them one-to-one, leave them in welcome packs, or distribute them
-                during gatherings and outreach moments.
-              </p>
-              <p className="leading-7">
-                If you need a starting point, use the current yellow card resource and spread it
-                consistently in your area.
-              </p>
-              <Link
-                to="/yellow-card"
-                className="inline-flex items-center gap-2 rounded-xl bg-red-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-red-800"
-              >
-                Open The Love Card
-                <MoveRight className="w-4 h-4" />
-              </Link>
-            </div>
-          </SectionCard>
-        </div>
+        <SectionCard
+          title="Where and how to share love cards"
+          className="border-orange-200 bg-white/95 shadow-md"
+        >
+          <p className="max-w-2xl text-gray-700 leading-7">
+            Start where people already live and move. Print the cards in batches,
+            photocopy them when needed, and hand them out with gentleness and respect
+            in places like schools, markets, hospitals, churches, and workplaces.
+          </p>
+          <div className="mt-4">
+            <Link
+              to="/yellow-card"
+              className="inline-flex items-center gap-2 rounded-xl bg-red-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-red-800"
+            >
+              Open The Love Card
+              <MoveRight className="w-4 h-4" />
+            </Link>
+          </div>
+        </SectionCard>
 
         <section
           id="donation-accounts"
@@ -228,7 +129,7 @@ export default function DonationPage() {
               </div>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="max-w-md">
               {DONATION_ACCOUNTS.map(account => (
                 <div
                   key={account.currency}
@@ -263,6 +164,9 @@ export default function DonationPage() {
                   </dl>
                 </div>
               ))}
+              <p className="mt-4 text-sm text-orange-200">
+                Additional currency accounts (USD, GBP, EUR) will be available soon.
+              </p>
             </div>
           </div>
         </section>

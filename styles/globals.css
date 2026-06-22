@@ -461,19 +461,101 @@ html {
     box-shadow: 0 28px 60px rgba(145, 32, 24, 0.1);
   }
 
-  /* ── Love Letter ────────────────────────────────────────────────── */
-  .love-letter-body {
-    position: relative;
+  /* ── Love Letter Upgrade ────────────────────────────────────────── */
+  .font-handwriting {
+    font-family: 'Dancing Script', cursive, sans-serif;
   }
 
-  .love-letter-body::before {
-    content: '';
+  .love-letter-glow {
+    box-shadow: 0 0 60px 15px rgba(244, 180, 123, 0.12);
+  }
+
+  @keyframes candle-flicker {
+    0%, 100% {
+      opacity: 0.94;
+      transform: scale(1);
+      filter: brightness(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.01);
+      filter: brightness(1.04);
+    }
+    25% {
+      opacity: 0.96;
+      transform: scale(0.995);
+      filter: brightness(0.98);
+    }
+    75% {
+      opacity: 0.98;
+      transform: scale(1.005);
+      filter: brightness(1.01);
+    }
+  }
+
+  .animate-candle {
+    animation: candle-flicker 5s ease-in-out infinite;
+  }
+
+  /* Envelope Flap 3D Opening Animation support */
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+
+  .backface-hidden {
+    backface-visibility: hidden;
+  }
+
+  /* Paper deckled edge feel */
+  .deckled-border {
+    position: relative;
+    background-color: #faf6f0;
+    box-shadow: 
+      0 0 0 1px rgba(0, 0, 0, 0.05),
+      0 10px 30px rgba(0, 0, 0, 0.15),
+      inset 0 0 40px rgba(139, 92, 26, 0.05);
+  }
+
+  /* Wax Seal Stamp styles */
+  .wax-seal-btn {
+    position: relative;
+    background: radial-gradient(circle, #8a0f12 0%, #660708 100%);
+    box-shadow: 
+      0 6px 12px rgba(0, 0, 0, 0.4),
+      inset 0 2px 4px rgba(255, 255, 255, 0.2),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.4);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  .wax-seal-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 
+      0 0 20px rgba(244, 180, 123, 0.4),
+      0 8px 16px rgba(0, 0, 0, 0.5),
+      inset 0 2px 4px rgba(255, 255, 255, 0.3);
+  }
+
+  .wax-seal-btn:active {
+    transform: scale(0.95);
+  }
+
+  /* Gold corner decoration lines */
+  .gold-decor-corner {
     position: absolute;
-    left: 2rem;
-    top: 2rem;
-    bottom: 2rem;
-    width: 1px;
-    background: linear-gradient(180deg, rgba(193, 114, 73, 0.12) 0%, rgba(193, 114, 73, 0.04) 100%);
+    width: 24px;
+    height: 24px;
+    border-color: rgba(184, 152, 118, 0.4);
+    pointer-events: none;
+  }
+
+  /* Ink drip effect */
+  .ink-drip {
+    opacity: 0.08;
+    filter: blur(0.5px);
   }
 
   /* ── Altar Call — Beating Heart ─────────────────────────────────── */
