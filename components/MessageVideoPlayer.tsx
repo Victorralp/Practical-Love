@@ -2,13 +2,22 @@ import { useState } from 'react';
 import { PlayCircle, Sparkles, Volume2 } from 'lucide-react';
 
 type MessageVideoPlayerProps = {
-  src: string;
+  src?: string;
+  youtubeUrl?: string;
   title: string;
   onRespond?: () => void;
 };
 
-export default function MessageVideoPlayer({ src, title, onRespond }: MessageVideoPlayerProps) {
+function getYouTubeId(url?: string) {
+  if (!url) return null;
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/;
+  const match = url.match(regExp);
+  return match && match[2].length === 11 ? match[2] : null;
+}
+
+export default function MessageVideoPlayer({ src, youtubeUrl, title, onRespond }: MessageVideoPlayerProps) {
   const [showReflection, setShowReflection] = useState(false);
+  const youtubeId = getYouTubeId(youtubeUrl);
 
   return (
     <div className="relative overflow-hidden rounded-[1.75rem] border border-[#f1c9a8] bg-[linear-gradient(145deg,_#24100c_0%,_#5b2116_46%,_#a44725_100%)] p-3 shadow-[0_24px_52px_rgba(95,53,30,0.22)]">
@@ -20,14 +29,25 @@ export default function MessageVideoPlayer({ src, title, onRespond }: MessageVid
           <PlayCircle className="h-4 w-4 text-[#ffbd87]" />
           Message watch
         </div>
-        <video
-          controls
-          preload="metadata"
-          className="aspect-video max-h-[34rem] w-full bg-black object-contain"
-          aria-label={`Video message: ${title}`}
-        >
-          <source src={src} />
-        </video>
+        {youtubeId ? (
+          <iframe
+            src={`https://www.youtube.com/embed/${youtubeId}`}
+            title={title}
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+            className="aspect-video w-full max-h-[34rem] bg-black"
+          />
+        ) : (
+          <video
+            controls
+            preload="metadata"
+            className="aspect-video max-h-[34rem] w-full bg-black object-contain"
+            aria-label={`Video message: ${title}`}
+          >
+            {src && <source src={src} />}
+          </video>
+        )}
       </div>
 
       <div className="relative mt-3 grid gap-3 sm:grid-cols-[1fr_auto] sm:items-center">

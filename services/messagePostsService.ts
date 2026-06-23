@@ -43,6 +43,7 @@ export type MessagePostRecord = {
   author: string;
   pinned: boolean;
   media: MessageMedia | null;
+  youtubeUrl?: string | null;
   reactions: ReactionsMap;
   comments: MessageComment[];
   createdAt: string;
@@ -57,6 +58,7 @@ type MessagePostPayload = {
   author: string;
   pinned: boolean;
   media: MessageMedia | null;
+  youtubeUrl?: string | null;
 };
 
 // ── Prayer Requests ─────────────────────────────────────────────────

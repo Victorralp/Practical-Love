@@ -478,6 +478,12 @@ export default function MessagesPage() {
                                   {post.media.resourceType}
                                 </span>
                               ) : null}
+                              {post.youtubeUrl ? (
+                                <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-red-700">
+                                  <Video className="h-3.5 w-3.5" />
+                                  YouTube
+                                </span>
+                              ) : null}
                             </div>
 
                             <h3 className="mt-4 text-2xl font-serif text-gray-900">
@@ -500,26 +506,32 @@ export default function MessagesPage() {
                             </span>
                           </div>
 
-                          {/* Media */}
-                          {post.media ? (
-                            <div className="mt-5">
-                              {post.media.resourceType === 'video' ? (
-                                <MessageVideoPlayer
-                                  src={post.media.url}
-                                  title={post.title}
-                                  onRespond={() => handleRespondToPost(post.id)}
-                                />
-                              ) : (
-                                <div className="overflow-hidden rounded-2xl border border-orange-100 bg-white">
-                                  <img
-                                    src={post.media.url}
-                                    alt={post.title}
-                                    className="max-h-[32rem] w-full object-cover"
-                                  />
-                                </div>
-                              )}
-                            </div>
-                          ) : null}
+                           {/* Media / Video */}
+                           {post.youtubeUrl || post.media ? (
+                             <div className="mt-5">
+                               {post.youtubeUrl ? (
+                                 <MessageVideoPlayer
+                                   youtubeUrl={post.youtubeUrl}
+                                   title={post.title}
+                                   onRespond={() => handleRespondToPost(post.id)}
+                                 />
+                               ) : post.media?.resourceType === 'video' ? (
+                                 <MessageVideoPlayer
+                                   src={post.media.url}
+                                   title={post.title}
+                                   onRespond={() => handleRespondToPost(post.id)}
+                                 />
+                               ) : post.media ? (
+                                 <div className="overflow-hidden rounded-2xl border border-orange-100 bg-white">
+                                   <img
+                                     src={post.media.url}
+                                     alt={post.title}
+                                     className="max-h-[32rem] w-full object-cover"
+                                   />
+                                 </div>
+                               ) : null}
+                             </div>
+                           ) : null}
 
                           {/* Body */}
                           <div className="mt-5 rounded-2xl border border-orange-100 bg-white/85 p-5">

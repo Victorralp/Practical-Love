@@ -26,7 +26,7 @@ export function filterMessagePosts(
 ): MessagePostRecord[] {
   if (filter === 'all') return posts;
   if (filter === 'pinned') return posts.filter(post => post.pinned);
-  if (filter === 'media') return posts.filter(post => post.media !== null);
+  if (filter === 'media') return posts.filter(post => post.media !== null || !!post.youtubeUrl);
   if (filter === 'announcement') return posts.filter(post => isAnnouncementCategory(post.category));
   if (filter === 'teaching') return posts.filter(post => isTeachingCategory(post.category));
 

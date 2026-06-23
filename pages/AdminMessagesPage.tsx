@@ -33,6 +33,7 @@ type FormState = {
   body: string;
   author: string;
   pinned: boolean;
+  youtubeUrl: string;
 };
 
 const INITIAL_FORM: FormState = {
@@ -42,6 +43,7 @@ const INITIAL_FORM: FormState = {
   body: '',
   author: 'Practical Love Team',
   pinned: false,
+  youtubeUrl: '',
 };
 
 function formatDate(isoDate: string) {
@@ -185,6 +187,7 @@ export default function AdminMessagesPage() {
         author: cleanAuthor,
         pinned: form.pinned,
         media,
+        youtubeUrl: form.youtubeUrl.trim() || null,
       };
 
       if (editingId) {
@@ -212,6 +215,7 @@ export default function AdminMessagesPage() {
       body: post.body,
       author: post.author,
       pinned: post.pinned,
+      youtubeUrl: post.youtubeUrl || '',
     });
     setMedia(post.media);
     setSelectedFileName(post.media ? post.media.publicId : '');
@@ -345,6 +349,21 @@ export default function AdminMessagesPage() {
                     className="w-full rounded-2xl border border-orange-100 bg-white px-4 py-3 focus:border-red-500 focus:ring-2 focus:ring-red-500"
                   />
                 </div>
+              </div>
+
+              <div>
+                <label htmlFor="youtubeUrl" className="mb-2 block text-sm font-semibold text-gray-700">
+                  YouTube Link (Optional)
+                </label>
+                <input
+                  id="youtubeUrl"
+                  name="youtubeUrl"
+                  type="url"
+                  value={form.youtubeUrl}
+                  onChange={handleChange}
+                  placeholder="Example: https://www.youtube.com/watch?v=..."
+                  className="w-full rounded-2xl border border-orange-100 bg-white px-4 py-3 focus:border-red-500 focus:ring-2 focus:ring-red-500"
+                />
               </div>
 
               <div>
@@ -551,6 +570,12 @@ export default function AdminMessagesPage() {
                           <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-amber-700">
                             <Pin className="h-3.5 w-3.5" />
                             Pinned
+                          </span>
+                        ) : null}
+                        {post.youtubeUrl ? (
+                          <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-red-700">
+                            <Video className="h-3.5 w-3.5" />
+                            YouTube
                           </span>
                         ) : null}
                       </div>

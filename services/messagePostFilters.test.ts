@@ -27,8 +27,8 @@ function makePost(
 describe('message post filters', () => {
   it.each([
     ['announcement', ['ministry-update', 'event-notice', 'announcement', 'pinned-post']],
-    ['teaching', ['teaching-note', 'video-post']],
-    ['media', ['video-post']],
+    ['teaching', ['teaching-note', 'video-post', 'youtube-post']],
+    ['media', ['video-post', 'youtube-post']],
     ['pinned', ['pinned-post']],
   ] satisfies Array<[MessageCategoryFilter, string[]]>)(
     'returns the expected posts for %s',
@@ -44,6 +44,9 @@ describe('message post filters', () => {
             publicId: 'video',
             resourceType: 'video',
           },
+        }),
+        makePost('youtube-post', 'Teaching note', {
+          youtubeUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
         }),
         makePost('pinned-post', 'Prayer focus', { pinned: true }),
       ];
