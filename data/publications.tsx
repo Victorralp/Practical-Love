@@ -771,4 +771,180 @@ export const publications: PublicationProps[] = [
       (await import('./medicine-without-medication-pages.json')).default as PublicationPage[],
     pdfUrl: '/publications/medicine-without-medication.pdf',
   },
+  {
+    id: 'benefits-of-moringa',
+    title: 'The Benefits of Moringa',
+    author: 'Practical Love Publications',
+    description:
+      'Discover the 16 remarkable health benefits of Moringa oleifera, nature\'s most nutrient-rich plant. From boosting immunity and promoting energy to supporting healthy skin and digestion.',
+    type: 'E-Book',
+    coverImage: '/publications/universal-cover.png',
+    pdfUrl: '/publications/benefits-of-moringa.pdf',
+    pages: [
+      {
+        title: 'Cover',
+        content: (
+          <div className="space-y-8 flex flex-col items-center justify-center h-full text-center">
+            <p className="text-sm font-semibold uppercase tracking-widest text-orange-600">
+              A Practical Love Publication
+            </p>
+            <div className="space-y-2">
+              <h1 className="text-5xl md:text-6xl font-bold text-red-900 leading-tight">
+                THE BENEFITS OF
+                <br />
+                <span className="text-orange-700">MORINGA</span>
+              </h1>
+              <div className="h-1 w-20 bg-orange-500 mx-auto my-4" />
+              <p className="text-xl text-gray-600 italic">
+                Nature&rsquo;s Most Nutrient-Rich Plant
+              </p>
+            </div>
+            <div className="mt-8 py-3 px-8 border-2 border-dashed border-orange-400 rounded-full text-orange-500 font-bold text-sm tracking-widest uppercase">
+              Free to distribute
+            </div>
+          </div>
+        ),
+      },
+      {
+        title: 'Introduction',
+        content: (
+          <div className="space-y-6">
+            <h2 className="text-3xl font-bold text-red-800 mb-4">Introduction</h2>
+            <p className="text-lg leading-relaxed text-gray-800">
+              Moringa oleifera, often called the &ldquo;miracle tree&rdquo; or &ldquo;tree of
+              life,&rdquo; is one of the most nutrient-dense plants ever discovered. Native to
+              parts of Africa and Asia, Moringa has been used for centuries in traditional medicine
+              and nutrition.
+            </p>
+            <p className="text-lg leading-relaxed text-gray-800">
+              Moringa leaf boosts your energy in a natural manner, and is a remarkable source of
+              nutrition. This energy promotion does not happen because of sugar, so it lasts for a
+              long time. Individuals ingesting it say that their ulcers are healed, tumors
+              restricted, there are reductions in arthritis pains and inflammations, controlled
+              blood pressure, skin problems are restored, and finally they have stronger defenses
+              against diseases.
+            </p>
+            <blockquote className="border-l-4 border-orange-400 pl-4 py-2 italic text-orange-700">
+              &ldquo;The problem with nutrition is not the quantity of food, but the quality of food
+              we eat, with people needing about 40 different nutrients to be healthy.&rdquo;
+              <br />
+              <span className="text-sm text-gray-500 not-italic">
+                &mdash; Prof. Mike Golden, United Nations nutrition advisor
+              </span>
+            </blockquote>
+          </div>
+        ),
+      },
+      {
+        title: 'The 16 Benefits',
+        content: (
+          <div className="space-y-4">
+            <h2 className="text-3xl font-bold text-red-800 mb-6">
+              The 16 Benefits of Moringa
+            </h2>
+            <p className="text-gray-700 mb-4">
+              Here are the benefits of continuous intake of Moringa:
+            </p>
+            <ol className="space-y-3 list-decimal list-inside text-gray-800">
+              <li>Increases the natural defenses of the body</li>
+              <li>Provides nourishment to the eyes and the brain</li>
+              <li>Promotes metabolism with bio-available ingredients</li>
+              <li>Promotes the cell structure of the body</li>
+              <li>Promotes natural serum cholesterol</li>
+              <li>Lowers the appearance of wrinkles and fine lines</li>
+              <li>Promotes the normal functioning of the liver and the kidney</li>
+              <li>Beautifies the skin</li>
+              <li>Promotes energy</li>
+              <li>Promotes proper digestion</li>
+              <li>Acts as an antioxidant</li>
+              <li>Takes care of the immune system of the body</li>
+              <li>Promotes healthy circulatory system</li>
+              <li>It is an anti-inflammatory</li>
+              <li>Gives a feeling of general wellness</li>
+              <li>Supports the normal sugar levels of the body</li>
+            </ol>
+          </div>
+        ),
+      },
+      {
+        title: 'Nutritional Comparison',
+        content: (
+          <div className="space-y-6">
+            <h2 className="text-3xl font-bold text-red-800 mb-6">
+              Nutritional Powerhouse
+            </h2>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-red-900 text-white">
+                    <th className="px-4 py-3 rounded-tl-lg">Nutrient</th>
+                    <th className="px-4 py-3">Moringa Comparison</th>
+                    <th className="px-4 py-3 rounded-tr-lg">Health Impact</th>
+                  </tr>
+                </thead>
+                <tbody className="text-gray-800">
+                  <tr className="bg-orange-50">
+                    <td className="px-4 py-3 font-semibold">Vitamin A</td>
+                    <td className="px-4 py-3">4x more than carrots</td>
+                    <td className="px-4 py-3">Shields against eye and skin disease</td>
+                  </tr>
+                  <tr>
+                    <td className="px-4 py-3 font-semibold">Vitamin C</td>
+                    <td className="px-4 py-3">7x more than oranges</td>
+                    <td className="px-4 py-3">Fights colds and flu</td>
+                  </tr>
+                  <tr className="bg-orange-50">
+                    <td className="px-4 py-3 font-semibold">Calcium</td>
+                    <td className="px-4 py-3">4x more than milk</td>
+                    <td className="px-4 py-3">Builds strong bones and teeth</td>
+                  </tr>
+                  <tr>
+                    <td className="px-4 py-3 font-semibold">Potassium</td>
+                    <td className="px-4 py-3">3x more than bananas</td>
+                    <td className="px-4 py-3">Promotes brain and nerve function</td>
+                  </tr>
+                  <tr className="bg-orange-50">
+                    <td className="px-4 py-3 font-semibold">Protein</td>
+                    <td className="px-4 py-3">2x more than yogurt</td>
+                    <td className="px-4 py-3">Builds and repairs body tissues</td>
+                  </tr>
+                  <tr>
+                    <td className="px-4 py-3 font-semibold">Iron</td>
+                    <td className="px-4 py-3">3x more than spinach</td>
+                    <td className="px-4 py-3">Combats anemia, carries oxygen</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        ),
+      },
+      {
+        title: 'Closing',
+        content: (
+          <div className="space-y-8 flex flex-col items-center justify-center h-full text-center">
+            <h2 className="text-3xl font-bold text-red-800">A Bridge to Better Health</h2>
+            <p className="text-lg leading-relaxed text-gray-800 max-w-xl">
+              The bridge to better health is through better nutrition. Moringa oleifera stands as
+              one of nature&rsquo;s most complete nutritional sources, offering a remarkable
+              combination of vitamins, minerals, amino acids, and antioxidants in a single,
+              natural plant.
+            </p>
+            <blockquote className="border-l-4 border-orange-400 pl-4 py-2 italic text-orange-700 text-xl">
+              &ldquo;Let food be thy medicine and medicine be thy food.&rdquo;
+              <br />
+              <span className="text-sm text-gray-500 not-italic">&mdash; Hippocrates</span>
+            </blockquote>
+            <div className="h-px w-48 bg-orange-400 my-4" />
+            <p className="text-sm text-gray-500">
+              Source: leafpower.wordpress.com | practicalove.com
+            </p>
+            <p className="text-sm text-gray-500 italic">
+              Feel free to reproduce and distribute this publication freely.
+            </p>
+          </div>
+        ),
+      },
+    ],
+  },
 ];
