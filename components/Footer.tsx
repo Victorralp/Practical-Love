@@ -1,4 +1,4 @@
-import { ArrowRight, Mail, MapPin, Phone } from 'lucide-react';
+import { ArrowRight, HandHeart, Mail, MapPin, Phone } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Logo from './Logo';
 
@@ -13,6 +13,8 @@ const QUICK_LINKS = [
 ] as const;
 
 const ACTION_LINKS = [
+  { label: "Today's devotion", href: '/messages#daily-devotion' },
+  { label: 'Prayer wall', href: '/messages#prayer-wall' },
   { label: 'Share a testimony', href: '/share-testimony' },
   { label: 'Read the mission', href: '/mission-vision' },
   { label: 'Browse publications', href: '/publications' },
@@ -71,8 +73,15 @@ export default function Footer() {
               </p>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Link to="/contact" className="btn-brand px-6 py-4 text-base">
+            <div className="grid gap-4 sm:grid-cols-3">
+              <Link
+                to="/messages#prayer-wall"
+                className="btn-brand group px-6 py-4 text-base"
+              >
+                <HandHeart className="mr-2 h-5 w-5" />
+                Ask for prayer
+              </Link>
+              <Link to="/contact" className="btn-outline-light px-6 py-4 text-base">
                 Contact the ministry
               </Link>
               <Link to="/share-testimony" className="btn-outline-light px-6 py-4 text-base">

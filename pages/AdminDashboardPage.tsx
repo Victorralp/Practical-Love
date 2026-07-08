@@ -1,26 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  BookOpen,
-  HandHeart,
-  Loader,
-  Megaphone,
-  Plus,
-  TrendingUp,
-} from 'lucide-react';
+import { BookOpen, HandHeart, Loader, Megaphone, Plus, TrendingUp } from 'lucide-react';
 import Logo from '../components/Logo';
 import {
   subscribeToMessagePosts,
-  subscribeToPrayerRequests,
+  subscribeToAllPrayerRequests,
   type MessagePostRecord,
 } from '../services/messagePostsService';
-import {
-  subscribeToManagedPublications,
-} from '../services/publicationsService';
-import {
-  subscribeToAllTestimonies,
-  type TestimonyRecord,
-} from '../services/testimoniesService';
+import { subscribeToManagedPublications } from '../services/publicationsService';
+import { subscribeToAllTestimonies, type TestimonyRecord } from '../services/testimoniesService';
 
 type DashboardCounts = {
   messages: number;
@@ -84,7 +72,7 @@ export default function AdminDashboardPage() {
         },
         () => markLoaded()
       ),
-      subscribeToPrayerRequests(
+      subscribeToAllPrayerRequests(
         prayers => {
           setCounts(c => ({ ...c, prayers: prayers.length }));
           markLoaded();
@@ -327,9 +315,7 @@ export default function AdminDashboardPage() {
                     <HandHeart className="h-4 w-4" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-semibold text-gray-800">
-                      {testimony.name}
-                    </p>
+                    <p className="truncate text-sm font-semibold text-gray-800">{testimony.name}</p>
                     <p className="mt-0.5 line-clamp-1 text-xs text-gray-500">
                       {testimony.testimony}
                     </p>

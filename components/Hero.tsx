@@ -3,6 +3,7 @@ import { animate, createTimeline, stagger } from 'animejs';
 import EmberParticles from './EmberParticles';
 import ScriptureMirror from './ScriptureMirror';
 import PrayerPause from './PrayerPause';
+import DailyDevotionCard from './DailyDevotionCard';
 import TestimonyHeartbeat from './TestimonyHeartbeat';
 import LoveLetterToYou from './LoveLetterToYou';
 import TheWeightOfWords from './TheWeightOfWords';
@@ -14,10 +15,10 @@ import {
   BookHeart,
   BookOpen,
   Camera,
+  HandHeart,
   House,
   MoveRight,
   Sparkles,
-  SunMedium,
   Target,
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -73,8 +74,7 @@ const EXPLORE_CARDS: Array<{
   },
   {
     title: 'Learn what this ministry is about',
-    description:
-      'Read the mission, vision, and scriptural foundation behind Practical Love.',
+    description: 'Read the mission, vision, and scriptural foundation behind Practical Love.',
     href: '/mission-vision',
     cta: 'Learn more',
     icon: Sparkles,
@@ -237,16 +237,7 @@ export default function Hero() {
       alternate: true,
     });
 
-    revertibles.push(
-      animate(root.querySelectorAll('[data-floating-chip]'), {
-        y: [0, -10],
-        duration: 2400,
-        delay: stagger(180),
-        ease: 'inOutSine',
-        loop: true,
-        alternate: true,
-      })
-    );
+
 
     const observer = new IntersectionObserver(
       entries => {
@@ -372,7 +363,22 @@ export default function Hero() {
                 </Link>
               </div>
 
-
+              <div data-hero-copy className="reveal-item mt-6 flex flex-wrap items-center gap-3 text-sm">
+                <Link
+                  to="/messages#daily-devotion"
+                  className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-4 py-2 font-medium text-[#ffe7d3] transition-colors hover:bg-white/16 hover:text-white"
+                >
+                  <BookHeart className="h-4 w-4" />
+                  Today&rsquo;s devotion
+                </Link>
+                <Link
+                  to="/messages#prayer-wall"
+                  className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-4 py-2 font-medium text-[#ffe7d3] transition-colors hover:bg-white/16 hover:text-white"
+                >
+                  <HandHeart className="h-4 w-4" />
+                  Prayer wall
+                </Link>
+              </div>
             </div>
 
             <div className="relative lg:pt-10">
@@ -389,66 +395,46 @@ export default function Hero() {
                   />
                 </div>
 
-                <div className="grid gap-3 p-3 sm:grid-cols-[1.15fr_0.85fr]">
-                  <div className="rounded-[1.35rem] bg-[#1f0f0b]/48 p-5 text-[#fff3e7]">
-                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#ffca9e]">
-                      Daily whisper
-                    </p>
-                    <p className="mt-3 font-serif text-3xl leading-none">
-                      &quot;I am patient. I am kind.&quot;
-                    </p>
-                    <p className="mt-4 text-sm leading-6 text-[#fff3e7] opacity-80">
-                      Put your name into the text until love stops being poetry and becomes a
-                      mirror.
-                    </p>
-                  </div>
+                <div className="grid gap-3 p-3 sm:grid-cols-2">
+                  <Link
+                    to="/messages#daily-devotion"
+                    className="group flex items-center gap-3 rounded-[1.35rem] bg-[#1f0f0b]/48 p-4 text-[#fff3e7] transition-colors hover:bg-[#1f0f0b]/64"
+                  >
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#ffca9e]/18">
+                      <BookHeart className="h-5 w-5 text-[#ffca9e]" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#ffca9e]">
+                        Today&rsquo;s devotion
+                      </p>
+                      <p className="mt-0.5 text-sm leading-5 opacity-80">
+                        Read today&rsquo;s word
+                      </p>
+                    </div>
+                    <ArrowRight className="ml-auto h-4 w-4 text-[#ffca9e] opacity-60 transition-transform group-hover:translate-x-0.5" />
+                  </Link>
 
-                  <div className="rounded-[1.35rem] bg-white/10 p-5 text-[#fff3e7]">
-                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#ffca9e]">
-                      Starting point
-                    </p>
-                    <p className="mt-3 text-lg font-semibold">The family level.</p>
-                    <p className="mt-3 text-sm leading-6 text-[#fff3e7] opacity-80">
-                      Where private conduct, marriage, parenting, and tone reveal what truly rules a
-                      heart.
-                    </p>
-                  </div>
+                  <Link
+                    to="/messages#prayer-wall"
+                    className="group flex items-center gap-3 rounded-[1.35rem] bg-white/10 p-4 text-[#fff3e7] transition-colors hover:bg-white/16"
+                  >
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#ffca9e]/18">
+                      <HandHeart className="h-5 w-5 text-[#ffca9e]" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#ffca9e]">
+                        Prayer wall
+                      </p>
+                      <p className="mt-0.5 text-sm leading-5 opacity-80">
+                        Lift a name in prayer
+                      </p>
+                    </div>
+                    <ArrowRight className="ml-auto h-4 w-4 text-[#ffca9e] opacity-60 transition-transform group-hover:translate-x-0.5" />
+                  </Link>
                 </div>
               </div>
 
-              <div
-                data-hero-panel
-                data-floating-chip
-                className="reveal-item glass-border absolute -left-12 top-14 hidden max-w-[12rem] rounded-[1.5rem] bg-[#fff5ea]/92 p-4 text-[#5b2d21] shadow-[0_24px_48px_rgba(39,18,12,0.22)] min-[1680px]:block"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#f6dfc6]">
-                    <SunMedium className="h-5 w-5 text-[#9d4a27]" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#b55b32]">
-                      Hidden burden
-                    </p>
-                    <p className="mt-1 text-sm leading-5">
-                      Homes look fine in public while breaking quietly in private.
-                    </p>
-                  </div>
-                </div>
-              </div>
 
-              <div
-                data-hero-panel
-                data-floating-chip
-                className="reveal-item glass-border absolute -bottom-4 -right-10 hidden max-w-[13rem] rounded-[1.5rem] bg-[#20100c]/74 p-4 text-[#fff6eb] shadow-[0_24px_48px_rgba(39,18,12,0.28)] min-[1680px]:block"
-              >
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#ffca9e]">
-                  Mission pulse
-                </p>
-                <p className="mt-3 text-lg font-semibold">Heal the home. Raise the standard.</p>
-                <p className="mt-3 text-sm leading-6 text-[#fff6eb] opacity-80">
-                  The nation feels whatever the family rehearses long enough.
-                </p>
-              </div>
             </div>
           </div>
         </div>
@@ -483,12 +469,18 @@ export default function Hero() {
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#f3dfcb] text-sm font-semibold text-[#9d4b2a]">
                     {index + 1}
                   </div>
-                  <p className="mt-4 text-sm font-semibold leading-6 text-[#3d1d17]">
-                    {practice}
-                  </p>
+                  <p className="mt-4 text-sm font-semibold leading-6 text-[#3d1d17]">{practice}</p>
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="px-4 pb-12 sm:px-6 lg:px-8 lg:pb-16">
+        <div className="mx-auto max-w-7xl" data-reveal-group>
+          <div data-reveal-item className="reveal-item">
+            <DailyDevotionCard />
           </div>
         </div>
       </section>

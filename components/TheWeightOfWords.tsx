@@ -55,9 +55,12 @@ function TransformCard({
       return;
     }
 
-    const timer = setTimeout(() => {
-      setIsTransformed(true);
-    }, 800 + index * 200);
+    const timer = setTimeout(
+      () => {
+        setIsTransformed(true);
+      },
+      800 + index * 200
+    );
 
     return () => clearTimeout(timer);
   }, [isRevealed, index]);
@@ -95,7 +98,7 @@ function TransformCard({
                 className="font-serif text-2xl transition-all duration-1000 md:text-3xl"
                 style={{
                   color: isTransformed ? '#d4bca8' : '#3e1e17',
-                  textDecoration: isTransformed ? 'line-through' : 'none',
+                  textDecorationLine: isTransformed ? 'line-through' : 'none',
                   textDecorationColor: '#c17249',
                   opacity: isTransformed ? 0.4 : 1,
                 }}
@@ -113,7 +116,14 @@ function TransformCard({
               }}
             >
               <svg viewBox="0 0 12 16" className="h-4 w-3 text-[#c17249]">
-                <path d="M6 2v12M3 11l3 3 3-3" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                <path
+                  d="M6 2v12M3 11l3 3 3-3"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </svg>
               <div className="h-px flex-1 bg-[#c17249]/20" />
             </div>
@@ -222,12 +232,7 @@ export default function TheWeightOfWords() {
         {/* Transformation grid */}
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {TRANSFORMATIONS.map((item, index) => (
-            <TransformCard
-              key={item.darkness}
-              item={item}
-              isRevealed={isRevealed}
-              index={index}
-            />
+            <TransformCard key={item.darkness} item={item} isRevealed={isRevealed} index={index} />
           ))}
         </div>
 
@@ -241,8 +246,8 @@ export default function TheWeightOfWords() {
           }}
         >
           <p className="mx-auto max-w-xl font-serif text-xl italic leading-relaxed text-[#8d5339]">
-            "The question is not whether you carry darkness. Everyone does.
-            The question is whether you will let love replace it — one word, one day, one home at a time."
+            "The question is not whether you carry darkness. Everyone does. The question is whether
+            you will let love replace it — one word, one day, one home at a time."
           </p>
         </div>
       </div>

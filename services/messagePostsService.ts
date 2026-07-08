@@ -68,8 +68,14 @@ export type PrayerRequest = {
   author: string;
   prayedCount: number;
   createdAt: string;
-  isActive: boolean;
+  isActive?: boolean;
+  status?: PrayerRequestStatus;
+  visibility?: PrayerRequestVisibility;
 };
+
+export type PrayerRequestStatus = 'pending' | 'approved' | 'hidden';
+export type PrayerRequestVisibility = 'public' | 'private';
+export type AdminPrayerFilter = 'all' | PrayerRequestStatus | 'private';
 
 // ── Paths ───────────────────────────────────────────────────────────
 const MESSAGES_PATH = 'messages';
@@ -128,14 +134,55 @@ function toPostArray(value: Record<string, MessagePostRecord> | null | undefined
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 }
 
+export function normalizePrayerRequest(id: string, record: PrayerRequest): PrayerRequest {
+  const visibility: PrayerRequestVisibility = record.visibility ?? 'public';
+  const status: PrayerRequestStatus =
+    record.status ?? (record.isActive === false ? 'hidden' : 'approved');
+
+  return {
+    ...record,
+    id,
+    author: record.author?.trim() || 'Anonymous',
+    prayedCount: record.prayedCount || 0,
+    visibility,
+    status,
+    isActive: status === 'approved',
+  };
+}
+
+export function shouldShowPrayerRequestPublicly(request: PrayerRequest): boolean {
+  const normalized = normalizePrayerRequest(request.id, request);
+  return normalized.visibility === 'public' && normalized.status === 'approved';
+}
+
+export function filterPrayerRequestsForAdmin(
+  requests: PrayerRequest[],
+  filter: AdminPrayerFilter
+): PrayerRequest[] {
+  if (filter === 'all') {
+    return requests;
+  }
+
+  if (filter === 'private') {
+    return requests.filter(
+      request => normalizePrayerRequest(request.id, request).visibility === 'private'
+    );
+  }
+
+  return requests.filter(request => {
+    const normalized = normalizePrayerRequest(request.id, request);
+    return normalized.status === filter && normalized.visibility === 'public';
+  });
+}
+
 function toPrayerArray(value: Record<string, PrayerRequest> | null | undefined) {
   if (!value) {
     return [];
   }
 
   return Object.entries(value)
-    .map(([id, record]) => ({ ...record, id, prayedCount: record.prayedCount || 0 }))
-    .filter(r => r.isActive !== false)
+    .map(([id, record]) => normalizePrayerRequest(id, record))
+    .filter(shouldShowPrayerRequestPublicly)
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 }
 
@@ -268,16 +315,23 @@ export function subscribeToPrayerRequests(
   );
 }
 
-export async function submitPrayerRequest(body: string, author?: string) {
+export async function submitPrayerRequest(
+  body: string,
+  author?: string,
+  visibility: PrayerRequestVisibility = 'public'
+) {
   const prayerRef = ref(realtimeDb, PRAYER_REQUESTS_PATH);
   const newRef = push(prayerRef);
+  const status: PrayerRequestStatus = visibility === 'public' ? 'pending' : 'approved';
 
   await set(newRef, {
     body: body.trim().slice(0, 500),
     author: author?.trim() || 'Anonymous',
     prayedCount: 0,
     createdAt: new Date().toISOString(),
-    isActive: true,
+    visibility,
+    status,
+    isActive: status === 'approved',
   });
 }
 
@@ -307,7 +361,29 @@ export async function incrementPrayedCount(requestId: string) {
 /** Toggle the active state of a prayer request (admin moderation) */
 export async function togglePrayerRequestActive(requestId: string, isActive: boolean) {
   const requestRef = ref(realtimeDb, `${PRAYER_REQUESTS_PATH}/${requestId}`);
-  await update(requestRef, { isActive });
+  await update(requestRef, {
+    isActive,
+    status: isActive ? 'approved' : 'hidden',
+  });
+}
+
+/** Approve a pending public prayer request */
+export async function approvePrayerRequest(requestId: string) {
+  const requestRef = ref(realtimeDb, `${PRAYER_REQUESTS_PATH}/${requestId}`);
+  await update(requestRef, {
+    status: 'approved',
+    visibility: 'public',
+    isActive: true,
+  });
+}
+
+/** Hide a prayer request from the public wall without deleting it */
+export async function hidePrayerRequest(requestId: string) {
+  const requestRef = ref(realtimeDb, `${PRAYER_REQUESTS_PATH}/${requestId}`);
+  await update(requestRef, {
+    status: 'hidden',
+    isActive: false,
+  });
 }
 
 /** Delete a prayer request permanently (admin action) */
@@ -332,7 +408,7 @@ export function subscribeToAllPrayerRequests(
       }
 
       const all = Object.entries(value)
-        .map(([id, record]) => ({ ...record, id, prayedCount: record.prayedCount || 0 }))
+        .map(([id, record]) => normalizePrayerRequest(id, record))
         .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
       onData(all);

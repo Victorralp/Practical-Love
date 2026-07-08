@@ -7,6 +7,7 @@ import {
   incrementPrayedCount,
   hasUserPrayed,
   type PrayerRequest,
+  type PrayerRequestVisibility,
 } from '../services/messagePostsService';
 
 function timeAgo(isoDate: string): string {
@@ -26,6 +27,8 @@ export default function PrayerWall() {
   const [isLoading, setIsLoading] = useState(true);
   const [newRequestBody, setNewRequestBody] = useState('');
   const [newRequestAuthor, setNewRequestAuthor] = useState('');
+  const [visibility, setVisibility] = useState<PrayerRequestVisibility>('public');
+  const [submitMessage, setSubmitMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [prayedIds, setPrayedIds] = useState<Set<string>>(new Set());
   const [animatingId, setAnimatingId] = useState<string | null>(null);
@@ -48,11 +51,18 @@ export default function PrayerWall() {
     if (!body || body.length < 5) return;
 
     setIsSubmitting(true);
+    setSubmitMessage('');
     try {
-      await submitPrayerRequest(body, newRequestAuthor);
+      await submitPrayerRequest(body, newRequestAuthor, visibility);
       setNewRequestBody('');
       setNewRequestAuthor('');
+      setSubmitMessage(
+        visibility === 'public'
+          ? 'Your request has been sent for review. It will appear publicly after approval.'
+          : 'Your private request has been sent to the ministry team.'
+      );
     } catch {
+      setSubmitMessage('We could not submit the request right now. Please try again.');
       // Silently fail — real-time listener will show the request if it succeeded
     } finally {
       setIsSubmitting(false);
@@ -90,7 +100,8 @@ export default function PrayerWall() {
           <h3 className="text-lg font-semibold font-serif">Share a prayer request</h3>
         </div>
         <p className="mt-2 text-sm text-gray-500">
-          Your request will be visible to the community. You can remain anonymous.
+          Public requests are reviewed before they appear. Private requests go only to the ministry
+          team. You can remain anonymous.
         </p>
 
         <div className="mt-4 grid gap-3">
@@ -116,6 +127,42 @@ export default function PrayerWall() {
               {charCount}/{maxChars}
             </span>
           </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {[
+              {
+                value: 'public' as const,
+                title: 'Public after approval',
+                description: 'Share with the community prayer wall after admin review.',
+              },
+              {
+                value: 'private' as const,
+                title: 'Private to ministry team',
+                description: 'Keep this request out of the public prayer wall.',
+              },
+            ].map(option => (
+              <label
+                key={option.value}
+                className={`cursor-pointer rounded-2xl border p-4 transition ${
+                  visibility === option.value
+                    ? 'border-red-200 bg-red-50 text-red-800 shadow-sm'
+                    : 'border-orange-100 bg-white text-gray-600 hover:bg-orange-50'
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="prayer-visibility"
+                  value={option.value}
+                  checked={visibility === option.value}
+                  onChange={() => setVisibility(option.value)}
+                  className="sr-only"
+                />
+                <span className="block text-sm font-semibold">{option.title}</span>
+                <span className="mt-1 block text-xs leading-5 opacity-75">
+                  {option.description}
+                </span>
+              </label>
+            ))}
+          </div>
           <button
             type="button"
             onClick={handleSubmit}
@@ -129,6 +176,11 @@ export default function PrayerWall() {
             )}
             {isSubmitting ? 'Submitting...' : 'Submit Request'}
           </button>
+          {submitMessage && (
+            <p className="rounded-2xl border border-orange-100 bg-white px-4 py-3 text-sm text-gray-600">
+              {submitMessage}
+            </p>
+          )}
         </div>
       </div>
 
@@ -196,9 +248,7 @@ export default function PrayerWall() {
                       <AnimatePresence mode="wait">
                         <motion.span
                           key={animatingId === request.id ? 'animating' : 'static'}
-                          initial={
-                            animatingId === request.id ? { scale: 0.3, opacity: 0 } : false
-                          }
+                          initial={animatingId === request.id ? { scale: 0.3, opacity: 0 } : false}
                           animate={{ scale: 1, opacity: 1 }}
                           transition={{ type: 'spring', stiffness: 400, damping: 12 }}
                           className="text-base"

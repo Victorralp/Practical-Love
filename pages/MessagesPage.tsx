@@ -20,6 +20,7 @@ import Logo from '../components/Logo';
 import { PageHero, PageShell, SectionCard } from '../components/ui';
 import ReactionBar from '../components/ReactionBar';
 import PrayerWall from '../components/PrayerWall';
+import DailyDevotionCard from '../components/DailyDevotionCard';
 import PostSkeleton from '../components/PostSkeleton';
 import MessageVideoPlayer from '../components/MessageVideoPlayer';
 import {
@@ -117,6 +118,23 @@ export default function MessagesPage() {
   // Tabs & filters
   const [activeTab, setActiveTab] = useState<TabId>('feed');
   const [categoryFilter, setCategoryFilter] = useState<MessageCategoryFilter>('all');
+
+  useEffect(() => {
+    const syncTabToHash = () => {
+      if (window.location.hash === '#prayer-wall') {
+        setActiveTab('prayer');
+      } else if (window.location.hash === '#daily-devotion') {
+        setActiveTab('feed');
+      }
+    };
+
+    syncTabToHash();
+    window.addEventListener('hashchange', syncTabToHash);
+
+    return () => {
+      window.removeEventListener('hashchange', syncTabToHash);
+    };
+  }, []);
 
   useEffect(() => {
     const loadingTimeout = window.setTimeout(() => {
@@ -274,28 +292,24 @@ export default function MessagesPage() {
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-600">
                 Latest teaching
               </p>
-              <p className="mt-2 text-lg font-semibold text-gray-900">
-                Read, watch & reflect
-              </p>
+              <p className="mt-2 text-lg font-semibold text-gray-900">Read, watch & reflect</p>
             </div>
             <div className="rounded-2xl border border-white/70 bg-white/85 p-4 backdrop-blur-sm">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-600">
                 Prayer focus
               </p>
-              <p className="mt-2 text-lg font-semibold text-gray-900">
-                Share & intercede together
-              </p>
+              <p className="mt-2 text-lg font-semibold text-gray-900">Share & intercede together</p>
             </div>
             <div className="rounded-2xl border border-white/70 bg-white/85 p-4 backdrop-blur-sm">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-600">
                 Community response
               </p>
-              <p className="mt-2 text-lg font-semibold text-gray-900">
-                Encourage one another
-              </p>
+              <p className="mt-2 text-lg font-semibold text-gray-900">Encourage one another</p>
             </div>
           </div>
         </PageHero>
+
+        <DailyDevotionCard variant="full" showActions={false} />
 
         {/* ── Main Tab Switcher ──────────────────────────────────────── */}
         <div className="flex gap-2 rounded-2xl border border-orange-100 bg-white/90 p-1.5 shadow-sm backdrop-blur-sm">
@@ -378,9 +392,7 @@ export default function MessagesPage() {
                     <h2 className="mt-2 text-3xl font-serif text-red-800">Latest posts</h2>
                   </div>
                   <p className="text-sm text-gray-500">
-                    {isLoading
-                      ? statusMessage
-                      : `${filteredPosts.length} post(s) available`}
+                    {isLoading ? statusMessage : `${filteredPosts.length} post(s) available`}
                   </p>
                 </div>
 
@@ -486,9 +498,7 @@ export default function MessagesPage() {
                               ) : null}
                             </div>
 
-                            <h3 className="mt-4 text-2xl font-serif text-gray-900">
-                              {post.title}
-                            </h3>
+                            <h3 className="mt-4 text-2xl font-serif text-gray-900">{post.title}</h3>
                             <p className="mt-3 max-w-3xl text-base leading-7 text-gray-700">
                               {post.summary}
                             </p>
@@ -506,32 +516,32 @@ export default function MessagesPage() {
                             </span>
                           </div>
 
-                           {/* Media / Video */}
-                           {post.youtubeUrl || post.media ? (
-                             <div className="mt-5">
-                               {post.youtubeUrl ? (
-                                 <MessageVideoPlayer
-                                   youtubeUrl={post.youtubeUrl}
-                                   title={post.title}
-                                   onRespond={() => handleRespondToPost(post.id)}
-                                 />
-                               ) : post.media?.resourceType === 'video' ? (
-                                 <MessageVideoPlayer
-                                   src={post.media.url}
-                                   title={post.title}
-                                   onRespond={() => handleRespondToPost(post.id)}
-                                 />
-                               ) : post.media ? (
-                                 <div className="overflow-hidden rounded-2xl border border-orange-100 bg-white">
-                                   <img
-                                     src={post.media.url}
-                                     alt={post.title}
-                                     className="max-h-[32rem] w-full object-cover"
-                                   />
-                                 </div>
-                               ) : null}
-                             </div>
-                           ) : null}
+                          {/* Media / Video */}
+                          {post.youtubeUrl || post.media ? (
+                            <div className="mt-5">
+                              {post.youtubeUrl ? (
+                                <MessageVideoPlayer
+                                  youtubeUrl={post.youtubeUrl}
+                                  title={post.title}
+                                  onRespond={() => handleRespondToPost(post.id)}
+                                />
+                              ) : post.media?.resourceType === 'video' ? (
+                                <MessageVideoPlayer
+                                  src={post.media.url}
+                                  title={post.title}
+                                  onRespond={() => handleRespondToPost(post.id)}
+                                />
+                              ) : post.media ? (
+                                <div className="overflow-hidden rounded-2xl border border-orange-100 bg-white">
+                                  <img
+                                    src={post.media.url}
+                                    alt={post.title}
+                                    className="max-h-[32rem] w-full object-cover"
+                                  />
+                                </div>
+                              ) : null}
+                            </div>
+                          ) : null}
 
                           {/* Body */}
                           <div className="mt-5 rounded-2xl border border-orange-100 bg-white/85 p-5">
@@ -656,11 +666,7 @@ export default function MessagesPage() {
                                         type="text"
                                         value={commentForms[post.id]?.author || ''}
                                         onChange={event =>
-                                          handleCommentChange(
-                                            post.id,
-                                            'author',
-                                            event.target.value
-                                          )
+                                          handleCommentChange(post.id, 'author', event.target.value)
                                         }
                                         placeholder="Your name"
                                         className="w-full rounded-2xl border border-orange-100 bg-white px-4 py-3 text-sm focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20"
@@ -734,9 +740,7 @@ export default function MessagesPage() {
                     <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
                       Prayer wall
                     </p>
-                    <h2 className="mt-2 text-3xl font-serif text-red-800">
-                      Pray for one another
-                    </h2>
+                    <h2 className="mt-2 text-3xl font-serif text-red-800">Pray for one another</h2>
                     <p className="mt-2 max-w-xl text-sm leading-6 text-gray-500">
                       "Bear one another's burdens, and so fulfill the law of Christ." — Galatians
                       6:2
