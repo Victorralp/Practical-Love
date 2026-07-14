@@ -759,6 +759,168 @@ export const publications: PublicationProps[] = [
     ],
   },
   {
+    id: 'how-to-avoid-evil-system',
+    title: 'How to Avoid Evil System',
+    author: 'Practical Love Publications',
+    description:
+      'An expanded practical Christian guide on choosing people above profit, righteousness above compromise, humility above pride, and love, truth, and worthwhile service above destructive worldly systems.',
+    type: 'E-Book',
+    coverImage: '/publications/universal-cover.png',
+    pageCount: 6,
+    pdfUrl: '/publications/how-to-avoid-evil-system.pdf',
+    pages: [
+      {
+        title: 'How to Avoid Evil System',
+        content: (
+          <div className="space-y-8 text-center">
+            <p className="text-sm font-semibold uppercase tracking-widest text-orange-600">
+              A Practical Love Publication
+            </p>
+            <h1 className="text-5xl md:text-6xl font-bold text-red-900 leading-tight">
+              How to Avoid
+              <br />
+              Evil System
+            </h1>
+            <p className="mx-auto max-w-2xl text-xl leading-relaxed text-gray-700">
+              A practical Christian guide for choosing love, truth, humility, and righteous service
+              above pride, profit, compromise, and destructive worldly desire.
+            </p>
+            <div className="mx-auto max-w-xl rounded-2xl border border-orange-200 bg-orange-50 p-6 text-lg font-semibold text-red-800">
+              People above products. People above money. God's will above compromise.
+            </div>
+          </div>
+        ),
+      },
+      {
+        title: 'Preface',
+        content: (
+          <div className="space-y-5 text-lg leading-relaxed text-gray-800">
+            <p>
+              This publication preserves and expands a simple but urgent message: every person must
+              choose the system that governs their heart. There are systems built on pride, greed,
+              appearance, manipulation, and compromise. There is also the way of God: love, truth,
+              humility, obedience, and service.
+            </p>
+            <p>
+              The original notes call the reader to place people above products, people above money,
+              righteousness above convenience, and God's will above every plan. This expanded
+              edition keeps that message intact while giving it the shape of a practical booklet for
+              reading, teaching, meditation, and personal application.
+            </p>
+            <p>
+              An evil system is any pattern of thought, business, ministry, family life, or
+              leadership that treats people as tools instead of souls. It is any habit that makes
+              profit greater than mercy, success greater than obedience, and reputation greater than
+              truth.
+            </p>
+          </div>
+        ),
+      },
+      {
+        title: 'The Seven Principles',
+        content: (
+          <div className="space-y-6 text-lg leading-relaxed text-gray-800">
+            <p>
+              <strong>1. People must always be more important than products.</strong> Products are
+              useful, but people are sacred. A business, ministry, family, or nation becomes
+              dangerous when the thing it produces matters more than the people it serves.
+            </p>
+            <p>
+              <strong>2. People must be considered above making money.</strong> Money can support
+              good work, but it becomes a cruel master when it outranks human dignity. A righteous
+              person asks, "Will this serve people honestly? Will it honour God?"
+            </p>
+            <p>
+              <strong>3. Do what is right no matter the cost.</strong> Truth may cost approval,
+              integrity may cost opportunity, and love may cost comfort. Yet compromise carries the
+              heavier price.
+            </p>
+            <p>
+              <strong>4. Keep away from pride in your plans, programmes, and successes.</strong>{' '}
+              Humility means every plan remains submitted to God, success is received with
+              gratitude, and correction is welcomed when the path is wrong.
+            </p>
+          </div>
+        ),
+      },
+      {
+        title: 'The Seven Principles Continued',
+        content: (
+          <div className="space-y-6 text-lg leading-relaxed text-gray-800">
+            <p>
+              <strong>
+                5. God's will, Word, and commandments must never be compromised.
+              </strong>{' '}
+              Obedience is not an ornament added after ambition has made its decisions. God's Word
+              must govern the decisions themselves.
+            </p>
+            <p>
+              <strong>6. Choose work that provides worthwhile service.</strong> Not every profitable
+              activity is worthwhile. Choose businesses, services, and professions that heal, teach,
+              feed, protect, build, encourage, restore, or guide.
+            </p>
+            <p>
+              <strong>
+                7. A life centered on love, truth, and humility cannot be defeated.
+              </strong>{' '}
+              Love refuses cruelty. Truth refuses deception. Humility refuses the throne that belongs
+              to God. Anything done in love can never fail before God.
+            </p>
+          </div>
+        ),
+      },
+      {
+        title: 'Five Keys to Love',
+        content: (
+          <div className="space-y-5 text-lg leading-relaxed text-gray-800">
+            <p>
+              <strong>1. Love is a command from God.</strong> Man has no right to treat love as
+              optional where God has commanded it.
+            </p>
+            <p>
+              <strong>2. Believe you have the power to love.</strong> Exercise faith to love, muster
+              your will to love, and remember that without faith it is impossible to please God.
+            </p>
+            <p>
+              <strong>3. Love is the most normal universal thing to do on earth.</strong> Every
+              person needs it, every family depends on it, and every nation is healed by it.
+            </p>
+            <p>
+              <strong>4. Love is the best fruit and work of the Holy Spirit.</strong> Love is the
+              evidence that spiritual life is becoming practical life.
+            </p>
+            <p>
+              <strong>5. Practice love first in thinking, then speech, then action.</strong> Thought
+              shapes interpretation, words can heal or wound, and action completes love.
+            </p>
+          </div>
+        ),
+      },
+      {
+        title: 'Memorise, Meditate, Verbalise, Practicalise',
+        content: (
+          <div className="space-y-5 text-lg leading-relaxed text-gray-800">
+            <p>
+              Unless you memorise, meditate, verbalise, and practicalise these truths, the blessings
+              that accompany them may elude you. Truth that is admired but not practiced may still
+              leave a life unchanged.
+            </p>
+            <p>
+              Memorise the principles so they can correct you quickly. Meditate on them until they
+              expose motives and habits. Verbalise them over your plans, family, work, ministry, and
+              decisions. Practicalise them when pressure comes.
+            </p>
+            <p>
+              To avoid an evil system, refuse to be governed by the spirit of that system. Choose
+              the way of love. Choose truth. Choose humility. Choose worthwhile service. Choose
+              God's will. Anything done in love can never fail.
+            </p>
+          </div>
+        ),
+      },
+    ],
+  },
+  {
     id: 'medicine-without-medication',
     title: 'Medicine Without Medication',
     author: 'MOSES ADEREMI AKANBI OWOEYE',
