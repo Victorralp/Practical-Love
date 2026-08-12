@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { ChevronDown, Menu, Sparkles, X } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import Logo from './Logo';
@@ -16,10 +16,15 @@ type NavItem = {
 
 const NAV_ITEMS: readonly NavItem[] = [
   { name: 'Home', href: '/' },
-  { name: 'About', href: '/about-love' },
+  {
+    name: 'About',
+    href: '/about-love',
+    children: [
+      { name: 'Family First', href: '/family-first' },
+      { name: 'Pride & Humility', href: '/pride-and-humility' },
+    ],
+  },
   { name: 'Messages', href: '/messages' },
-  { name: 'Family First', href: '/family-first' },
-  { name: 'Pride & Humility', href: '/pride-and-humility' },
   {
     name: 'Resources',
     href: '/resources',
@@ -32,49 +37,120 @@ const NAV_ITEMS: readonly NavItem[] = [
     ],
   },
   { name: 'Growth', href: '/growth' },
-  { name: 'Contact', href: '/contact' },
 ] as const;
+
+const FOCUS_RING =
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ffb27a] focus-visible:ring-offset-2 focus-visible:ring-offset-[#1a0e0b]';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const navRef = useRef<HTMLElement | null>(null);
   const location = useLocation();
 
   const isActive = (href: string) => location.pathname === href;
   const isChildActive = (children?: readonly NavChild[]) =>
     children ? children.some(child => location.pathname === child.href) : false;
 
-  useEffect(() => {
+  const closeAll = useCallback(() => {
     setIsMenuOpen(false);
     setOpenDropdown(null);
-  }, [location.pathname]);
+  }, []);
+
+  // Close everything on navigation.
+  useEffect(() => {
+    closeAll();
+  }, [location.pathname, closeAll]);
+
+  // Compact the bar once the page scrolls away from the top.
+  useEffect(() => {
+    const onScroll = () => setIsScrolled(window.scrollY > 12);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  // Escape closes any open menu.
+  useEffect(() => {
+    if (!isMenuOpen && !openDropdown) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') closeAll();
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [isMenuOpen, openDropdown, closeAll]);
+
+  // Click outside the desktop nav closes an open dropdown.
+  useEffect(() => {
+    if (!openDropdown) return;
+    const onPointerDown = (event: MouseEvent) => {
+      if (navRef.current && !navRef.current.contains(event.target as Node)) {
+        setOpenDropdown(null);
+      }
+    };
+    document.addEventListener('mousedown', onPointerDown);
+    return () => document.removeEventListener('mousedown', onPointerDown);
+  }, [openDropdown]);
+
+  // Lock the page behind the mobile drawer.
+  useEffect(() => {
+    if (!isMenuOpen) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [isMenuOpen]);
 
   return (
-    <header className="sticky top-0 z-50 px-3 py-3 sm:px-4">
-      <div className="mx-auto max-w-7xl">
-        <div className="glass-border rounded-[1.6rem] bg-[rgba(26,14,11,0.84)] px-4 py-2.5 shadow-[0_18px_42px_rgba(17,8,6,0.18)] backdrop-blur-2xl sm:px-5">
+    <header
+      className={`sticky top-0 z-50 border-b bg-[rgba(26,14,11,0.92)] backdrop-blur-2xl transition-all duration-300 ${
+        isScrolled
+          ? 'border-white/10 shadow-[0_10px_30px_rgba(17,8,6,0.28)]'
+          : 'border-transparent shadow-none'
+      }`}
+    >
+      <a
+        href="#main-content"
+        className={`sr-only rounded-full bg-[#1a0e0b] px-4 py-2 text-sm font-semibold text-white focus:not-sr-only focus:absolute focus:left-6 focus:top-4 focus:z-[60] ${FOCUS_RING}`}
+      >
+        Skip to content
+      </a>
+
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className={`transition-all duration-300 ${isScrolled ? 'py-2' : 'py-3.5'}`}>
           <div className="flex items-center justify-between gap-4">
-            <Link to="/" className="flex min-w-0 flex-1 items-center gap-3 xl:max-w-[18rem]">
-              <div className="flex h-10 w-10 items-center justify-center rounded-[1rem] bg-white/8">
+            <Link
+              to="/"
+              className={`group flex min-w-0 flex-1 items-center gap-3 rounded-[1.2rem] lg:flex-none ${FOCUS_RING}`}
+            >
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[1rem] bg-white/8 transition-colors group-hover:bg-white/14">
                 <Logo className="h-7 w-7" />
               </div>
               <div className="min-w-0 leading-tight">
                 <p
-                  title="Practical Love"
-                  className="text-sm font-semibold uppercase tracking-[0.16em] text-[#ffcda7]"
+                  title="Practical Love Ministry (Logosrhema)"
+                  className="truncate text-sm font-semibold uppercase tracking-[0.16em] text-[#ffcda7]"
                 >
-                  Practical Love
+                  Practical Love Ministry
                 </p>
                 <p
-                  title="Biblical love, practiced daily"
-                  className="mt-1 text-xs text-[#f6dfc6] sm:text-sm"
+                  title="Logosrhema: biblical love, practiced daily"
+                  className={`truncate text-xs text-[#f6dfc6] transition-all duration-300 ${
+                    isScrolled ? 'mt-0 max-h-0 opacity-0 sm:mt-1 sm:max-h-6 sm:opacity-100' : 'mt-1'
+                  }`}
                 >
-                  Biblical love, practiced daily
+                  Logosrhema: biblical love, practiced daily
                 </p>
               </div>
             </Link>
 
-            <nav className="hidden flex-1 items-center justify-center gap-1 xl:flex">
+            <nav
+              ref={navRef}
+              aria-label="Primary"
+              className="hidden flex-1 items-center justify-center gap-1 lg:flex"
+            >
               {NAV_ITEMS.map(item => {
                 const isCurrent = isActive(item.href) || isChildActive(item.children);
 
@@ -83,16 +159,22 @@ export default function Header() {
                     <Link
                       key={item.name}
                       to={item.href}
-                      className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                      aria-current={isCurrent ? 'page' : undefined}
+                      className={`relative rounded-full px-4 py-2 text-sm font-medium transition-colors ${FOCUS_RING} ${
                         isCurrent
                           ? 'bg-white/12 text-white'
                           : 'text-[#f6dfc6] hover:bg-white/8 hover:text-white'
                       }`}
                     >
                       {item.name}
+                      {isCurrent && (
+                        <span className="absolute inset-x-4 -bottom-0.5 h-0.5 rounded-full bg-[#eb9a4f]" />
+                      )}
                     </Link>
                   );
                 }
+
+                const isOpen = openDropdown === item.name;
 
                 return (
                   <div
@@ -108,37 +190,45 @@ export default function Header() {
                           : 'text-[#f6dfc6] hover:bg-white/8 hover:text-white'
                       }`}
                     >
-                      <Link to={item.href} className="rounded-full px-4 py-2 text-sm font-medium">
+                      <Link
+                        to={item.href}
+                        aria-current={isCurrent ? 'page' : undefined}
+                        className={`relative rounded-full px-4 py-2 text-sm font-medium ${FOCUS_RING}`}
+                      >
                         {item.name}
+                        {isCurrent && (
+                          <span className="absolute inset-x-4 -bottom-0.5 h-0.5 rounded-full bg-[#eb9a4f]" />
+                        )}
                       </Link>
                       <button
                         type="button"
                         onClick={() =>
                           setOpenDropdown(current => (current === item.name ? null : item.name))
                         }
-                        className="rounded-full px-3 py-2 text-sm"
+                        className={`rounded-full px-3 py-2 text-sm ${FOCUS_RING}`}
                         aria-label={`Toggle ${item.name} menu`}
-                        aria-expanded={openDropdown === item.name}
+                        aria-haspopup="true"
+                        aria-expanded={isOpen}
                       >
                         <ChevronDown
-                          className={`h-4 w-4 transition-transform ${
-                            openDropdown === item.name ? 'rotate-180' : ''
+                          className={`h-4 w-4 transition-transform duration-200 ${
+                            isOpen ? 'rotate-180' : ''
                           }`}
                         />
                       </button>
                     </div>
 
                     <div
-                      className={`absolute left-0 top-full w-72 pt-3 transition-all ${
-                        openDropdown === item.name
+                      className={`absolute left-1/2 top-full w-72 -translate-x-1/2 pt-3 transition-all duration-200 ${
+                        isOpen
                           ? 'visible translate-y-0 opacity-100'
-                          : 'invisible -translate-y-2 opacity-0 pointer-events-none'
+                          : 'pointer-events-none invisible -translate-y-2 opacity-0'
                       }`}
                     >
-                      <div className="overflow-hidden rounded-[1.5rem] border border-white/10 bg-[rgba(31,16,12,0.94)] p-2 shadow-[0_24px_44px_rgba(17,8,6,0.28)]">
+                      <div className="overflow-hidden rounded-[1.5rem] border border-white/10 bg-[rgba(31,16,12,0.94)] p-2 shadow-[0_24px_44px_rgba(17,8,6,0.28)] backdrop-blur-2xl">
                         <Link
                           to={item.href}
-                          className="block rounded-[1.1rem] border border-white/8 bg-white/6 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/10"
+                          className={`block rounded-[1.1rem] border border-white/8 bg-white/6 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/10 ${FOCUS_RING}`}
                         >
                           Open {item.name}
                         </Link>
@@ -147,7 +237,8 @@ export default function Header() {
                             <Link
                               key={child.name}
                               to={child.href}
-                              className={`block rounded-[1.1rem] px-4 py-3 text-sm transition-colors ${
+                              aria-current={isActive(child.href) ? 'page' : undefined}
+                              className={`block rounded-[1.1rem] px-4 py-3 text-sm transition-colors ${FOCUS_RING} ${
                                 isActive(child.href)
                                   ? 'bg-white/10 text-white'
                                   : 'text-[#f6dfc6] hover:bg-white/8 hover:text-white'
@@ -164,7 +255,7 @@ export default function Header() {
               })}
             </nav>
 
-            <div className="hidden xl:flex">
+            <div className="hidden lg:flex">
               <Link to="/contact" className="btn-brand px-5 py-2.5 text-sm">
                 Contact
               </Link>
@@ -173,16 +264,21 @@ export default function Header() {
             <button
               type="button"
               onClick={() => setIsMenuOpen(current => !current)}
-              className="flex h-11 w-11 items-center justify-center rounded-full bg-white/8 text-[#f9e7d3] transition-colors hover:bg-white/12 xl:hidden"
-              aria-label="Toggle navigation menu"
+              className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/8 text-[#f9e7d3] transition-colors hover:bg-white/12 lg:hidden ${FOCUS_RING}`}
+              aria-label={isMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+              aria-expanded={isMenuOpen}
+              aria-controls="mobile-navigation"
             >
               {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
           </div>
 
           {isMenuOpen && (
-            <div className="mt-4 border-t border-white/10 pt-4 xl:hidden">
-              <div className="space-y-2">
+            <div
+              id="mobile-navigation"
+              className="mt-4 max-h-[calc(100vh-9rem)] overflow-y-auto overscroll-contain border-t border-white/10 pt-4 lg:hidden"
+            >
+              <nav aria-label="Mobile" className="space-y-2">
                 {NAV_ITEMS.map(item => {
                   const isCurrent = isActive(item.href) || isChildActive(item.children);
 
@@ -191,7 +287,8 @@ export default function Header() {
                       <div key={item.name} className="rounded-[1.4rem] bg-white/4 p-1">
                         <Link
                           to={item.href}
-                          className={`block rounded-[1.1rem] px-4 py-3 text-sm font-medium ${
+                          aria-current={isCurrent ? 'page' : undefined}
+                          className={`block rounded-[1.1rem] px-4 py-3 text-sm font-medium ${FOCUS_RING} ${
                             isCurrent
                               ? 'bg-white/10 text-white'
                               : 'text-[#f6dfc6] hover:bg-white/8 hover:text-white'
@@ -203,12 +300,15 @@ export default function Header() {
                     );
                   }
 
+                  const isOpen = openDropdown === item.name;
+
                   return (
                     <div key={item.name} className="rounded-[1.4rem] bg-white/4 p-1">
                       <div className="flex items-center gap-1">
                         <Link
                           to={item.href}
-                          className={`min-w-0 flex-1 rounded-[1.1rem] px-4 py-3 text-sm font-medium ${
+                          aria-current={isCurrent ? 'page' : undefined}
+                          className={`min-w-0 flex-1 rounded-[1.1rem] px-4 py-3 text-sm font-medium ${FOCUS_RING} ${
                             isCurrent
                               ? 'bg-white/10 text-white'
                               : 'text-[#f6dfc6] hover:bg-white/8 hover:text-white'
@@ -221,25 +321,26 @@ export default function Header() {
                           onClick={() =>
                             setOpenDropdown(current => (current === item.name ? null : item.name))
                           }
-                          className="rounded-[1.1rem] px-4 py-3 text-[#f6dfc6]"
+                          className={`rounded-[1.1rem] px-4 py-3 text-[#f6dfc6] ${FOCUS_RING}`}
                           aria-label={`Toggle ${item.name} menu`}
-                          aria-expanded={openDropdown === item.name}
+                          aria-expanded={isOpen}
                         >
                           <ChevronDown
-                            className={`h-4 w-4 transition-transform ${
-                              openDropdown === item.name ? 'rotate-180' : ''
+                            className={`h-4 w-4 transition-transform duration-200 ${
+                              isOpen ? 'rotate-180' : ''
                             }`}
                           />
                         </button>
                       </div>
 
-                      {openDropdown === item.name && (
+                      {isOpen && (
                         <div className="space-y-1 px-2 pb-2 pt-1">
                           {item.children.map(child => (
                             <Link
                               key={child.name}
                               to={child.href}
-                              className={`block rounded-[1rem] px-4 py-3 text-sm ${
+                              aria-current={isActive(child.href) ? 'page' : undefined}
+                              className={`block rounded-[1rem] px-4 py-3 text-sm ${FOCUS_RING} ${
                                 isActive(child.href)
                                   ? 'bg-white/10 text-white'
                                   : 'text-[#efd7c0] hover:bg-white/8 hover:text-white'
@@ -253,20 +354,23 @@ export default function Header() {
                     </div>
                   );
                 })}
-              </div>
+              </nav>
 
               <div className="mt-4 grid gap-3 sm:grid-cols-2">
                 <Link
                   to="/family-first"
-                  className="pill justify-center border-white/10 bg-white/6 py-3 text-[#ffe0c2]"
+                  className={`btn-outline-light gap-2 py-3 text-sm ${FOCUS_RING}`}
                 >
                   <Sparkles className="h-4 w-4" />
                   Family first
                 </Link>
-                <Link to="/contact" className="btn-outline-light py-3 text-sm">
+                <Link to="/contact" className={`btn-outline-light py-3 text-sm ${FOCUS_RING}`}>
                   Contact the ministry
                 </Link>
-                <Link to="/love-challenge" className="btn-brand py-3 text-sm">
+                <Link
+                  to="/love-challenge"
+                  className={`btn-brand py-3 text-sm sm:col-span-2 ${FOCUS_RING}`}
+                >
                   Start challenge
                 </Link>
               </div>

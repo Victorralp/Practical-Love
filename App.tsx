@@ -103,7 +103,7 @@ function AppLayout() {
       <AdminShortcut />
       <SiteSeo />
       {!isAdminRoute && <Header />}
-      <main className="flex-grow">
+      <main id="main-content" className="flex-grow">
         <Suspense fallback={<PageLoader />}>
           <Routes>
             <Route path="/" element={<Hero />} />
