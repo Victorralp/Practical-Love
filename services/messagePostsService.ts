@@ -80,6 +80,7 @@ export type AdminPrayerFilter = 'all' | PrayerRequestStatus | 'private';
 // ── Paths ───────────────────────────────────────────────────────────
 const MESSAGES_PATH = 'messages';
 const PRAYER_REQUESTS_PATH = 'prayerRequests';
+const PUBLIC_PRAYER_REQUESTS_PATH = 'publicPrayerRequests';
 
 // ── Local reaction tracking (anonymous, localStorage) ───────────────
 const REACTIONS_STORAGE_KEY = 'pl_reactions';
@@ -186,6 +187,20 @@ function toPrayerArray(value: Record<string, PrayerRequest> | null | undefined) 
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 }
 
+function toPublicPrayerRequest(request: PrayerRequest) {
+  const normalized = normalizePrayerRequest(request.id, request);
+
+  return {
+    body: normalized.body,
+    author: normalized.author,
+    prayedCount: normalized.prayedCount,
+    createdAt: normalized.createdAt,
+    visibility: 'public' as const,
+    status: 'approved' as const,
+    isActive: true,
+  };
+}
+
 // ══════════════════════════════════════════════════════════════════════
 // MESSAGE POSTS
 // ══════════════════════════════════════════════════════════════════════
@@ -264,10 +279,9 @@ export async function toggleReaction(postId: string, reactionType: ReactionType)
 
   saveLocalSet(REACTIONS_STORAGE_KEY, localSet);
 
-  await update(postRef, {
-    reactions: currentReactions,
-    updatedAt: new Date().toISOString(),
-  });
+  // Write to the reactions child directly: visitors are anonymous, and the
+  // database rules only open that node (not the whole post) to public writes.
+  await set(ref(realtimeDb, `${MESSAGES_PATH}/${postId}/reactions`), currentReactions);
 }
 
 // ── Comments ────────────────────────────────────────────────────────
@@ -288,10 +302,8 @@ export async function addCommentToMessagePost(
     createdAt: new Date().toISOString(),
   });
 
-  await update(postRef, {
-    comments: nextComments,
-    updatedAt: new Date().toISOString(),
-  });
+  // Same reasoning as toggleReaction: public writes are scoped to this child.
+  await set(ref(realtimeDb, `${MESSAGES_PATH}/${id}/comments`), nextComments);
 }
 
 // ══════════════════════════════════════════════════════════════════════
@@ -302,7 +314,7 @@ export function subscribeToPrayerRequests(
   onData: (requests: PrayerRequest[]) => void,
   onError?: (error: Error) => void
 ): Unsubscribe {
-  const prayerRef = ref(realtimeDb, PRAYER_REQUESTS_PATH);
+  const prayerRef = ref(realtimeDb, PUBLIC_PRAYER_REQUESTS_PATH);
 
   return onValue(
     prayerRef,
@@ -340,7 +352,7 @@ export async function incrementPrayedCount(requestId: string) {
 
   if (localSet.has(requestId)) return; // Already prayed
 
-  const requestRef = ref(realtimeDb, `${PRAYER_REQUESTS_PATH}/${requestId}`);
+  const requestRef = ref(realtimeDb, `${PUBLIC_PRAYER_REQUESTS_PATH}/${requestId}`);
   const snapshot = await get(requestRef);
   const existing = snapshot.val() as PrayerRequest | null;
 
@@ -360,35 +372,50 @@ export async function incrementPrayedCount(requestId: string) {
 
 /** Toggle the active state of a prayer request (admin moderation) */
 export async function togglePrayerRequestActive(requestId: string, isActive: boolean) {
-  const requestRef = ref(realtimeDb, `${PRAYER_REQUESTS_PATH}/${requestId}`);
-  await update(requestRef, {
-    isActive,
-    status: isActive ? 'approved' : 'hidden',
-  });
+  if (isActive) {
+    await approvePrayerRequest(requestId);
+    return;
+  }
+
+  await hidePrayerRequest(requestId);
 }
 
 /** Approve a pending public prayer request */
 export async function approvePrayerRequest(requestId: string) {
   const requestRef = ref(realtimeDb, `${PRAYER_REQUESTS_PATH}/${requestId}`);
-  await update(requestRef, {
+  const snapshot = await get(requestRef);
+  const existing = snapshot.val() as PrayerRequest | null;
+
+  if (!existing) return;
+
+  const approved = normalizePrayerRequest(requestId, {
+    ...existing,
     status: 'approved',
     visibility: 'public',
     isActive: true,
+  });
+
+  await update(ref(realtimeDb), {
+    [`${PRAYER_REQUESTS_PATH}/${requestId}`]: approved,
+    [`${PUBLIC_PRAYER_REQUESTS_PATH}/${requestId}`]: toPublicPrayerRequest(approved),
   });
 }
 
 /** Hide a prayer request from the public wall without deleting it */
 export async function hidePrayerRequest(requestId: string) {
-  const requestRef = ref(realtimeDb, `${PRAYER_REQUESTS_PATH}/${requestId}`);
-  await update(requestRef, {
-    status: 'hidden',
-    isActive: false,
+  await update(ref(realtimeDb), {
+    [`${PRAYER_REQUESTS_PATH}/${requestId}/status`]: 'hidden',
+    [`${PRAYER_REQUESTS_PATH}/${requestId}/isActive`]: false,
+    [`${PUBLIC_PRAYER_REQUESTS_PATH}/${requestId}`]: null,
   });
 }
 
 /** Delete a prayer request permanently (admin action) */
 export async function deletePrayerRequest(requestId: string) {
-  await remove(ref(realtimeDb, `${PRAYER_REQUESTS_PATH}/${requestId}`));
+  await update(ref(realtimeDb), {
+    [`${PRAYER_REQUESTS_PATH}/${requestId}`]: null,
+    [`${PUBLIC_PRAYER_REQUESTS_PATH}/${requestId}`]: null,
+  });
 }
 
 /** Subscribe to ALL prayer requests including inactive (admin use) */

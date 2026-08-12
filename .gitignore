@@ -101,5 +101,7 @@ temp/
 *.json
 !data/medicine-without-medication-pages.json
 !src/seo/routes.json
+!firebase.json
+!database.rules.json
 firebase-key.json
 service-account-key.json

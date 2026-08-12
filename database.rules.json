@@ -1,0 +1,37 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "messages": {
+      ".read": true,
+      ".write": "auth != null && (auth.token.email === 'victorralp407@gmail.com' || auth.token.email === 'logosrhema842@gmail.com')",
+      "$postId": {
+        "reactions": {
+          ".write": "data.parent().exists() && newData.exists()",
+          "amen": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+          "love": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+          "insightful": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+          "$other": { ".validate": false }
+        },
+        "comments": {
+          ".write": "data.parent().exists() && newData.exists()",
+          "$commentId": {
+            ".validate": "newData.hasChildren(['id', 'author', 'body', 'createdAt']) && newData.child('id').isString() && newData.child('author').isString() && newData.child('author').val().length <= 80 && newData.child('body').isString() && newData.child('body').val().length > 0 && newData.child('body').val().length <= 1000 && newData.child('createdAt').isString()"
+          }
+        }
+      }
+    },
+    "prayerRequests": {
+      ".read": "auth != null && (auth.token.email === 'victorralp407@gmail.com' || auth.token.email === 'logosrhema842@gmail.com')",
+      "$requestId": {
+        ".write": "(auth != null && (auth.token.email === 'victorralp407@gmail.com' || auth.token.email === 'logosrhema842@gmail.com')) || (!data.exists() && newData.hasChildren(['body', 'author', 'prayedCount', 'createdAt', 'visibility', 'status', 'isActive']) && newData.child('body').isString() && newData.child('author').isString() && newData.child('prayedCount').val() === 0 && newData.child('createdAt').isString() && ((newData.child('visibility').val() === 'public' && newData.child('status').val() === 'pending' && newData.child('isActive').val() === false) || (newData.child('visibility').val() === 'private' && newData.child('status').val() === 'approved' && newData.child('isActive').val() === true)))"
+      }
+    },
+    "publicPrayerRequests": {
+      ".read": true,
+      "$requestId": {
+        ".write": "(auth != null && (auth.token.email === 'victorralp407@gmail.com' || auth.token.email === 'logosrhema842@gmail.com')) || (data.exists() && newData.child('body').val() === data.child('body').val() && newData.child('author').val() === data.child('author').val() && newData.child('createdAt').val() === data.child('createdAt').val() && newData.child('visibility').val() === data.child('visibility').val() && newData.child('status').val() === data.child('status').val() && newData.child('isActive').val() === data.child('isActive').val() && newData.child('prayedCount').val() === data.child('prayedCount').val() + 1)"
+      }
+    }
+  }
+}

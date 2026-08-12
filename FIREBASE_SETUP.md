@@ -59,6 +59,29 @@ npm test -- services/firebaseService.test.ts
 - Use `.env.example` as a template for required variables
 - Firebase API keys are safe to expose in client-side code (they're meant to be public)
 
+## Realtime Database rules
+
+Prayer requests are split into two database paths: `prayerRequests` contains every
+submission (including private and pending requests), while `publicPrayerRequests`
+contains only approved public requests. This prevents private submissions from ever
+being sent to public visitors.
+
+Deploy the included rules before using the prayer-request admin page:
+
+```bash
+npx firebase-tools login
+npx firebase-tools deploy --only database --project logosrhema-12
+```
+
+The admin email addresses in `database.rules.json` must match the Google accounts
+configured in `VITE_ADMIN_EMAIL`. After deploying, sign out and sign back in to the
+admin page so Firebase sends a fresh authentication token.
+
+Existing approved requests need to be copied once to `publicPrayerRequests`. In the
+Realtime Database console, copy each approved public record from `prayerRequests`
+to `publicPrayerRequests` using the same key. New approvals, hides, and deletions
+are synchronized by the application automatically.
+
 ## Available Firebase Services
 
 Currently initialized:
