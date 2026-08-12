@@ -10,11 +10,12 @@ const publicDir = path.join(projectRoot, 'public');
 const distIndexPath = path.join(distDir, 'index.html');
 const routesPath = path.join(projectRoot, 'src', 'seo', 'routes.json');
 
-const SITE_NAME = 'Practical Love';
+const SITE_NAME = 'Practical Love Ministry (Logosrhema)';
 const SITE_URL = 'https://logosrhema.org.ng';
+const FACEBOOK_URL = 'https://web.facebook.com/profile.php?id=61590900447700';
 const DEFAULT_IMAGE_PATH = '/love-hero-v2.png';
 const DEFAULT_DESCRIPTION =
-  'Practical Love teaches biblical love through 1 Corinthians 13, family discipleship, the Yellow Card, and daily practice for homes, churches, and communities in Nigeria.';
+  'Practical Love Ministry (Logosrhema) teaches biblical love through 1 Corinthians 13, family discipleship, the Yellow Card, and daily practice for homes, churches, and communities in Nigeria.';
 
 function readJson(filePath) {
   return JSON.parse(fs.readFileSync(filePath, 'utf8'));
@@ -67,6 +68,7 @@ function buildStructuredData(route) {
         url: imageUrl,
       },
       email: 'logosrhema842@gmail.com',
+      sameAs: [FACEBOOK_URL],
       areaServed: 'Nigeria',
       description: DEFAULT_DESCRIPTION,
     },

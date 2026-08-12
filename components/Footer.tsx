@@ -1,4 +1,4 @@
-import { ArrowRight, HandHeart, Mail, MapPin, Phone } from 'lucide-react';
+import { ArrowRight, HandHeart, Mail, MapPin, Phone, Share2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Logo from './Logo';
 
@@ -40,6 +40,12 @@ const CONTACT_ITEMS = [
     href: '/contact',
     icon: MapPin,
   },
+  {
+    label: 'Facebook',
+    value: 'Practical Love Ministry',
+    href: 'https://web.facebook.com/profile.php?id=61590900447700',
+    icon: Share2,
+  },
 ] as const;
 
 export default function Footer() {
@@ -60,7 +66,7 @@ export default function Footer() {
                 </div>
                 <div>
                   <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#ffcea7]">
-                    Practical Love
+                    Practical Love Ministry
                   </p>
                   <h2 className="font-serif text-3xl text-white md:text-4xl">
                     A ministry for households that want reform, not performance.
@@ -149,6 +155,8 @@ export default function Footer() {
                   <a
                     key={item.label}
                     href={item.href}
+                    target={item.href.startsWith('http') ? '_blank' : undefined}
+                    rel={item.href.startsWith('http') ? 'noreferrer' : undefined}
                     className="flex items-start gap-4 rounded-[1rem] px-3 py-3 text-[#ffe7d1] transition-colors hover:bg-white/8 hover:text-white"
                   >
                     <div className="flex h-11 w-11 items-center justify-center rounded-[1rem] bg-white/8 text-[#ffca9d]">
@@ -168,7 +176,7 @@ export default function Footer() {
         </div>
 
         <div className="flex flex-col gap-4 border-t border-white/12 pt-6 text-sm text-[#ffe7d1] opacity-80 md:flex-row md:items-center md:justify-between">
-          <p>{currentYear} Practical Love. All rights reserved.</p>
+          <p>{currentYear} Practical Love Ministry (Logosrhema). All rights reserved.</p>
           <div className="flex flex-wrap items-center gap-5">
             <Link to="/privacy-policy" className="transition-colors hover:text-white">
               Privacy Policy

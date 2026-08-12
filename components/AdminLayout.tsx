@@ -76,7 +76,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         </div>
         {!collapsed && (
           <div className="min-w-0">
-            <p className="text-sm font-bold tracking-wide text-[#3d1d17]">Practical Love</p>
+            <p className="text-sm font-bold tracking-wide text-[#3d1d17]">
+              Practical Love Ministry
+            </p>
             <p className="text-xs text-[#6e4737]">Admin Panel</p>
           </div>
         )}
