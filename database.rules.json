@@ -2,6 +2,10 @@
   "rules": {
     ".read": false,
     ".write": false,
+    "publications": {
+      ".read": true,
+      ".write": "auth != null && (auth.token.email === 'victorralp407@gmail.com' || auth.token.email === 'logosrhema842@gmail.com')"
+    },
     "messages": {
       ".read": true,
       ".write": "auth != null && (auth.token.email === 'victorralp407@gmail.com' || auth.token.email === 'logosrhema842@gmail.com')",
