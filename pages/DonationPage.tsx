@@ -23,15 +23,44 @@ const JOIN_US_STEPS = [
 
 
 
-const DONATION_ACCOUNTS = [
+const ACCOUNT_NAME = 'LRF Mission';
+const BANK_NAME = 'Stanbic IBTC Bank';
+
+type DonationAccount = {
+  currency: string;
+  label: string;
+  accountNumber: string;
+  /** Set when the account cannot currently receive transfers. */
+  unavailableReason?: string;
+};
+
+const DONATION_ACCOUNTS: readonly DonationAccount[] = [
+  {
+    currency: 'USD',
+    label: 'US Dollar',
+    accountNumber: '0002341445',
+  },
+  {
+    currency: 'GBP',
+    label: 'British Pound',
+    accountNumber: '0002345340',
+  },
+  {
+    currency: 'EUR',
+    label: 'Euro',
+    accountNumber: '0002345429',
+  },
   {
     currency: 'NGN',
-    label: 'Nigeria Naira',
-    accountName: 'Add verified account name',
-    bank: 'Add bank name',
-    accountNumber: '0000000000',
+    label: 'Nigerian Naira',
+    accountNumber: '0001504485',
+    unavailableReason: 'Dormant and frozen — please use another currency for now.',
   },
 ] as const;
+
+function formatAccountNumber(value: string) {
+  return `${value.slice(0, 3)} ${value.slice(3, 6)} ${value.slice(6)}`;
+}
 
 export default function DonationPage() {
   return (
@@ -111,7 +140,7 @@ export default function DonationPage() {
           id="donation-accounts"
           className="rounded-[2rem] border border-orange-200 bg-gradient-to-br from-red-950 via-red-900 to-orange-900 p-6 text-white shadow-xl md:p-8"
         >
-          <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
+          <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.22em] text-orange-200">
                 Donation
@@ -120,53 +149,76 @@ export default function DonationPage() {
                 Share the blessing with yourself and your generation
               </h2>
               <p className="mt-4 max-w-xl text-base leading-7 text-orange-100">
-                Feel free to donate in order to help us share the full blessing more widely. Use
-                the right account and currency below once your verified payment details are added.
+                Feel free to donate in order to help us share the full blessing more widely. Every
+                account below is held with {BANK_NAME} in the name {ACCOUNT_NAME}. Choose the
+                account that matches the currency you are sending.
               </p>
-              <div className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-orange-100">
-                Replace the placeholder account details below with your real verified ministry
-                accounts before publishing this page live.
-              </div>
+              <dl className="mt-6 grid gap-3 rounded-2xl border border-white/10 bg-white/5 p-4 text-sm sm:grid-cols-2">
+                <div>
+                  <dt className="text-orange-200">Account name</dt>
+                  <dd className="mt-1 font-semibold text-white">{ACCOUNT_NAME}</dd>
+                </div>
+                <div>
+                  <dt className="text-orange-200">Bank</dt>
+                  <dd className="mt-1 font-semibold text-white">{BANK_NAME}</dd>
+                </div>
+              </dl>
+              <p className="mt-4 text-sm text-orange-200">
+                Please confirm the account name shows as {ACCOUNT_NAME} in your banking app before
+                you complete any transfer.
+              </p>
             </div>
 
-            <div className="max-w-md">
-              {DONATION_ACCOUNTS.map(account => (
-                <div
-                  key={account.currency}
-                  className="rounded-2xl border border-white/10 bg-white/10 p-5 backdrop-blur-sm"
-                >
-                  <div className="flex items-center justify-between gap-3">
-                    <div>
-                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-orange-200">
-                        {account.currency}
+            <div className="grid gap-4 sm:grid-cols-2">
+              {DONATION_ACCOUNTS.map(account => {
+                const isUnavailable = Boolean(account.unavailableReason);
+
+                return (
+                  <div
+                    key={account.currency}
+                    className={`rounded-2xl border p-5 backdrop-blur-sm ${
+                      isUnavailable
+                        ? 'border-white/10 bg-white/5'
+                        : 'border-white/10 bg-white/10'
+                    }`}
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-orange-200">
+                          {account.currency}
+                        </p>
+                        <h3 className="mt-2 text-xl font-serif text-white">{account.label}</h3>
+                      </div>
+                      <div
+                        className={`rounded-full border px-3 py-1 text-xs font-semibold ${
+                          isUnavailable
+                            ? 'border-white/15 text-orange-200'
+                            : 'border-emerald-300/40 bg-emerald-400/10 text-emerald-100'
+                        }`}
+                      >
+                        {isUnavailable ? 'Unavailable' : 'Active'}
+                      </div>
+                    </div>
+
+                    <p className="mt-5 text-xs uppercase tracking-[0.18em] text-orange-200">
+                      Account number
+                    </p>
+                    <p
+                      className={`mt-1 text-lg font-semibold tracking-[0.16em] ${
+                        isUnavailable ? 'text-orange-100/70 line-through' : 'text-white'
+                      }`}
+                    >
+                      {formatAccountNumber(account.accountNumber)}
+                    </p>
+
+                    {account.unavailableReason && (
+                      <p className="mt-3 text-sm leading-6 text-orange-200">
+                        {account.unavailableReason}
                       </p>
-                      <h3 className="mt-2 text-xl font-serif text-white">{account.label}</h3>
-                    </div>
-                    <div className="rounded-full border border-white/15 px-3 py-1 text-xs font-semibold text-orange-100">
-                      Active Soon
-                    </div>
+                    )}
                   </div>
-                  <dl className="mt-5 space-y-3 text-sm">
-                    <div>
-                      <dt className="text-orange-200">Account name</dt>
-                      <dd className="mt-1 text-white">{account.accountName}</dd>
-                    </div>
-                    <div>
-                      <dt className="text-orange-200">Bank</dt>
-                      <dd className="mt-1 text-white">{account.bank}</dd>
-                    </div>
-                    <div>
-                      <dt className="text-orange-200">Account number</dt>
-                      <dd className="mt-1 font-semibold tracking-[0.16em] text-white">
-                        {account.accountNumber}
-                      </dd>
-                    </div>
-                  </dl>
-                </div>
-              ))}
-              <p className="mt-4 text-sm text-orange-200">
-                Additional currency accounts (USD, GBP, EUR) will be available soon.
-              </p>
+                );
+              })}
             </div>
           </div>
         </section>
