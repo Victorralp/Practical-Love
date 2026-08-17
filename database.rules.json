@@ -2,6 +2,17 @@
   "rules": {
     ".read": false,
     ".write": false,
+    "testimonies": {
+      ".read": "auth != null && (auth.token.email === 'victorralp407@gmail.com' || auth.token.email === 'logosrhema842@gmail.com')",
+      ".write": "auth != null && (auth.token.email === 'victorralp407@gmail.com' || auth.token.email === 'logosrhema842@gmail.com')",
+      "$testimonyId": {
+        ".write": "!data.exists() && newData.hasChildren(['name', 'testimony', 'rating', 'status', 'createdAt']) && newData.child('status').val() === 'pending' && newData.child('name').isString() && newData.child('name').val().length > 0 && newData.child('name').val().length <= 80 && newData.child('testimony').isString() && newData.child('testimony').val().length > 0 && newData.child('testimony').val().length <= 2000 && newData.child('rating').isNumber() && newData.child('rating').val() >= 1 && newData.child('rating').val() <= 5 && newData.child('createdAt').isString()"
+      }
+    },
+    "publicTestimonies": {
+      ".read": true,
+      ".write": "auth != null && (auth.token.email === 'victorralp407@gmail.com' || auth.token.email === 'logosrhema842@gmail.com')"
+    },
     "publications": {
       ".read": true,
       ".write": "auth != null && (auth.token.email === 'victorralp407@gmail.com' || auth.token.email === 'logosrhema842@gmail.com')"

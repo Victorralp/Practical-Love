@@ -1,4 +1,4 @@
-import { get, onValue, push, ref, remove, set, update, type Unsubscribe } from 'firebase/database';
+import { get, onValue, push, ref, set, update, type Unsubscribe } from 'firebase/database';
 import { realtimeDb } from './firebaseService';
 
 // ── Types ───────────────────────────────────────────────────────────
@@ -30,8 +30,31 @@ type TestimonyPayload = {
   imagePublicId: string;
 };
 
-// ── Path ────────────────────────────────────────────────────────────
+// ── Paths ───────────────────────────────────────────────────────────
 const TESTIMONIES_PATH = 'testimonies';
+/**
+ * Approved testimonies are mirrored here without the submitter's email so the
+ * public page can read them. The main node stays admin-only because it holds
+ * contact details and unapproved submissions.
+ */
+const PUBLIC_TESTIMONIES_PATH = 'publicTestimonies';
+
+export type PublicTestimony = Omit<TestimonyRecord, 'email'>;
+
+function toPublicTestimony(record: TestimonyRecord): Omit<PublicTestimony, 'id'> {
+  return {
+    name: record.name,
+    role: record.role ?? '',
+    location: record.location ?? '',
+    testimony: record.testimony,
+    rating: record.rating,
+    imageUrl: record.imageUrl ?? '',
+    imagePublicId: record.imagePublicId ?? '',
+    status: 'approved',
+    createdAt: record.createdAt,
+    updatedAt: new Date().toISOString(),
+  };
+}
 
 // ── Helpers ─────────────────────────────────────────────────────────
 function toArray(value: Record<string, TestimonyRecord> | null | undefined): TestimonyRecord[] {
@@ -69,13 +92,12 @@ export function subscribeToApprovedTestimonies(
   onData: (testimonies: TestimonyRecord[]) => void,
   onError?: (error: Error) => void
 ): Unsubscribe {
-  const testimoniesRef = ref(realtimeDb, TESTIMONIES_PATH);
+  const testimoniesRef = ref(realtimeDb, PUBLIC_TESTIMONIES_PATH);
 
   return onValue(
     testimoniesRef,
     snapshot => {
-      const all = toArray(snapshot.val() as Record<string, TestimonyRecord> | null);
-      onData(all.filter(t => t.status === 'approved'));
+      onData(toArray(snapshot.val() as Record<string, TestimonyRecord> | null));
     },
     error => {
       onError?.(error);
@@ -103,15 +125,29 @@ export async function submitTestimony(payload: TestimonyPayload): Promise<void> 
 
 /** Update the status of a testimony (admin action) */
 export async function updateTestimonyStatus(id: string, status: TestimonyStatus): Promise<void> {
-  await update(ref(realtimeDb, `${TESTIMONIES_PATH}/${id}`), {
-    status,
-    updatedAt: new Date().toISOString(),
+  const snapshot = await get(ref(realtimeDb, `${TESTIMONIES_PATH}/${id}`));
+  const existing = snapshot.val() as TestimonyRecord | null;
+
+  if (!existing) return;
+
+  const now = new Date().toISOString();
+
+  // Approving publishes a copy without the submitter's email; any other status
+  // pulls that copy back down.
+  await update(ref(realtimeDb), {
+    [`${TESTIMONIES_PATH}/${id}/status`]: status,
+    [`${TESTIMONIES_PATH}/${id}/updatedAt`]: now,
+    [`${PUBLIC_TESTIMONIES_PATH}/${id}`]:
+      status === 'approved' ? toPublicTestimony({ ...existing, id }) : null,
   });
 }
 
 /** Delete a testimony permanently (admin action) */
 export async function deleteTestimony(id: string): Promise<void> {
-  await remove(ref(realtimeDb, `${TESTIMONIES_PATH}/${id}`));
+  await update(ref(realtimeDb), {
+    [`${TESTIMONIES_PATH}/${id}`]: null,
+    [`${PUBLIC_TESTIMONIES_PATH}/${id}`]: null,
+  });
 }
 
 /** Get the count of testimonies by status */
