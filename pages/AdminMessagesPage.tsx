@@ -1,20 +1,32 @@
 import { useEffect, useMemo, useState } from 'react';
 import {
+  ExternalLink,
   FileImage,
-  FileText,
   Loader,
   Megaphone,
   MessageSquare,
   PencilLine,
   Pin,
+  PinOff,
   Plus,
   Save,
   Trash2,
+  Upload,
   Video,
+  X,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import Logo from '../components/Logo';
-import { PageHero, SectionCard } from '../components/ui';
+import {
+  AdminPageHeader,
+  AdminPanel,
+  ConfirmButton,
+  EmptyState,
+  Field,
+  LoadingState,
+  StatusBanner,
+  adminButton,
+  controlClass,
+} from '../components/admin';
 import { uploadToCloudinary, type CloudinaryUploadResponse } from '../services/cloudinaryService';
 import {
   createMessagePost,
@@ -46,6 +58,14 @@ const INITIAL_FORM: FormState = {
   youtubeUrl: '',
 };
 
+const CATEGORIES = [
+  'Ministry update',
+  'Announcement',
+  'Prayer focus',
+  'Teaching note',
+  'Event notice',
+] as const;
+
 function formatDate(isoDate: string) {
   return new Intl.DateTimeFormat('en-NG', {
     dateStyle: 'medium',
@@ -65,25 +85,11 @@ function toMediaPayload(result: CloudinaryUploadResponse): MessageMedia {
   };
 }
 
-function getFileKindLabel(resourceType: MessageMedia['resourceType'] | null) {
-  if (resourceType === 'video') {
-    return 'Video attached';
-  }
-
-  if (resourceType === 'image') {
-    return 'Image attached';
-  }
-
-  return 'Optional media';
-}
-
 export default function AdminMessagesPage() {
   const [posts, setPosts] = useState<MessagePostRecord[]>([]);
   const [form, setForm] = useState<FormState>(INITIAL_FORM);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [statusMessage, setStatusMessage] = useState(
-    'This admin page publishes to Firebase and uploads media to Cloudinary.'
-  );
+  const [statusMessage, setStatusMessage] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -122,10 +128,6 @@ export default function AdminMessagesPage() {
   ) => {
     const { name, value } = event.target;
     setForm(current => ({ ...current, [name]: value }));
-  };
-
-  const handlePinnedChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setForm(current => ({ ...current, pinned: event.target.checked }));
   };
 
   const resetForm = () => {
@@ -192,10 +194,10 @@ export default function AdminMessagesPage() {
 
       if (editingId) {
         await updateMessagePost(editingId, payload);
-        setStatusMessage('Post updated in Firebase.');
+        setStatusMessage('Post updated.');
       } else {
         await createMessagePost(payload);
-        setStatusMessage('New post published to Firebase.');
+        setStatusMessage('New post published to the feed.');
       }
 
       resetForm();
@@ -220,13 +222,15 @@ export default function AdminMessagesPage() {
     setMedia(post.media);
     setSelectedFileName(post.media ? post.media.publicId : '');
     setStatusMessage(`Editing "${post.title}".`);
+
+    document.getElementById('message-editor')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   const handleDelete = async (id: string) => {
     try {
       await deleteMessagePost(id);
       if (editingId === id) resetForm();
-      setStatusMessage('Post deleted from Firebase.');
+      setStatusMessage('Post deleted.');
     } catch (error) {
       setStatusMessage(error instanceof Error ? error.message : 'Unable to delete post.');
     }
@@ -235,394 +239,324 @@ export default function AdminMessagesPage() {
   const handleTogglePinned = async (post: MessagePostRecord) => {
     try {
       await updateMessagePinnedState(post.id, !post.pinned);
-      setStatusMessage('Pin state updated.');
+      setStatusMessage(post.pinned ? 'Post unpinned.' : 'Post pinned to the top of the feed.');
     } catch (error) {
       setStatusMessage(error instanceof Error ? error.message : 'Unable to update pin state.');
     }
   };
 
   return (
-    <div className="space-y-8">
-        <PageHero
-          compact
-          badge={
-            <>
-              <Megaphone className="h-4 w-4" />
-              Admin Messages
-            </>
-          }
-          icon={
-            <div className="flex h-14 w-14 items-center justify-center rounded-[1.25rem] bg-gradient-to-br from-red-600 via-orange-500 to-amber-400 text-white shadow-lg">
-              <Logo className="h-7 w-7" />
-            </div>
-          }
-          title="Admin page for posting feed messages"
-          subtitle="Use this page to create, edit, pin, and delete public posts. The feed itself remains public at /messages."
+    <div className="space-y-6">
+      <AdminPageHeader
+        eyebrow="Messages"
+        title="Feed posts"
+        description="Create, edit, pin, and remove the posts shown on the public messages feed."
+        icon={<Megaphone className="h-5 w-5" />}
+        actions={
+          <>
+            <a href="#message-editor" className={adminButton.primary}>
+              <Plus className="h-4 w-4" />
+              New post
+            </a>
+            <Link to="/messages" className={adminButton.secondary}>
+              <ExternalLink className="h-4 w-4" />
+              View public feed
+            </Link>
+          </>
+        }
+        meta={isLoading ? 'Loading posts...' : `${orderedPosts.length} post(s) live`}
+      />
+
+      {statusMessage ? (
+        <StatusBanner message={statusMessage} onDismiss={() => setStatusMessage('')} />
+      ) : null}
+
+      <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,25rem)_minmax(0,1fr)]">
+        {/* ── Editor ─────────────────────────────────────────────────── */}
+        <AdminPanel
+          id="message-editor"
+          eyebrow={editingId ? 'Editing' : 'New post'}
+          title={editingId ? 'Edit feed post' : 'Create a feed post'}
+          icon={editingId ? <PencilLine className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
+          className="lg:sticky lg:top-6"
           actions={
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <a href="#message-editor" className="btn-brand px-7 py-3">
-                Add a post
-              </a>
-              <Link to="/admin/publications" className="btn-outline-brand px-7 py-3">
-                Manage publications
-              </Link>
-              <Link to="/messages" className="btn-outline-brand px-7 py-3">
-                View public feed
-              </Link>
-            </div>
+            editingId ? (
+              <button type="button" onClick={resetForm} className={adminButton.subtle}>
+                <X className="h-3.5 w-3.5" />
+                Cancel edit
+              </button>
+            ) : null
           }
-        />
+        >
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <Field label="Post title" htmlFor="title">
+              <input
+                id="title"
+                name="title"
+                type="text"
+                value={form.title}
+                onChange={handleChange}
+                placeholder="Family Prayer Gathering This Sunday"
+                className={controlClass}
+              />
+            </Field>
 
-        <section className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
-          <SectionCard id="message-editor" className="border-red-100 bg-white/95 shadow-lg">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
-                  Post editor
-                </p>
-                <h2 className="mt-2 text-3xl font-serif text-red-800">
-                  {editingId ? 'Edit feed post' : 'Create a feed post'}
-                </h2>
-              </div>
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-100 text-red-700">
-                {editingId ? <PencilLine className="h-6 w-6" /> : <Plus className="h-6 w-6" />}
-              </div>
-            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field label="Category" htmlFor="category">
+                <select
+                  id="category"
+                  name="category"
+                  value={form.category}
+                  onChange={handleChange}
+                  className={controlClass}
+                >
+                  {CATEGORIES.map(category => (
+                    <option key={category}>{category}</option>
+                  ))}
+                </select>
+              </Field>
 
-            <p className="mt-4 rounded-2xl border border-orange-100 bg-orange-50 px-4 py-3 text-sm text-gray-700">
-              {statusMessage}
-            </p>
-
-            <form onSubmit={handleSubmit} className="mt-6 space-y-5">
-              <div>
-                <label htmlFor="title" className="mb-2 block text-sm font-semibold text-gray-700">
-                  Post title
-                </label>
+              <Field label="Author line" htmlFor="author">
                 <input
-                  id="title"
-                  name="title"
+                  id="author"
+                  name="author"
                   type="text"
-                  value={form.title}
+                  value={form.author}
                   onChange={handleChange}
-                  placeholder="Example: Family Prayer Gathering This Sunday"
-                  className="w-full rounded-2xl border border-orange-100 bg-white px-4 py-3 focus:border-red-500 focus:ring-2 focus:ring-red-500"
+                  placeholder="Practical Love Team"
+                  className={controlClass}
                 />
-              </div>
+              </Field>
+            </div>
 
-              <div className="grid gap-5 md:grid-cols-2">
-                <div>
-                  <label
-                    htmlFor="category"
-                    className="mb-2 block text-sm font-semibold text-gray-700"
-                  >
-                    Category
-                  </label>
-                  <select
-                    id="category"
-                    name="category"
-                    value={form.category}
-                    onChange={handleChange}
-                    className="w-full rounded-2xl border border-orange-100 bg-white px-4 py-3 focus:border-red-500 focus:ring-2 focus:ring-red-500"
-                  >
-                    <option>Ministry update</option>
-                    <option>Announcement</option>
-                    <option>Prayer focus</option>
-                    <option>Teaching note</option>
-                    <option>Event notice</option>
-                  </select>
-                </div>
+            <Field label="Short summary" htmlFor="summary" hint="Shown first on the feed card.">
+              <textarea
+                id="summary"
+                name="summary"
+                value={form.summary}
+                onChange={handleChange}
+                rows={3}
+                placeholder="The short version people should see first."
+                className={`${controlClass} resize-none`}
+              />
+            </Field>
 
-                <div>
-                  <label
-                    htmlFor="author"
-                    className="mb-2 block text-sm font-semibold text-gray-700"
-                  >
-                    Author line
-                  </label>
-                  <input
-                    id="author"
-                    name="author"
-                    type="text"
-                    value={form.author}
-                    onChange={handleChange}
-                    placeholder="Practical Love Team"
-                    className="w-full rounded-2xl border border-orange-100 bg-white px-4 py-3 focus:border-red-500 focus:ring-2 focus:ring-red-500"
-                  />
-                </div>
-              </div>
+            <Field label="Full message" htmlFor="body">
+              <textarea
+                id="body"
+                name="body"
+                value={form.body}
+                onChange={handleChange}
+                rows={9}
+                placeholder="Write the complete post here."
+                className={`${controlClass} resize-y`}
+              />
+            </Field>
 
-              <div>
-                <label htmlFor="youtubeUrl" className="mb-2 block text-sm font-semibold text-gray-700">
-                  YouTube Link (Optional)
-                </label>
-                <input
-                  id="youtubeUrl"
-                  name="youtubeUrl"
-                  type="url"
-                  value={form.youtubeUrl}
-                  onChange={handleChange}
-                  placeholder="Example: https://www.youtube.com/watch?v=..."
-                  className="w-full rounded-2xl border border-orange-100 bg-white px-4 py-3 focus:border-red-500 focus:ring-2 focus:ring-red-500"
-                />
-              </div>
+            <Field label="YouTube link" htmlFor="youtubeUrl" note="Optional">
+              <input
+                id="youtubeUrl"
+                name="youtubeUrl"
+                type="url"
+                value={form.youtubeUrl}
+                onChange={handleChange}
+                placeholder="https://www.youtube.com/watch?v=..."
+                className={controlClass}
+              />
+            </Field>
 
-              <div>
-                <label htmlFor="summary" className="mb-2 block text-sm font-semibold text-gray-700">
-                  Short summary
-                </label>
-                <textarea
-                  id="summary"
-                  name="summary"
-                  value={form.summary}
-                  onChange={handleChange}
-                  rows={3}
-                  placeholder="Write the short version people should see first."
-                  className="w-full resize-none rounded-2xl border border-orange-100 bg-white px-4 py-3 focus:border-red-500 focus:ring-2 focus:ring-red-500"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="body" className="mb-2 block text-sm font-semibold text-gray-700">
-                  Full message
-                </label>
-                <textarea
-                  id="body"
-                  name="body"
-                  value={form.body}
-                  onChange={handleChange}
-                  rows={10}
-                  placeholder="Write the complete post here."
-                  className="w-full resize-y rounded-2xl border border-orange-100 bg-white px-4 py-3 focus:border-red-500 focus:ring-2 focus:ring-red-500"
-                />
-              </div>
-
-              <div className="rounded-2xl border border-orange-100 bg-white p-4">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-red-100 text-red-700">
+            {/* ── Media ────────────────────────────────────────────── */}
+            <div className="rounded-xl border border-[#f0e2d8] bg-[#fdfaf7] p-4">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2.5">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-[#a8735c] ring-1 ring-[#f0e2d8]">
                     {media?.resourceType === 'video' ? (
-                      <Video className="h-5 w-5" />
+                      <Video className="h-4 w-4" />
                     ) : (
-                      <FileImage className="h-5 w-5" />
+                      <FileImage className="h-4 w-4" />
                     )}
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-gray-900">
-                      {getFileKindLabel(media?.resourceType || null)}
+                  </span>
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium text-[#3d1d17]">Media</p>
+                    <p className="truncate text-xs text-[#8a6552]">
+                      {selectedFileName || media?.publicId || 'One image or video, optional.'}
                     </p>
-                    <p className="text-sm text-gray-500">Add one image or video to this post.</p>
                   </div>
                 </div>
 
-                <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
-                  <label className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-2xl bg-red-700 px-6 py-3 font-semibold text-white transition hover:bg-red-800">
-                    {isUploading ? (
-                      <Loader className="h-5 w-5 animate-spin" />
-                    ) : (
-                      <Plus className="h-5 w-5" />
-                    )}
-                    {isUploading ? 'Uploading...' : 'Upload image or video'}
-                    <input
-                      type="file"
-                      accept="image/*,video/*"
-                      onChange={handleMediaUpload}
-                      className="hidden"
-                      disabled={isUploading}
-                    />
-                  </label>
-                  <p className="text-sm text-gray-500">
-                    {selectedFileName || media?.publicId || 'No file selected yet.'}
-                  </p>
-                </div>
-
-                {media ? (
-                  <div className="mt-4 rounded-2xl border border-orange-100 bg-orange-50 p-4">
-                    {media.resourceType === 'video' ? (
-                      <video controls className="max-h-72 w-full rounded-2xl bg-black">
-                        <source src={media.url} />
-                      </video>
-                    ) : (
-                      <img
-                        src={media.url}
-                        alt="Uploaded media preview"
-                        className="max-h-72 w-full rounded-2xl object-cover"
-                      />
-                    )}
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setMedia(null);
-                        setSelectedFileName('');
-                      }}
-                      className="mt-3 inline-flex items-center gap-2 rounded-xl border border-red-200 bg-white px-4 py-2 text-sm font-medium text-red-700 transition hover:bg-red-50"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                      Remove attached media
-                    </button>
-                  </div>
-                ) : null}
-              </div>
-
-              <label className="flex items-center gap-3 rounded-2xl border border-orange-100 bg-orange-50 px-4 py-3 text-sm text-gray-700">
-                <input
-                  type="checkbox"
-                  checked={form.pinned}
-                  onChange={handlePinnedChange}
-                  className="h-4 w-4 rounded border-orange-300 text-red-700 focus:ring-red-500"
-                />
-                Pin this post so it stays above regular updates.
-              </label>
-
-              <div className="flex flex-col gap-3 sm:flex-row">
-                <button
-                  type="submit"
-                  disabled={isSaving || isUploading}
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl bg-red-700 px-8 py-4 font-semibold text-white transition hover:bg-red-800 disabled:cursor-not-allowed disabled:opacity-70"
+                <label
+                  className={`${adminButton.secondary} shrink-0 cursor-pointer px-3 py-2 text-xs`}
                 >
-                  {isSaving ? (
-                    <Loader className="h-5 w-5 animate-spin" />
-                  ) : editingId ? (
-                    <Save className="h-5 w-5" />
+                  {isUploading ? (
+                    <Loader className="h-3.5 w-3.5 animate-spin" />
                   ) : (
-                    <Plus className="h-5 w-5" />
+                    <Upload className="h-3.5 w-3.5" />
                   )}
-                  {isSaving ? 'Saving...' : editingId ? 'Save changes' : 'Publish post'}
-                </button>
-                <button
-                  type="button"
-                  onClick={resetForm}
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-orange-200 bg-white px-8 py-4 font-semibold text-orange-700 transition hover:bg-orange-50"
-                >
-                  Reset form
-                </button>
+                  {isUploading ? 'Uploading' : media ? 'Replace' : 'Upload'}
+                  <input
+                    type="file"
+                    accept="image/*,video/*"
+                    onChange={handleMediaUpload}
+                    className="hidden"
+                    disabled={isUploading}
+                  />
+                </label>
               </div>
-            </form>
-          </SectionCard>
 
-          <SectionCard variant="gradient" className="border-orange-200 shadow-lg">
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
-              Admin guide
-            </p>
-            <h2 className="mt-2 text-3xl font-serif text-red-800">What this page controls</h2>
-            <div className="mt-6 grid gap-4">
-              <div className="rounded-2xl border border-white/80 bg-white/90 p-5">
-                <div className="flex items-center gap-3">
-                  <FileText className="h-5 w-5 text-red-700" />
-                  <h3 className="text-lg font-semibold text-gray-900">Content</h3>
+              {media ? (
+                <div className="mt-3">
+                  {media.resourceType === 'video' ? (
+                    <video controls className="max-h-56 w-full rounded-lg bg-black">
+                      <source src={media.url} />
+                    </video>
+                  ) : (
+                    <img
+                      src={media.url}
+                      alt="Attached media preview"
+                      className="max-h-56 w-full rounded-lg object-cover"
+                    />
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMedia(null);
+                      setSelectedFileName('');
+                    }}
+                    className={`${adminButton.danger} mt-2`}
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                    Remove media
+                  </button>
                 </div>
-                <p className="mt-3 leading-7 text-gray-700">
-                  Write titles, summaries, and full ministry posts.
-                </p>
-              </div>
-              <div className="rounded-2xl border border-white/80 bg-white/90 p-5">
-                <div className="flex items-center gap-3">
-                  <Video className="h-5 w-5 text-red-700" />
-                  <h3 className="text-lg font-semibold text-gray-900">Media</h3>
-                </div>
-                <p className="mt-3 leading-7 text-gray-700">
-                  Attach one Cloudinary-hosted image or video per post.
-                </p>
-              </div>
-              <div className="rounded-2xl border border-white/80 bg-white/90 p-5">
-                <div className="flex items-center gap-3">
-                  <Pin className="h-5 w-5 text-red-700" />
-                  <h3 className="text-lg font-semibold text-gray-900">Visibility</h3>
-                </div>
-                <p className="mt-3 leading-7 text-gray-700">
-                  Pin important posts and manage the public order shown on `/messages`.
-                </p>
-              </div>
+              ) : null}
             </div>
-          </SectionCard>
-        </section>
 
-        <SectionCard className="border-red-100 bg-white/95 shadow-lg">
-          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
-                Manage posts
-              </p>
-              <h2 className="mt-2 text-3xl font-serif text-red-800">Current feed inventory</h2>
+            <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-[#f0e2d8] bg-[#fdfaf7] px-4 py-3">
+              <input
+                type="checkbox"
+                checked={form.pinned}
+                onChange={event => setForm(current => ({ ...current, pinned: event.target.checked }))}
+                className="mt-0.5 h-4 w-4 rounded border-[#d9c3b4] text-red-700 focus:ring-red-500"
+              />
+              <span className="text-sm text-[#5c3a2b]">
+                Pin this post
+                <span className="mt-0.5 block text-xs text-[#8a6552]">
+                  Pinned posts stay above regular updates on /messages.
+                </span>
+              </span>
+            </label>
+
+            <div className="flex flex-col gap-2 border-t border-[#f6ece4] pt-4 sm:flex-row">
+              <button
+                type="submit"
+                disabled={isSaving || isUploading}
+                className={`${adminButton.primary} flex-1`}
+              >
+                {isSaving ? (
+                  <Loader className="h-4 w-4 animate-spin" />
+                ) : editingId ? (
+                  <Save className="h-4 w-4" />
+                ) : (
+                  <Plus className="h-4 w-4" />
+                )}
+                {isSaving ? 'Saving...' : editingId ? 'Save changes' : 'Publish post'}
+              </button>
+              <button type="button" onClick={resetForm} className={adminButton.secondary}>
+                Reset
+              </button>
             </div>
-            <p className="text-sm text-gray-500">
-              {isLoading ? 'Loading posts...' : `${orderedPosts.length} post(s) available`}
-            </p>
-          </div>
+          </form>
+        </AdminPanel>
 
+        {/* ── Existing posts ─────────────────────────────────────────── */}
+        <AdminPanel
+          eyebrow="Feed"
+          title="Published posts"
+          description="Newest first, pinned posts on top."
+          flush
+        >
           {isLoading ? (
-            <div className="mt-8 flex items-center justify-center gap-3 rounded-2xl border border-orange-100 bg-orange-50 px-6 py-10 text-gray-700">
-              <Loader className="h-5 w-5 animate-spin text-red-700" />
-              Loading posts from Firebase...
-            </div>
+            <LoadingState label="Loading posts..." className="m-5" />
+          ) : orderedPosts.length === 0 ? (
+            <EmptyState
+              icon={<Megaphone className="h-5 w-5" />}
+              title="No posts yet"
+              description="Publish your first post from the editor and it appears on the public feed straight away."
+              className="m-5"
+            />
           ) : (
-            <div className="mt-6 space-y-5">
+            <ul className="divide-y divide-[#f6ece4]">
               {orderedPosts.map(post => (
-                <article
+                <li
                   key={post.id}
-                  className="rounded-[1.8rem] border border-orange-100 bg-[linear-gradient(135deg,_rgba(255,255,255,0.98)_0%,_rgba(255,247,237,0.95)_100%)] p-6 shadow-sm"
+                  className={`px-5 py-4 transition hover:bg-[#fdfaf7] ${
+                    editingId === post.id ? 'bg-[#fdf3ec]' : ''
+                  }`}
                 >
-                  <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                    <div className="min-w-0">
-                      <div className="flex flex-wrap items-center gap-3">
-                        <span className="rounded-full bg-red-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-red-700">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        <span className="rounded-md bg-[#fdf3ec] px-2 py-0.5 text-[0.68rem] font-semibold uppercase tracking-[0.1em] text-[#a8735c]">
                           {post.category}
                         </span>
                         {post.pinned ? (
-                          <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-amber-700">
-                            <Pin className="h-3.5 w-3.5" />
+                          <span className="inline-flex items-center gap-1 rounded-md bg-amber-50 px-2 py-0.5 text-[0.68rem] font-semibold uppercase tracking-[0.1em] text-amber-700">
+                            <Pin className="h-3 w-3" />
                             Pinned
                           </span>
                         ) : null}
                         {post.youtubeUrl ? (
-                          <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-red-700">
-                            <Video className="h-3.5 w-3.5" />
+                          <span className="inline-flex items-center gap-1 rounded-md bg-red-50 px-2 py-0.5 text-[0.68rem] font-semibold uppercase tracking-[0.1em] text-red-700">
+                            <Video className="h-3 w-3" />
                             YouTube
                           </span>
                         ) : null}
                       </div>
-                      <h3 className="mt-4 text-2xl font-serif text-gray-900">{post.title}</h3>
-                      <p className="mt-3 max-w-3xl text-base leading-7 text-gray-700">
+
+                      <h3 className="mt-2 text-base font-semibold text-[#3d1d17]">{post.title}</h3>
+                      <p className="mt-1 line-clamp-2 text-sm leading-6 text-[#6e4737]">
                         {post.summary}
                       </p>
-                      <div className="mt-3 flex flex-wrap items-center gap-4 text-sm text-gray-500">
+                      <p className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[#a8735c]">
                         <span>{formatDate(post.createdAt)}</span>
                         <span className="inline-flex items-center gap-1">
-                          <MessageSquare className="h-4 w-4" />
-                          {post.comments.length} comment(s)
+                          <MessageSquare className="h-3.5 w-3.5" />
+                          {post.comments.length}
                         </span>
-                      </div>
+                        <span>{post.author}</span>
+                      </p>
                     </div>
-                    <div className="flex flex-wrap gap-2">
+
+                    <div className="flex shrink-0 flex-wrap gap-1.5">
                       <button
                         type="button"
                         onClick={() => handleEdit(post)}
-                        className="inline-flex items-center gap-2 rounded-xl border border-orange-200 bg-white px-4 py-2 text-sm font-medium text-orange-700 transition hover:bg-orange-50"
+                        className={adminButton.subtle}
                       >
-                        <PencilLine className="h-4 w-4" />
+                        <PencilLine className="h-3.5 w-3.5" />
                         Edit
                       </button>
                       <button
                         type="button"
                         onClick={() => handleTogglePinned(post)}
-                        className="inline-flex items-center gap-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-2 text-sm font-medium text-amber-700 transition hover:bg-amber-100"
+                        className={adminButton.subtle}
                       >
-                        <Pin className="h-4 w-4" />
+                        {post.pinned ? (
+                          <PinOff className="h-3.5 w-3.5" />
+                        ) : (
+                          <Pin className="h-3.5 w-3.5" />
+                        )}
                         {post.pinned ? 'Unpin' : 'Pin'}
                       </button>
-                      <button
-                        type="button"
-                        onClick={() => handleDelete(post.id)}
-                        className="inline-flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-sm font-medium text-red-700 transition hover:bg-red-100"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                        Delete
-                      </button>
+                      <ConfirmButton onConfirm={() => handleDelete(post.id)} />
                     </div>
                   </div>
-                </article>
+                </li>
               ))}
-            </div>
+            </ul>
           )}
-      </SectionCard>
+        </AdminPanel>
+      </div>
     </div>
   );
 }

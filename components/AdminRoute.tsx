@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Loader, Lock, LogOut } from 'lucide-react';
+import { StatusBanner, adminButton } from './admin';
 import {
   subscribeToAdminAuth,
   signInAdminWithGoogle,
@@ -30,9 +31,9 @@ export default function AdminRoute({ children }: AdminRouteProps) {
 
   if (isChecking) {
     return (
-      <div className="flex min-h-[50vh] items-center justify-center px-4">
-        <div className="inline-flex items-center gap-3 rounded-2xl border border-orange-100 bg-orange-50 px-6 py-4 text-gray-700">
-          <Loader className="h-5 w-5 animate-spin text-red-700" />
+      <div className="flex min-h-[60vh] items-center justify-center px-4">
+        <div className="inline-flex items-center gap-2.5 text-sm text-[#8a6552]">
+          <Loader className="h-4 w-4 animate-spin text-red-600" />
           Checking admin access...
         </div>
       </div>
@@ -44,27 +45,37 @@ export default function AdminRoute({ children }: AdminRouteProps) {
   }
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 lg:px-8">
-      <div className="rounded-[2rem] border border-orange-100 bg-white/95 p-8 text-center shadow-[0_24px_48px_rgba(95,53,30,0.08)]">
-        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-red-100 text-red-700">
-          <Lock className="h-7 w-7" />
-        </div>
-        <h1 className="mt-5 font-serif text-4xl text-[#3d1d17]">Admin access required</h1>
-        <p className="mt-4 text-lg leading-8 text-[#6e4737]">
-          This page is restricted to the approved admin Google account.
+    <div className="flex min-h-[70vh] items-center justify-center bg-[#fdfaf7] px-4 py-12">
+      <div className="w-full max-w-md rounded-2xl border border-[#f0e2d8] bg-white p-6 shadow-[0_1px_2px_rgba(61,29,23,0.04),0_10px_28px_-18px_rgba(61,29,23,0.25)]">
+        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#fdf3ec] text-red-600">
+          <Lock className="h-5 w-5" />
+        </span>
+
+        <h1 className="mt-4 text-xl font-semibold tracking-tight text-[#3d1d17]">
+          Admin sign-in required
+        </h1>
+        <p className="mt-1.5 text-sm leading-6 text-[#6e4737]">
+          This area is restricted to approved ministry Google accounts.
         </p>
+
         {user ? (
-          <p className="mt-4 rounded-2xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700">
-            Signed in as <strong>{user.email}</strong>, but this account is not allowed to manage
-            posts.
-          </p>
+          <StatusBanner
+            className="mt-4"
+            tone="error"
+            message={`Signed in as ${user.email}, but this account is not on the admin list.`}
+          />
         ) : null}
+
         {errorMessage ? (
-          <p className="mt-4 rounded-2xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700">
-            {errorMessage}
-          </p>
+          <StatusBanner
+            className="mt-3"
+            tone="error"
+            message={errorMessage}
+            onDismiss={() => setErrorMessage('')}
+          />
         ) : null}
-        <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
+
+        <div className="mt-5 flex flex-wrap gap-2">
           <button
             type="button"
             onClick={async () => {
@@ -77,23 +88,25 @@ export default function AdminRoute({ children }: AdminRouteProps) {
                 );
               }
             }}
-            className="btn-brand px-7 py-3"
+            className={adminButton.primary}
           >
             Sign in with Google
           </button>
+
           {user ? (
             <button
               type="button"
               onClick={async () => {
                 await signOutAdmin();
               }}
-              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-orange-200 bg-white px-7 py-3 font-semibold text-orange-700 transition hover:bg-orange-50"
+              className={adminButton.secondary}
             >
-              <LogOut className="h-4 w-4" />
+              <LogOut className="h-3.5 w-3.5" />
               Sign out
             </button>
           ) : null}
-          <Link to="/messages" className="btn-outline-brand px-7 py-3">
+
+          <Link to="/messages" className={adminButton.ghost}>
             Go to public feed
           </Link>
         </div>

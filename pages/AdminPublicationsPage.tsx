@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import {
   BookOpen,
+  ExternalLink,
   FileImage,
   FileText,
   Loader,
@@ -9,12 +10,21 @@ import {
   Save,
   Search,
   Star,
-  Trash2,
   Upload,
+  X,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import Logo from '../components/Logo';
-import { PageHero, SectionCard } from '../components/ui';
+import {
+  AdminPageHeader,
+  AdminPanel,
+  ConfirmButton,
+  EmptyState,
+  Field,
+  LoadingState,
+  StatusBanner,
+  adminButton,
+  controlClass,
+} from '../components/admin';
 import { uploadToCloudinary, type CloudinaryUploadResponse } from '../services/cloudinaryService';
 import {
   createManagedPublication,
@@ -72,9 +82,7 @@ export default function AdminPublicationsPage() {
   const [publications, setPublications] = useState<ManagedPublicationRecord[]>([]);
   const [form, setForm] = useState<PublicationFormState>(INITIAL_FORM);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [statusMessage, setStatusMessage] = useState(
-    'Upload cover images and PDFs for publications from this admin page.'
-  );
+  const [statusMessage, setStatusMessage] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [isUploadingCover, setIsUploadingCover] = useState(false);
@@ -200,6 +208,7 @@ export default function AdminPublicationsPage() {
         : null
     );
     setStatusMessage(`Editing "${publication.title}".`);
+    document.getElementById('publication-editor')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   const handleDelete = async (id: string) => {
@@ -270,216 +279,172 @@ export default function AdminPublicationsPage() {
     }
   };
 
+  const isBusy = isSaving || isUploadingCover || isUploadingPdf;
+
   return (
-    <div className="space-y-8">
-        <PageHero
-          compact
-          badge={
-            <>
-              <BookOpen className="h-4 w-4" />
-              Admin Publications
-            </>
-          }
-          icon={
-            <div className="flex h-14 w-14 items-center justify-center rounded-[1.25rem] bg-gradient-to-br from-red-600 via-orange-500 to-amber-400 text-white shadow-lg">
-              <Logo className="h-7 w-7" />
-            </div>
-          }
-          title="Admin page for publication uploads"
-          subtitle="Create publication entries with a cover image and PDF so they appear in the public publications catalog."
-          actions={
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <a href="#publication-editor" className="btn-brand px-7 py-3">
-                Add publication
-              </a>
-              <Link to="/publications" className="btn-outline-brand px-7 py-3">
-                View public publications
-              </Link>
-            </div>
-          }
-        />
+    <div className="space-y-6">
+      <AdminPageHeader
+        eyebrow="Publications"
+        title="Books & PDFs"
+        description="Publications with a PDF appear in the public catalog. Drafts stay hidden until published."
+        icon={<BookOpen className="h-5 w-5" />}
+        accentClassName="bg-orange-50 text-orange-600 ring-orange-100"
+        meta={isLoading ? 'Loading...' : `${orderedPublications.length} of ${publications.length} shown`}
+        actions={
+          <>
+            <a href="#publication-editor" className={adminButton.primary}>
+              <Plus className="h-4 w-4" />
+              New publication
+            </a>
+            <Link to="/publications" className={adminButton.secondary}>
+              <ExternalLink className="h-4 w-4" />
+              View public page
+            </Link>
+          </>
+        }
+      />
 
-        <section className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
-          <SectionCard id="publication-editor" className="border-red-100 bg-white/95 shadow-lg">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
-                  Publication editor
-                </p>
-                <h2 className="mt-2 text-3xl font-serif text-red-800">
-                  {editingId ? 'Edit publication' : 'Create a publication'}
-                </h2>
-              </div>
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-100 text-red-700">
-                {editingId ? <PencilLine className="h-6 w-6" /> : <Plus className="h-6 w-6" />}
-              </div>
-            </div>
+      {statusMessage ? (
+        <StatusBanner message={statusMessage} onDismiss={() => setStatusMessage('')} />
+      ) : null}
 
-            <p className="mt-4 rounded-2xl border border-orange-100 bg-orange-50 px-4 py-3 text-sm text-gray-700">
-              {statusMessage}
-            </p>
-
-            <form onSubmit={handleSubmit} className="mt-6 space-y-5">
-              <div>
-                <label htmlFor="title" className="mb-2 block text-sm font-semibold text-gray-700">
-                  Publication title
-                </label>
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,27rem)_minmax(0,1fr)] lg:items-start">
+        {/* ── Editor ───────────────────────────────────────────────── */}
+        <div className="lg:sticky lg:top-6">
+          <AdminPanel
+            id="publication-editor"
+            eyebrow={editingId ? 'Editing' : 'New'}
+            title={editingId ? 'Edit publication' : 'Create a publication'}
+            icon={editingId ? <PencilLine className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
+            actions={
+              editingId ? (
+                <button
+                  type="button"
+                  onClick={resetForm}
+                  className="text-sm font-medium text-[#8a6552] hover:text-[#3d1d17] hover:underline"
+                >
+                  Cancel
+                </button>
+              ) : undefined
+            }
+          >
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <Field label="Title" htmlFor="title">
                 <input
                   id="title"
                   name="title"
                   type="text"
                   value={form.title}
                   onChange={handleChange}
-                  placeholder="Example: The Practical Love Handbook"
-                  className="w-full rounded-2xl border border-orange-100 bg-white px-4 py-3 focus:border-red-500 focus:ring-2 focus:ring-red-500"
+                  placeholder="The Practical Love Handbook"
+                  className={controlClass}
                 />
-              </div>
+              </Field>
 
-              <div className="grid gap-5 md:grid-cols-2">
-                <div>
-                  <label
-                    htmlFor="author"
-                    className="mb-2 block text-sm font-semibold text-gray-700"
-                  >
-                    Author
-                  </label>
-                  <input
-                    id="author"
-                    name="author"
-                    type="text"
-                    value={form.author}
+              <Field label="Author" htmlFor="author">
+                <input
+                  id="author"
+                  name="author"
+                  type="text"
+                  value={form.author}
+                  onChange={handleChange}
+                  placeholder="Practical Love Ministry"
+                  className={controlClass}
+                />
+              </Field>
+
+              <div className="grid gap-4 sm:grid-cols-[1fr_7rem]">
+                <Field label="Type" htmlFor="type">
+                  <select
+                    id="type"
+                    name="type"
+                    value={form.type}
                     onChange={handleChange}
-                    placeholder="Practical Love Ministry"
-                    className="w-full rounded-2xl border border-orange-100 bg-white px-4 py-3 focus:border-red-500 focus:ring-2 focus:ring-red-500"
+                    className={controlClass}
+                  >
+                    <option>Book</option>
+                    <option>E-Book</option>
+                    <option>Audiobook</option>
+                  </select>
+                </Field>
+
+                <Field label="Pages" htmlFor="pageCount" note="Optional">
+                  <input
+                    id="pageCount"
+                    name="pageCount"
+                    type="number"
+                    min="1"
+                    value={form.pageCount}
+                    onChange={handleChange}
+                    placeholder="24"
+                    className={controlClass}
                   />
-                </div>
-
-                <div className="grid gap-5 md:grid-cols-[1fr_0.8fr]">
-                  <div>
-                    <label
-                      htmlFor="type"
-                      className="mb-2 block text-sm font-semibold text-gray-700"
-                    >
-                      Type
-                    </label>
-                    <select
-                      id="type"
-                      name="type"
-                      value={form.type}
-                      onChange={handleChange}
-                      className="w-full rounded-2xl border border-orange-100 bg-white px-4 py-3 focus:border-red-500 focus:ring-2 focus:ring-red-500"
-                    >
-                      <option>Book</option>
-                      <option>E-Book</option>
-                      <option>Audiobook</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor="pageCount"
-                      className="mb-2 block text-sm font-semibold text-gray-700"
-                    >
-                      Pages
-                    </label>
-                    <input
-                      id="pageCount"
-                      name="pageCount"
-                      type="number"
-                      min="1"
-                      value={form.pageCount}
-                      onChange={handleChange}
-                      placeholder="24"
-                      className="w-full rounded-2xl border border-orange-100 bg-white px-4 py-3 focus:border-red-500 focus:ring-2 focus:ring-red-500"
-                    />
-                  </div>
-                </div>
+                </Field>
               </div>
 
-              <div>
-                <label
-                  htmlFor="description"
-                  className="mb-2 block text-sm font-semibold text-gray-700"
-                >
-                  Description
-                </label>
+              <Field label="Description" htmlFor="description">
                 <textarea
                   id="description"
                   name="description"
                   value={form.description}
                   onChange={handleChange}
                   rows={4}
-                  placeholder="Describe the publication and what readers should expect."
-                  className="w-full resize-none rounded-2xl border border-orange-100 bg-white px-4 py-3 focus:border-red-500 focus:ring-2 focus:ring-red-500"
+                  placeholder="What should readers expect from this publication?"
+                  className={`${controlClass} resize-y`}
                 />
-              </div>
+              </Field>
 
-              {/* Status & Featured */}
-              <div className="grid gap-5 md:grid-cols-2">
-                <div className="rounded-2xl border border-orange-100 bg-white p-4">
-                  <p className="text-sm font-semibold text-gray-900 mb-2">Publish Status</p>
-                  <div className="flex gap-3">
+              {/* Visibility */}
+              <Field label="Visibility">
+                <div className="flex gap-2">
+                  {(['draft', 'published'] as const).map(value => (
                     <button
+                      key={value}
                       type="button"
-                      onClick={() => setForm(c => ({ ...c, status: 'draft' }))}
-                      className={`flex-1 rounded-xl px-4 py-2.5 text-sm font-medium transition ${
-                        form.status === 'draft'
-                          ? 'bg-amber-100 text-amber-800 ring-2 ring-amber-300'
-                          : 'border border-orange-100 bg-white text-gray-600 hover:bg-orange-50'
+                      onClick={() => setForm(c => ({ ...c, status: value }))}
+                      aria-pressed={form.status === value}
+                      className={`flex-1 rounded-xl border px-3 py-2 text-sm font-medium capitalize transition ${
+                        form.status === value
+                          ? value === 'published'
+                            ? 'border-emerald-300 bg-emerald-50 text-emerald-800'
+                            : 'border-amber-300 bg-amber-50 text-amber-800'
+                          : 'border-[#e8d9cd] bg-white text-[#8a6552] hover:bg-[#fdf8f4]'
                       }`}
                     >
-                      📝 Draft
+                      {value}
                     </button>
-                    <button
-                      type="button"
-                      onClick={() => setForm(c => ({ ...c, status: 'published' }))}
-                      className={`flex-1 rounded-xl px-4 py-2.5 text-sm font-medium transition ${
-                        form.status === 'published'
-                          ? 'bg-green-100 text-green-800 ring-2 ring-green-300'
-                          : 'border border-orange-100 bg-white text-gray-600 hover:bg-orange-50'
-                      }`}
-                    >
-                      ✅ Published
-                    </button>
-                  </div>
+                  ))}
                 </div>
+              </Field>
 
-                <div className="rounded-2xl border border-orange-100 bg-white p-4">
-                  <p className="text-sm font-semibold text-gray-900 mb-2">Featured</p>
-                  <label className="flex items-center gap-3 rounded-xl border border-orange-100 bg-orange-50/50 px-4 py-2.5 text-sm text-gray-700 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={form.featured}
-                      onChange={e => setForm(c => ({ ...c, featured: e.target.checked }))}
-                      className="h-4 w-4 rounded border-orange-300 text-red-700 focus:ring-red-500"
-                    />
-                    <Star className={`h-4 w-4 ${form.featured ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} />
-                    Highlight on public page
-                  </label>
-                </div>
-              </div>
+              <label className="flex cursor-pointer items-center gap-2.5 rounded-xl border border-[#e8d9cd] bg-white px-3.5 py-2.5">
+                <input
+                  type="checkbox"
+                  checked={form.featured}
+                  onChange={e => setForm(c => ({ ...c, featured: e.target.checked }))}
+                  className="h-4 w-4 rounded border-[#e8d9cd] text-red-700 focus:ring-red-500"
+                />
+                <Star
+                  className={`h-4 w-4 ${form.featured ? 'fill-amber-400 text-amber-400' : 'text-[#bda392]'}`}
+                />
+                <span className="text-sm text-[#5c3a2b]">Feature on the public page</span>
+              </label>
 
-              <div className="grid gap-5 md:grid-cols-2">
-                <div className="rounded-2xl border border-orange-100 bg-white p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-red-100 text-red-700">
-                      <FileImage className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-900">Cover image</p>
-                      <p className="text-sm text-gray-500">
-                        Optional visual for the publication card.
-                      </p>
-                    </div>
+              {/* Cover */}
+              <div className="rounded-xl border border-[#f0e2d8] bg-[#fdfaf7] p-3.5">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2 text-sm font-medium text-[#3d1d17]">
+                    <FileImage className="h-4 w-4 text-[#a8735c]" />
+                    Cover image
+                    <span className="text-xs font-normal text-[#a8735c]">Optional</span>
                   </div>
-
-                  <label className="mt-4 inline-flex cursor-pointer items-center justify-center gap-2 rounded-2xl bg-red-700 px-5 py-3 font-semibold text-white transition hover:bg-red-800">
+                  <label className={`${adminButton.secondary} cursor-pointer`}>
                     {isUploadingCover ? (
-                      <Loader className="h-5 w-5 animate-spin" />
+                      <Loader className="h-3.5 w-3.5 animate-spin" />
                     ) : (
-                      <Upload className="h-5 w-5" />
+                      <Upload className="h-3.5 w-3.5" />
                     )}
-                    {isUploadingCover ? 'Uploading...' : 'Upload cover'}
+                    {isUploadingCover ? 'Uploading' : coverAsset ? 'Replace' : 'Upload'}
                     <input
                       type="file"
                       accept="image/*"
@@ -488,46 +453,42 @@ export default function AdminPublicationsPage() {
                       disabled={isUploadingCover}
                     />
                   </label>
-
-                  {coverAsset ? (
-                    <div className="mt-4 space-y-3">
-                      <img
-                        src={coverAsset.url}
-                        alt="Publication cover preview"
-                        className="h-44 w-full rounded-2xl object-cover"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setCoverAsset(null)}
-                        className="inline-flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-sm font-medium text-red-700 transition hover:bg-red-100"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                        Remove cover
-                      </button>
-                    </div>
-                  ) : null}
                 </div>
 
-                <div className="rounded-2xl border border-orange-100 bg-white p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-red-100 text-red-700">
-                      <FileText className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-900">PDF file</p>
-                      <p className="text-sm text-gray-500">
-                        Required. This is what readers will open.
-                      </p>
-                    </div>
+                {coverAsset && (
+                  <div className="mt-3 flex items-start gap-3">
+                    <img
+                      src={coverAsset.url}
+                      alt="Publication cover preview"
+                      className="h-24 w-20 shrink-0 rounded-lg border border-[#f0e2d8] object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setCoverAsset(null)}
+                      className={adminButton.ghost}
+                    >
+                      <X className="h-3.5 w-3.5" />
+                      Remove
+                    </button>
                   </div>
+                )}
+              </div>
 
-                  <label className="mt-4 inline-flex cursor-pointer items-center justify-center gap-2 rounded-2xl bg-red-700 px-5 py-3 font-semibold text-white transition hover:bg-red-800">
+              {/* PDF */}
+              <div className="rounded-xl border border-[#f0e2d8] bg-[#fdfaf7] p-3.5">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2 text-sm font-medium text-[#3d1d17]">
+                    <FileText className="h-4 w-4 text-[#a8735c]" />
+                    PDF file
+                    <span className="text-xs font-normal text-red-600">Required</span>
+                  </div>
+                  <label className={`${adminButton.secondary} cursor-pointer`}>
                     {isUploadingPdf ? (
-                      <Loader className="h-5 w-5 animate-spin" />
+                      <Loader className="h-3.5 w-3.5 animate-spin" />
                     ) : (
-                      <Upload className="h-5 w-5" />
+                      <Upload className="h-3.5 w-3.5" />
                     )}
-                    {isUploadingPdf ? 'Uploading...' : 'Upload PDF'}
+                    {isUploadingPdf ? 'Uploading' : pdfAsset ? 'Replace' : 'Upload'}
                     <input
                       type="file"
                       accept="application/pdf"
@@ -536,206 +497,164 @@ export default function AdminPublicationsPage() {
                       disabled={isUploadingPdf}
                     />
                   </label>
-
-                  {pdfAsset ? (
-                    <div className="mt-4 rounded-2xl border border-orange-100 bg-orange-50 p-4">
-                      <p className="text-sm font-medium text-gray-900">{pdfAsset.publicId}</p>
-                      <a
-                        href={pdfAsset.url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="mt-3 inline-flex items-center gap-2 rounded-xl border border-orange-200 bg-white px-4 py-2 text-sm font-medium text-orange-700 transition hover:bg-orange-100"
-                      >
-                        <BookOpen className="h-4 w-4" />
-                        Open uploaded PDF
-                      </a>
-                    </div>
-                  ) : null}
                 </div>
+
+                {pdfAsset && (
+                  <div className="mt-3 flex items-center justify-between gap-3">
+                    <p className="min-w-0 truncate text-xs text-[#8a6552]" title={pdfAsset.publicId}>
+                      {pdfAsset.publicId}
+                    </p>
+                    <a
+                      href={pdfAsset.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex shrink-0 items-center gap-1 text-xs font-medium text-red-700 hover:underline"
+                    >
+                      Open
+                      <ExternalLink className="h-3 w-3" />
+                    </a>
+                  </div>
+                )}
               </div>
 
-              <div className="flex flex-col gap-3 sm:flex-row">
-                <button
-                  type="submit"
-                  disabled={isSaving || isUploadingCover || isUploadingPdf}
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl bg-red-700 px-8 py-4 font-semibold text-white transition hover:bg-red-800 disabled:cursor-not-allowed disabled:opacity-70"
-                >
+              <div className="flex gap-2 pt-1">
+                <button type="submit" disabled={isBusy} className={adminButton.primary}>
                   {isSaving ? (
-                    <Loader className="h-5 w-5 animate-spin" />
+                    <Loader className="h-4 w-4 animate-spin" />
                   ) : editingId ? (
-                    <Save className="h-5 w-5" />
+                    <Save className="h-4 w-4" />
                   ) : (
-                    <Plus className="h-5 w-5" />
+                    <Plus className="h-4 w-4" />
                   )}
                   {isSaving ? 'Saving...' : editingId ? 'Save changes' : 'Create publication'}
                 </button>
-                <button
-                  type="button"
-                  onClick={resetForm}
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-orange-200 bg-white px-8 py-4 font-semibold text-orange-700 transition hover:bg-orange-50"
-                >
-                  Reset form
+                <button type="button" onClick={resetForm} className={adminButton.secondary}>
+                  Reset
                 </button>
               </div>
             </form>
-          </SectionCard>
+          </AdminPanel>
+        </div>
 
-          <SectionCard variant="gradient" className="border-orange-200 shadow-lg">
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
-              Admin guide
-            </p>
-            <h2 className="mt-2 text-3xl font-serif text-red-800">
-              How uploaded publications work
-            </h2>
-            <div className="mt-6 grid gap-4">
-              <div className="rounded-2xl border border-white/80 bg-white/90 p-5">
-                <div className="flex items-center gap-3">
-                  <FileImage className="h-5 w-5 text-red-700" />
-                  <h3 className="text-lg font-semibold text-gray-900">Cover</h3>
-                </div>
-                <p className="mt-3 leading-7 text-gray-700">
-                  Upload an optional cover image to improve the publication card on the public page.
-                </p>
-              </div>
-              <div className="rounded-2xl border border-white/80 bg-white/90 p-5">
-                <div className="flex items-center gap-3">
-                  <FileText className="h-5 w-5 text-red-700" />
-                  <h3 className="text-lg font-semibold text-gray-900">PDF</h3>
-                </div>
-                <p className="mt-3 leading-7 text-gray-700">
-                  Upload the book or booklet PDF. Public readers will be able to open and download
-                  it.
-                </p>
-              </div>
-              <div className="rounded-2xl border border-white/80 bg-white/90 p-5">
-                <div className="flex items-center gap-3">
-                  <BookOpen className="h-5 w-5 text-red-700" />
-                  <h3 className="text-lg font-semibold text-gray-900">Catalog</h3>
-                </div>
-                <p className="mt-3 leading-7 text-gray-700">
-                  Uploaded publications are merged into the existing publications page without
-                  removing the current built-in titles.
-                </p>
-              </div>
+        {/* ── List ─────────────────────────────────────────────────── */}
+        <AdminPanel
+          eyebrow="Catalog"
+          title="Publications"
+          actions={
+            <div className="relative w-48">
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#bda392]" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                placeholder="Search..."
+                aria-label="Search publications"
+                className={`${controlClass} pl-9`}
+              />
             </div>
-          </SectionCard>
-        </section>
-
-        <SectionCard className="border-red-100 bg-white/95 shadow-lg">
-          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
-                Manage uploads
-              </p>
-              <h2 className="mt-2 text-3xl font-serif text-red-800">Current admin publications</h2>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={e => setSearchQuery(e.target.value)}
-                  placeholder="Search publications..."
-                  className="rounded-2xl border border-orange-100 bg-white py-2 pl-10 pr-4 text-sm focus:border-red-500 focus:ring-2 focus:ring-red-500 w-56"
-                />
-              </div>
-              <p className="text-sm text-gray-500 whitespace-nowrap">
-                {isLoading
-                  ? 'Loading...'
-                  : `${orderedPublications.length} publication(s)`}
-              </p>
-            </div>
-          </div>
-
+          }
+          flush
+        >
           {isLoading ? (
-            <div className="mt-8 flex items-center justify-center gap-3 rounded-2xl border border-orange-100 bg-orange-50 px-6 py-10 text-gray-700">
-              <Loader className="h-5 w-5 animate-spin text-red-700" />
-              Loading publications from Firebase...
-            </div>
+            <LoadingState label="Loading publications..." className="m-5" />
           ) : orderedPublications.length === 0 ? (
-            <div className="mt-8 rounded-2xl border border-orange-100 bg-orange-50 px-6 py-10 text-center text-gray-700">
-              No admin-uploaded publications yet.
-            </div>
+            <EmptyState
+              icon={<BookOpen className="h-5 w-5" />}
+              title={searchQuery ? 'Nothing matches this search' : 'No publications yet'}
+              description={
+                searchQuery
+                  ? 'Try another title or author.'
+                  : 'Create one with the editor to add it to the public catalog.'
+              }
+              className="m-5"
+            />
           ) : (
-            <div className="mt-6 space-y-5">
+            <ul className="divide-y divide-[#f6ece4]">
               {orderedPublications.map(publication => (
-                <article
+                <li
                   key={publication.id}
-                  className="rounded-[1.8rem] border border-orange-100 bg-[linear-gradient(135deg,_rgba(255,255,255,0.98)_0%,_rgba(255,247,237,0.95)_100%)] p-6 shadow-sm"
+                  className={`px-5 py-4 transition hover:bg-[#fdfaf7] ${
+                    editingId === publication.id ? 'bg-[#fdf3ec]' : ''
+                  }`}
                 >
-                  <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                    <div className="min-w-0">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <span className="rounded-full bg-red-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-red-700">
-                          {publication.type}
-                        </span>
+                  <div className="flex gap-4">
+                    {publication.coverImage ? (
+                      <img
+                        src={publication.coverImage}
+                        alt=""
+                        className="h-20 w-14 shrink-0 rounded-lg border border-[#f0e2d8] object-cover"
+                      />
+                    ) : (
+                      <span className="flex h-20 w-14 shrink-0 items-center justify-center rounded-lg border border-[#f0e2d8] bg-[#fdf3ec] text-[#bda392]">
+                        <BookOpen className="h-5 w-5" />
+                      </span>
+                    )}
+
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-1.5">
                         <span
-                          className={`rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] ${
+                          className={`rounded-md px-2 py-0.5 text-[0.68rem] font-semibold uppercase tracking-[0.1em] ${
                             publication.status === 'published'
-                              ? 'bg-green-100 text-green-700'
-                              : 'bg-amber-100 text-amber-700'
+                              ? 'bg-emerald-50 text-emerald-700'
+                              : 'bg-amber-50 text-amber-700'
                           }`}
                         >
-                          {publication.status === 'published' ? '✅ Published' : '📝 Draft'}
+                          {publication.status === 'published' ? 'Published' : 'Draft'}
+                        </span>
+                        <span className="rounded-md bg-[#fdf3ec] px-2 py-0.5 text-[0.68rem] font-semibold uppercase tracking-[0.1em] text-[#a8735c]">
+                          {publication.type}
                         </span>
                         {publication.featured && (
-                          <span className="inline-flex items-center gap-1 rounded-full bg-yellow-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-yellow-700">
-                            <Star className="h-3 w-3 fill-yellow-500" />
+                          <span className="inline-flex items-center gap-1 rounded-md bg-amber-50 px-2 py-0.5 text-[0.68rem] font-semibold uppercase tracking-[0.1em] text-amber-700">
+                            <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
                             Featured
                           </span>
                         )}
                         {publication.pageCount ? (
-                          <span className="rounded-full bg-orange-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-orange-700">
+                          <span className="rounded-md bg-[#f4ede8] px-2 py-0.5 text-[0.68rem] font-semibold uppercase tracking-[0.1em] text-[#8a6552]">
                             {publication.pageCount} pages
                           </span>
                         ) : null}
                       </div>
-                      <h3 className="mt-4 text-2xl font-serif text-gray-900">
-                        {publication.title}
-                      </h3>
-                      <p className="mt-2 text-sm text-gray-500">{publication.author}</p>
-                      <p className="mt-3 max-w-3xl text-base leading-7 text-gray-700">
+
+                      <h3 className="mt-2 font-semibold text-[#3d1d17]">{publication.title}</h3>
+                      <p className="mt-0.5 text-xs text-[#a8735c]">
+                        {publication.author} · {formatDate(publication.createdAt)}
+                      </p>
+                      <p className="mt-2 line-clamp-2 text-sm leading-6 text-[#5c3a2b]">
                         {publication.description}
                       </p>
-                      <div className="mt-3 flex flex-wrap items-center gap-4 text-sm text-gray-500">
-                        <span>{formatDate(publication.createdAt)}</span>
-                        {publication.pdfUrl ? (
+
+                      <div className="mt-3 flex flex-wrap items-center gap-1.5">
+                        <button
+                          type="button"
+                          onClick={() => handleEdit(publication)}
+                          className={adminButton.secondary}
+                        >
+                          <PencilLine className="h-3.5 w-3.5" />
+                          Edit
+                        </button>
+                        {publication.pdfUrl && (
                           <a
                             href={publication.pdfUrl}
                             target="_blank"
                             rel="noreferrer"
-                            className="text-orange-700 underline"
+                            className={adminButton.subtle}
                           >
+                            <FileText className="h-3.5 w-3.5" />
                             Open PDF
                           </a>
-                        ) : null}
+                        )}
+                        <ConfirmButton onConfirm={() => handleDelete(publication.id)} />
                       </div>
                     </div>
-                    <div className="flex flex-wrap gap-2">
-                      <button
-                        type="button"
-                        onClick={() => handleEdit(publication)}
-                        className="inline-flex items-center gap-2 rounded-xl border border-orange-200 bg-white px-4 py-2 text-sm font-medium text-orange-700 transition hover:bg-orange-50"
-                      >
-                        <PencilLine className="h-4 w-4" />
-                        Edit
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleDelete(publication.id)}
-                        className="inline-flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-sm font-medium text-red-700 transition hover:bg-red-100"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                        Delete
-                      </button>
-                    </div>
                   </div>
-                </article>
+                </li>
               ))}
-            </div>
+            </ul>
           )}
-        </SectionCard>
+        </AdminPanel>
+      </div>
     </div>
   );
 }
