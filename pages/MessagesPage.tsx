@@ -33,6 +33,7 @@ import {
   filterMessagePosts,
   type MessageCategoryFilter,
 } from '../services/messagePostFilters';
+import VideoProviderBadge from '../components/VideoProviderBadge';
 
 // ── Helpers ─────────────────────────────────────────────────────────
 
@@ -490,12 +491,7 @@ export default function MessagesPage() {
                                   {post.media.resourceType}
                                 </span>
                               ) : null}
-                              {post.youtubeUrl ? (
-                                <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-red-700">
-                                  <Video className="h-3.5 w-3.5" />
-                                  YouTube
-                                </span>
-                              ) : null}
+                              <VideoProviderBadge url={post.youtubeUrl} />
                             </div>
 
                             <h3 className="mt-4 text-2xl font-serif text-gray-900">{post.title}</h3>
@@ -521,7 +517,7 @@ export default function MessagesPage() {
                             <div className="mt-5">
                               {post.youtubeUrl ? (
                                 <MessageVideoPlayer
-                                  youtubeUrl={post.youtubeUrl}
+                                  videoUrl={post.youtubeUrl}
                                   title={post.title}
                                   onRespond={() => handleRespondToPost(post.id)}
                                 />

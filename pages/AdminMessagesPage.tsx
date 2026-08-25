@@ -27,7 +27,11 @@ import {
   adminButton,
   controlClass,
 } from '../components/admin';
-import { uploadToCloudinary, type CloudinaryUploadResponse } from '../services/cloudinaryService';
+import {
+  deleteFromCloudinary,
+  uploadToCloudinary,
+  type CloudinaryUploadResponse,
+} from '../services/cloudinaryService';
 import {
   createMessagePost,
   deleteMessagePost,
@@ -37,6 +41,7 @@ import {
   type MessageMedia,
   type MessagePostRecord,
 } from '../services/messagePostsService';
+import VideoProviderBadge from '../components/VideoProviderBadge';
 
 type FormState = {
   title: string;
@@ -85,6 +90,37 @@ function toMediaPayload(result: CloudinaryUploadResponse): MessageMedia {
   };
 }
 
+/** Best-effort Cloudinary cleanup — failures are logged, never block the UI. */
+function cleanupCloudinaryMedia(target: MessageMedia | null | undefined) {
+  if (!target) return;
+
+  deleteFromCloudinary(target.publicId, target.resourceType).catch(() => {
+    console.warn(
+      `Could not delete Cloudinary asset "${target.publicId}" — remove it manually if it is no longer needed.`
+    );
+  });
+}
+
+const MAX_TITLE_LENGTH = 120;
+const MAX_SUMMARY_LENGTH = 280;
+const MAX_BODY_LENGTH = 10000;
+const MAX_AUTHOR_LENGTH = 80;
+const MAX_URL_LENGTH = 2048;
+
+/** True when the editor still matches its pristine "new post" state. */
+function isBlankForm(form: FormState, media: MessageMedia | null) {
+  return (
+    form.title === INITIAL_FORM.title &&
+    form.category === INITIAL_FORM.category &&
+    form.summary === INITIAL_FORM.summary &&
+    form.body === INITIAL_FORM.body &&
+    form.author === INITIAL_FORM.author &&
+    form.pinned === INITIAL_FORM.pinned &&
+    form.youtubeUrl === INITIAL_FORM.youtubeUrl &&
+    !media
+  );
+}
+
 export default function AdminMessagesPage() {
   const [posts, setPosts] = useState<MessagePostRecord[]>([]);
   const [form, setForm] = useState<FormState>(INITIAL_FORM);
@@ -95,6 +131,10 @@ export default function AdminMessagesPage() {
   const [isUploading, setIsUploading] = useState(false);
   const [selectedFileName, setSelectedFileName] = useState('');
   const [media, setMedia] = useState<MessageMedia | null>(null);
+  // Media detached from the form during this editing session. It is only
+  // deleted from Cloudinary once the change is actually saved (or the editor
+  // is discarded in "new post" mode), so "Cancel edit" never breaks a live post.
+  const [detachedMedia, setDetachedMedia] = useState<MessageMedia[]>([]);
 
   useEffect(() => {
     const unsubscribe = subscribeToMessagePosts(
@@ -123,6 +163,21 @@ export default function AdminMessagesPage() {
     [posts]
   );
 
+  const isFormDirty = !isBlankForm(form, media);
+
+  // Warn before closing/reloading the tab with unsaved editor content.
+  useEffect(() => {
+    if (!isFormDirty) return;
+
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = '';
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [isFormDirty]);
+
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
@@ -130,11 +185,40 @@ export default function AdminMessagesPage() {
     setForm(current => ({ ...current, [name]: value }));
   };
 
-  const resetForm = () => {
+  const queueDetachedMedia = (target: MessageMedia | null | undefined) => {
+    if (!target) return;
+    setDetachedMedia(current => [...current, target]);
+  };
+
+  const applyReset = () => {
     setForm(INITIAL_FORM);
     setEditingId(null);
     setMedia(null);
     setSelectedFileName('');
+    setStatusMessage('');
+    setDetachedMedia([]);
+  };
+
+  /** Reset used by UI buttons — asks first when there are unsaved changes. */
+  const resetForm = () => {
+    if (
+      isFormDirty &&
+      !window.confirm(
+        editingId
+          ? 'Discard the changes to this post? Its current media will be kept.'
+          : 'Discard the changes in this form?'
+      )
+    ) {
+      return;
+    }
+
+    // Discarding an unsaved new post leaves its freshly uploaded media
+    // unreferenced — clean those up now.
+    if (!editingId) {
+      detachedMedia.forEach(cleanupCloudinaryMedia);
+    }
+
+    applyReset();
   };
 
   const handleMediaUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -153,6 +237,7 @@ export default function AdminMessagesPage() {
         resourceType,
       });
 
+      queueDetachedMedia(media);
       setMedia(toMediaPayload(uploadResult));
       setStatusMessage(`${resourceType === 'video' ? 'Video' : 'Image'} uploaded successfully.`);
     } catch (error) {
@@ -200,7 +285,8 @@ export default function AdminMessagesPage() {
         setStatusMessage('New post published to the feed.');
       }
 
-      resetForm();
+      detachedMedia.forEach(cleanupCloudinaryMedia);
+      applyReset();
     } catch (error) {
       setStatusMessage(error instanceof Error ? error.message : 'Unable to save post.');
     } finally {
@@ -229,7 +315,13 @@ export default function AdminMessagesPage() {
   const handleDelete = async (id: string) => {
     try {
       await deleteMessagePost(id);
-      if (editingId === id) resetForm();
+      cleanupCloudinaryMedia(posts.find(post => post.id === id)?.media);
+
+      if (editingId === id) {
+        detachedMedia.forEach(cleanupCloudinaryMedia);
+        applyReset();
+      }
+
       setStatusMessage('Post deleted.');
     } catch (error) {
       setStatusMessage(error instanceof Error ? error.message : 'Unable to delete post.');
@@ -296,6 +388,7 @@ export default function AdminMessagesPage() {
                 type="text"
                 value={form.title}
                 onChange={handleChange}
+                maxLength={MAX_TITLE_LENGTH}
                 placeholder="Family Prayer Gathering This Sunday"
                 className={controlClass}
               />
@@ -323,19 +416,25 @@ export default function AdminMessagesPage() {
                   type="text"
                   value={form.author}
                   onChange={handleChange}
+                  maxLength={MAX_AUTHOR_LENGTH}
                   placeholder="Practical Love Team"
                   className={controlClass}
                 />
               </Field>
             </div>
 
-            <Field label="Short summary" htmlFor="summary" hint="Shown first on the feed card.">
+            <Field
+              label="Short summary"
+              htmlFor="summary"
+              hint={`Shown first on the feed card. Max ${MAX_SUMMARY_LENGTH} characters.`}
+            >
               <textarea
                 id="summary"
                 name="summary"
                 value={form.summary}
                 onChange={handleChange}
                 rows={3}
+                maxLength={MAX_SUMMARY_LENGTH}
                 placeholder="The short version people should see first."
                 className={`${controlClass} resize-none`}
               />
@@ -348,18 +447,24 @@ export default function AdminMessagesPage() {
                 value={form.body}
                 onChange={handleChange}
                 rows={9}
+                maxLength={MAX_BODY_LENGTH}
                 placeholder="Write the complete post here."
                 className={`${controlClass} resize-y`}
               />
             </Field>
 
-            <Field label="YouTube link" htmlFor="youtubeUrl" note="Optional">
+            <Field
+              label="Video link"
+              htmlFor="youtubeUrl"
+              note="Optional — YouTube, Facebook, Vimeo, TikTok, or Instagram"
+            >
               <input
                 id="youtubeUrl"
                 name="youtubeUrl"
                 type="url"
                 value={form.youtubeUrl}
                 onChange={handleChange}
+                maxLength={MAX_URL_LENGTH}
                 placeholder="https://www.youtube.com/watch?v=..."
                 className={controlClass}
               />
@@ -419,6 +524,7 @@ export default function AdminMessagesPage() {
                   <button
                     type="button"
                     onClick={() => {
+                      queueDetachedMedia(media);
                       setMedia(null);
                       setSelectedFileName('');
                     }}
@@ -505,12 +611,7 @@ export default function AdminMessagesPage() {
                             Pinned
                           </span>
                         ) : null}
-                        {post.youtubeUrl ? (
-                          <span className="inline-flex items-center gap-1 rounded-md bg-red-50 px-2 py-0.5 text-[0.68rem] font-semibold uppercase tracking-[0.1em] text-red-700">
-                            <Video className="h-3 w-3" />
-                            YouTube
-                          </span>
-                        ) : null}
+                        <VideoProviderBadge url={post.youtubeUrl} size="sm" />
                       </div>
 
                       <h3 className="mt-2 text-base font-semibold text-[#3d1d17]">{post.title}</h3>

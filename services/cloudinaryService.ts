@@ -146,11 +146,15 @@ export const getThumbnailUrl = (
 };
 
 /**
- * Delete image from Cloudinary
+ * Delete asset from Cloudinary
  * @param publicId - Cloudinary public ID
+ * @param resourceType - Cloudinary resource type ('image' or 'video')
  * @returns Promise with deletion response
  */
-export const deleteFromCloudinary = async (publicId: string): Promise<any> => {
+export const deleteFromCloudinary = async (
+  publicId: string,
+  resourceType: 'image' | 'video' = 'image'
+): Promise<any> => {
   const apiKey = import.meta.env.VITE_CLOUDINARY_API_KEY;
   const apiSecret = import.meta.env.VITE_CLOUDINARY_API_SECRET;
   const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
@@ -170,18 +174,21 @@ export const deleteFromCloudinary = async (publicId: string): Promise<any> => {
   const signature = await generateSignature(publicId, timestamp);
 
   try {
-    const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/destroy`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        public_id: publicId,
-        api_key: apiKey,
-        timestamp: timestamp,
-        signature: signature,
-      }),
-    });
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/destroy`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            public_id: publicId,
+            api_key: apiKey,
+            timestamp: timestamp,
+            signature: signature,
+          }),
+        }
+      );
 
     if (!response.ok) {
       const errorData = await response.json();

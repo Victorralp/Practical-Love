@@ -1,23 +1,17 @@
 import { useState } from 'react';
 import { PlayCircle, Sparkles, Volume2 } from 'lucide-react';
+import { resolveVideoEmbed } from '../services/videoEmbed';
 
 type MessageVideoPlayerProps = {
   src?: string;
-  youtubeUrl?: string;
+  videoUrl?: string | null;
   title: string;
   onRespond?: () => void;
 };
 
-function getYouTubeId(url?: string) {
-  if (!url) return null;
-  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/;
-  const match = url.match(regExp);
-  return match && match[2].length === 11 ? match[2] : null;
-}
-
-export default function MessageVideoPlayer({ src, youtubeUrl, title, onRespond }: MessageVideoPlayerProps) {
+export default function MessageVideoPlayer({ src, videoUrl, title, onRespond }: MessageVideoPlayerProps) {
   const [showReflection, setShowReflection] = useState(false);
-  const youtubeId = getYouTubeId(youtubeUrl);
+  const embed = resolveVideoEmbed(videoUrl);
 
   return (
     <div className="relative overflow-hidden rounded-[1.75rem] border border-[#f1c9a8] bg-[linear-gradient(145deg,_#24100c_0%,_#5b2116_46%,_#a44725_100%)] p-3 shadow-[0_24px_52px_rgba(95,53,30,0.22)]">
@@ -29,11 +23,12 @@ export default function MessageVideoPlayer({ src, youtubeUrl, title, onRespond }
           <PlayCircle className="h-4 w-4 text-[#ffbd87]" />
           Message watch
         </div>
-        {youtubeId ? (
+        {embed ? (
           <iframe
-            src={`https://www.youtube.com/embed/${youtubeId}`}
+            src={embed.embedUrl}
             title={title}
             frameBorder="0"
+            scrolling="no"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
             className="aspect-video w-full max-h-[34rem] bg-black"
