@@ -456,7 +456,7 @@ export default function AdminMessagesPage() {
             <Field
               label="Video link"
               htmlFor="youtubeUrl"
-              note="Optional — YouTube, Facebook, Vimeo, TikTok, or Instagram"
+              note="Optional — YouTube, Facebook (video, photo, or post), Vimeo, TikTok, or Instagram"
             >
               <input
                 id="youtubeUrl"

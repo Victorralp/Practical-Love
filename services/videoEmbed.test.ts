@@ -11,6 +11,7 @@ describe('resolveVideoEmbed', () => {
     expect(resolveVideoEmbed(url)).toEqual({
       provider: 'youtube',
       label: 'YouTube',
+      kind: 'video',
       embedUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
     });
   });
@@ -19,14 +20,32 @@ describe('resolveVideoEmbed', () => {
     'https://www.facebook.com/watch/?v=1234567890',
     'https://www.facebook.com/practicallove/videos/1234567890/',
     'https://web.facebook.com/reel/1234567890',
+    'https://www.facebook.com/video.php?v=1234567890',
     'https://fb.watch/aBcDeFgHiJ/',
-  ])('embeds the Facebook url %s', url => {
+  ])('embeds the Facebook video url %s', url => {
     const embed = resolveVideoEmbed(url);
 
     expect(embed?.provider).toBe('facebook');
     expect(embed?.label).toBe('Facebook');
+    expect(embed?.kind).toBe('video');
     expect(embed?.embedUrl).toBe(
       `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=false`
+    );
+  });
+
+  it.each([
+    'https://www.facebook.com/practicallove/photos/a.123/456/',
+    'https://www.facebook.com/photo/?fbid=1234567890',
+    'https://www.facebook.com/photo.php?fbid=1234567890',
+    'https://www.facebook.com/practicallove/posts/1234567890',
+  ])('embeds the Facebook photo/post url %s', url => {
+    const embed = resolveVideoEmbed(url);
+
+    expect(embed?.provider).toBe('facebook');
+    expect(embed?.label).toBe('Facebook');
+    expect(embed?.kind).toBe('post');
+    expect(embed?.embedUrl).toBe(
+      `https://www.facebook.com/plugins/post.php?href=${encodeURIComponent(url)}&show_text=false`
     );
   });
 
@@ -39,6 +58,7 @@ describe('resolveVideoEmbed', () => {
     expect(resolveVideoEmbed(url)).toEqual({
       provider: 'vimeo',
       label: 'Vimeo',
+      kind: 'video',
       embedUrl,
     });
   });
@@ -52,6 +72,7 @@ describe('resolveVideoEmbed', () => {
     expect(resolveVideoEmbed(url)).toEqual({
       provider: 'tiktok',
       label: 'TikTok',
+      kind: 'video',
       embedUrl,
     });
   });
@@ -69,6 +90,7 @@ describe('resolveVideoEmbed', () => {
     expect(resolveVideoEmbed(url)).toEqual({
       provider: 'instagram',
       label: 'Instagram',
+      kind: 'video',
       embedUrl,
     });
   });

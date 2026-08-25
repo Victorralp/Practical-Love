@@ -31,7 +31,11 @@ export default function MessageVideoPlayer({ src, videoUrl, title, onRespond }: 
             scrolling="no"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
-            className="aspect-video w-full max-h-[34rem] bg-black"
+            className={
+              embed.kind === 'post'
+                ? 'h-[34rem] w-full bg-white'
+                : 'aspect-video w-full max-h-[34rem] bg-black'
+            }
           />
         ) : (
           <video
