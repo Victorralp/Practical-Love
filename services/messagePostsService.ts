@@ -117,6 +117,27 @@ export function hasUserPrayed(requestId: string): boolean {
 const DEFAULT_REACTIONS: ReactionsMap = { amen: 0, love: 0, insightful: 0 };
 
 /**
+ * Realtime Database rejects any write containing `undefined`, which Cloudinary
+ * responses produce whenever an optional field (format, width, height, bytes)
+ * is absent. Dropping those keys writes the same data without the crash.
+ */
+export function stripUndefined<T>(value: T): T {
+  if (Array.isArray(value)) {
+    return value.map(item => stripUndefined(item)) as unknown as T;
+  }
+
+  if (value && typeof value === 'object') {
+    const entries = Object.entries(value as Record<string, unknown>)
+      .filter(([, item]) => item !== undefined)
+      .map(([key, item]) => [key, stripUndefined(item)] as const);
+
+    return Object.fromEntries(entries) as T;
+  }
+
+  return value;
+}
+
+/**
  * Realtime Database drops empty fields and turns sparse arrays into keyed
  * objects, so posts written by older versions of the admin panel come back with
  * missing or differently-shaped fields. Filling the gaps here keeps every post —
@@ -263,13 +284,16 @@ export async function createMessagePost(payload: MessagePostPayload) {
   const newPostRef = push(messagesRef);
   const now = new Date().toISOString();
 
-  await set(newPostRef, {
-    ...payload,
-    reactions: DEFAULT_REACTIONS,
-    comments: [],
-    createdAt: now,
-    updatedAt: now,
-  });
+  await set(
+    newPostRef,
+    stripUndefined({
+      ...payload,
+      reactions: DEFAULT_REACTIONS,
+      comments: [],
+      createdAt: now,
+      updatedAt: now,
+    })
+  );
 }
 
 export async function updateMessagePost(id: string, payload: MessagePostPayload) {
@@ -290,7 +314,7 @@ export async function updateMessagePost(id: string, payload: MessagePostPayload)
     patch.reactions = DEFAULT_REACTIONS;
   }
 
-  await update(postRef, patch);
+  await update(postRef, stripUndefined(patch));
 }
 
 export async function updateMessagePinnedState(id: string, pinned: boolean) {

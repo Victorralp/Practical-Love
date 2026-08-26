@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { normalizeMessagePost, type MessagePostRecord } from './messagePostsService';
+import {
+  normalizeMessagePost,
+  stripUndefined,
+  type MessagePostRecord,
+} from './messagePostsService';
 
 describe('normalizeMessagePost', () => {
   it('fills in every field a legacy post is missing so it stays editable', () => {
@@ -64,5 +68,42 @@ describe('normalizeMessagePost', () => {
     expect(post.reactions).toEqual({ amen: 4, love: 2, insightful: 1 });
     expect(post.pinned).toBe(true);
     expect(post.updatedAt).toBe('2026-08-02T00:00:00.000Z');
+  });
+});
+
+describe('stripUndefined', () => {
+  it('drops undefined values that Realtime Database refuses to write', () => {
+    expect(
+      stripUndefined({
+        url: 'https://res.cloudinary.com/demo/image/upload/v1/post.jpg',
+        publicId: 'messages/feed/post',
+        resourceType: 'image',
+        format: undefined,
+        width: undefined,
+        height: 1080,
+        bytes: undefined,
+      })
+    ).toEqual({
+      url: 'https://res.cloudinary.com/demo/image/upload/v1/post.jpg',
+      publicId: 'messages/feed/post',
+      resourceType: 'image',
+      height: 1080,
+    });
+  });
+
+  it('keeps null, zero, and empty strings, and cleans nested values', () => {
+    expect(
+      stripUndefined({
+        media: null,
+        youtubeUrl: '',
+        reactions: { amen: 0, love: undefined },
+        comments: [{ id: 'c1', author: 'Ada', body: 'Hi', createdAt: '2026-01-01', edited: undefined }],
+      })
+    ).toEqual({
+      media: null,
+      youtubeUrl: '',
+      reactions: { amen: 0 },
+      comments: [{ id: 'c1', author: 'Ada', body: 'Hi', createdAt: '2026-01-01' }],
+    });
   });
 });

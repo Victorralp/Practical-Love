@@ -37,6 +37,7 @@ import {
   createMessagePost,
   deleteMessagePost,
   subscribeToMessagePosts,
+  stripUndefined,
   updateMessagePinnedState,
   updateMessagePost,
   type MessageMedia,
@@ -86,8 +87,12 @@ function formatDate(isoDate?: string | null) {
   }).format(parsed);
 }
 
+/**
+ * Cloudinary omits the optional fields for some uploads, and Realtime Database
+ * refuses a write that carries `undefined`, so only defined values are kept.
+ */
 function toMediaPayload(result: CloudinaryUploadResponse): MessageMedia {
-  return {
+  return stripUndefined({
     url: result.secure_url,
     publicId: result.public_id,
     resourceType: result.resource_type === 'video' ? 'video' : 'image',
@@ -95,7 +100,7 @@ function toMediaPayload(result: CloudinaryUploadResponse): MessageMedia {
     width: result.width,
     height: result.height,
     bytes: result.bytes,
-  };
+  });
 }
 
 /** Best-effort Cloudinary cleanup — failures are logged, never block the UI. */
