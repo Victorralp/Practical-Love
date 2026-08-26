@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { PlayCircle, Sparkles, Volume2 } from 'lucide-react';
+import { ExternalLink, PlayCircle, Sparkles, Volume2 } from 'lucide-react';
 import { resolveVideoEmbed } from '../services/videoEmbed';
 
 type MessageVideoPlayerProps = {
@@ -23,7 +23,20 @@ export default function MessageVideoPlayer({ src, videoUrl, title, onRespond }: 
           <PlayCircle className="h-4 w-4 text-[#ffbd87]" />
           Message watch
         </div>
-        {embed ? (
+        {embed?.warning ? (
+          <div className="flex min-h-[16rem] flex-col items-center justify-center gap-3 bg-[#fff7ee] p-6 text-center text-[#4a2418]">
+            <p className="text-sm leading-6">{embed.warning}</p>
+            <a
+              href={embed.sourceUrl}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="inline-flex items-center gap-2 rounded-full bg-[#a44f2b] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#8a3f20]"
+            >
+              <ExternalLink className="h-4 w-4" />
+              Open on {embed.label}
+            </a>
+          </div>
+        ) : embed ? (
           <iframe
             src={embed.embedUrl}
             title={title}
@@ -48,6 +61,21 @@ export default function MessageVideoPlayer({ src, videoUrl, title, onRespond }: 
           </video>
         )}
       </div>
+
+      {embed && !embed.warning ? (
+        <p className="relative mt-2 px-1 text-right text-xs text-[#ffe4ce]/85">
+          Not loading?{' '}
+          <a
+            href={embed.sourceUrl}
+            target="_blank"
+            rel="noreferrer noopener"
+            className="inline-flex items-center gap-1 font-semibold text-[#ffd2af] underline underline-offset-2 hover:text-white"
+          >
+            Open on {embed.label}
+            <ExternalLink className="h-3 w-3" />
+          </a>
+        </p>
+      ) : null}
 
       <div className="relative mt-3 grid gap-3 sm:grid-cols-[1fr_auto] sm:items-center">
         <div className="rounded-[1.15rem] border border-white/10 bg-white/8 px-4 py-3 text-[#fff3e7]">

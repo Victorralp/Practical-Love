@@ -116,22 +116,58 @@ export function hasUserPrayed(requestId: string): boolean {
 // ── Helpers ─────────────────────────────────────────────────────────
 const DEFAULT_REACTIONS: ReactionsMap = { amen: 0, love: 0, insightful: 0 };
 
+/**
+ * Realtime Database drops empty fields and turns sparse arrays into keyed
+ * objects, so posts written by older versions of the admin panel come back with
+ * missing or differently-shaped fields. Filling the gaps here keeps every post —
+ * however old — safe to render, edit, and save again.
+ */
+export function normalizeMessagePost(
+  id: string,
+  record: Partial<MessagePostRecord> | null | undefined
+): MessagePostRecord {
+  const source = record ?? {};
+  const rawComments = source.comments as
+    | MessageComment[]
+    | Record<string, MessageComment>
+    | undefined;
+  const comments = Array.isArray(rawComments)
+    ? [...rawComments]
+    : rawComments
+      ? Object.entries(rawComments).map(([commentId, comment]) => ({
+          ...comment,
+          id: comment?.id ?? commentId,
+        }))
+      : [];
+  const createdAt = source.createdAt || source.updatedAt || new Date(0).toISOString();
+
+  return {
+    ...source,
+    id,
+    title: source.title ?? '',
+    category: source.category || 'Ministry update',
+    summary: source.summary ?? '',
+    body: source.body ?? '',
+    author: source.author || 'Practical Love Team',
+    pinned: Boolean(source.pinned),
+    media: source.media ?? null,
+    youtubeUrl: source.youtubeUrl ?? null,
+    reactions: { ...DEFAULT_REACTIONS, ...source.reactions },
+    comments: comments
+      .filter(Boolean)
+      .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()),
+    createdAt,
+    updatedAt: source.updatedAt || createdAt,
+  };
+}
+
 function toPostArray(value: Record<string, MessagePostRecord> | null | undefined) {
   if (!value) {
     return [];
   }
 
   return Object.entries(value)
-    .map(([id, record]) => ({
-      ...record,
-      id,
-      reactions: { ...DEFAULT_REACTIONS, ...record.reactions },
-      comments: Array.isArray(record.comments)
-        ? [...record.comments].sort(
-            (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-          )
-        : [],
-    }))
+    .map(([id, record]) => normalizeMessagePost(id, record))
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 }
 
@@ -237,10 +273,24 @@ export async function createMessagePost(payload: MessagePostPayload) {
 }
 
 export async function updateMessagePost(id: string, payload: MessagePostPayload) {
-  await update(ref(realtimeDb, `${MESSAGES_PATH}/${id}`), {
-    ...payload,
-    updatedAt: new Date().toISOString(),
-  });
+  const postRef = ref(realtimeDb, `${MESSAGES_PATH}/${id}`);
+  const snapshot = await get(postRef);
+  const existing = snapshot.val() as Partial<MessagePostRecord> | null;
+  const now = new Date().toISOString();
+
+  const patch: Record<string, unknown> = { ...payload, updatedAt: now };
+
+  // Posts written by older versions of the admin panel can be missing these.
+  // Backfill on edit — but never overwrite live reaction counts.
+  if (!existing?.createdAt) {
+    patch.createdAt = now;
+  }
+
+  if (!existing?.reactions) {
+    patch.reactions = DEFAULT_REACTIONS;
+  }
+
+  await update(postRef, patch);
 }
 
 export async function updateMessagePinnedState(id: string, pinned: boolean) {

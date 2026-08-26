@@ -10,6 +10,7 @@ import {
   PinOff,
   Plus,
   Save,
+  Search,
   Trash2,
   Upload,
   Video,
@@ -42,6 +43,7 @@ import {
   type MessagePostRecord,
 } from '../services/messagePostsService';
 import VideoProviderBadge from '../components/VideoProviderBadge';
+import { resolveVideoEmbed } from '../services/videoEmbed';
 
 type FormState = {
   title: string;
@@ -71,11 +73,17 @@ const CATEGORIES = [
   'Event notice',
 ] as const;
 
-function formatDate(isoDate: string) {
+function formatDate(isoDate?: string | null) {
+  const parsed = isoDate ? new Date(isoDate) : null;
+
+  if (!parsed || Number.isNaN(parsed.getTime())) {
+    return 'Date unknown';
+  }
+
   return new Intl.DateTimeFormat('en-NG', {
     dateStyle: 'medium',
     timeStyle: 'short',
-  }).format(new Date(isoDate));
+  }).format(parsed);
 }
 
 function toMediaPayload(result: CloudinaryUploadResponse): MessageMedia {
@@ -135,6 +143,7 @@ export default function AdminMessagesPage() {
   // deleted from Cloudinary once the change is actually saved (or the editor
   // is discarded in "new post" mode), so "Cancel edit" never breaks a live post.
   const [detachedMedia, setDetachedMedia] = useState<MessageMedia[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const unsubscribe = subscribeToMessagePosts(
@@ -162,6 +171,20 @@ export default function AdminMessagesPage() {
       }),
     [posts]
   );
+
+  // Lets older posts be found without scrolling the whole feed.
+  const visiblePosts = useMemo(() => {
+    const needle = searchTerm.trim().toLowerCase();
+    if (!needle) return orderedPosts;
+
+    return orderedPosts.filter(post =>
+      [post.title, post.summary, post.body, post.author, post.category, post.youtubeUrl]
+        .filter(Boolean)
+        .some(field => String(field).toLowerCase().includes(needle))
+    );
+  }, [orderedPosts, searchTerm]);
+
+  const embedWarning = resolveVideoEmbed(form.youtubeUrl)?.warning ?? null;
 
   const isFormDirty = !isBlankForm(form, media);
 
@@ -296,16 +319,18 @@ export default function AdminMessagesPage() {
 
   const handleEdit = (post: MessagePostRecord) => {
     setEditingId(post.id);
+    // Older posts can be missing fields entirely — fall back to the defaults
+    // so the editor never opens with `undefined` in a controlled input.
     setForm({
-      title: post.title,
-      category: post.category,
-      summary: post.summary,
-      body: post.body,
-      author: post.author,
-      pinned: post.pinned,
+      title: post.title ?? '',
+      category: post.category || INITIAL_FORM.category,
+      summary: post.summary ?? '',
+      body: post.body ?? '',
+      author: post.author || INITIAL_FORM.author,
+      pinned: Boolean(post.pinned),
       youtubeUrl: post.youtubeUrl || '',
     });
-    setMedia(post.media);
+    setMedia(post.media ?? null);
     setSelectedFileName(post.media ? post.media.publicId : '');
     setStatusMessage(`Editing "${post.title}".`);
 
@@ -468,6 +493,11 @@ export default function AdminMessagesPage() {
                 placeholder="https://www.youtube.com/watch?v=..."
                 className={controlClass}
               />
+              {embedWarning ? (
+                <p className="mt-2 rounded-lg bg-[#fff4e8] px-3 py-2 text-xs leading-5 text-[#8a3f20]">
+                  {embedWarning}
+                </p>
+              ) : null}
             </Field>
 
             {/* ── Media ────────────────────────────────────────────── */}
@@ -578,9 +608,28 @@ export default function AdminMessagesPage() {
         <AdminPanel
           eyebrow="Feed"
           title="Published posts"
-          description="Newest first, pinned posts on top."
+          description="Newest first, pinned posts on top. Every post stays editable, however old."
           flush
         >
+          <div className="border-b border-[#f6ece4] px-5 py-4">
+            <div className="relative">
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#a8735c]" />
+              <input
+                type="search"
+                value={searchTerm}
+                onChange={event => setSearchTerm(event.target.value)}
+                placeholder="Search older posts by title, text, author, or link"
+                aria-label="Search posts"
+                className={`${controlClass} pl-9`}
+              />
+            </div>
+            {searchTerm.trim() ? (
+              <p className="mt-2 text-xs text-[#a8735c]">
+                {visiblePosts.length} of {orderedPosts.length} post(s) match.
+              </p>
+            ) : null}
+          </div>
+
           {isLoading ? (
             <LoadingState label="Loading posts..." className="m-5" />
           ) : orderedPosts.length === 0 ? (
@@ -590,9 +639,21 @@ export default function AdminMessagesPage() {
               description="Publish your first post from the editor and it appears on the public feed straight away."
               className="m-5"
             />
+          ) : visiblePosts.length === 0 ? (
+            <EmptyState
+              icon={<Search className="h-5 w-5" />}
+              title="No matching posts"
+              description="Nothing matches that search. Clear it to see every published post again."
+              action={
+                <button type="button" onClick={() => setSearchTerm('')} className={adminButton.secondary}>
+                  Clear search
+                </button>
+              }
+              className="m-5"
+            />
           ) : (
             <ul className="divide-y divide-[#f6ece4]">
-              {orderedPosts.map(post => (
+              {visiblePosts.map(post => (
                 <li
                   key={post.id}
                   className={`px-5 py-4 transition hover:bg-[#fdfaf7] ${
