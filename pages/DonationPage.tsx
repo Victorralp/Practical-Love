@@ -145,7 +145,7 @@ export default function DonationPage() {
               <p className="text-sm font-semibold uppercase tracking-[0.22em] text-orange-200">
                 Donation
               </p>
-              <h2 className="mt-3 text-3xl font-serif">
+              <h2 className="mt-3 text-3xl font-serif leading-[1.1] tracking-[-0.015em]">
                 Share the blessing with yourself and your generation
               </h2>
               <p className="mt-4 max-w-xl text-base leading-7 text-orange-100">

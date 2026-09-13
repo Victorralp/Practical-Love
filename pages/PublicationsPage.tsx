@@ -172,7 +172,7 @@ export default function PublicationsPage() {
 
       {/* Call to Action */}
       <div className="bg-gradient-to-r from-red-600 to-orange-600 rounded-xl p-8 md:p-10 text-center shadow-xl mb-10">
-        <h2 className="text-3xl md:text-4xl font-serif text-white mb-6">
+        <h2 className="text-3xl md:text-4xl font-serif text-white mb-6 leading-[1.1] tracking-[-0.015em]">
           Share the Message of Love
         </h2>
         <p className="text-xl text-orange-100 mb-8 max-w-2xl mx-auto leading-relaxed">

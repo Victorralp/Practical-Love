@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Heart } from 'lucide-react';
+import { usePauseWhenOffscreen } from './usePauseWhenOffscreen';
 
 const IMPACT_STATS = [
   { value: 247, label: 'Families touched by love', suffix: '+' },
@@ -34,6 +35,7 @@ function AnimatedCounter({ target, duration = 2000, isActive }: { target: number
 export default function GivingHeart() {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLDivElement | null>(null);
+  usePauseWhenOffscreen(sectionRef);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -83,7 +85,7 @@ export default function GivingHeart() {
         <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#d4864f]">
           Your giving carries this message further
         </p>
-        <h2 className="mx-auto mt-4 max-w-xl font-serif text-3xl text-white md:text-4xl">
+        <h2 className="mx-auto mt-4 max-w-xl font-serif text-3xl text-white md:text-4xl leading-[1.1] tracking-[-0.015em]">
           Every gift plants love in a home that needs it.
         </h2>
       </div>

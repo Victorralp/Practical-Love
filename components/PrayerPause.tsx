@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useReducedMotion } from 'framer-motion';
 import { Pause, Play } from 'lucide-react';
+import { usePauseWhenOffscreen } from './usePauseWhenOffscreen';
 
 const PRAYER_VERSES = [
   {
@@ -78,10 +79,12 @@ export default function PrayerPause() {
   // Once someone picks a verse themselves, stop rotating so it stays with them.
   const [hasTakenControl, setHasTakenControl] = useState(false);
   const [ripples, setRipples] = useState<Array<{ id: number; x: number; y: number }>>([]);
-  const [prayerCount, setPrayerCount] = useState(0);
+  // Only this visitor's own tap: nothing is shared, so the copy must not imply others are praying.
+  const [hasPrayed, setHasPrayed] = useState(false);
   const prefersReducedMotion = useReducedMotion();
   const sectionRef = useRef<HTMLElement | null>(null);
   const rippleIdRef = useRef(0);
+  usePauseWhenOffscreen(sectionRef);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -123,7 +126,7 @@ export default function PrayerPause() {
       const id = rippleIdRef.current++;
 
       setRipples((prev) => [...prev, { id, x, y }]);
-      setPrayerCount((prev) => prev + 1);
+      setHasPrayed(true);
 
       setTimeout(() => {
         setRipples((prev) => prev.filter((r) => r.id !== id));
@@ -240,14 +243,12 @@ export default function PrayerPause() {
             ))}
 
             <span className="relative z-10 flex items-center gap-3">
-              <span className="prayer-heart-icon inline-block text-[#ffb87a]">♥</span>
-              {prayerCount === 0
-                ? "I'm praying right now"
-                : `Praying${prayerCount > 1 ? ` (${prayerCount})` : ''} — amen`}
+              <span className="inline-block text-[#ffb87a]" aria-hidden="true">♥</span>
+              {hasPrayed ? 'Amen' : "I'm praying right now"}
             </span>
           </button>
 
-          {prayerCount > 0 && (
+          {hasPrayed && (
             <p className="mt-4 text-sm text-[#fff3e7]/40 transition-all duration-700">
               Your prayer is heard. God is near.
             </p>

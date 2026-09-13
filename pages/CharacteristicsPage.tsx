@@ -247,7 +247,7 @@ export default function CharacteristicsPage() {
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
             Personalization Studio
           </p>
-          <h2 className="mt-2 text-3xl font-serif text-red-800">Put your name inside the passage</h2>
+          <h2 className="mt-2 text-3xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">Put your name inside the passage</h2>
           <p className="mt-3 leading-7 text-gray-700">
             Replace the word &ldquo;Love&rdquo; with your own name to turn the passage into a mirror.
             The goal is not decoration. The goal is conviction and practice.
@@ -316,7 +316,7 @@ export default function CharacteristicsPage() {
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-orange-700">
                   Characteristic {selectedCharacteristic.num}
                 </p>
-                <h2 className="mt-2 text-3xl font-serif text-gray-900">
+                <h2 className="mt-2 text-3xl font-serif text-gray-900 leading-[1.1] tracking-[-0.015em]">
                   {selectedCharacteristic.shortText}
                 </h2>
                 <p className="mt-4 leading-8 text-gray-700">
@@ -353,7 +353,7 @@ export default function CharacteristicsPage() {
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
               Full Reference Grid
             </p>
-            <h2 className="mt-2 text-3xl font-serif text-red-800">Study all 17 characteristics</h2>
+            <h2 className="mt-2 text-3xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">Study all 17 characteristics</h2>
             <p className="mt-3 max-w-3xl leading-7 text-gray-700">
               Select any card to make it the active focus above. This grid is meant to feel like a
               reference wall you can return to often.
@@ -450,7 +450,7 @@ export default function CharacteristicsPage() {
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
             Practice Path
           </p>
-          <h2 className="mt-2 text-3xl font-serif text-red-800">Turn the list into a life rhythm</h2>
+          <h2 className="mt-2 text-3xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">Turn the list into a life rhythm</h2>
           <div className="mt-6 grid gap-4">
             {PRACTICE_STEPS.map(step => (
               <FeatureCard

@@ -346,7 +346,7 @@ export default function MessagesPage() {
               <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
                 This week's love practice
               </p>
-              <h2 className="mt-2 text-3xl font-serif text-red-800">
+              <h2 className="mt-2 text-3xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">
                 Let every message become a step.
               </h2>
               <p className="mt-3 max-w-2xl leading-7 text-gray-600">
@@ -390,7 +390,7 @@ export default function MessagesPage() {
                     <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
                       Public feed
                     </p>
-                    <h2 className="mt-2 text-3xl font-serif text-red-800">Latest posts</h2>
+                    <h2 className="mt-2 text-3xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">Latest posts</h2>
                   </div>
                   <p className="text-sm text-gray-500">
                     {isLoading ? statusMessage : `${filteredPosts.length} post(s) available`}
@@ -736,7 +736,7 @@ export default function MessagesPage() {
                     <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
                       Prayer wall
                     </p>
-                    <h2 className="mt-2 text-3xl font-serif text-red-800">Pray for one another</h2>
+                    <h2 className="mt-2 text-3xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">Pray for one another</h2>
                     <p className="mt-2 max-w-xl text-sm leading-6 text-gray-500">
                       "Bear one another's burdens, and so fulfill the law of Christ." — Galatians
                       6:2

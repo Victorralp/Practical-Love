@@ -116,7 +116,7 @@ export default function PrideHumilityPage() {
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#a45f3c]">
           Heart diagram
         </p>
-        <h2 className="mt-2 font-serif text-3xl text-[#3d1d17]">
+        <h2 className="mt-2 font-serif text-3xl text-[#3d1d17] leading-[1.1] tracking-[-0.015em]">
           Pride and humility often show themselves in ordinary reactions.
         </h2>
         <p className="mt-4 max-w-3xl leading-8 text-[#6e4737]">
@@ -137,7 +137,7 @@ export default function PrideHumilityPage() {
               <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#a45f3c]">
                 How pride hides
               </p>
-              <h2 className="mt-2 font-serif text-3xl text-[#3d1d17]">
+              <h2 className="mt-2 font-serif text-3xl text-[#3d1d17] leading-[1.1] tracking-[-0.015em]">
                 Pride does not always look loud.
               </h2>
             </div>
@@ -160,7 +160,7 @@ export default function PrideHumilityPage() {
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#a45f3c]">
             A simple heart test
           </p>
-          <h2 className="mt-2 font-serif text-3xl text-[#3d1d17]">
+          <h2 className="mt-2 font-serif text-3xl text-[#3d1d17] leading-[1.1] tracking-[-0.015em]">
             Ask these questions slowly, without defending yourself.
           </h2>
 
@@ -186,7 +186,7 @@ export default function PrideHumilityPage() {
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#ffd2af]">
           The way back
         </p>
-        <h2 className="mt-2 font-serif text-3xl text-white">
+        <h2 className="mt-2 font-serif text-3xl text-white leading-[1.1] tracking-[-0.015em]">
           Humility is practiced one honest step at a time.
         </h2>
         <p className="mt-4 max-w-3xl leading-8 text-[#fff1e3] opacity-85">
@@ -216,7 +216,7 @@ export default function PrideHumilityPage() {
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#a45f3c]">
               Scripture direction
             </p>
-            <h2 className="mt-2 font-serif text-3xl text-[#3d1d17]">
+            <h2 className="mt-2 font-serif text-3xl text-[#3d1d17] leading-[1.1] tracking-[-0.015em]">
               Love becomes practical when the heart becomes teachable.
             </h2>
             <p className="mt-4 max-w-3xl leading-8 text-[#6e4737]">

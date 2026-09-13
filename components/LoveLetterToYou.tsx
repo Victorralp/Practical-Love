@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Heart, Send, Sparkles, PenTool, RefreshCw } from 'lucide-react';
+import { usePauseWhenOffscreen } from './usePauseWhenOffscreen';
 
 interface Sparkle {
   id: number;
@@ -22,6 +23,7 @@ export default function LoveLetterToYou() {
   const [isSending, setIsSending] = useState(false);
   
   const sectionRef = useRef<HTMLElement | null>(null);
+  usePauseWhenOffscreen(sectionRef);
 
   // Generate floating sparkles when envelope opens
   useEffect(() => {
@@ -274,13 +276,13 @@ export default function LoveLetterToYou() {
                   {sealCracked ? (
                     <Sparkles className="w-8 h-8 animate-spin text-[#ffd369]" />
                   ) : (
-                    <Heart className="w-9 h-9 fill-[#ff3b3f]/10 text-[#ffa62b] filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)] animate-pulse" />
+                    <Heart className="w-9 h-9 fill-[#ff3b3f]/10 text-[#ffa62b] filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]" />
                   )}
                 </button>
                 
                 {/* Wax seal label indicator */}
                 {!sealCracked && (
-                  <span className="absolute left-1/2 -translate-x-1/2 top-24 whitespace-nowrap text-xs font-serif italic text-[#8c6b54] animate-bounce tracking-wide">
+                  <span className="absolute left-1/2 -translate-x-1/2 top-24 whitespace-nowrap text-xs font-serif italic text-[#8c6b54] tracking-wide">
                     Press Seal
                   </span>
                 )}
@@ -420,7 +422,7 @@ export default function LoveLetterToYou() {
               {responseSent && (
                 <div className="mt-12 p-6 md:p-10 border border-dashed border-[#b89876]/40 rounded-2xl text-center space-y-4 bg-gradient-to-br from-[#faf6f0] to-[#fbfbf9]">
                   <div className="w-12 h-12 rounded-full bg-[#fcd34d]/20 mx-auto flex items-center justify-center text-[#d09e10]">
-                    <Sparkles className="w-6 h-6 animate-pulse" />
+                    <Sparkles className="w-6 h-6" />
                   </div>
                   <h4 className="font-serif text-lg font-semibold text-[#661214]">
                     Your response has risen like incense.

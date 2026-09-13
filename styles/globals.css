@@ -173,19 +173,19 @@
     h1 {
       font-size: var(--text-2xl);
       font-weight: var(--font-weight-medium);
-      line-height: 1.5;
+      line-height: 1.15;
     }
 
     h2 {
       font-size: var(--text-xl);
       font-weight: var(--font-weight-medium);
-      line-height: 1.5;
+      line-height: 1.2;
     }
 
     h3 {
       font-size: var(--text-lg);
       font-weight: var(--font-weight-medium);
-      line-height: 1.5;
+      line-height: 1.3;
     }
 
     h4 {
@@ -439,40 +439,14 @@ html {
     animation: prayer-ripple-expand 1.4s ease-out forwards;
   }
 
-  .prayer-heart-icon {
-    animation: heartbeat-gentle 2s ease-in-out infinite;
-  }
-
   @keyframes prayer-ripple-expand {
     0% { width: 0; height: 0; opacity: 0.5; }
     100% { width: 400px; height: 400px; opacity: 0; }
   }
 
-  @keyframes heartbeat-gentle {
-    0%, 100% { transform: scale(1); }
-    14% { transform: scale(1.2); }
-    28% { transform: scale(1); }
-    42% { transform: scale(1.15); }
-    56% { transform: scale(1); }
-  }
-
-  /* ── Testimony Breathing ────────────────────────────────────────── */
-  .testimony-card {
-    animation: breathe-card 6s ease-in-out infinite;
-  }
-
-  .testimony-quote-icon {
-    animation: heartbeat-gentle 2.4s ease-in-out infinite;
-  }
-
-  @keyframes breathe-card {
-    0%, 100% { box-shadow: 0 24px 48px rgba(95, 53, 30, 0.08); }
-    50% { box-shadow: 0 28px 56px rgba(95, 53, 30, 0.12); }
-  }
-
   /* ── Scripture Mirror Glow ─────────────────────────────────────── */
   .scripture-name {
-    transition: all 0.5s ease;
+    transition: color 0.5s ease, filter 0.5s ease;
   }
 
   .scripture-mirror-container {
@@ -492,26 +466,23 @@ html {
     box-shadow: 0 0 60px 15px rgba(244, 180, 123, 0.12);
   }
 
+  /* Opacity and transform only, so the flicker stays on the compositor. */
   @keyframes candle-flicker {
     0%, 100% {
       opacity: 0.94;
       transform: scale(1);
-      filter: brightness(1);
+    }
+    25% {
+      opacity: 0.92;
+      transform: scale(0.995);
     }
     50% {
       opacity: 1;
       transform: scale(1.01);
-      filter: brightness(1.04);
-    }
-    25% {
-      opacity: 0.96;
-      transform: scale(0.995);
-      filter: brightness(0.98);
     }
     75% {
-      opacity: 0.98;
+      opacity: 0.97;
       transform: scale(1.005);
-      filter: brightness(1.01);
     }
   }
 
@@ -612,52 +583,18 @@ html {
     }
   }
 
-  /* ── Altar Call — Shimmer Text ──────────────────────────────────── */
+  /* ── Altar Call — Warm Gradient Text ───────────────────────────── */
+  /* Static: the beating heart is this section's one ambient loop. */
   .altar-shimmer-text {
-    background: linear-gradient(
-      90deg,
-      #ffb380 0%,
-      #fff1e3 30%,
-      #ffb380 50%,
-      #fff1e3 70%,
-      #ffb380 100%
-    );
-    background-size: 300% 100%;
+    background: linear-gradient(90deg, #ffb380 0%, #fff1e3 50%, #ffb380 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: altar-shimmer 6s ease-in-out infinite;
   }
 
-  @keyframes altar-shimmer {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-  }
-
-  /* ── Floating Love Whispers ────────────────────────────────────── */
+  /* ── Love Whispers (static background words) ───────────────────── */
   .love-whisper {
-    animation: whisper-float linear infinite;
     white-space: nowrap;
-  }
-
-  @keyframes whisper-float {
-    0% {
-      opacity: 0;
-      transform: translateY(20px) rotate(-2deg);
-    }
-    15% {
-      opacity: 0.08;
-    }
-    50% {
-      transform: translateY(-20px) rotate(1deg);
-    }
-    85% {
-      opacity: 0.08;
-    }
-    100% {
-      opacity: 0;
-      transform: translateY(-60px) rotate(3deg);
-    }
   }
 
   /* ── Altar Pledge Response ─────────────────────────────────────── */
@@ -668,6 +605,37 @@ html {
   @keyframes pledge-reveal {
     0% { opacity: 0; transform: translateY(20px) scale(0.97); }
     100% { opacity: 1; transform: translateY(0) scale(1); }
+  }
+}
+
+/* Ambient loops stop while their section is off screen (see usePauseWhenOffscreen). */
+[data-offscreen] *,
+[data-offscreen] *::before,
+[data-offscreen] *::after {
+  animation-play-state: paused !important;
+}
+
+/* Translucent materials turn solid when people ask for less transparency or more contrast. */
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  .surface-soft {
+    background: #ffffff;
+    border-color: rgba(101, 59, 39, 0.28);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  .editorial-panel {
+    background: #2f1511;
+    border-color: rgba(255, 244, 236, 0.4);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  .material-dark {
+    background-color: #1a0e0b !important;
+    border-color: rgba(255, 244, 236, 0.32) !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
   }
 }
 

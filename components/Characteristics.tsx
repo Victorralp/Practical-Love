@@ -61,7 +61,7 @@ export default function Characteristics() {
     >
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-serif text-red-800 mb-6">
+          <h2 className="text-4xl md:text-5xl font-serif text-red-800 mb-6 leading-[1.1] tracking-[-0.015em]">
             Characteristics of Love
           </h2>
         </div>

@@ -91,7 +91,7 @@ export default function YellowCardPage() {
       <div className="surface p-6">
         <div className="bg-white border border-orange-100 rounded-2xl p-6 space-y-6">
           <div className="text-center space-y-2">
-            <h2 className="text-2xl md:text-3xl font-serif font-bold text-red-800">Practical Love: The Yellow Card</h2>
+            <h2 className="text-2xl md:text-3xl font-serif font-bold text-red-800 leading-[1.1] tracking-[-0.015em]">Practical Love: The Yellow Card</h2>
             <p className="text-sm uppercase tracking-wide text-orange-700 font-semibold">
               Insert your name wherever you see “LOVE”
             </p>
@@ -122,7 +122,7 @@ export default function YellowCardPage() {
 
       <div className="surface p-10 md:p-12 space-y-10">
         <div className="text-center space-y-3">
-          <h2 className="text-3xl md:text-4xl font-serif text-red-800 font-bold">Your Daily Practice Guide</h2>
+          <h2 className="text-3xl md:text-4xl font-serif text-red-800 font-bold leading-[1.1] tracking-[-0.015em]">Your Daily Practice Guide</h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             Three simple checkpoints to make love a daily habit.
           </p>
@@ -220,7 +220,7 @@ export default function YellowCardPage() {
       </div>
 
       <div className="surface-soft p-10 text-center space-y-4">
-        <h2 className="text-3xl md:text-4xl font-serif text-red-800">Get Your Personal Yellow Card</h2>
+        <h2 className="text-3xl md:text-4xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">Get Your Personal Yellow Card</h2>
         <p className="text-lg text-gray-700 max-w-2xl mx-auto">
           Download a printable version or save it to your phone for daily inspiration. It’s free and transformative.
         </p>
@@ -238,7 +238,7 @@ export default function YellowCardPage() {
       </div>
 
       <div className="surface text-center p-12 space-y-6">
-        <h2 className="text-4xl font-serif text-red-800">Ready to Begin Your Journey?</h2>
+        <h2 className="text-4xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">Ready to Begin Your Journey?</h2>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
           Start practicing practical love today and experience transformation in your relationships and community.
         </p>

@@ -144,7 +144,7 @@ export default function BiblePassages() {
             <Logo className="w-12 h-12 mr-4" />
             <BookOpen className="w-12 h-12 text-orange-600" />
           </div>
-          <h2 className="text-4xl md:text-5xl font-serif text-red-800 mb-6">
+          <h2 className="text-4xl md:text-5xl font-serif text-red-800 mb-6 leading-[1.1] tracking-[-0.015em]">
             LOVE PASSAGES IN <span className="text-orange-600">NEW TESTAMENT</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">

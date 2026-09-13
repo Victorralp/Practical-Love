@@ -52,7 +52,7 @@ export function PageHero({
 
         <h1
           className={cn(
-            'mt-5 font-serif text-[#3d1d17]',
+            'mt-5 font-serif leading-[1.05] tracking-[-0.02em] text-[#3d1d17]',
             compact ? 'text-3xl md:text-4xl' : 'text-4xl md:text-5xl',
             titleClassName
           )}
