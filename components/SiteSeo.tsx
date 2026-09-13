@@ -3,6 +3,8 @@ import { useLocation } from 'react-router-dom';
 import {
   buildSeoPayload,
   buildStructuredData,
+  DEFAULT_IMAGE_HEIGHT,
+  DEFAULT_IMAGE_WIDTH,
   resolveRuntimeSiteUrl,
   SITE_NAME,
 } from '../src/seo/routeSeo';
@@ -78,6 +80,17 @@ export default function SiteSeo() {
     upsertMeta('meta[property="og:description"]', { property: 'og:description' }, description);
     upsertMeta('meta[property="og:url"]', { property: 'og:url' }, canonicalUrl);
     upsertMeta('meta[property="og:image"]', { property: 'og:image' }, imageUrl);
+    upsertMeta(
+      'meta[property="og:image:width"]',
+      { property: 'og:image:width' },
+      String(DEFAULT_IMAGE_WIDTH)
+    );
+    upsertMeta(
+      'meta[property="og:image:height"]',
+      { property: 'og:image:height' },
+      String(DEFAULT_IMAGE_HEIGHT)
+    );
+    upsertMeta('meta[property="og:image:alt"]', { property: 'og:image:alt' }, SITE_NAME);
 
     upsertMeta('meta[name="twitter:card"]', { name: 'twitter:card' }, 'summary_large_image');
     upsertMeta('meta[name="twitter:title"]', { name: 'twitter:title' }, title);
