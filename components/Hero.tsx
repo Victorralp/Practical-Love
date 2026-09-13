@@ -146,7 +146,8 @@ export default function Hero() {
     const introTimeline = createTimeline({
       defaults: {
         duration: 1100,
-        ease: 'spring(1, 82, 12, 0)',
+        // animejs v4 has no 'spring(...)' string ease; it silently fell back to linear.
+        ease: 'outQuint',
       },
     });
 
@@ -242,14 +243,18 @@ export default function Hero() {
     const observer = new IntersectionObserver(
       entries => {
         entries.forEach(entry => {
-          if (!entry.isIntersecting) {
+          const group = entry.target as HTMLElement;
+          // A fast scroll, anchor jump or restored scroll position can skip past a group
+          // entirely; reveal those too so no section is left invisible.
+          const isAboveViewport = entry.boundingClientRect.bottom < 0;
+
+          if (!entry.isIntersecting && !isAboveViewport) {
             return;
           }
 
-          const group = entry.target as HTMLElement;
+          observer.unobserve(group);
 
           if (group.dataset.revealed === 'true') {
-            observer.unobserve(group);
             return;
           }
 
@@ -259,23 +264,24 @@ export default function Hero() {
 
           const revealAnimation = animate(items, {
             opacity: [0, 1],
-            y: [36, 0],
-            scale: [0.97, 1],
-            delay: stagger(110),
-            duration: 920,
-            ease: 'spring(1, 80, 10, 0)',
+            y: [20, 0],
+            duration: 480,
+            // Cap the stagger so long card lists don't keep people waiting on content.
+            delay: (_target, index) => Math.min(index, 3) * 60,
+            ease: 'outQuint',
             onComplete: () => {
               items.forEach(item => item.classList.add('is-visible'));
             },
           });
 
           revertibles.push(revealAnimation);
-          observer.unobserve(group);
         });
       },
       {
-        threshold: 0.18,
-        rootMargin: '0px 0px -10% 0px',
+        // Any visible pixel counts, and start slightly early so content is settling
+        // by the time it is on screen.
+        threshold: 0,
+        rootMargin: '0px 0px 15% 0px',
       }
     );
 
@@ -516,7 +522,7 @@ export default function Hero() {
                   key={card.href}
                   to={card.href}
                   data-reveal-item
-                  className="reveal-item surface group overflow-hidden bg-[linear-gradient(135deg,_rgba(255,255,255,0.96)_0%,_rgba(249,239,228,0.96)_100%)] p-7 transition-transform duration-300 hover:-translate-y-1"
+                  className="reveal-item surface group overflow-hidden bg-[linear-gradient(135deg,_rgba(255,255,255,0.96)_0%,_rgba(249,239,228,0.96)_100%)] p-7 transition-transform duration-300 hover:-translate-y-1 active:translate-y-0 active:scale-[0.99] active:duration-75"
                 >
                   <div className="flex items-start justify-between gap-6">
                     <div className="flex h-14 w-14 items-center justify-center rounded-[1.4rem] bg-[#f3dfcb] text-[#9a4a29] shadow-[inset_0_1px_0_rgba(255,255,255,0.6)]">
@@ -564,7 +570,7 @@ export default function Hero() {
                 key={item.href}
                 to={item.href}
                 data-reveal-item
-                className="reveal-item surface group overflow-hidden bg-[linear-gradient(180deg,_rgba(255,255,255,0.97),_rgba(247,236,221,0.9))] transition-transform duration-300 hover:-translate-y-1"
+                className="reveal-item surface group overflow-hidden bg-[linear-gradient(180deg,_rgba(255,255,255,0.97),_rgba(247,236,221,0.9))] transition-transform duration-300 hover:-translate-y-1 active:translate-y-0 active:scale-[0.99] active:duration-75"
               >
                 <div className="overflow-hidden border-b border-[#ecd9c7]">
                   <img

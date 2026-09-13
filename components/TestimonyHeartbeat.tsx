@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useReducedMotion } from 'framer-motion';
 import { Quote, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const TESTIMONIES = [
@@ -36,9 +37,11 @@ const TESTIMONIES = [
 
 export default function TestimonyHeartbeat() {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isFading, setIsFading] = useState(false);
   const [isInView, setIsInView] = useState(false);
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const [isPaused, setIsPaused] = useState(false);
+  // Once someone picks a testimony themselves, stop rotating so it never moves under them.
+  const [hasTakenControl, setHasTakenControl] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
   const sectionRef = useRef<HTMLElement | null>(null);
 
   // Intersection observer
@@ -61,44 +64,22 @@ export default function TestimonyHeartbeat() {
     return () => observer.disconnect();
   }, []);
 
-  // Auto-rotation
+  // Auto-rotation: only while visible, not hovered or focused, and never under reduced motion.
   useEffect(() => {
-    if (!isInView) {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
-
+    if (!isInView || isPaused || hasTakenControl || prefersReducedMotion) {
       return;
     }
 
-    intervalRef.current = setInterval(() => {
-      setIsFading(true);
-
-      setTimeout(() => {
-        setActiveIndex((prev) => (prev + 1) % TESTIMONIES.length);
-        setIsFading(false);
-      }, 500);
+    const interval = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % TESTIMONIES.length);
     }, 6000);
 
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
-  }, [isInView]);
+    return () => clearInterval(interval);
+  }, [isInView, isPaused, hasTakenControl, prefersReducedMotion]);
 
   const goTo = (index: number) => {
-    if (index === activeIndex) {
-      return;
-    }
-
-    setIsFading(true);
-
-    setTimeout(() => {
-      setActiveIndex(index);
-      setIsFading(false);
-    }, 400);
+    setHasTakenControl(true);
+    setActiveIndex(index);
   };
 
   const goPrev = () => {
@@ -116,6 +97,14 @@ export default function TestimonyHeartbeat() {
       ref={sectionRef}
       id="testimony-heartbeat"
       className="px-4 py-16 sm:px-6 lg:px-8 lg:py-20"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+      onFocus={() => setIsPaused(true)}
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+          setIsPaused(false);
+        }
+      }}
     >
       <div className="mx-auto max-w-7xl">
         {/* Section header */}
@@ -131,14 +120,14 @@ export default function TestimonyHeartbeat() {
           <div className="flex items-center gap-3">
             <button
               onClick={goPrev}
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-[rgba(176,111,74,0.2)] bg-white/80 text-[#8d4a2b] transition-all hover:-translate-y-0.5 hover:bg-white hover:shadow-md"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-[rgba(176,111,74,0.2)] bg-white/80 text-[#8d4a2b] transition-[transform,background-color,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-white hover:shadow-md active:translate-y-0 active:scale-95 active:duration-75"
               aria-label="Previous testimony"
             >
               <ChevronLeft className="h-5 w-5" />
             </button>
             <button
               onClick={goNext}
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-[rgba(176,111,74,0.2)] bg-white/80 text-[#8d4a2b] transition-all hover:-translate-y-0.5 hover:bg-white hover:shadow-md"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-[rgba(176,111,74,0.2)] bg-white/80 text-[#8d4a2b] transition-[transform,background-color,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-white hover:shadow-md active:translate-y-0 active:scale-95 active:duration-75"
               aria-label="Next testimony"
             >
               <ChevronRight className="h-5 w-5" />
@@ -166,14 +155,8 @@ export default function TestimonyHeartbeat() {
             </span>
           </div>
 
-          {/* Message */}
-          <div
-            className={`relative mt-8 transition-all duration-600 ${
-              isFading
-                ? 'translate-y-2 scale-[0.99] opacity-0'
-                : 'translate-y-0 scale-100 opacity-100'
-            }`}
-          >
+          {/* Message: swaps immediately, then fades in, so a tap never waits on the old one leaving. */}
+          <div key={activeIndex} className="relative mt-8 animate-[fadeSlideIn_300ms_ease-out]">
             <p className="max-w-4xl font-serif text-3xl leading-snug text-[#3e1e17] md:text-4xl lg:text-5xl lg:leading-[1.15]">
               {current.message}
             </p>
@@ -192,12 +175,13 @@ export default function TestimonyHeartbeat() {
               <button
                 key={index}
                 onClick={() => goTo(index)}
-                className={`h-1.5 rounded-full transition-all duration-500 ${
+                className={`h-1.5 rounded-full transition-[width,background-color] duration-300 ${
                   index === activeIndex
                     ? 'w-10 bg-[#c17249]'
                     : 'w-4 bg-[#d4bca8] hover:bg-[#c4a28a]'
                 }`}
                 aria-label={`Go to testimony ${index + 1}`}
+                aria-current={index === activeIndex ? 'true' : undefined}
               />
             ))}
           </div>

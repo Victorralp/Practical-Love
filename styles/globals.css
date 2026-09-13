@@ -134,8 +134,10 @@
     height: 100%;
   }
 
-  html {
-    scroll-behavior: smooth;
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
   }
 
   body {
@@ -232,7 +234,7 @@ html {
   }
 
   .btn-brand {
-    @apply inline-flex items-center justify-center rounded-full px-5 py-3 font-semibold text-white transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
+    @apply inline-flex items-center justify-center rounded-full px-5 py-3 font-semibold text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
     background:
       linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0)) padding-box,
       linear-gradient(135deg, #9b2318 0%, #c34f2a 54%, #eb9a4f 100%) border-box;
@@ -240,32 +242,52 @@ html {
     box-shadow: 0 20px 40px rgba(113, 42, 19, 0.18);
   }
 
-  .btn-brand:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 26px 48px rgba(113, 42, 19, 0.22);
-  }
-
   .btn-outline-brand {
-    @apply inline-flex items-center justify-center rounded-full px-5 py-3 font-semibold text-red-900 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
+    @apply inline-flex items-center justify-center rounded-full px-5 py-3 font-semibold text-red-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
     background: rgba(255, 255, 255, 0.72);
     border: 1px solid rgba(133, 60, 34, 0.2);
     box-shadow: 0 18px 30px rgba(117, 74, 51, 0.08);
   }
 
-  .btn-outline-brand:hover {
-    transform: translateY(-2px);
-    background: rgba(255, 252, 248, 0.96);
-  }
-
   .btn-outline-light {
-    @apply inline-flex items-center justify-center rounded-full px-5 py-3 font-semibold text-white transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
+    @apply inline-flex items-center justify-center rounded-full px-5 py-3 font-semibold text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
     border: 1px solid rgba(255, 244, 236, 0.36);
     background: rgba(255, 244, 236, 0.06);
   }
 
-  .btn-outline-light:hover {
-    transform: translateY(-2px);
-    background: rgba(255, 244, 236, 0.14);
+  .btn-brand,
+  .btn-outline-brand,
+  .btn-outline-light {
+    transition-property: transform, box-shadow, background-color, border-color, color;
+    transition-duration: 200ms;
+    transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Hover lift only on devices that really hover, so it doesn't stick after a tap. */
+  @media (hover: hover) {
+    .btn-brand:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 26px 48px rgba(113, 42, 19, 0.22);
+    }
+
+    .btn-outline-brand:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 252, 248, 0.96);
+    }
+
+    .btn-outline-light:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 244, 236, 0.14);
+    }
+  }
+
+  /* Press feedback lands on pointer-down, faster than the hover lift. */
+  .btn-brand:active,
+  .btn-outline-brand:active,
+  .btn-outline-light:active {
+    transform: scale(0.97);
+    transition-duration: 80ms;
   }
 
   .surface {

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { X } from 'lucide-react';
 
 const DAILY_VERSES = [
@@ -16,6 +16,8 @@ const DAILY_VERSES = [
   { text: 'The Lord your God is with you, the Mighty Warrior who saves. He will take great delight in you.', ref: 'Zephaniah 3:17' },
 ] as const;
 
+const DISMISSED_KEY = 'verse-banner-dismissed';
+
 function getTodaysVerse() {
   const dayOfYear = Math.floor(
     (Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000
@@ -23,39 +25,43 @@ function getTodaysVerse() {
   return DAILY_VERSES[dayOfYear % DAILY_VERSES.length];
 }
 
+function wasDismissedThisSession() {
+  try {
+    return sessionStorage.getItem(DISMISSED_KEY) !== null;
+  } catch {
+    return false;
+  }
+}
+
 export default function DailyVerseBanner() {
-  const [isVisible, setIsVisible] = useState(true);
-  const [isRevealed, setIsRevealed] = useState(false);
+  // Read the dismissal up front so the banner is simply there (or not) on first paint,
+  // instead of sliding in after a delay and pushing the page down.
+  const [isVisible, setIsVisible] = useState(() => !wasDismissedThisSession());
+  const [isClosing, setIsClosing] = useState(false);
   const verse = getTodaysVerse();
 
-  useEffect(() => {
-    // Check if dismissed this session
-    const dismissed = sessionStorage.getItem('verse-banner-dismissed');
-    if (dismissed) {
-      setIsVisible(false);
-      return;
-    }
-
-    const timer = setTimeout(() => setIsRevealed(true), 300);
-    return () => clearTimeout(timer);
-  }, []);
-
   const handleDismiss = () => {
-    setIsRevealed(false);
-    setTimeout(() => {
-      setIsVisible(false);
-      sessionStorage.setItem('verse-banner-dismissed', 'true');
-    }, 400);
+    try {
+      sessionStorage.setItem(DISMISSED_KEY, 'true');
+    } catch {
+      // Storage blocked: the banner still hides for this page view.
+    }
+    setIsClosing(true);
   };
 
   if (!isVisible) return null;
 
   return (
     <div
-      className="daily-verse-banner relative overflow-hidden transition-all duration-500"
+      className="daily-verse-banner relative overflow-hidden transition-[max-height,opacity] duration-200 ease-out"
       style={{
-        maxHeight: isRevealed ? '120px' : '0',
-        opacity: isRevealed ? 1 : 0,
+        maxHeight: isClosing ? '0' : '120px',
+        opacity: isClosing ? 0 : 1,
+      }}
+      onTransitionEnd={event => {
+        if (isClosing && event.target === event.currentTarget) {
+          setIsVisible(false);
+        }
       }}
     >
       <div className="relative bg-[linear-gradient(135deg,_#3e1e17_0%,_#5a2818_40%,_#7d3a1e_100%)] px-4 py-3 sm:px-6">
@@ -78,7 +84,7 @@ export default function DailyVerseBanner() {
             </span>
             <button
               onClick={handleDismiss}
-              className="flex h-6 w-6 items-center justify-center rounded-full text-white/30 transition-colors hover:bg-white/10 hover:text-white/60"
+              className="relative flex h-6 w-6 items-center justify-center rounded-full text-white/30 transition-colors before:absolute before:-inset-2.5 before:content-[''] hover:bg-white/10 hover:text-white/60 active:bg-white/20"
               aria-label="Dismiss verse"
             >
               <X className="h-3.5 w-3.5" />
