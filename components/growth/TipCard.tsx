@@ -32,7 +32,19 @@ export default function TipCard({ tip }: TipCardProps) {
   return (
     <div className="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl">
       {/* Header - Always visible */}
-      <div className="p-6 cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
+      <div
+        role="button"
+        tabIndex={0}
+        aria-expanded={isExpanded}
+        className="p-6 cursor-pointer rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-orange-500"
+        onClick={() => setIsExpanded(!isExpanded)}
+        onKeyDown={e => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setIsExpanded(!isExpanded);
+          }
+        }}
+      >
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <div className="flex items-center gap-3 mb-2">

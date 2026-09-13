@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useReducedMotion } from 'framer-motion';
-import { Quote, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Quote, ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
 
 const TESTIMONIES = [
   {
@@ -118,6 +118,16 @@ export default function TestimonyHeartbeat() {
             </h2>
           </div>
           <div className="flex items-center gap-3">
+            {!prefersReducedMotion && (
+              <button
+                type="button"
+                onClick={() => setHasTakenControl((stopped) => !stopped)}
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-[rgba(176,111,74,0.2)] bg-white/80 text-[#8d4a2b] transition-[transform,background-color,box-shadow] duration-200 hover:bg-white hover:shadow-md active:scale-95 active:duration-75"
+                aria-label={hasTakenControl ? 'Play testimonies' : 'Pause testimonies'}
+              >
+                {hasTakenControl ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
+              </button>
+            )}
             <button
               onClick={goPrev}
               className="flex h-11 w-11 items-center justify-center rounded-full border border-[rgba(176,111,74,0.2)] bg-white/80 text-[#8d4a2b] transition-[transform,background-color,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-white hover:shadow-md active:translate-y-0 active:scale-95 active:duration-75"
@@ -170,19 +180,25 @@ export default function TestimonyHeartbeat() {
           </div>
 
           {/* Progress dots */}
-          <div className="mt-10 flex items-center gap-2">
+          {/* Dots stay small; each button is a 44px-tall hit area around its dot. */}
+          <div className="-ml-1 mt-8 flex items-center">
             {TESTIMONIES.map((_, index) => (
               <button
                 key={index}
+                type="button"
                 onClick={() => goTo(index)}
-                className={`h-1.5 rounded-full transition-[width,background-color] duration-300 ${
-                  index === activeIndex
-                    ? 'w-10 bg-[#c17249]'
-                    : 'w-4 bg-[#d4bca8] hover:bg-[#c4a28a]'
-                }`}
+                className="group flex h-11 min-w-11 items-center justify-center px-1"
                 aria-label={`Go to testimony ${index + 1}`}
                 aria-current={index === activeIndex ? 'true' : undefined}
-              />
+              >
+                <span
+                  className={`block h-1.5 rounded-full transition-[width,background-color] duration-300 ${
+                    index === activeIndex
+                      ? 'w-10 bg-[#c17249]'
+                      : 'w-4 bg-[#d4bca8] group-hover:bg-[#c4a28a]'
+                  }`}
+                />
+              </button>
             ))}
           </div>
         </div>

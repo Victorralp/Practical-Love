@@ -21,7 +21,7 @@ import {
   Sparkles,
   Target,
 } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Logo from './Logo';
 import { TODAY_LOVE_PRACTICES } from './homeContent';
 
@@ -109,7 +109,6 @@ const RECENT_ACTIVITY = [
 ] as const;
 
 export default function Hero() {
-  const navigate = useNavigate();
   const rootRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -344,13 +343,13 @@ export default function Hero() {
               </p>
 
               <div data-hero-copy className="reveal-item mt-10 flex flex-col gap-4 lg:flex-row">
-                <button
-                  onClick={() => navigate('/mission-vision')}
+                <Link
+                  to="/mission-vision"
                   className="btn-brand group px-8 py-4 text-base md:text-lg"
                 >
                   Learn more
                   <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
-                </button>
+                </Link>
 
                 <Link
                   to="/messages"
@@ -372,14 +371,14 @@ export default function Hero() {
               <div data-hero-copy className="reveal-item mt-6 flex flex-wrap items-center gap-3 text-sm">
                 <Link
                   to="/messages#daily-devotion"
-                  className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-4 py-2 font-medium text-[#ffe7d3] transition-colors hover:bg-white/16 hover:text-white"
+                  className="inline-flex min-h-11 items-center gap-1.5 rounded-full bg-white/10 px-4 py-2 font-medium text-[#ffe7d3] transition-colors hover:bg-white/16 hover:text-white"
                 >
                   <BookHeart className="h-4 w-4" />
                   Today&rsquo;s devotion
                 </Link>
                 <Link
                   to="/messages#prayer-wall"
-                  className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-4 py-2 font-medium text-[#ffe7d3] transition-colors hover:bg-white/16 hover:text-white"
+                  className="inline-flex min-h-11 items-center gap-1.5 rounded-full bg-white/10 px-4 py-2 font-medium text-[#ffe7d3] transition-colors hover:bg-white/16 hover:text-white"
                 >
                   <HandHeart className="h-4 w-4" />
                   Prayer wall

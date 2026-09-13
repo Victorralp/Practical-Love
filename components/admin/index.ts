@@ -6,4 +6,5 @@ export { Field, controlClass, type FieldProps } from './Field';
 export { FilterTabs, type FilterTab, type FilterTabsProps } from './FilterTabs';
 export { EmptyState, LoadingState, type EmptyStateProps } from './EmptyState';
 export { ConfirmButton, type ConfirmButtonProps } from './ConfirmButton';
+export { ConfirmDialog, type ConfirmDialogProps } from './ConfirmDialog';
 export { adminButton } from './buttons';

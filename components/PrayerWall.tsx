@@ -250,7 +250,7 @@ export default function PrayerWall() {
                           key={animatingId === request.id ? 'animating' : 'static'}
                           initial={animatingId === request.id ? { scale: 0.3, opacity: 0 } : false}
                           animate={{ scale: 1, opacity: 1 }}
-                          transition={{ type: 'spring', stiffness: 400, damping: 12 }}
+                          transition={{ type: 'spring', bounce: 0, duration: 0.3 }}
                           className="text-base"
                         >
                           🙏

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useReducedMotion } from 'framer-motion';
+import { Pause, Play } from 'lucide-react';
 
 const PRAYER_VERSES = [
   {
@@ -181,23 +182,39 @@ export default function PrayerPause() {
         </div>
 
         {/* Verse indicator dots */}
-        <div className="mt-8 flex items-center justify-center gap-2">
+        {/* Dots stay small; each button is a 44px hit area around its dot. */}
+        <div className="mt-6 flex items-center justify-center">
           {PRAYER_VERSES.map((_, index) => (
             <button
               key={index}
+              type="button"
               onClick={() => {
                 setHasTakenControl(true);
                 setActiveVerse(index);
               }}
-              className={`h-2 rounded-full transition-[width,background-color] duration-300 ${
-                index === activeVerse
-                  ? 'w-6 bg-[#e8a05c]'
-                  : 'w-2 bg-[#fff3e7]/20 hover:bg-[#fff3e7]/40'
-              }`}
+              className="group flex h-11 min-w-9 items-center justify-center px-1"
               aria-label={`Go to verse ${index + 1}`}
               aria-current={index === activeVerse ? 'true' : undefined}
-            />
+            >
+              <span
+                className={`block h-2 rounded-full transition-[width,background-color] duration-300 ${
+                  index === activeVerse
+                    ? 'w-6 bg-[#e8a05c]'
+                    : 'w-2 bg-[#fff3e7]/20 group-hover:bg-[#fff3e7]/40'
+                }`}
+              />
+            </button>
           ))}
+          {!prefersReducedMotion && (
+            <button
+              type="button"
+              onClick={() => setHasTakenControl((stopped) => !stopped)}
+              className="ml-2 flex h-11 w-11 items-center justify-center rounded-full text-[#fff3e7]/50 transition-colors hover:bg-[#fff3e7]/8 hover:text-[#fff3e7]/80"
+              aria-label={hasTakenControl ? 'Play verses' : 'Pause verses'}
+            >
+              {hasTakenControl ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
+            </button>
+          )}
         </div>
 
         {/* Prayer button */}
