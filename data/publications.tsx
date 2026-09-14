@@ -23,6 +23,7 @@ export interface PublicationProps {
 }
 
 import { happyHomeDigest } from './happyhome-digest';
+import { loadStudyEdition } from './study-editions';
 
 export const publications: PublicationProps[] = [
   happyHomeDigest,
@@ -35,6 +36,7 @@ export const publications: PublicationProps[] = [
       'Discover the solution to corruption and the path to national blessing through the practical application of love.',
     type: 'Book',
     coverImage: '/backgrounds/reader-bg.png',
+    pdfUrl: '/publications/love-nigerians-or-live-on-curses.pdf',
     pages: [
       {
         content: (
@@ -915,6 +917,340 @@ export const publications: PublicationProps[] = [
               the way of love. Choose truth. Choose humility. Choose worthwhile service. Choose
               God's will. Anything done in love can never fail.
             </p>
+          </div>
+        ),
+      },
+    ],
+  },
+  {
+    id: 'raising-loving-families-in-nigeria',
+    title: 'Raising Loving Families in Nigeria',
+    author: 'Practical Love Publications',
+    description:
+      'A study edition with explanations: raising husbands who love their wives, wives who love their husbands, and children and parents who love one another. Thirteen points on love at home, in the church and in the nation.',
+    type: 'E-Book',
+    coverImage: '/publications/universal-cover.png',
+    pdfUrl: '/publications/raising-loving-families-in-nigeria.pdf',
+    pageCount: 17,
+    loadPages: loadStudyEdition(() => import('./study-editions/raising-loving-families-in-nigeria.json')),
+  },
+  {
+    id: 'five-global-evil-giants',
+    title: 'Five Global Evil Giants',
+    author: 'Practical Love Publications',
+    description:
+      'A study edition with explanations: spiritual lostness, corrupt leadership, poverty, disease and ignorance, and how planting churches, curing diseases and education defeat them.',
+    type: 'E-Book',
+    coverImage: '/publications/universal-cover.png',
+    pdfUrl: '/publications/five-global-evil-giants.pdf',
+    pageCount: 10,
+    loadPages: loadStudyEdition(() => import('./study-editions/five-global-evil-giants.json')),
+  },
+  {
+    id: 'love-at-home',
+    title: 'Love at Home',
+    author: 'Practical Love Publications',
+    description:
+      'A study edition with explanations: nine best steps for a loving marriage and five things to observe with children’s food.',
+    type: 'E-Book',
+    coverImage: '/publications/universal-cover.png',
+    pdfUrl: '/publications/love-at-home.pdf',
+    pageCount: 16,
+    loadPages: loadStudyEdition(() => import('./study-editions/love-at-home.json')),
+  },
+  {
+    id: 'eradicating-poverty-in-ijesha-land',
+    title: 'Eradicating Poverty in Ijesha Land',
+    author: 'REV. DR. MOSES ADEREMI AKANBI OWOEYE',
+    description:
+      'A lifetime project by LOVE Ministry using LoveCards: a proposal to the Owa Obokun Adimula of Ijesha Land to restore godly love, and with it prosperity, in every home and family.',
+    type: 'E-Book',
+    coverImage: '/publications/universal-cover.png',
+    pdfUrl: '/publications/eradicating-poverty-in-ijesha-land.pdf',
+    pages: [
+      {
+        title: 'A Lifetime Project',
+        content: (
+          <div className="space-y-5 text-lg leading-relaxed text-gray-800">
+            <p className="text-sm italic text-gray-600">26th May, 2025</p>
+            <p>
+              <strong>To:</strong> His Imperial Majesty Owa Clement Adesuyi Haastrup Ajimoko III, Owa
+              Obokun Adimula and the Paramount Ruler of Ijesha Land
+            </p>
+            <p>His Imperial Majesty,</p>
+            <p>
+              Warm greetings to you in the name of love, unity, and progress. It is with great joy
+              that I extend my heartfelt congratulations to you on the auspicious occasion of your
+              coronation, recently concluded on the 25th of May, 2025, a momentous event marking the
+              dawn of a new era of leadership, peace, and prosperity in every home and family in
+              Ijesha land.
+            </p>
+            <p>
+              As a ministry deeply committed to the message of LOVE, we humbly submit this proposal
+              to request the honour of beginning a lifetime poverty eradication project targeting the
+              homes and families of Ijeshas in Ijesha Land. Our mission is to reignite the flame of
+              LOVE in the hearts of Ijesha people; to burn out the weeds of greed and materialism
+              that have taken root and to restore the foundation of godly love that once defined this
+              land. This project is in alignment with the spiritual heritage of Ijesha Land, as
+              exemplified by the great missionary Pa Elton and perpetuated by the godly men he raised
+              here.
+            </p>
+          </div>
+        ),
+      },
+      {
+        title: 'Why This Project Matters for Ijesha Land',
+        content: (
+          <div className="space-y-5 text-lg leading-relaxed text-gray-800">
+            <p>
+              The foundation of a prosperous community lies in families grounded in love: love that
+              begins in the home and flows outward to transform society. Our lifetime project to
+              eradicate poverty in homes and families using LoveCards is rooted in this timeless
+              truth. The legacy of Pa Elton remains a testimony to the power of love and faith in
+              shaping destinies, and this initiative offers a divine opportunity to rekindle that same
+              spirit in our time.
+            </p>
+            <p>
+              At the heart of the societal challenges facing our country today (greed, division, and
+              moral decay) lies a deficit of LOVE. This erosion of love within homes has led to both
+              moral and financial bankruptcy, as materialism and the love of money take the helm.
+            </p>
+            <p>
+              For decades, our ministry has combated this decline through the simple, yet powerful
+              act of giving out LoveCards. LoveCards are tools that convey God&rsquo;s message of love
+              and redirect individuals and families back to His principles as found in the Bible. We
+              have witnessed profound transformations in homes and communities where these LoveCards
+              were received: families restored, youth redirected, and entrepreneurial spirits
+              awakened, resulting in tangible economic upliftment.
+            </p>
+          </div>
+        ),
+      },
+      {
+        title: 'How This Aligns with the Vision of the New King',
+        content: (
+          <div className="space-y-5 text-lg leading-relaxed text-gray-800">
+            <p>
+              As His Royal Majesty assumes the revered throne, his commitment to fostering unity,
+              peace, and progress in Ijesha Land is clear. This lifetime project to eradicate poverty
+              in homes and families using LoveCards aligns seamlessly with that vision.
+            </p>
+            <p>
+              By launching this initiative under your reign, we will not only honour the values and
+              traditions of Ijesha Land but also create a spiritual and economic blueprint for the
+              future. Families and youth across communities will be empowered through love-centered
+              education and training that will shift mindsets, eliminate ignorance, and foster wealth
+              generation using the abundant natural and human resources of Ijesha.
+            </p>
+            <p>
+              This project will serve as a unifying force that will encourage collaboration, respect,
+              and shared progress. It will also spark the creativity of the youth, steering them away
+              from vices and redirecting them into channels of productivity that will boost
+              Ijesha&rsquo;s economy and reputation globally.
+            </p>
+          </div>
+        ),
+      },
+      {
+        title: 'One Family at a Time',
+        content: (
+          <div className="space-y-5 text-lg leading-relaxed text-gray-800">
+            <p className="rounded-2xl border border-orange-200 bg-orange-50 p-4 text-center text-sm text-gray-600">
+              One page of the original letter is not available.
+            </p>
+            <p>
+              &hellip; lifetime project focused on eradicating poverty in homes and families using
+              LoveCards, together we can build a legacy that reflects the heart of God and the
+              strength of our people.
+            </p>
+            <p>
+              We humbly seek the opportunity to contribute to this reign by laying the foundation for
+              revival and progress, one family at a time.
+            </p>
+            <p>
+              We await your kind consideration and remain available for further discussions at your
+              convenience. May your reign be remembered as the golden age of love, light, and lasting
+              prosperity in Ijesha Land.
+            </p>
+            <p className="italic text-gray-700">
+              Yours in service to love and revival,
+              <br />
+              Rev. Dr. Moses Aderemi Akanbi Owoeye
+              <br />
+              MB;BS (Lagos), MATh. (Cal. USA)
+              <br />
+              LOVE Ministry using LoveCards
+            </p>
+          </div>
+        ),
+      },
+    ],
+  },
+  {
+    id: 'vision-for-churches-and-clinics',
+    title: 'A Vision for Churches and Clinics',
+    author: 'MOSES A. OWOEYE, MD, MATh',
+    description:
+      'A 2010 letter sharing a vision to plant churches and church-run medical clinics from Nigeria to West Africa and the rest of Africa, built on a practical foundation of love and humility.',
+    type: 'E-Book',
+    coverImage: '/publications/universal-cover.png',
+    pdfUrl: '/publications/vision-for-churches-and-clinics.pdf',
+    pages: [
+      {
+        title: 'The Vision',
+        content: (
+          <div className="space-y-5 text-lg leading-relaxed text-gray-800">
+            <p className="text-sm italic text-gray-600">January 2010</p>
+            <p>Dear brethren,</p>
+            <p>
+              Peace and love to you as I ask for your time to share a vision which the Lord has put
+              in my heart. The vision may be summarized as a direction to dedicate the rest of my life
+              to the ministry of planting churches and medical clinics attached to and run by the
+              church with practical spiritual foundation of love and humility; also training both the
+              church and the clinic to multiply, using local material and personnel as safe and as
+              much as possible. I hereby seek your prayers, advice and support to realize the vision
+              in the ways I explain below.
+            </p>
+            <p className="font-semibold text-red-800">The vision and plan for its realization</p>
+            <p>
+              The vision is to plant churches and/or clinics starting from Nigeria, expanding to the
+              West Africa sub-region and then to the rest of Africa. The plan is to mobilize medical
+              clinic equipment and personnel (for training) locally and/or in the United States from
+              willing donors and volunteers to support the church and the clinics.
+            </p>
+            <p className="font-semibold text-red-800">The legal vehicle for work</p>
+            <p>
+              A nonprofit 501(c)(3) has been incorporated both in Nigeria and the United States of
+              America, named <strong>LOGOS-RHEMA HUMAN SERVICES Inc.</strong> This will serve as a
+              vehicle to accelerate and mobilize professionals, personnel and volunteers to actualize
+              the vision of planting churches and clinics run by the church, and subsequently train
+              the church members and staff of the clinics to multiply.
+            </p>
+            <p>
+              The legal vehicle will be used to channel cooperation between stakeholders in the USA
+              and Nigeria. The non-profit organization is being structured to generate jobs for
+              Americans and Nigerians in the service of the Lord. An attorney in California is in
+              charge of the non-profit organization.
+            </p>
+          </div>
+        ),
+      },
+      {
+        title: 'Training and Calling',
+        content: (
+          <div className="space-y-5 text-lg leading-relaxed text-gray-800">
+            <p>
+              I am a professional in various fields and have valuable skills in the areas of medicine
+              (30 years&rsquo; experience in general medical practice in Nigeria), ultrasound,
+              theology and developmental management of disabled individuals.
+            </p>
+            <p>
+              I was trained as a medical doctor at the College of Medicine, University of Lagos,
+              Nigeria, and acquired research skills at the University of Southern California, Los
+              Angeles. I was licensed to practise family medicine in Nigeria for 30 years.
+            </p>
+            <ul className="ml-6 list-disc space-y-2">
+              <li>
+                In addition, I was trained in ultrasound at Thomas Jefferson University Institute of
+                Ultrasound in Philadelphia.
+              </li>
+              <li>
+                I also trained in caring for developmentally disabled individuals at the Department of
+                Health of the State of California.
+              </li>
+              <li>
+                By the grace of the Lord I am an ordained minister and licensed to preach. I was
+                trained in theology at Fuller Theological Seminary in Pasadena, California, where I
+                obtained a Master of Arts in Theology.
+              </li>
+            </ul>
+          </div>
+        ),
+      },
+      {
+        title: 'The Needs',
+        content: (
+          <div className="space-y-5 text-lg leading-relaxed text-gray-800">
+            <p className="font-semibold text-red-800">The needs for the realization of the vision</p>
+            <ul className="ml-6 list-disc space-y-2">
+              <li>
+                Your fervent prayer to the Lord to open ways for the realization of the vision for His
+                glory;
+              </li>
+              <li>
+                Introduction to professionals in the health industry and others for support by way of
+                materials, equipment and personnel training;
+              </li>
+              <li>
+                Financial support to meet immediate legal and running costs of the nonprofit
+                corporation and personal expenses.
+              </li>
+            </ul>
+            <p className="font-semibold text-red-800">My immediate needs</p>
+            <p>
+              I am currently in the stage of preparation for field work in Nigeria. While I am in the
+              United States, it is necessary to take steps to be affiliated to a religious
+              organization to facilitate building a network of support and provide an anchor for the
+              work. Consequently, I am seeking a religious organization that will facilitate my free
+              movement in and out of the USA and provide a home base for the realization of the
+              vision.
+            </p>
+            <p>
+              In addition to the above, I need support to provide for my immediate needs to meet my
+              minimum sustenance while in the USA. These include:
+            </p>
+            <ul className="ml-6 list-disc space-y-2">
+              <li>Counsel and accountability from church members or church network groups.</li>
+              <li>
+                Support to cover my minimum monthly budget, which includes unexpected expenses, of
+                $780.
+              </li>
+            </ul>
+            <p>
+              Again, I ask for your prayers, and if the Lord so leads you to assist me in any of the
+              areas of the fulfilment of this vision, please get in touch through the contact page.
+            </p>
+            <p className="italic text-gray-700">
+              Shalom.
+              <br />
+              Moses A. Owoeye, MD, MATh
+            </p>
+          </div>
+        ),
+      },
+    ],
+  },
+  {
+    id: 'prescription-for-life',
+    title: 'Prescription For Life',
+    author: 'Practical Love Publications',
+    description:
+      'A book recommendation: Prescription For Life by Dr. Richard Furman, MD, FACS, a must read for every Nigerian in order to increase our average life-span.',
+    type: 'E-Book',
+    coverImage: '/publications/universal-cover.png',
+    pdfUrl: '/publications/prescription-for-life.pdf',
+    pages: [
+      {
+        title: 'Prescription For Life',
+        content: (
+          <div className="space-y-5 text-lg leading-relaxed text-gray-800">
+            <p className="font-semibold text-red-800">By Dr. Richard Furman, MD, FACS</p>
+            <ol className="ml-6 list-decimal space-y-2">
+              <li>Based on documented medical research.</li>
+              <li>Three simple strategies to live younger and longer.</li>
+              <li>Six (6) foods you should NEVER eat again.</li>
+              <li>Why lack of exercise is killing you.</li>
+              <li>Decrease the risk of heart attack, stroke, and dementia.</li>
+            </ol>
+            <div className="rounded-2xl border border-orange-200 bg-orange-50 p-5 space-y-3">
+              <p className="font-semibold text-red-800">P.S.</p>
+              <p>This book is a must read for every Nigerian in order to increase our average life-span.</p>
+              <p>
+                This book is as powerful as <em>The Purpose Driven Life</em> by Rick Warren, with over
+                sixty million copies sold worldwide. I have prayerfully read PDL over ten times, each
+                time gaining a new perspective.
+              </p>
+            </div>
           </div>
         ),
       },
