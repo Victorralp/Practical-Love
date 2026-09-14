@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { ArrowRight, BookOpen, Download } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { publications } from '../data/publications';
-import { FocusRail, type FocusRailItem } from '../components/ui/focus-rail';
 import { PageHero, PageShell } from '../components/ui';
 import Logo from '../components/Logo';
 import {
@@ -31,17 +30,6 @@ export default function PublicationsPage() {
     () => mergePublicationCatalog(publications, managedPublications),
     [managedPublications]
   );
-
-  const railItems: FocusRailItem[] = catalog.map(book => ({
-    id: book.id,
-    title: book.title,
-    description: book.description,
-    imageSrc:
-      book.coverImage ||
-      'https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=1000&auto=format&fit=crop',
-    href: `/read/${book.id}`,
-    meta: `${book.type} • ${book.author}`,
-  }));
 
   // Main render function
   return (
@@ -73,12 +61,8 @@ export default function PublicationsPage() {
         }
       />
 
-      {/* Focus Rail Carousel */}
-      <div className="mb-12 rounded-2xl overflow-hidden shadow-2xl">
-        <FocusRail items={railItems} autoPlay={true} interval={5000} loop={true} />
-      </div>
       {/* Publications Grid */}
-      <h2 className="text-2xl font-serif text-red-800 mb-6 text-center">All Publications</h2>
+      <h2 className="text-2xl font-serif text-red-800 mb-6 text-center leading-[1.2]">All Publications</h2>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
         {catalog.map(book => {
           const readablePageCount = book.pageCount ?? book.pages?.length;
