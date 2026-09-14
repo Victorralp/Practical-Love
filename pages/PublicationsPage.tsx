@@ -32,16 +32,20 @@ export default function PublicationsPage() {
     [managedPublications]
   );
 
-  const railItems: FocusRailItem[] = catalog.map(book => ({
-    id: book.id,
-    title: book.title,
-    description: book.description,
-    imageSrc:
-      book.coverImage ||
-      'https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=1000&auto=format&fit=crop',
-    href: `/read/${book.id}`,
-    meta: `${book.type} • ${book.author}`,
-  }));
+  // Every static publication ships a cover rendered from its own first page;
+  // the fallback only covers publications added later through the admin screen.
+  const railItems: FocusRailItem[] = useMemo(
+    () =>
+      catalog.map(book => ({
+        id: book.id,
+        title: book.title,
+        description: book.description,
+        imageSrc: book.coverImage || '/publications/universal-cover.png',
+        href: `/read/${book.id}`,
+        meta: `${book.type} • ${book.author}`,
+      })),
+    [catalog]
+  );
 
   // Main render function
   return (
@@ -74,11 +78,14 @@ export default function PublicationsPage() {
       />
 
       {/* Focus Rail Carousel */}
-      <div className="mb-12 rounded-2xl overflow-hidden shadow-2xl">
-        <FocusRail items={railItems} autoPlay={true} interval={5000} loop={true} />
-      </div>
+      {railItems.length > 0 && (
+        <div className="mb-12 rounded-2xl overflow-hidden shadow-2xl">
+          <FocusRail items={railItems} autoPlay={true} interval={5000} loop={true} />
+        </div>
+      )}
+
       {/* Publications Grid */}
-      <h2 className="text-2xl font-serif text-red-800 mb-6 text-center">All Publications</h2>
+      <h2 className="text-2xl font-serif text-red-800 mb-6 text-center leading-[1.2]">All Publications</h2>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
         {catalog.map(book => {
           const readablePageCount = book.pageCount ?? book.pages?.length;
@@ -172,7 +179,7 @@ export default function PublicationsPage() {
 
       {/* Call to Action */}
       <div className="bg-gradient-to-r from-red-600 to-orange-600 rounded-xl p-8 md:p-10 text-center shadow-xl mb-10">
-        <h2 className="text-3xl md:text-4xl font-serif text-white mb-6">
+        <h2 className="text-3xl md:text-4xl font-serif text-white mb-6 leading-[1.1] tracking-[-0.015em]">
           Share the Message of Love
         </h2>
         <p className="text-xl text-orange-100 mb-8 max-w-2xl mx-auto leading-relaxed">

@@ -353,7 +353,7 @@ export default function LoveChallengePage() {
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
             Quick Start
           </p>
-          <h2 className="mt-2 text-3xl font-serif text-red-800">How to use the challenge well</h2>
+          <h2 className="mt-2 text-3xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">How to use the challenge well</h2>
           <div className="mt-6 space-y-4">
             {QUICK_START_STEPS.map((step, index) => (
               <div
@@ -379,7 +379,7 @@ export default function LoveChallengePage() {
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
             Challenge Modes
           </p>
-          <h2 className="mt-2 text-3xl font-serif text-red-800">Use it alone or with people</h2>
+          <h2 className="mt-2 text-3xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">Use it alone or with people</h2>
           <div className="mt-6 grid gap-4 md:grid-cols-3">
             {CHALLENGE_MODES.map(mode => (
               <div
@@ -405,7 +405,7 @@ export default function LoveChallengePage() {
               <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
                 Journey Radar
               </p>
-              <h2 className="mt-2 text-3xl font-serif text-red-800">Track your love formation</h2>
+              <h2 className="mt-2 text-3xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">Track your love formation</h2>
               <p className="mt-3 max-w-2xl leading-7 text-gray-700">
                 This challenge is arranged as a progression. Each phase strengthens a different part
                 of love so the practice feels layered, not repetitive.
@@ -458,7 +458,7 @@ export default function LoveChallengePage() {
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-orange-200">
             Momentum Board
           </p>
-          <h2 className="mt-3 text-3xl font-serif text-white">Stay in motion</h2>
+          <h2 className="mt-3 text-3xl font-serif text-white leading-[1.1] tracking-[-0.015em]">Stay in motion</h2>
 
           <div className="mt-6 space-y-4">
             <div className="rounded-2xl border border-white/10 bg-white/10 p-4">
@@ -527,7 +527,7 @@ export default function LoveChallengePage() {
               <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
                 Challenge Map
               </p>
-              <h2 className="mt-2 text-3xl font-serif text-red-800">
+              <h2 className="mt-2 text-3xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">
                 Browse the current phase and select a day
               </h2>
             </div>
@@ -580,7 +580,7 @@ export default function LoveChallengePage() {
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
             Selected Phase
           </p>
-          <h2 className="mt-2 text-3xl font-serif text-red-800">{selectedPhase.title}</h2>
+          <h2 className="mt-2 text-3xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">{selectedPhase.title}</h2>
           <p className="mt-3 leading-7 text-gray-700">{selectedPhase.description}</p>
 
           <div className="mt-6 space-y-4">
@@ -613,7 +613,7 @@ export default function LoveChallengePage() {
               <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
                 Current Day Studio
               </p>
-              <h2 className="mt-2 text-3xl font-serif text-red-800">
+              <h2 className="mt-2 text-3xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">
                 Day {currentDay}: {dayContent.characteristic}
               </h2>
               <p className="mt-3 max-w-2xl text-lg leading-8 text-gray-700">{dayContent.focus}</p>
@@ -723,7 +723,7 @@ export default function LoveChallengePage() {
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
             Daily Rhythm
           </p>
-          <h2 className="mt-2 text-3xl font-serif text-red-800">A better way to move through the day</h2>
+          <h2 className="mt-2 text-3xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">A better way to move through the day</h2>
           <div className="mt-6 space-y-4">
             {DAILY_RHYTHM.map(rhythm => (
               <div
@@ -753,7 +753,7 @@ export default function LoveChallengePage() {
               <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
                 Milestone Trail
               </p>
-              <h2 className="mt-2 text-3xl font-serif text-red-800">See what each checkpoint means</h2>
+              <h2 className="mt-2 text-3xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">See what each checkpoint means</h2>
             </div>
             <div className="rounded-2xl border border-orange-100 bg-orange-50 px-4 py-3">
               <p className="text-sm font-medium text-orange-700">Next milestone</p>
@@ -836,7 +836,7 @@ export default function LoveChallengePage() {
       {completedCount === TOTAL_DAYS ? (
         <section className="rounded-[2rem] bg-gradient-to-r from-red-600 via-red-500 to-orange-500 p-10 text-center text-white shadow-2xl md:p-12">
           <Award className="mx-auto h-24 w-24 fill-current text-yellow-300" />
-          <h2 className="mt-6 text-4xl font-serif md:text-5xl">Challenge Completed</h2>
+          <h2 className="mt-6 text-4xl font-serif md:text-5xl leading-[1.1] tracking-[-0.015em]">Challenge Completed</h2>
           <p className="mx-auto mt-4 max-w-3xl text-lg leading-8 text-orange-50">
             You have completed all 30 days. Keep this rhythm alive and mark the milestone with your
             certificate.

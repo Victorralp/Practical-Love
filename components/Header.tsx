@@ -106,7 +106,7 @@ export default function Header() {
   return (
     <>
       <header
-        className={`sticky top-0 z-50 border-b bg-[rgba(26,14,11,0.92)] backdrop-blur-2xl transition-[border-color,box-shadow] duration-200 ${
+        className={`material-dark sticky top-0 z-50 border-b bg-[rgba(26,14,11,0.92)] backdrop-blur-2xl transition-[border-color,box-shadow] duration-200 ${
           isScrolled || isMenuOpen
             ? 'border-white/10 shadow-[0_10px_30px_rgba(17,8,6,0.28)]'
             : 'border-transparent shadow-none'
@@ -226,7 +226,7 @@ export default function Header() {
                             : 'pointer-events-none invisible scale-[0.96] opacity-0'
                         }`}
                       >
-                        <div className="overflow-hidden rounded-[1.5rem] border border-white/10 bg-[rgba(31,16,12,0.94)] p-2 shadow-[0_24px_44px_rgba(17,8,6,0.28)] backdrop-blur-2xl">
+                        <div className="material-dark overflow-hidden rounded-[1.5rem] border border-white/10 bg-[rgba(31,16,12,0.94)] p-2 shadow-[0_24px_44px_rgba(17,8,6,0.28)] backdrop-blur-2xl">
                           <Link
                             to={item.href}
                             className={`block rounded-[1.1rem] border border-white/8 bg-white/6 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/10 ${FOCUS_RING}`}

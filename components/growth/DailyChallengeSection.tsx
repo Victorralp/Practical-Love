@@ -59,7 +59,7 @@ export default function DailyChallengeSection() {
       <div className="mb-8">
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div>
-            <h2 className="text-3xl font-serif text-red-800 mb-2">Daily Love Challenge</h2>
+            <h2 className="text-3xl font-serif text-red-800 mb-2 leading-[1.1] tracking-[-0.015em]">Daily Love Challenge</h2>
             <p className="text-gray-600 flex items-center">
               <Calendar className="w-4 h-4 mr-2" />
               {formattedDate}

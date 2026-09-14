@@ -242,7 +242,7 @@ export default function GrowthPage() {
                 <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
                   Growth Atlas
                 </p>
-                <h2 className="mt-2 text-3xl font-serif text-red-800">
+                <h2 className="mt-2 text-3xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">
                   Choose the lane you need now
                 </h2>
               </div>
@@ -293,7 +293,7 @@ export default function GrowthPage() {
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-orange-200">
               Growth Rhythm
             </p>
-            <h2 className="mt-2 text-3xl font-serif text-white">
+            <h2 className="mt-2 text-3xl font-serif text-white leading-[1.1] tracking-[-0.015em]">
               Use the hub like a practice cycle
             </h2>
             <div className="mt-6 space-y-4">
@@ -318,7 +318,7 @@ export default function GrowthPage() {
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
               Search Studio
             </p>
-            <h2 className="mt-2 text-3xl font-serif text-red-800">Find content fast</h2>
+            <h2 className="mt-2 text-3xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">Find content fast</h2>
             <p className="mt-3 leading-7 text-gray-700">
               Search by topic, action, or theme. This hub scans challenges, tips, journeys, and
               reflection prompts together.
@@ -412,7 +412,7 @@ export default function GrowthPage() {
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
               Active Focus
             </p>
-            <h2 className="mt-2 text-3xl font-serif text-red-800">{activeMeta.title}</h2>
+            <h2 className="mt-2 text-3xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">{activeMeta.title}</h2>
             <p className="mt-3 max-w-2xl leading-7 text-gray-700">{activeMeta.description}</p>
 
             <div className="mt-6 rounded-[1.75rem] border border-white/80 bg-white/90 p-5 shadow-sm">
@@ -455,7 +455,7 @@ export default function GrowthPage() {
                 <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
                   Section Canvas
                 </p>
-                <h2 className="mt-2 text-3xl font-serif text-red-800">{activeMeta.label}</h2>
+                <h2 className="mt-2 text-3xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">{activeMeta.label}</h2>
               </div>
               <div className="rounded-2xl border border-orange-100 bg-orange-50 px-4 py-3">
                 <p className="text-sm font-medium text-orange-700">Now exploring</p>

@@ -144,7 +144,7 @@ export default function MissionVisionPage() {
               <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
                 Our Mission
               </p>
-              <h2 className="mt-2 text-3xl font-serif text-red-800">
+              <h2 className="mt-2 text-3xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">
                 Equip every Nigerian family with practical tools for love
               </h2>
               <p className="mt-4 max-w-3xl leading-8 text-gray-700">
@@ -189,7 +189,7 @@ export default function MissionVisionPage() {
               <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
                 Our Vision
               </p>
-              <h2 className="mt-2 text-3xl font-serif text-red-800">What we see ahead</h2>
+              <h2 className="mt-2 text-3xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">What we see ahead</h2>
               <p className="mt-4 leading-8 text-gray-700">
                 We want to see every Nigerian family transformed by the power of God’s love,
                 breaking the cycle of corruption, wickedness, and materialism through transformation
@@ -229,7 +229,7 @@ export default function MissionVisionPage() {
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
             Mission Lanes
           </p>
-          <h2 className="mt-2 text-3xl font-serif text-red-800">How the vision becomes practical</h2>
+          <h2 className="mt-2 text-3xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">How the vision becomes practical</h2>
           <div className="mt-6 space-y-4">
             {MISSION_LANES.map(lane => (
               <div
@@ -257,7 +257,7 @@ export default function MissionVisionPage() {
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-orange-200">
             Strategy Flow
           </p>
-          <h2 className="mt-2 text-3xl font-serif text-white">Reproduction and distribution</h2>
+          <h2 className="mt-2 text-3xl font-serif text-white leading-[1.1] tracking-[-0.015em]">Reproduction and distribution</h2>
           <div className="mt-6 space-y-4">
             {STRATEGY_STEPS.map((step, index) => (
               <div key={step.number} className="relative rounded-2xl border border-white/10 bg-white/10 p-5">

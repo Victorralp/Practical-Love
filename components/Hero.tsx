@@ -121,14 +121,6 @@ export default function Hero() {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const revertibles: Array<{ revert: () => void }> = [];
     const revealGroups = Array.from(root.querySelectorAll<HTMLElement>('[data-reveal-group]'));
-    const pushAnimation = (target: Element | null, animation: Parameters<typeof animate>[1]) => {
-      if (!target) {
-        return;
-      }
-
-      revertibles.push(animate(target, animation));
-    };
-
     const showImmediately = () => {
       root.querySelectorAll<HTMLElement>('.hero-line, .reveal-item').forEach(element => {
         element.classList.add('is-visible');
@@ -201,43 +193,7 @@ export default function Hero() {
 
     revertibles.push(introTimeline);
 
-    pushAnimation(root.querySelector('.ambient-orb-a'), {
-      x: [0, 42],
-      y: [0, -34],
-      scale: [1, 1.1],
-      duration: 4200,
-      ease: 'inOutSine',
-      loop: true,
-      alternate: true,
-    });
-    pushAnimation(root.querySelector('.ambient-orb-b'), {
-      x: [0, -48],
-      y: [0, 28],
-      scale: [1.08, 0.94],
-      duration: 5600,
-      ease: 'inOutQuad',
-      loop: true,
-      alternate: true,
-    });
-    pushAnimation(root.querySelector('.ambient-orb-c'), {
-      x: [0, 26],
-      y: [0, 18],
-      scale: [0.96, 1.12],
-      duration: 5100,
-      ease: 'inOutQuad',
-      loop: true,
-      alternate: true,
-    });
-    pushAnimation(root.querySelector('[data-float-panel]'), {
-      y: [0, -14],
-      rotate: [0, -1.25],
-      duration: 5200,
-      ease: 'inOutSine',
-      loop: true,
-      alternate: true,
-    });
-
-
+    // No looping orb/panel sway: the embers are the hero's one ambient loop.
 
     const observer = new IntersectionObserver(
       entries => {
@@ -333,37 +289,31 @@ export default function Hero() {
                 connected to the ministry.
               </p>
 
+              {/* Hidden on phones so the main actions land on the first screen. */}
               <p
                 data-hero-copy
-                className="reveal-item mt-5 max-w-2xl text-base leading-7 text-[#ffe7d3] opacity-80"
+                className="reveal-item mt-5 hidden max-w-2xl text-base leading-7 text-[#ffe7d3] opacity-80 sm:block"
               >
                 Behind the hustle, status, and survival instinct, many homes are carrying silent
                 exhaustion. Practical Love exists to move people from rhetoric into a disciplined,
                 biblical pattern of love that restores the family and reaches the nation.
               </p>
 
-              <div data-hero-copy className="reveal-item mt-10 flex flex-col gap-4 lg:flex-row">
+              {/* One primary action, one secondary. Contact lives in the header and footer. */}
+              <div data-hero-copy className="reveal-item mt-8 flex flex-col gap-4 sm:mt-10 sm:flex-row">
                 <Link
-                  to="/mission-vision"
+                  to="/messages"
                   className="btn-brand group px-8 py-4 text-base md:text-lg"
                 >
-                  Learn more
+                  Read messages
                   <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
                 </Link>
 
                 <Link
-                  to="/messages"
+                  to="/mission-vision"
                   className="btn-outline-light group px-8 py-4 text-base md:text-lg"
                 >
-                  Read messages
-                  <MoveRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
-                </Link>
-
-                <Link
-                  to="/contact"
-                  className="btn-outline-light group px-8 py-4 text-base md:text-lg"
-                >
-                  Contact
+                  Learn more
                   <MoveRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
                 </Link>
               </div>
@@ -389,7 +339,6 @@ export default function Hero() {
             <div className="relative lg:pt-10">
               <div
                 data-hero-panel
-                data-float-panel
                 className="editorial-panel reveal-item mx-auto max-w-[34rem] p-4 sm:p-5"
               >
                 <div className="overflow-hidden rounded-[1.6rem] border border-white/10">

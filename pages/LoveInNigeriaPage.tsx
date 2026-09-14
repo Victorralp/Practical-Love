@@ -204,7 +204,7 @@ export default function LoveInNigeriaPage() {
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
             National Diagnosis
           </p>
-          <h2 className="mt-2 text-3xl font-serif text-red-800">Where the crisis begins</h2>
+          <h2 className="mt-2 text-3xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">Where the crisis begins</h2>
           <p className="mt-3 leading-7 text-gray-700">
             This message is direct on purpose. A nation cannot heal what it refuses to name.
           </p>
@@ -217,7 +217,7 @@ export default function LoveInNigeriaPage() {
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
             Restoration Architecture
           </p>
-          <h2 className="mt-2 text-3xl font-serif text-red-800">What changes everything</h2>
+          <h2 className="mt-2 text-3xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">What changes everything</h2>
           <p className="mt-3 leading-7 text-gray-700">
             The answer is not vague sentiment. It is disciplined, repeatable, practical love
             anchored in God and worked out inside real homes.
@@ -245,7 +245,7 @@ export default function LoveInNigeriaPage() {
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
             Response Lanes
           </p>
-          <h2 className="mt-2 text-3xl font-serif text-red-800">How the message should move</h2>
+          <h2 className="mt-2 text-3xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">How the message should move</h2>
           <div className="mt-6 grid gap-4">
             {RESPONSE_LANES.map(lane => (
               <div
@@ -313,7 +313,7 @@ export default function LoveInNigeriaPage() {
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
             Leadership Examples
           </p>
-          <h2 className="mt-2 text-3xl font-serif text-red-800">Why formation matters</h2>
+          <h2 className="mt-2 text-3xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">Why formation matters</h2>
           <p className="mt-3 leading-7 text-gray-700">
             The page’s core idea is that what is cultivated in a family eventually appears in
             public life. Strong formation produces visible impact.

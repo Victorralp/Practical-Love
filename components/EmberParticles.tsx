@@ -1,4 +1,5 @@
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
+import { usePauseWhenOffscreen } from './usePauseWhenOffscreen';
 
 interface Ember {
   id: number;
@@ -12,6 +13,9 @@ interface Ember {
 const EMBER_COUNT = 18;
 
 export default function EmberParticles() {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  usePauseWhenOffscreen(containerRef);
+
   const embers = useMemo<Ember[]>(() => {
     return Array.from({ length: EMBER_COUNT }, (_, i) => ({
       id: i,
@@ -25,6 +29,7 @@ export default function EmberParticles() {
 
   return (
     <div
+      ref={containerRef}
       className="pointer-events-none absolute inset-0 overflow-hidden"
       aria-hidden="true"
     >

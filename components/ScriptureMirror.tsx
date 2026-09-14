@@ -144,7 +144,7 @@ export default function ScriptureMirror() {
                 >
                   <p className="font-serif text-2xl leading-relaxed text-[#4c2b20] md:text-3xl">
                     <span
-                      className={`scripture-name inline-block transition-all duration-500 ${
+                      className={`scripture-name inline-block ${
                         name.trim()
                           ? 'font-semibold text-[#912018] drop-shadow-[0_0_12px_rgba(145,32,24,0.15)]'
                           : 'text-[#b86b43]'

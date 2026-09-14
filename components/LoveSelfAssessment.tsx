@@ -94,7 +94,7 @@ export default function LoveSelfAssessment() {
       <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#b76840]">
         Love self-assessment
       </p>
-      <h2 className="mt-3 font-serif text-3xl text-[#3e1e17]">
+      <h2 className="mt-3 font-serif text-3xl text-[#3e1e17] leading-[1.1] tracking-[-0.015em]">
         How well do you practice love?
       </h2>
       <p className="mt-3 max-w-2xl leading-7 text-[#6b4332]">

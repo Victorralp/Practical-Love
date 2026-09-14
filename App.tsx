@@ -96,13 +96,15 @@ function AdminShortcut() {
 function AppLayout() {
   const { pathname } = useLocation();
   const isAdminRoute = pathname.startsWith('/admin');
+  // The book reader has its own sticky toolbar with Home/Close actions.
+  const isReaderRoute = pathname.startsWith('/read/');
 
   return (
     <div className="flex flex-col min-h-screen">
       <ScrollToTop />
       <AdminShortcut />
       <SiteSeo />
-      {!isAdminRoute && <Header />}
+      {!isAdminRoute && !isReaderRoute && <Header />}
       <main id="main-content" className="flex-grow">
         <Suspense fallback={<PageLoader />}>
           <Routes>

@@ -121,7 +121,7 @@ export default function AboutLovePage() {
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#a45f3c]">
             How it began
           </p>
-          <h2 className="mt-2 font-serif text-3xl text-[#3d1d17]">
+          <h2 className="mt-2 font-serif text-3xl text-[#3d1d17] leading-[1.1] tracking-[-0.015em]">
             Practical Love is a ministry burden before it is a website section.
           </h2>
           <p className="mt-4 max-w-3xl leading-8 text-[#6e4737]">
@@ -152,7 +152,7 @@ export default function AboutLovePage() {
               <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#a45f3c]">
                 Ministry orientation
               </p>
-              <h2 className="mt-2 font-serif text-3xl text-[#3d1d17]">
+              <h2 className="mt-2 font-serif text-3xl text-[#3d1d17] leading-[1.1] tracking-[-0.015em]">
                 The site should introduce the burden quickly and credibly.
               </h2>
             </div>
@@ -192,7 +192,7 @@ export default function AboutLovePage() {
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#a45f3c]">
           Orientation
         </p>
-        <h2 className="mt-2 font-serif text-3xl text-[#3d1d17]">
+        <h2 className="mt-2 font-serif text-3xl text-[#3d1d17] leading-[1.1] tracking-[-0.015em]">
           Start with the route that answers your first question.
         </h2>
         <div className="mt-8 grid gap-5 md:grid-cols-3">
@@ -214,7 +214,7 @@ export default function AboutLovePage() {
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#a45f3c]">
           Ministry snapshots
         </p>
-        <h2 className="mt-2 font-serif text-3xl text-[#3d1d17]">
+        <h2 className="mt-2 font-serif text-3xl text-[#3d1d17] leading-[1.1] tracking-[-0.015em]">
           Practical Love should feel visible, active, and rooted in real ministry life.
         </h2>
         <p className="mt-4 max-w-3xl leading-8 text-[#6e4737]">

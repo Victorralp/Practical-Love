@@ -48,7 +48,7 @@ export default function GrowthTipsSection() {
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-2">
           <Lightbulb className="w-8 h-8 text-orange-600" />
-          <h2 className="text-3xl font-serif text-red-800">Growth Tips</h2>
+          <h2 className="text-3xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">Growth Tips</h2>
         </div>
         <p className="text-gray-600">
           Practical advice and exercises to help you grow in love and develop stronger

@@ -224,7 +224,7 @@ export default function ContactPage() {
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
               Contact Routes
             </p>
-            <h2 className="mt-2 text-3xl font-serif text-red-800">Choose the best way to reach us</h2>
+            <h2 className="mt-2 text-3xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">Choose the best way to reach us</h2>
             <div className="mt-6 space-y-4">
               {CONTACT_CHANNELS.map(channel => (
                 <a
@@ -256,7 +256,7 @@ export default function ContactPage() {
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-orange-200">
               Before You Send
             </p>
-            <h2 className="mt-2 text-3xl font-serif text-white">Help the team respond well</h2>
+            <h2 className="mt-2 text-3xl font-serif text-white leading-[1.1] tracking-[-0.015em]">Help the team respond well</h2>
 
             <div className="mt-6 space-y-4">
               <div className="rounded-2xl border border-white/10 bg-white/10 p-5">
@@ -306,7 +306,7 @@ export default function ContactPage() {
                 <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
                   Message Form
                 </p>
-                <h2 className="mt-2 text-3xl font-serif text-red-800">Send your message here</h2>
+                <h2 className="mt-2 text-3xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">Send your message here</h2>
               </div>
               <p className="text-sm text-gray-500">
                 Web3Forms powered submission
@@ -424,7 +424,7 @@ export default function ContactPage() {
               <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
                 Best Uses
               </p>
-              <h2 className="mt-2 text-3xl font-serif text-red-800">What people usually contact us about</h2>
+              <h2 className="mt-2 text-3xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">What people usually contact us about</h2>
               <div className="mt-6 space-y-4">
                 {CONTACT_LANES.map(lane => (
                   <div key={lane.title} className="rounded-2xl border border-white/70 bg-white/90 p-4">

@@ -125,7 +125,7 @@ export default function FamilyFirstPage() {
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#a45f3c]">
             Household picture
           </p>
-          <h2 className="mt-2 font-serif text-3xl text-[#3d1d17]">
+          <h2 className="mt-2 font-serif text-3xl text-[#3d1d17] leading-[1.1] tracking-[-0.015em]">
             Family first must feel broad enough to include fathers, mothers, sons, and daughters.
           </h2>
           <p className="mt-4 max-w-3xl leading-8 text-[#6e4737]">
@@ -178,7 +178,7 @@ export default function FamilyFirstPage() {
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#a45f3c]">
             Family first in practice
           </p>
-          <h2 className="mt-2 font-serif text-3xl text-[#3d1d17]">
+          <h2 className="mt-2 font-serif text-3xl text-[#3d1d17] leading-[1.1] tracking-[-0.015em]">
             The question is not whether a home is busy, but what kind of culture it is rehearsing.
           </h2>
           <div className="mt-6 grid gap-4">
@@ -204,7 +204,7 @@ export default function FamilyFirstPage() {
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#a45f3c]">
             Core idea
           </p>
-          <h2 className="mt-2 font-serif text-3xl text-[#3d1d17]">
+          <h2 className="mt-2 font-serif text-3xl text-[#3d1d17] leading-[1.1] tracking-[-0.015em]">
             The home is the first place where pretense fails.
           </h2>
           <p className="mt-4 max-w-3xl leading-8 text-[#6e4737]">
@@ -229,7 +229,7 @@ export default function FamilyFirstPage() {
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#a45f3c]">
             Practice lanes
           </p>
-          <h2 className="mt-2 font-serif text-3xl text-[#3d1d17]">
+          <h2 className="mt-2 font-serif text-3xl text-[#3d1d17] leading-[1.1] tracking-[-0.015em]">
             How to make “family first” visible
           </h2>
           <div className="mt-6 space-y-4">
@@ -258,7 +258,7 @@ export default function FamilyFirstPage() {
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#a45f3c]">
             Children are watching
           </p>
-          <h2 className="mt-2 font-serif text-3xl text-[#3d1d17]">
+          <h2 className="mt-2 font-serif text-3xl text-[#3d1d17] leading-[1.1] tracking-[-0.015em]">
             Ages 3 to 13 are not passive years inside the home.
           </h2>
           <p className="mt-4 max-w-3xl leading-8 text-[#6e4737]">
@@ -288,7 +288,7 @@ export default function FamilyFirstPage() {
               <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#a45f3c]">
                 What to guard against
               </p>
-              <h2 className="mt-2 font-serif text-3xl text-[#3d1d17]">
+              <h2 className="mt-2 font-serif text-3xl text-[#3d1d17] leading-[1.1] tracking-[-0.015em]">
                 Works of the flesh are often taught by atmosphere before they are defended by words.
               </h2>
             </div>
@@ -321,7 +321,7 @@ export default function FamilyFirstPage() {
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#a45f3c]">
           Why it matters
         </p>
-        <h2 className="mt-2 font-serif text-3xl text-[#3d1d17]">
+        <h2 className="mt-2 font-serif text-3xl text-[#3d1d17] leading-[1.1] tracking-[-0.015em]">
           Three reasons this ministry keeps returning to the household.
         </h2>
 
@@ -344,7 +344,7 @@ export default function FamilyFirstPage() {
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#ffd2af]">
           Spiritual power
         </p>
-        <h2 className="mt-2 font-serif text-3xl text-white">
+        <h2 className="mt-2 font-serif text-3xl text-white leading-[1.1] tracking-[-0.015em]">
           Families need more than advice. They need the power of the Holy Spirit.
         </h2>
         <p className="mt-4 max-w-3xl leading-8 text-[#fff1e3] opacity-85">
@@ -364,7 +364,7 @@ export default function FamilyFirstPage() {
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#ffd2af]">
               Next move
             </p>
-            <h2 className="mt-2 font-serif text-3xl text-white">
+            <h2 className="mt-2 font-serif text-3xl text-white leading-[1.1] tracking-[-0.015em]">
               If the family is first, the next question is simple: what should the family practice?
             </h2>
             <p className="mt-4 max-w-2xl leading-8 text-[#fff1e3] opacity-85">

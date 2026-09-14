@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Heart } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { usePauseWhenOffscreen } from './usePauseWhenOffscreen';
 
 const LOVE_WORDS = [
   'patience', 'kindness', 'forgiveness', 'truth', 'hope',
@@ -9,12 +10,10 @@ const LOVE_WORDS = [
   'endurance', 'restoration', 'renewal', 'courage', 'steadfastness',
 ];
 
-function FloatingWhisper({ word, index }: { word: string; index: number }) {
+function FloatingWhisper({ word }: { word: string }) {
   const style: React.CSSProperties = {
     left: `${8 + Math.random() * 84}%`,
     top: `${5 + Math.random() * 90}%`,
-    animationDelay: `${index * 1.7}s`,
-    animationDuration: `${12 + Math.random() * 8}s`,
     fontSize: `${0.7 + Math.random() * 0.5}rem`,
   };
 
@@ -53,6 +52,7 @@ export default function AltarCall() {
   const [pledgeText, setPledgeText] = useState('');
   const [isPledged, setIsPledged] = useState(false);
   const sectionRef = useRef<HTMLElement | null>(null);
+  usePauseWhenOffscreen(sectionRef);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -95,8 +95,8 @@ export default function AltarCall() {
       <div className="absolute left-1/2 top-0 h-[60%] w-[40rem] -translate-x-1/2 bg-[radial-gradient(ellipse,_rgba(255,180,100,0.04)_0%,_transparent_70%)]" />
 
       {/* Floating love whispers */}
-      {LOVE_WORDS.map((word, index) => (
-        <FloatingWhisper key={word} word={word} index={index} />
+      {LOVE_WORDS.map((word) => (
+        <FloatingWhisper key={word} word={word} />
       ))}
 
       {/* Content */}

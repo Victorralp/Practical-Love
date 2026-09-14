@@ -84,7 +84,7 @@ export default function ResourcesPage() {
 
       <SectionCard>
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#a45f3c]">Toolset</p>
-        <h2 className="mt-2 font-serif text-3xl text-[#3d1d17]">Choose the format that helps you keep practicing.</h2>
+        <h2 className="mt-2 font-serif text-3xl text-[#3d1d17] leading-[1.1] tracking-[-0.015em]">Choose the format that helps you keep practicing.</h2>
         <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
           {RESOURCE_ROUTES.map(route => (
             <Link key={route.href} to={route.href} className="block">

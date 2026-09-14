@@ -94,12 +94,16 @@ jspm_packages/
 .out
 .storybook-out
 
+# Python bytecode
+__pycache__/
+
 # Temporary folders
 tmp/
 temp/
 # Firebase service account keys
 *.json
 !data/medicine-without-medication-pages.json
+!data/study-editions/*.json
 !src/seo/routes.json
 !firebase.json
 !database.rules.json

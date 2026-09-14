@@ -146,9 +146,9 @@ export default function TestimonyHeartbeat() {
         </div>
 
         {/* Testimony card */}
-        <div className="surface testimony-card relative overflow-hidden bg-[linear-gradient(145deg,_#fdfaf7_0%,_#fff8f1_40%,_#f9ede0_100%)] p-8 md:p-12 lg:p-16">
-          {/* Breathing quote icon */}
-          <div className="testimony-quote-icon absolute right-8 top-8 md:right-12 md:top-12">
+        <div className="surface relative overflow-hidden bg-[linear-gradient(145deg,_#fdfaf7_0%,_#fff8f1_40%,_#f9ede0_100%)] p-8 md:p-12 lg:p-16">
+          {/* Quote icon */}
+          <div className="absolute right-8 top-8 md:right-12 md:top-12">
             <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#f3dfcb]">
               <Quote className="h-7 w-7 text-[#c17249]" />
             </div>

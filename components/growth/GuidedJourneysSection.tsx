@@ -88,7 +88,7 @@ export default function GuidedJourneysSection() {
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-2">
           <MapIcon className="w-8 h-8 text-orange-600" />
-          <h2 className="text-3xl font-serif text-red-800">Guided Journeys</h2>
+          <h2 className="text-3xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">Guided Journeys</h2>
         </div>
         <p className="text-gray-600">
           Multi-day devotional paths to help you grow spiritually and develop deeper love.

@@ -68,7 +68,7 @@ export default function Footer() {
                   <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#ffcea7]">
                     Practical Love Ministry
                   </p>
-                  <h2 className="font-serif text-3xl text-white md:text-4xl">
+                  <h2 className="font-serif text-3xl text-white md:text-4xl leading-[1.1] tracking-[-0.015em]">
                     A ministry for households that want reform, not performance.
                   </h2>
                 </div>
