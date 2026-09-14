@@ -13,7 +13,7 @@ const routesPath = path.join(projectRoot, 'src', 'seo', 'routes.json');
 const SITE_NAME = 'Practical Love Ministry (Logosrhema)';
 const SITE_URL = 'https://logosrhema.org.ng';
 const FACEBOOK_URL = 'https://web.facebook.com/profile.php?id=61590900447700';
-const DEFAULT_IMAGE_PATH = '/love-hero-v2.png';
+const DEFAULT_IMAGE_PATH = '/brand/practical-love-share.jpg';
 const DEFAULT_DESCRIPTION =
   'Practical Love Ministry (Logosrhema) teaches biblical love through 1 Corinthians 13, family discipleship, the Yellow Card, and daily practice for homes, churches, and communities in Nigeria.';
 
@@ -149,6 +149,9 @@ function buildSeoHead(route) {
     <meta property="og:description" content="${escapeHtml(route.description)}" />
     <meta property="og:url" content="${escapeHtml(canonicalUrl)}" />
     <meta property="og:image" content="${escapeHtml(imageUrl)}" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="${escapeHtml(SITE_NAME)}" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="${escapeHtml(route.title)}" />
     <meta name="twitter:description" content="${escapeHtml(route.description)}" />
@@ -159,7 +162,7 @@ function buildSeoHead(route) {
 
 function injectSeoHead(html, route) {
   const seoTagPattern =
-    /<title>[\s\S]*?<\/title>|<meta[^>]+(?:name|property)=["'](?:description|keywords|robots|author|theme-color|twitter:card|twitter:title|twitter:description|twitter:image|og:type|og:site_name|og:title|og:description|og:url|og:image)["'][^>]*>\s*|<link[^>]+rel=["']canonical["'][^>]*>\s*|<script[^>]+id=["']seo-json-ld["'][\s\S]*?<\/script>\s*/gi;
+    /<title>[\s\S]*?<\/title>|<meta[^>]+(?:name|property)=["'](?:description|keywords|robots|author|theme-color|twitter:card|twitter:title|twitter:description|twitter:image|og:type|og:site_name|og:title|og:description|og:url|og:image|og:image:width|og:image:height|og:image:alt)["'][^>]*>\s*|<link[^>]+rel=["']canonical["'][^>]*>\s*|<script[^>]+id=["']seo-json-ld["'][\s\S]*?<\/script>\s*/gi;
 
   const sanitized = html.replace(seoTagPattern, '');
   return sanitized.replace('</head>', `  ${buildSeoHead(route)}\n  </head>`);
