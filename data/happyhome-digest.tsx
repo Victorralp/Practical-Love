@@ -8,7 +8,7 @@ export const happyHomeDigest: PublicationProps = {
   description:
     'Features articles on navigating marital storms, overcoming barrenness, understanding the wise woman, and protecting your glory as a youth.',
   type: 'Book',
-  coverImage: '/backgrounds/reader-bg.png',
+  coverImage: '/publications/covers/happy-home-digest-vol-1-no-4.jpg',
   images: [
     'https://images.unsplash.com/photo-1542037104857-ffbb0b9155fb?q=80&w=1000&auto=format&fit=crop',
     'https://images.unsplash.com/photo-1505672675380-41225d7b87d3?q=80&w=1000&auto=format&fit=crop',

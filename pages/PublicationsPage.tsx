@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { ArrowRight, BookOpen, Download } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { publications } from '../data/publications';
+import { FocusRail, type FocusRailItem } from '../components/ui/focus-rail';
 import { PageHero, PageShell } from '../components/ui';
 import Logo from '../components/Logo';
 import {
@@ -29,6 +30,21 @@ export default function PublicationsPage() {
   const catalog = useMemo(
     () => mergePublicationCatalog(publications, managedPublications),
     [managedPublications]
+  );
+
+  // Every static publication ships a cover rendered from its own first page;
+  // the fallback only covers publications added later through the admin screen.
+  const railItems: FocusRailItem[] = useMemo(
+    () =>
+      catalog.map(book => ({
+        id: book.id,
+        title: book.title,
+        description: book.description,
+        imageSrc: book.coverImage || '/publications/universal-cover.png',
+        href: `/read/${book.id}`,
+        meta: `${book.type} • ${book.author}`,
+      })),
+    [catalog]
   );
 
   // Main render function
@@ -60,6 +76,13 @@ export default function PublicationsPage() {
           </>
         }
       />
+
+      {/* Focus Rail Carousel */}
+      {railItems.length > 0 && (
+        <div className="mb-12 rounded-2xl overflow-hidden shadow-2xl">
+          <FocusRail items={railItems} autoPlay={true} interval={5000} loop={true} />
+        </div>
+      )}
 
       {/* Publications Grid */}
       <h2 className="text-2xl font-serif text-red-800 mb-6 text-center leading-[1.2]">All Publications</h2>

@@ -35,7 +35,7 @@ export const publications: PublicationProps[] = [
     description:
       'Discover the solution to corruption and the path to national blessing through the practical application of love.',
     type: 'Book',
-    coverImage: '/backgrounds/reader-bg.png',
+    coverImage: '/publications/covers/love-nigerians.jpg',
     pdfUrl: '/publications/love-nigerians-or-live-on-curses.pdf',
     pages: [
       {
@@ -402,7 +402,7 @@ export const publications: PublicationProps[] = [
     description:
       'Discover the solution to division and the path to national blessing through the practical application of love in America.',
     type: 'Book',
-    coverImage: '/backgrounds/reader-bg.png',
+    coverImage: '/publications/covers/love-americans.jpg',
     pages: [
       {
         content: (
@@ -767,7 +767,7 @@ export const publications: PublicationProps[] = [
     description:
       'An expanded practical Christian guide on choosing people above profit, righteousness above compromise, humility above pride, and love, truth, and worthwhile service above destructive worldly systems.',
     type: 'E-Book',
-    coverImage: '/publications/universal-cover.png',
+    coverImage: '/publications/covers/how-to-avoid-evil-system.jpg',
     pageCount: 6,
     pdfUrl: '/publications/how-to-avoid-evil-system.pdf',
     pages: [
@@ -929,7 +929,7 @@ export const publications: PublicationProps[] = [
     description:
       'A study edition with explanations: raising husbands who love their wives, wives who love their husbands, and children and parents who love one another. Thirteen points on love at home, in the church and in the nation.',
     type: 'E-Book',
-    coverImage: '/publications/universal-cover.png',
+    coverImage: '/publications/covers/raising-loving-families-in-nigeria.jpg',
     pdfUrl: '/publications/raising-loving-families-in-nigeria.pdf',
     pageCount: 40,
     loadPages: loadStudyEdition(() => import('./study-editions/raising-loving-families-in-nigeria.json')),
@@ -941,7 +941,7 @@ export const publications: PublicationProps[] = [
     description:
       'A study edition with explanations: spiritual lostness, corrupt leadership, poverty, disease and ignorance, and how planting churches, curing diseases and education defeat them.',
     type: 'E-Book',
-    coverImage: '/publications/universal-cover.png',
+    coverImage: '/publications/covers/five-global-evil-giants.jpg',
     pdfUrl: '/publications/five-global-evil-giants.pdf',
     pageCount: 31,
     loadPages: loadStudyEdition(() => import('./study-editions/five-global-evil-giants.json')),
@@ -953,7 +953,7 @@ export const publications: PublicationProps[] = [
     description:
       'A study edition with explanations: nine best steps for a loving marriage and five things to observe with children’s food.',
     type: 'E-Book',
-    coverImage: '/publications/universal-cover.png',
+    coverImage: '/publications/covers/love-at-home.jpg',
     pdfUrl: '/publications/love-at-home.pdf',
     pageCount: 40,
     loadPages: loadStudyEdition(() => import('./study-editions/love-at-home.json')),
@@ -965,7 +965,7 @@ export const publications: PublicationProps[] = [
     description:
       'A study edition with explanations of the 26 May 2025 letter to the Owa Obokun Adimula of Ijesha Land: a lifetime LoveCards project to restore godly love, and with it prosperity, in every home and family.',
     type: 'E-Book',
-    coverImage: '/publications/universal-cover.png',
+    coverImage: '/publications/covers/eradicating-poverty-in-ijesha-land.jpg',
     pdfUrl: '/publications/eradicating-poverty-in-ijesha-land.pdf',
     pageCount: 28,
     loadPages: loadStudyEdition(() => import('./study-editions/eradicating-poverty-in-ijesha-land.json')),
@@ -977,7 +977,7 @@ export const publications: PublicationProps[] = [
     description:
       'A study edition with explanations of the January 2010 letter: a vision to plant churches and church-run medical clinics from Nigeria to West Africa and the rest of Africa, built on a practical foundation of love and humility.',
     type: 'E-Book',
-    coverImage: '/publications/universal-cover.png',
+    coverImage: '/publications/covers/vision-for-churches-and-clinics.jpg',
     pdfUrl: '/publications/vision-for-churches-and-clinics.pdf',
     pageCount: 23,
     loadPages: loadStudyEdition(() => import('./study-editions/vision-for-churches-and-clinics.json')),
@@ -989,7 +989,7 @@ export const publications: PublicationProps[] = [
     description:
       'A study edition with explanations of the recommendation of Prescription For Life by Dr. Richard Furman, MD, FACS: why a ministry of love commends a health book, and how to read it well.',
     type: 'E-Book',
-    coverImage: '/publications/universal-cover.png',
+    coverImage: '/publications/covers/prescription-for-life.jpg',
     pdfUrl: '/publications/prescription-for-life.pdf',
     pageCount: 23,
     loadPages: loadStudyEdition(() => import('./study-editions/prescription-for-life.json')),
@@ -1001,7 +1001,7 @@ export const publications: PublicationProps[] = [
     description:
       'A readable text edition of Medicine Without Medication, available online with the original PDF for download.',
     type: 'E-Book',
-    coverImage: '/publications/universal-cover.png',
+    coverImage: '/publications/covers/medicine-without-medication.jpg',
     pageCount: 95,
     loadPages: async () =>
       (await import('./medicine-without-medication-pages.json')).default as PublicationPage[],
@@ -1014,7 +1014,7 @@ export const publications: PublicationProps[] = [
     description:
       'Discover the 16 remarkable health benefits of Moringa oleifera, nature\'s most nutrient-rich plant. From boosting immunity and promoting energy to supporting healthy skin and digestion.',
     type: 'E-Book',
-    coverImage: '/publications/universal-cover.png',
+    coverImage: '/publications/covers/benefits-of-moringa.jpg',
     pdfUrl: '/publications/benefits-of-moringa.pdf',
     pages: [
       {
