@@ -931,7 +931,7 @@ export const publications: PublicationProps[] = [
     type: 'E-Book',
     coverImage: '/publications/universal-cover.png',
     pdfUrl: '/publications/raising-loving-families-in-nigeria.pdf',
-    pageCount: 17,
+    pageCount: 40,
     loadPages: loadStudyEdition(() => import('./study-editions/raising-loving-families-in-nigeria.json')),
   },
   {
@@ -943,7 +943,7 @@ export const publications: PublicationProps[] = [
     type: 'E-Book',
     coverImage: '/publications/universal-cover.png',
     pdfUrl: '/publications/five-global-evil-giants.pdf',
-    pageCount: 10,
+    pageCount: 31,
     loadPages: loadStudyEdition(() => import('./study-editions/five-global-evil-giants.json')),
   },
   {
@@ -955,7 +955,7 @@ export const publications: PublicationProps[] = [
     type: 'E-Book',
     coverImage: '/publications/universal-cover.png',
     pdfUrl: '/publications/love-at-home.pdf',
-    pageCount: 16,
+    pageCount: 40,
     loadPages: loadStudyEdition(() => import('./study-editions/love-at-home.json')),
   },
   {
