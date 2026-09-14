@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import {
   ArrowRight,
   Compass,
@@ -103,12 +103,6 @@ export default function GrowthPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 300);
-    return () => clearTimeout(timer);
-  }, []);
 
   const counts = useMemo(
     () => ({
@@ -175,19 +169,6 @@ export default function GrowthPage() {
   };
 
   const activeMeta = SECTION_DETAILS[activeSection];
-
-  if (isLoading) {
-    return (
-      <PageShell className="bg-[radial-gradient(circle_at_top,_rgba(254,215,170,0.32),_transparent_36%),linear-gradient(180deg,_#fff7ed_0%,_#ffffff_60%,_#fff1f2_100%)]">
-        <div className="flex flex-col items-center justify-center py-32">
-          <div className="animate-pulse rounded-[1.5rem] bg-white p-4 shadow-lg">
-            <Logo className="h-16 w-16" />
-          </div>
-          <p className="mt-5 text-gray-600">Loading your growth hub...</p>
-        </div>
-      </PageShell>
-    );
-  }
 
   return (
     <PageShell className="bg-[radial-gradient(circle_at_top_left,_rgba(254,215,170,0.26),_transparent_30%),radial-gradient(circle_at_top_right,_rgba(248,113,113,0.16),_transparent_34%),linear-gradient(180deg,_#fffaf5_0%,_#ffffff_48%,_#fff7ed_100%)]">

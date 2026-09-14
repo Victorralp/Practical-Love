@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { useReducedMotion } from 'framer-motion';
+import { Pause, Play } from 'lucide-react';
 
 const PRAYER_VERSES = [
   {
@@ -71,25 +73,47 @@ function CandleFlame() {
 
 export default function PrayerPause() {
   const [activeVerse, setActiveVerse] = useState(0);
-  const [isFading, setIsFading] = useState(false);
+  const [isInView, setIsInView] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  // Once someone picks a verse themselves, stop rotating so it stays with them.
+  const [hasTakenControl, setHasTakenControl] = useState(false);
   const [ripples, setRipples] = useState<Array<{ id: number; x: number; y: number }>>([]);
   const [prayerCount, setPrayerCount] = useState(0);
+  const prefersReducedMotion = useReducedMotion();
   const sectionRef = useRef<HTMLElement | null>(null);
   const rippleIdRef = useRef(0);
 
-  // Rotate verses
   useEffect(() => {
-    const interval = setInterval(() => {
-      setIsFading(true);
+    const section = sectionRef.current;
 
-      setTimeout(() => {
-        setActiveVerse((prev) => (prev + 1) % PRAYER_VERSES.length);
-        setIsFading(false);
-      }, 600);
+    if (!section) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting);
+      },
+      { threshold: 0.25 }
+    );
+
+    observer.observe(section);
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Rotate verses only while visible, not hovered or focused, and never under reduced motion.
+  useEffect(() => {
+    if (!isInView || isPaused || hasTakenControl || prefersReducedMotion) {
+      return;
+    }
+
+    const interval = setInterval(() => {
+      setActiveVerse((prev) => (prev + 1) % PRAYER_VERSES.length);
     }, 8000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [isInView, isPaused, hasTakenControl, prefersReducedMotion]);
 
   const handlePrayerClick = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -115,6 +139,14 @@ export default function PrayerPause() {
       ref={sectionRef}
       id="prayer-pause"
       className="relative overflow-hidden px-4 py-20 sm:px-6 lg:px-8 lg:py-28"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+      onFocus={() => setIsPaused(true)}
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+          setIsPaused(false);
+        }
+      }}
     >
       {/* Deep warm background */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(45,21,18,0.97)_0%,_rgba(30,14,11,0.99)_60%,_#1a0e0b_100%)]" />
@@ -137,13 +169,9 @@ export default function PrayerPause() {
         {/* Candle */}
         <CandleFlame />
 
-        {/* Rotating verse */}
+        {/* Rotating verse: swaps immediately, then fades in. */}
         <div className="relative mx-auto min-h-[10rem] max-w-2xl">
-          <div
-            className={`transition-all duration-600 ${
-              isFading ? 'scale-[0.98] opacity-0' : 'scale-100 opacity-100'
-            }`}
-          >
+          <div key={activeVerse} className="animate-[fadeSlideIn_300ms_ease-out]">
             <p className="font-serif text-3xl leading-snug text-[#fff8f1] md:text-4xl">
               {currentVerse.text}
             </p>
@@ -154,32 +182,46 @@ export default function PrayerPause() {
         </div>
 
         {/* Verse indicator dots */}
-        <div className="mt-8 flex items-center justify-center gap-2">
+        {/* Dots stay small; each button is a 44px hit area around its dot. */}
+        <div className="mt-6 flex items-center justify-center">
           {PRAYER_VERSES.map((_, index) => (
             <button
               key={index}
+              type="button"
               onClick={() => {
-                setIsFading(true);
-                setTimeout(() => {
-                  setActiveVerse(index);
-                  setIsFading(false);
-                }, 400);
+                setHasTakenControl(true);
+                setActiveVerse(index);
               }}
-              className={`h-2 rounded-full transition-all duration-500 ${
-                index === activeVerse
-                  ? 'w-6 bg-[#e8a05c]'
-                  : 'w-2 bg-[#fff3e7]/20 hover:bg-[#fff3e7]/40'
-              }`}
+              className="group flex h-11 min-w-9 items-center justify-center px-1"
               aria-label={`Go to verse ${index + 1}`}
-            />
+              aria-current={index === activeVerse ? 'true' : undefined}
+            >
+              <span
+                className={`block h-2 rounded-full transition-[width,background-color] duration-300 ${
+                  index === activeVerse
+                    ? 'w-6 bg-[#e8a05c]'
+                    : 'w-2 bg-[#fff3e7]/20 group-hover:bg-[#fff3e7]/40'
+                }`}
+              />
+            </button>
           ))}
+          {!prefersReducedMotion && (
+            <button
+              type="button"
+              onClick={() => setHasTakenControl((stopped) => !stopped)}
+              className="ml-2 flex h-11 w-11 items-center justify-center rounded-full text-[#fff3e7]/50 transition-colors hover:bg-[#fff3e7]/8 hover:text-[#fff3e7]/80"
+              aria-label={hasTakenControl ? 'Play verses' : 'Pause verses'}
+            >
+              {hasTakenControl ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
+            </button>
+          )}
         </div>
 
         {/* Prayer button */}
         <div className="mt-12">
           <button
             onClick={handlePrayerClick}
-            className="prayer-btn group relative overflow-hidden rounded-full border border-[#fff3e7]/16 bg-[#fff3e7]/8 px-8 py-4 font-medium text-[#ffe7d3] transition-all duration-500 hover:border-[#fff3e7]/28 hover:bg-[#fff3e7]/12 hover:shadow-[0_0_40px_rgba(255,200,140,0.1)]"
+            className="prayer-btn group relative overflow-hidden rounded-full border border-[#fff3e7]/16 bg-[#fff3e7]/8 px-8 py-4 font-medium text-[#ffe7d3] transition-[transform,border-color,background-color,box-shadow] duration-500 hover:border-[#fff3e7]/28 hover:bg-[#fff3e7]/12 hover:shadow-[0_0_40px_rgba(255,200,140,0.1)] active:scale-[0.97] active:duration-75"
             id="prayer-button"
           >
             {/* Ripples */}

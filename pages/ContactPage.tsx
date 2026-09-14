@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   Clock3,
   Handshake,
@@ -85,8 +85,6 @@ export default function ContactPage() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitState, setSubmitState] = useState<SubmitState>({ status: 'idle', message: '' });
-  const [warmPromptIndex, setWarmPromptIndex] = useState(0);
-
   const WARM_PROMPTS = [
     'Tell us what\'s on your heart...',
     'Every prayer request is sacred to us...',
@@ -95,12 +93,10 @@ export default function ContactPage() {
     'This space is safe. Speak freely...',
   ];
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setWarmPromptIndex(prev => (prev + 1) % 5);
-    }, 4000);
-    return () => clearInterval(timer);
-  }, []);
+  // One prompt per visit. Text that keeps changing beside the form pulls attention while people type.
+  const [warmPrompt] = useState(
+    () => WARM_PROMPTS[Math.floor(Math.random() * WARM_PROMPTS.length)]
+  );
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -317,15 +313,9 @@ export default function ContactPage() {
               </p>
             </div>
 
-            {/* Warm rotating prompt */}
+            {/* Warm prompt */}
             <div className="mt-4 rounded-2xl border border-[rgba(176,111,74,0.12)] bg-[linear-gradient(135deg,_rgba(255,248,240,0.9)_0%,_rgba(255,243,231,0.9)_100%)] p-4 text-center">
-              <p
-                className="font-serif text-lg italic text-[#8d5339] transition-opacity duration-500"
-                key={warmPromptIndex}
-                style={{ animation: 'fadeSlideIn 0.6s ease' }}
-              >
-                {WARM_PROMPTS[warmPromptIndex]}
-              </p>
+              <p className="font-serif text-lg italic text-[#8d5339]">{warmPrompt}</p>
             </div>
 
             <form onSubmit={handleSubmit} className="mt-6 space-y-6">

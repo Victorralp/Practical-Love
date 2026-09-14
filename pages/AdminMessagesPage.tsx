@@ -21,6 +21,7 @@ import {
   AdminPageHeader,
   AdminPanel,
   ConfirmButton,
+  ConfirmDialog,
   EmptyState,
   Field,
   LoadingState,
@@ -149,6 +150,7 @@ export default function AdminMessagesPage() {
   // is discarded in "new post" mode), so "Cancel edit" never breaks a live post.
   const [detachedMedia, setDetachedMedia] = useState<MessageMedia[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isDiscardDialogOpen, setIsDiscardDialogOpen] = useState(false);
 
   useEffect(() => {
     const unsubscribe = subscribeToMessagePosts(
@@ -227,18 +229,8 @@ export default function AdminMessagesPage() {
     setDetachedMedia([]);
   };
 
-  /** Reset used by UI buttons — asks first when there are unsaved changes. */
-  const resetForm = () => {
-    if (
-      isFormDirty &&
-      !window.confirm(
-        editingId
-          ? 'Discard the changes to this post? Its current media will be kept.'
-          : 'Discard the changes in this form?'
-      )
-    ) {
-      return;
-    }
+  const discardForm = () => {
+    setIsDiscardDialogOpen(false);
 
     // Discarding an unsaved new post leaves its freshly uploaded media
     // unreferenced — clean those up now.
@@ -247,6 +239,16 @@ export default function AdminMessagesPage() {
     }
 
     applyReset();
+  };
+
+  /** Reset used by UI buttons — asks first when there are unsaved changes. */
+  const resetForm = () => {
+    if (isFormDirty) {
+      setIsDiscardDialogOpen(true);
+      return;
+    }
+
+    discardForm();
   };
 
   const handleMediaUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -724,6 +726,20 @@ export default function AdminMessagesPage() {
           )}
         </AdminPanel>
       </div>
+
+      <ConfirmDialog
+        open={isDiscardDialogOpen}
+        title={editingId ? 'Discard changes to this post?' : 'Discard this draft?'}
+        description={
+          editingId
+            ? 'Your edits will be lost. The published post and its current media stay as they are.'
+            : 'Everything in the form, including any uploaded media, will be removed.'
+        }
+        confirmLabel="Discard"
+        cancelLabel="Keep editing"
+        onConfirm={discardForm}
+        onCancel={() => setIsDiscardDialogOpen(false)}
+      />
     </div>
   );
 }

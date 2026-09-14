@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   BookOpen,
   Filter,
@@ -101,6 +101,16 @@ export default function BiblePassagesPage() {
   const closePopup = () => {
     setSelectedPassage(null);
   };
+
+  // Escape closes the popup, so the pointer-only backdrop is never the only way out.
+  useEffect(() => {
+    if (selectedPassage === null) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setSelectedPassage(null);
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [selectedPassage]);
 
   // Bible passages data - 50 foundational verses about love
   const passages: BiblePassage[] = [
@@ -624,10 +634,12 @@ export default function BiblePassagesPage() {
                     tabIndex={0}
                     aria-label={`View passage ${passage.reference}`}
                     onClick={e => openPopup(originalIndex, e)}
-                    onKeyDown={e =>
-                      e.key === 'Enter' &&
-                      openPopup(originalIndex, e as unknown as React.MouseEvent<HTMLDivElement>)
-                    }
+                    onKeyDown={e => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        openPopup(originalIndex, e as unknown as React.MouseEvent<HTMLDivElement>);
+                      }
+                    }}
                   >
                     {/* Category indicator dot */}
                     <div
@@ -654,8 +666,13 @@ export default function BiblePassagesPage() {
           {/* Popup positioned next to the card */}
           {selectedPassage !== null && (
             <>
-              {/* Backdrop to close popup when clicking outside */}
-              <div className="fixed inset-0" style={{ zIndex: 99998 }} onClick={closePopup} />
+              {/* Pointer-only backdrop; keyboard users close with Escape or the close button. */}
+              <div
+                className="fixed inset-0"
+                style={{ zIndex: 99998 }}
+                onClick={closePopup}
+                aria-hidden="true"
+              />
 
               {/* Popup */}
               <div
@@ -705,7 +722,7 @@ export default function BiblePassagesPage() {
                     <button
                       type="button"
                       onClick={closePopup}
-                      className="p-1.5 hover:bg-gray-200 rounded-full transition-colors"
+                      className="relative p-1.5 hover:bg-gray-200 rounded-full transition-colors before:absolute before:-inset-1.5 before:content-['']"
                       aria-label="Close popup"
                     >
                       <X className="w-5 h-5 text-gray-500" />

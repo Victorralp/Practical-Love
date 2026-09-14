@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { motion, AnimatePresence, PanInfo } from 'framer-motion';
+import { motion, AnimatePresence, PanInfo, useReducedMotion } from 'framer-motion';
 import { ChevronLeft, ChevronRight, ArrowUpRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { cn } from './utils';
@@ -53,6 +53,7 @@ export function FocusRail({
 }: FocusRailProps) {
   const [active, setActive] = React.useState(initialIndex);
   const [isHovering, setIsHovering] = React.useState(false);
+  const prefersReducedMotion = useReducedMotion();
   const lastWheelTime = React.useRef<number>(0);
 
   const count = items.length;
@@ -91,10 +92,10 @@ export function FocusRail({
 
   // Autoplay logic
   React.useEffect(() => {
-    if (!autoPlay || isHovering) return;
+    if (!autoPlay || isHovering || prefersReducedMotion) return;
     const timer = setInterval(() => handleNext(), interval);
     return () => clearInterval(timer);
-  }, [autoPlay, isHovering, handleNext, interval]);
+  }, [autoPlay, isHovering, prefersReducedMotion, handleNext, interval]);
 
   // Keyboard navigation
   const onKeyDown = (e: React.KeyboardEvent) => {
