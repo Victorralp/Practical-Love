@@ -21,9 +21,7 @@ const PublicationsPage = lazy(() => import('./pages/PublicationsPage'));
 const BookReaderPage = lazy(() => import('./pages/BookReaderPage'));
 const ContactPage = lazy(() => import('./pages/ContactPage'));
 const TestimoniesPage = lazy(() => import('./pages/TestimoniesPage'));
-const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'));
-const TermsOfServicePage = lazy(() => import('./pages/TermsOfServicePage'));
-const CookiePolicyPage = lazy(() => import('./pages/CookiePolicyPage'));
+const LegalPage = lazy(() => import('./pages/LegalPage'));
 const DonationPage = lazy(() => import('./pages/DonationPage'));
 const AboutLovePage = lazy(() => import('./pages/AboutLovePage'));
 const ResourcesPage = lazy(() => import('./pages/ResourcesPage'));
@@ -187,9 +185,9 @@ function AppLayout() {
             <Route path="/read/:id" element={<BookReaderPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/testimonies" element={<TestimoniesPage />} />
-            <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
-            <Route path="/terms-of-service" element={<TermsOfServicePage />} />
-            <Route path="/cookie-policy" element={<CookiePolicyPage />} />
+            <Route path="/privacy-policy" element={<LegalPage doc="privacy" />} />
+            <Route path="/terms-of-service" element={<LegalPage doc="terms" />} />
+            <Route path="/cookie-policy" element={<LegalPage doc="cookies" />} />
             <Route path="/donate" element={<DonationPage />} />
 
             {/* Dev-only debug routes — tree-shaken out of production builds */}
