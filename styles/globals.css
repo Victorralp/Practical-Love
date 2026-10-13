@@ -426,3 +426,20 @@
     opacity: 1;
   }
 }
+
+/* Printable cards: hide the site chrome and on-screen-only pieces. */
+@media print {
+  header,
+  footer,
+  .pl-noprint {
+    display: none !important;
+  }
+
+  .pl-print-only {
+    display: block !important;
+  }
+}
+
+.pl-print-only {
+  display: none;
+}

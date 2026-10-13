@@ -1,256 +1,164 @@
-import { Award, Download, Printer, Calendar, Target, Star, Sparkles } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { PageHero, PageShell } from '../components/ui';
-import Logo from '../components/Logo';
+import { Em } from '../components/pl/primitives';
+import { animate, prefersReducedMotion, useEntrance, usePopOnChange } from '../components/pl/motion';
+import { CHARACTERISTICS } from '../data/yellowCard';
+
+const ROUTINE = [
+  { when: 'Morning', what: 'Read one characteristic. Set your intention.' },
+  { when: 'All day', what: 'Practise that one trait in every conversation.' },
+  { when: 'Evening', what: 'Review how you loved. Note one thing for tomorrow.' },
+];
+
+function capitalise(text: string) {
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
 
 export default function YellowCardPage() {
-  const characteristics = [
-    { num: 1, text: 'LOVE endures long and is patient and kind' },
-    { num: 2, text: 'LOVE is never envious or boils over with jealousy' },
-    { num: 3, text: 'LOVE is not boastful or vainglorious' },
-    { num: 4, text: 'LOVE does not display itself haughtily' },
-    { num: 5, text: 'LOVE is not conceited (arrogant and inflated with pride)' },
-    { num: 6, text: 'LOVE is not rude or unmannerly' },
-    { num: 7, text: 'LOVE does not act unbecomingly' },
-    { num: 8, text: "LOVE (GOD'S LOVE IN US) does not insist on his own way or his own right" },
-    { num: 9, text: 'LOVE is not self-seeking' },
-    { num: 10, text: 'LOVE is not fretful, touchy or resentful' },
-    { num: 11, text: 'LOVE takes no account of evil done to it' },
-    { num: 12, text: 'LOVE pays no attention to a suffered wrong' },
-    {
-      num: 13,
-      text: 'LOVE does not rejoice at injustice and unrighteousness but rejoices when right and truth prevail',
-    },
-    { num: 14, text: 'LOVE bears up under anything that comes' },
-    { num: 15, text: 'LOVE is ever ready to believe the best of every person' },
-    { num: 16, text: "LOVE's hope is fadeless under all circumstances, and it endures everything" },
-    { num: 17, text: 'LOVE never fails, never fades out, or becomes obsolete, or comes to an end' },
-  ];
+  const [back, setBack] = useState(false);
+  const [pick, setPick] = useState(() => new Date().getDate() % CHARACTERISTICS.length);
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  const cardRef = useRef<HTMLDivElement | null>(null);
+  const todayRef = useRef<HTMLHeadingElement | null>(null);
 
-  const dailyPractices = [
-    {
-      icon: <Logo className="w-6 h-6" />,
-      title: 'Morning Reflection',
-      description: 'Read one characteristic and set your intention for the day.',
-      accent: 'Step 01',
-      tip: 'Set the tone for every interaction.',
-    },
-    {
-      icon: <Target className="w-6 h-6" />,
-      title: 'Daily Goal',
-      description: 'Choose one trait to practice intentionally in every interaction.',
-      accent: 'Step 02',
-      tip: 'Carry one focus word with you.',
-    },
-    {
-      icon: <Calendar className="w-6 h-6" />,
-      title: 'Evening Review',
-      description: 'Reflect on how you loved today and note one improvement for tomorrow.',
-      accent: 'Step 03',
-      tip: 'Celebrate one small win nightly.',
-    },
-  ];
+  useEntrance(rootRef);
+  usePopOnChange(todayRef, pick, [
+    { transform: 'translateY(30px)', opacity: 0 },
+    { transform: 'none', opacity: 1 },
+  ]);
 
-  const benefits = [
-    {
-      icon: <Logo className="w-8 h-8" />,
-      title: 'Transform Relationships',
-      description: 'Strengthen family, friendships, and work through lived-out love.',
-    },
-    {
-      icon: <Target className="w-8 h-8" />,
-      title: 'Build Communities',
-      description: 'Create positive change in your neighborhood and workplace.',
-    },
-    {
-      icon: <Award className="w-8 h-8" />,
-      title: 'Grow Personally',
-      description: 'Develop character and emotional maturity with daily practice.',
-    },
-  ];
+  useEffect(() => {
+    if (prefersReducedMotion()) return;
+    animate(
+      cardRef.current,
+      [
+        { transform: 'rotateY(-30deg) rotate(-12deg) translateY(60px)', opacity: 0 },
+        { transform: 'rotateY(0) rotate(-3deg)', opacity: 1 },
+      ],
+      { duration: 1200, delay: 300, easing: 'cubic-bezier(.3,1.3,.5,1)', fill: 'backwards' }
+    );
+  }, []);
+
+  const flip = () => setBack(b => !b);
+  const shuffle = () =>
+    setPick(current => {
+      let next = current;
+      while (next === current) next = Math.floor(Math.random() * CHARACTERISTICS.length);
+      return next;
+    });
 
   return (
-    <PageShell className="bg-gradient-to-b from-yellow-50 via-white to-orange-50" containerClassName="py-16 section-gap">
-      <PageHero
-        className="surface-soft mb-8"
-        badge={
-          <>
-            <Sparkles className="w-4 h-4" />
-            God&apos;s Love Language
-          </>
-        }
-        icon={
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-red-600 to-orange-500 flex items-center justify-center shadow-sm">
-            <Logo className="w-6 h-6" />
+    <div ref={rootRef}>
+      <section className="pl-noprint pl-wrap grid items-center gap-[clamp(40px,6vw,88px)] py-[clamp(48px,7vw,96px)] [grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr))]">
+        <div>
+          <Link to="/resources" className="text-[15px] font-semibold text-pl-ink no-underline">
+            ← Resources
+          </Link>
+          <h1 data-in className="mb-0 mt-5 text-[clamp(56px,9vw,128px)] font-extrabold leading-[.88] tracking-[-0.055em]">
+            The Yellow <Em>Card.</Em>
+          </h1>
+          <p data-in className="pl-lede max-w-[36ch]">
+            The 17 characteristics of love from 1 Corinthians 13, on one card. Keep it in your wallet, on the fridge, by the bed.
+          </p>
+          <div data-in className="mt-7 flex flex-wrap gap-3">
+            <button type="button" onClick={flip} className="pl-btn pl-btn-ink">
+              {back ? 'Show the 17 traits' : 'Flip for the daily routine'}
+            </button>
+            <button type="button" onClick={() => window.print()} className="pl-btn pl-btn-outline">
+              Print the card
+            </button>
           </div>
-        }
-        title="The Yellow Card"
-        subtitle="A simple, printable guide to memorize and live the 17 characteristics of love from 1 Corinthians 13."
-      />
+        </div>
 
-      <div className="surface p-6">
-        <div className="bg-white border border-orange-100 rounded-2xl p-6 space-y-6">
-          <div className="text-center space-y-2">
-            <h2 className="text-2xl md:text-3xl font-serif font-bold text-red-800 leading-[1.1] tracking-[-0.015em]">Practical Love: The Yellow Card</h2>
-            <p className="text-sm uppercase tracking-wide text-orange-700 font-semibold">
-              Insert your name wherever you see “LOVE”
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {characteristics.map(item => (
-              <div
-                key={item.num}
-                className="flex items-start bg-white rounded-xl p-4 border border-orange-100 hover:border-orange-200 hover:-translate-y-0.5 transition"
-              >
-                <div className="w-8 h-8 bg-gradient-to-br from-red-600 to-orange-500 rounded-full flex items-center justify-center mr-4 text-white font-semibold shadow-sm">
-                  {item.num}
+        <div data-in className="w-[min(100%,520px)] justify-self-center [perspective:1400px]">
+          <div ref={cardRef}>
+            <div
+              role="button"
+              tabIndex={0}
+              aria-label={back ? 'Yellow Card, back: daily routine. Activate to flip.' : 'Yellow Card, front: 17 characteristics. Activate to flip.'}
+              onClick={flip}
+              onKeyDown={e => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  flip();
+                }
+              }}
+              className="relative aspect-[5/7] cursor-pointer transition-transform duration-[900ms] [transform-style:preserve-3d] [transition-timing-function:cubic-bezier(.3,1.3,.5,1)]"
+              style={{ transform: `rotateY(${back ? 180 : 0}deg) rotate(-3deg)` }}
+            >
+              <div className="absolute inset-0 flex flex-col rounded-[28px] border-2 border-pl-ink bg-pl-yellow p-[clamp(20px,3vw,32px)] shadow-[14px_14px_0_#e1251b] [backface-visibility:hidden]">
+                <div className="flex items-baseline justify-between">
+                  <span className="text-[16px] font-extrabold">
+                    practical<span className="text-pl-red">♥</span>love
+                  </span>
+                  <span className="text-[12px] font-bold uppercase tracking-[0.08em]">1 Cor 13:4–8</span>
                 </div>
-                <p className="text-gray-800 text-base leading-relaxed">{item.text}</p>
+                <p className="pl-serif mb-[6px] mt-3 text-[clamp(26px,3vw,34px)] leading-none">Love…</p>
+                <ol className="m-0 grid list-none gap-[clamp(2px,.4vw,5px)] p-0 text-[clamp(12px,1.25vw,15px)] font-semibold leading-[1.2]">
+                  {CHARACTERISTICS.map((c, i) => (
+                    <li key={c.full} className={`flex gap-2 rounded-[6px] px-[6px] py-[2px] transition-colors duration-300 ${i === pick ? 'bg-white' : ''}`}>
+                      <span className="min-w-[1.6em] text-pl-press">{i + 1}</span>
+                      {capitalise(c.short)}
+                    </li>
+                  ))}
+                </ol>
               </div>
-            ))}
-          </div>
-
-          <div className="mt-6 pt-4 border-t border-orange-100 text-center space-y-2">
-            <p className="text-red-800 font-bold text-lg font-serif">1 Corinthians 13 (Amplified)</p>
-            <p className="text-gray-700 italic">
-              “Any family who memorizes and practices these characteristics of love—God will bless that family.”
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div className="surface p-10 md:p-12 space-y-10">
-        <div className="text-center space-y-3">
-          <h2 className="text-3xl md:text-4xl font-serif text-red-800 font-bold leading-[1.1] tracking-[-0.015em]">Your Daily Practice Guide</h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Three simple checkpoints to make love a daily habit.
-          </p>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {dailyPractices.map((practice, index) => (
-            <div
-              key={index}
-              className="surface-soft relative overflow-hidden p-8 border border-orange-100 hover:-translate-y-1 transition-transform duration-300 shadow-sm hover:shadow-lg group"
-            >
-              <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-red-500 via-orange-400 to-amber-300 opacity-80" />
-
-              <div className="flex items-center justify-between mb-6 pt-1">
-                <span className="pill text-xs font-semibold uppercase tracking-wide">{practice.accent}</span>
-                <span
-                  className="w-14 h-14 bg-gradient-to-br from-red-600 via-orange-500 to-amber-400 text-white rounded-2xl flex items-center justify-center shadow-md group-hover:scale-110 transition-transform ring-2 ring-orange-100/60"
-                >
-                  {practice.icon}
-                </span>
-              </div>
-              <h3 className="text-xl font-bold text-gray-800 mb-3 group-hover:text-red-700 transition-colors">
-                {practice.title}
-              </h3>
-              <p className="text-gray-600 leading-relaxed">{practice.description}</p>
-              <div className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-orange-700">
-                <Sparkles className="w-4 h-4" />
-                {practice.tip}
+              <div className="absolute inset-0 flex flex-col justify-between rounded-[28px] border-2 border-pl-ink bg-pl-red p-[clamp(24px,4vw,44px)] text-white shadow-[14px_14px_0_#ffd23f] [backface-visibility:hidden] [transform:rotateY(180deg)]">
+                <span className="text-[12px] font-bold uppercase tracking-[0.08em]">Every day</span>
+                <div className="grid gap-5">
+                  {ROUTINE.map(r => (
+                    <div key={r.when}>
+                      <b className="text-[22px]">{r.when}</b>
+                      <p className="mb-0 mt-1 text-[16px] leading-[1.4]">{r.what}</p>
+                    </div>
+                  ))}
+                </div>
+                <p className="pl-serif m-0 text-[clamp(28px,3vw,38px)] leading-none">Love never fails.</p>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="pl-noprint bg-pl-yellow">
+        <div className="pl-wrap py-[clamp(48px,7vw,96px)]">
+          <p className="m-0 text-[14px] font-bold uppercase tracking-[0.08em]">Today’s trait</p>
+          <div className="mt-4 flex flex-wrap items-end justify-between gap-x-12 gap-y-6">
+            <h2 ref={todayRef} aria-live="polite" className="m-0 max-w-[14ch] text-[clamp(44px,7vw,104px)] font-extrabold leading-[.9] tracking-[-0.05em]">
+              <span className="pl-serif text-pl-press">Love</span> {CHARACTERISTICS[pick].short}.
+            </h2>
+            <button type="button" onClick={shuffle} className="pl-btn border-2 border-pl-ink bg-white text-pl-ink">
+              Pick another ↻
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section className="pl-noprint pl-wrap flex flex-wrap items-center justify-between gap-6 py-[clamp(48px,7vw,96px)]">
+        <h2 className="pl-h2 m-0 max-w-[16ch]">
+          Go deeper, <Em>one trait at a time.</Em>
+        </h2>
+        <div className="flex flex-wrap gap-3">
+          <Link to="/characteristics" className="pl-btn pl-btn-red">
+            The characteristics guide
+          </Link>
+          <Link to="/love-challenge" className="pl-btn pl-btn-outline">
+            Take the 30-day challenge
+          </Link>
+        </div>
+      </section>
+
+      {/* Printed version: the full Amplified wording, as on the physical card. */}
+      <section className="pl-print-only p-6 text-pl-ink">
+        <h1 className="m-0 text-[28px] font-extrabold">Practical Love: The Yellow Card</h1>
+        <p className="mb-4 mt-1 text-[13px] font-semibold uppercase tracking-[0.08em]">Insert your name wherever you see “LOVE”</p>
+        <ol className="m-0 grid gap-1 pl-6 text-[14px] leading-[1.35]">
+          {CHARACTERISTICS.map(c => (
+            <li key={c.full}>{c.full}</li>
           ))}
-        </div>
-
-      <div className="surface-soft p-8 md:p-10 max-w-5xl mx-auto space-y-6 md:space-y-8 text-center">
-        <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-yellow-100 text-yellow-800 text-sm font-bold uppercase tracking-wide mx-auto">
-          <Sparkles className="w-4 h-4 mr-2" />
-          Transform your life
-        </div>
-        <div className="space-y-3">
-          <h3 className="text-3xl font-serif font-bold text-gray-900">30-Day Love Challenge</h3>
-          <p className="text-gray-600 text-lg leading-relaxed max-w-2xl mx-auto">
-            Focus on one characteristic each day to strengthen relationships and your personal character.
-          </p>
-        </div>
-        <div className="flex flex-col sm:flex-row justify-center gap-3">
-          <Link to="/love-challenge" className="btn-brand px-8 py-3">
-            Start the Challenge
-          </Link>
-          <Link to="/love-challenge" className="btn-outline-brand px-8 py-3">
-            Join 1,000+ others today
-          </Link>
-        </div>
-        <div className="w-full max-w-xl bg-white border border-orange-100 rounded-2xl shadow-md p-6 mx-auto">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <div className="w-10 h-10 bg-gradient-to-r from-red-500 to-orange-500 rounded-full flex items-center justify-center text-white font-bold">
-                1
-              </div>
-              <div>
-                <p className="text-xs uppercase text-orange-700 font-semibold">Day 1</p>
-                <p className="text-sm text-gray-600">Preview</p>
-              </div>
-            </div>
-            <div className="flex items-center text-sm text-orange-700">
-              <Star className="w-4 h-4 text-yellow-500 mr-1 fill-current" />
-              Trust
-            </div>
-          </div>
-          <p className="text-lg font-semibold text-gray-900 mb-2">Love is Patient</p>
-          <p className="text-sm text-gray-600 mb-4">
-            “Today, I will choose to breathe and wait before reacting in difficult situations.”
-          </p>
-          <div className="flex items-center gap-2 text-xs text-gray-500">
-            <div className="w-24 h-2 bg-gray-100 rounded-full overflow-hidden">
-              <div className="h-2 bg-gradient-to-r from-red-500 to-orange-500 w-16"></div>
-            </div>
-            Progress
-          </div>
-        </div>
-      </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {benefits.map((benefit, index) => (
-            <div
-              key={index}
-              className="surface-soft rounded-2xl p-8 text-center hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-t-4 border-orange-400"
-            >
-              <div className="w-20 h-20 bg-gradient-to-r from-yellow-100 to-orange-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
-                {benefit.icon}
-              </div>
-              <h3 className="text-xl font-bold text-gray-800 mb-3">{benefit.title}</h3>
-              <p className="text-gray-600 leading-relaxed">{benefit.description}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="surface-soft p-10 text-center space-y-4">
-        <h2 className="text-3xl md:text-4xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">Get Your Personal Yellow Card</h2>
-        <p className="text-lg text-gray-700 max-w-2xl mx-auto">
-          Download a printable version or save it to your phone for daily inspiration. It’s free and transformative.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center print:hidden">
-          <button type="button" onClick={() => window.print()} className="btn-brand px-8 py-3">
-            <Download className="w-5 h-5 mr-2" />
-            Download PDF
-          </button>
-          <button type="button" onClick={() => window.print()} className="btn-outline-brand px-8 py-3">
-            <Printer className="w-5 h-5 mr-2" />
-            Print version
-          </button>
-        </div>
-        <p className="text-sm text-orange-700">Mobile-friendly version coming soon.</p>
-      </div>
-
-      <div className="surface text-center p-12 space-y-6">
-        <h2 className="text-4xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">Ready to Begin Your Journey?</h2>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          Start practicing practical love today and experience transformation in your relationships and community.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link to="/characteristics" className="btn-brand px-10 py-4">
-            Detailed Characteristics Guide
-          </Link>
-          <Link to="/bible-passages" className="btn-outline-brand px-10 py-4">
-            Explore 50 Love Passages
-          </Link>
-        </div>
-      </div>
-    </PageShell>
+        </ol>
+        <p className="mb-0 mt-4 text-[13px] font-bold">1 Corinthians 13 (Amplified)</p>
+      </section>
+    </div>
   );
 }
