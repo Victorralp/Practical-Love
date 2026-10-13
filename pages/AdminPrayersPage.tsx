@@ -40,10 +40,10 @@ function formatDate(isoDate: string) {
 }
 
 function getStatusStyle(prayer: PrayerRequest) {
-  if (prayer.visibility === 'private') return 'bg-violet-50 text-violet-700';
-  if (prayer.status === 'pending') return 'bg-amber-50 text-amber-700';
-  if (prayer.status === 'hidden') return 'bg-[#f4ede8] text-[#8a6552]';
-  return 'bg-emerald-50 text-emerald-700';
+  if (prayer.visibility === 'private') return 'bg-pl-blush text-pl-press';
+  if (prayer.status === 'pending') return 'bg-[#fff4dc] text-[#8a5a00]';
+  if (prayer.status === 'hidden') return 'bg-[#f3ecea] text-[#5a4f4f]';
+  return 'bg-[#e7f5ec] text-[#1f6b3a]';
 }
 
 function getStatusLabel(prayer: PrayerRequest) {
@@ -140,10 +140,10 @@ export default function AdminPrayersPage() {
           {summaryStats.map(stat => (
             <div
               key={stat.label}
-              className="rounded-xl border border-[#f0e2d8] bg-white px-4 py-3.5"
+              className="rounded-[12px] border border-[#eadfdc] bg-white px-4 py-3.5"
             >
               <p className={`text-2xl font-semibold tabular-nums ${stat.className}`}>{stat.value}</p>
-              <p className="mt-0.5 text-xs text-[#8a6552]">{stat.label}</p>
+              <p className="mt-0.5 text-xs text-[#6b5f5f]">{stat.label}</p>
             </div>
           ))}
         </div>
@@ -162,7 +162,7 @@ export default function AdminPrayersPage() {
         />
 
         <div className="relative lg:w-72">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#bda392]" />
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#a39797]" />
           <input
             type="text"
             value={searchQuery}
@@ -193,35 +193,35 @@ export default function AdminPrayersPage() {
             className="m-5"
           />
         ) : (
-          <ul className="divide-y divide-[#f6ece4]">
+          <ul className="divide-y divide-[#f3ecea]">
             {filtered.map(prayer => (
               <li
                 key={prayer.id}
-                className={`px-5 py-4 transition hover:bg-[#fdfaf7] ${
-                  prayer.status === 'hidden' ? 'opacity-70' : ''
+                className={`px-5 py-4 transition hover:bg-[#faf7f6] ${
+                  prayer.status === 'hidden' ? 'opacity-60' : ''
                 }`}
               >
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-1.5">
                       <span
-                        className={`rounded-md px-2 py-0.5 text-[0.68rem] font-semibold uppercase tracking-[0.1em] ${getStatusStyle(prayer)}`}
+                        className={`rounded-full px-[10px] py-[3px] text-[12px] font-bold ${getStatusStyle(prayer)}`}
                       >
                         {getStatusLabel(prayer)}
                       </span>
-                      <span className="rounded-md bg-[#fdf3ec] px-2 py-0.5 text-[0.68rem] font-semibold uppercase tracking-[0.1em] text-[#a8735c]">
+                      <span className="rounded-full bg-[#f3ecea] px-[10px] py-[3px] text-[12px] font-bold capitalize text-[#5a4f4f]">
                         {prayer.prayedCount} prayed
                       </span>
                       {prayer.visibility === 'private' && (
-                        <span className="inline-flex items-center gap-1 rounded-md bg-[#f4ede8] px-2 py-0.5 text-[0.68rem] font-semibold uppercase tracking-[0.1em] text-[#8a6552]">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-[#f3ecea] px-[10px] py-[3px] text-[12px] font-bold text-[#5a4f4f]">
                           <Lock className="h-3 w-3" />
                           Admin only
                         </span>
                       )}
                     </div>
 
-                    <p className="mt-2.5 text-sm leading-6 text-[#3d1d17]">“{prayer.body}”</p>
-                    <p className="mt-2 text-xs text-[#a8735c]">
+                    <p className="mt-2.5 text-sm leading-6 text-[#141010]">“{prayer.body}”</p>
+                    <p className="mt-2 text-xs text-[#6b5f5f]">
                       {prayer.author} · {formatDate(prayer.createdAt)}
                     </p>
                   </div>

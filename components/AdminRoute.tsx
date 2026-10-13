@@ -32,8 +32,8 @@ export default function AdminRoute({ children }: AdminRouteProps) {
   if (isChecking) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center px-4">
-        <div className="inline-flex items-center gap-2.5 text-sm text-[#8a6552]">
-          <Loader className="h-4 w-4 animate-spin text-red-600" />
+        <div className="inline-flex items-center gap-2.5 text-sm text-[#6b5f5f]">
+          <Loader className="h-4 w-4 animate-spin text-pl-red" />
           Checking admin access...
         </div>
       </div>
@@ -45,16 +45,16 @@ export default function AdminRoute({ children }: AdminRouteProps) {
   }
 
   return (
-    <div className="flex min-h-[70vh] items-center justify-center bg-[#fdfaf7] px-4 py-12">
-      <div className="w-full max-w-md rounded-2xl border border-[#f0e2d8] bg-white p-6 shadow-[0_1px_2px_rgba(61,29,23,0.04),0_10px_28px_-18px_rgba(61,29,23,0.25)]">
-        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#fdf3ec] text-red-600">
+    <div className="flex min-h-[70vh] items-center justify-center bg-[#faf7f6] px-4 py-12">
+      <div className="w-full max-w-md rounded-[20px] border border-[#eadfdc] bg-white p-7">
+        <span className="flex h-10 w-10 items-center justify-center rounded-full bg-pl-blush text-pl-red">
           <Lock className="h-5 w-5" />
         </span>
 
-        <h1 className="mt-4 text-xl font-semibold tracking-tight text-[#3d1d17]">
+        <h1 className="mb-0 mt-4 text-[28px] font-extrabold leading-none tracking-[-0.03em] text-pl-ink">
           Admin sign-in required
         </h1>
-        <p className="mt-1.5 text-sm leading-6 text-[#6e4737]">
+        <p className="mt-1.5 text-sm leading-6 text-[#5a4f4f]">
           This area is restricted to approved ministry Google accounts.
         </p>
 

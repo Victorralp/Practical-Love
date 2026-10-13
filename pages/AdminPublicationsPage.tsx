@@ -321,7 +321,7 @@ export default function AdminPublicationsPage() {
                 <button
                   type="button"
                   onClick={resetForm}
-                  className="text-sm font-medium text-[#8a6552] hover:text-[#3d1d17] hover:underline"
+                  className="text-sm font-medium text-[#6b5f5f] hover:text-[#141010] hover:underline"
                 >
                   Cancel
                 </button>
@@ -403,12 +403,12 @@ export default function AdminPublicationsPage() {
                       type="button"
                       onClick={() => setForm(c => ({ ...c, status: value }))}
                       aria-pressed={form.status === value}
-                      className={`flex-1 rounded-xl border px-3 py-2 text-sm font-medium capitalize transition ${
+                      className={`flex-1 rounded-[12px] border px-3 py-2 text-sm font-medium capitalize transition ${
                         form.status === value
                           ? value === 'published'
-                            ? 'border-emerald-300 bg-emerald-50 text-emerald-800'
-                            : 'border-amber-300 bg-amber-50 text-amber-800'
-                          : 'border-[#e8d9cd] bg-white text-[#8a6552] hover:bg-[#fdf8f4]'
+                            ? 'border-[#1f6b3a] bg-[#e7f5ec] text-[#1f6b3a]'
+                            : 'border-pl-ink bg-[#f3ecea] text-pl-ink'
+                          : 'border-[#d9cbc8] bg-white text-[#6b5f5f] hover:bg-[#faf7f6]'
                       }`}
                     >
                       {value}
@@ -417,26 +417,26 @@ export default function AdminPublicationsPage() {
                 </div>
               </Field>
 
-              <label className="flex cursor-pointer items-center gap-2.5 rounded-xl border border-[#e8d9cd] bg-white px-3.5 py-2.5">
+              <label className="flex cursor-pointer items-center gap-2.5 rounded-[12px] border border-[#d9cbc8] bg-white px-3.5 py-2.5">
                 <input
                   type="checkbox"
                   checked={form.featured}
                   onChange={e => setForm(c => ({ ...c, featured: e.target.checked }))}
-                  className="h-4 w-4 rounded border-[#e8d9cd] text-red-700 focus:ring-red-500"
+                  className="h-4 w-4 rounded border-[#d9cbc8] text-red-700 focus:ring-red-500"
                 />
                 <Star
-                  className={`h-4 w-4 ${form.featured ? 'fill-amber-400 text-amber-400' : 'text-[#bda392]'}`}
+                  className={`h-4 w-4 ${form.featured ? 'fill-[#e8a400] text-[#e8a400]' : 'text-[#a39797]'}`}
                 />
-                <span className="text-sm text-[#5c3a2b]">Feature on the public page</span>
+                <span className="text-sm text-[#3d3333]">Feature on the public page</span>
               </label>
 
               {/* Cover */}
-              <div className="rounded-xl border border-[#f0e2d8] bg-[#fdfaf7] p-3.5">
+              <div className="rounded-[12px] border border-[#eadfdc] bg-[#faf7f6] p-3.5">
                 <div className="flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-2 text-sm font-medium text-[#3d1d17]">
-                    <FileImage className="h-4 w-4 text-[#a8735c]" />
+                  <div className="flex items-center gap-2 text-sm font-medium text-[#141010]">
+                    <FileImage className="h-4 w-4 text-[#6b5f5f]" />
                     Cover image
-                    <span className="text-xs font-normal text-[#a8735c]">Optional</span>
+                    <span className="text-xs font-normal text-[#6b5f5f]">Optional</span>
                   </div>
                   <label className={`${adminButton.secondary} cursor-pointer`}>
                     {isUploadingCover ? (
@@ -460,7 +460,7 @@ export default function AdminPublicationsPage() {
                     <img
                       src={coverAsset.url}
                       alt="Publication cover preview"
-                      className="h-24 w-20 shrink-0 rounded-lg border border-[#f0e2d8] object-cover"
+                      className="h-24 w-20 shrink-0 rounded-lg border border-[#eadfdc] object-cover"
                     />
                     <button
                       type="button"
@@ -475,10 +475,10 @@ export default function AdminPublicationsPage() {
               </div>
 
               {/* PDF */}
-              <div className="rounded-xl border border-[#f0e2d8] bg-[#fdfaf7] p-3.5">
+              <div className="rounded-[12px] border border-[#eadfdc] bg-[#faf7f6] p-3.5">
                 <div className="flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-2 text-sm font-medium text-[#3d1d17]">
-                    <FileText className="h-4 w-4 text-[#a8735c]" />
+                  <div className="flex items-center gap-2 text-sm font-medium text-[#141010]">
+                    <FileText className="h-4 w-4 text-[#6b5f5f]" />
                     PDF file
                     <span className="text-xs font-normal text-red-600">Required</span>
                   </div>
@@ -501,7 +501,7 @@ export default function AdminPublicationsPage() {
 
                 {pdfAsset && (
                   <div className="mt-3 flex items-center justify-between gap-3">
-                    <p className="min-w-0 truncate text-xs text-[#8a6552]" title={pdfAsset.publicId}>
+                    <p className="min-w-0 truncate text-xs text-[#6b5f5f]" title={pdfAsset.publicId}>
                       {pdfAsset.publicId}
                     </p>
                     <a
@@ -542,7 +542,7 @@ export default function AdminPublicationsPage() {
           title="Publications"
           actions={
             <div className="relative w-48">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#bda392]" />
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#a39797]" />
               <input
                 type="text"
                 value={searchQuery}
@@ -569,12 +569,12 @@ export default function AdminPublicationsPage() {
               className="m-5"
             />
           ) : (
-            <ul className="divide-y divide-[#f6ece4]">
+            <ul className="divide-y divide-[#f3ecea]">
               {orderedPublications.map(publication => (
                 <li
                   key={publication.id}
-                  className={`px-5 py-4 transition hover:bg-[#fdfaf7] ${
-                    editingId === publication.id ? 'bg-[#fdf3ec]' : ''
+                  className={`px-5 py-4 transition hover:bg-[#faf7f6] ${
+                    editingId === publication.id ? 'bg-[#ffe6e3]' : ''
                   }`}
                 >
                   <div className="flex gap-4">
@@ -582,10 +582,10 @@ export default function AdminPublicationsPage() {
                       <img
                         src={publication.coverImage}
                         alt=""
-                        className="h-20 w-14 shrink-0 rounded-lg border border-[#f0e2d8] object-cover"
+                        className="h-20 w-14 shrink-0 rounded-lg border border-[#eadfdc] object-cover"
                       />
                     ) : (
-                      <span className="flex h-20 w-14 shrink-0 items-center justify-center rounded-lg border border-[#f0e2d8] bg-[#fdf3ec] text-[#bda392]">
+                      <span className="flex h-20 w-14 shrink-0 items-center justify-center rounded-lg border border-[#eadfdc] bg-[#ffe6e3] text-[#a39797]">
                         <BookOpen className="h-5 w-5" />
                       </span>
                     )}
@@ -593,35 +593,35 @@ export default function AdminPublicationsPage() {
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-1.5">
                         <span
-                          className={`rounded-md px-2 py-0.5 text-[0.68rem] font-semibold uppercase tracking-[0.1em] ${
+                          className={`rounded-full px-[10px] py-[3px] text-[12px] font-bold ${
                             publication.status === 'published'
-                              ? 'bg-emerald-50 text-emerald-700'
-                              : 'bg-amber-50 text-amber-700'
+                              ? 'bg-[#e7f5ec] text-[#1f6b3a]'
+                              : 'bg-[#f3ecea] text-[#5a4f4f]'
                           }`}
                         >
                           {publication.status === 'published' ? 'Published' : 'Draft'}
                         </span>
-                        <span className="rounded-md bg-[#fdf3ec] px-2 py-0.5 text-[0.68rem] font-semibold uppercase tracking-[0.1em] text-[#a8735c]">
+                        <span className="rounded-full bg-[#f3ecea] px-[10px] py-[3px] text-[12px] font-bold capitalize text-[#5a4f4f]">
                           {publication.type}
                         </span>
                         {publication.featured && (
-                          <span className="inline-flex items-center gap-1 rounded-md bg-amber-50 px-2 py-0.5 text-[0.68rem] font-semibold uppercase tracking-[0.1em] text-amber-700">
-                            <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                          <span className="inline-flex items-center gap-1 rounded-full bg-[#fff4dc] px-[10px] py-[3px] text-[12px] font-bold text-[#8a5a00]">
+                            <Star className="h-3 w-3 fill-[#e8a400] text-[#e8a400]" />
                             Featured
                           </span>
                         )}
                         {publication.pageCount ? (
-                          <span className="rounded-md bg-[#f4ede8] px-2 py-0.5 text-[0.68rem] font-semibold uppercase tracking-[0.1em] text-[#8a6552]">
+                          <span className="rounded-full bg-[#f3ecea] px-[10px] py-[3px] text-[12px] font-bold text-[#5a4f4f]">
                             {publication.pageCount} pages
                           </span>
                         ) : null}
                       </div>
 
-                      <h3 className="mt-2 font-semibold text-[#3d1d17]">{publication.title}</h3>
-                      <p className="mt-0.5 text-xs text-[#a8735c]">
+                      <h3 className="mt-2 font-semibold text-[#141010]">{publication.title}</h3>
+                      <p className="mt-0.5 text-xs text-[#6b5f5f]">
                         {publication.author} · {formatDate(publication.createdAt)}
                       </p>
-                      <p className="mt-2 line-clamp-2 text-sm leading-6 text-[#5c3a2b]">
+                      <p className="mt-2 line-clamp-2 text-sm leading-6 text-[#3d3333]">
                         {publication.description}
                       </p>
 

@@ -5,8 +5,8 @@ export type StatusTone = 'info' | 'success' | 'error' | 'busy';
 
 const TONE_STYLES: Record<StatusTone, { wrapper: string; icon: React.ReactNode }> = {
   info: {
-    wrapper: 'border-[#e8d9cd] bg-[#fdf8f4] text-[#5c3a2b]',
-    icon: <Info className="h-4 w-4 text-[#a8735c]" />,
+    wrapper: 'border-[#d9cbc8] bg-[#faf7f6] text-[#3d3333]',
+    icon: <Info className="h-4 w-4 text-[#6b5f5f]" />,
   },
   success: {
     wrapper: 'border-emerald-200 bg-emerald-50 text-emerald-800',
@@ -17,8 +17,8 @@ const TONE_STYLES: Record<StatusTone, { wrapper: string; icon: React.ReactNode }
     icon: <AlertTriangle className="h-4 w-4 text-red-600" />,
   },
   busy: {
-    wrapper: 'border-[#e8d9cd] bg-[#fdf8f4] text-[#5c3a2b]',
-    icon: <Loader className="h-4 w-4 animate-spin text-[#a8735c]" />,
+    wrapper: 'border-[#d9cbc8] bg-[#faf7f6] text-[#3d3333]',
+    icon: <Loader className="h-4 w-4 animate-spin text-[#6b5f5f]" />,
   },
 };
 
