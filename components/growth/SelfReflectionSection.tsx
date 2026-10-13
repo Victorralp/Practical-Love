@@ -200,7 +200,7 @@ export default function SelfReflectionSection() {
         </div>
 
         {/* Current Prompt */}
-        <ReflectionPrompt prompt={currentPrompt} onSubmit={handlePromptSubmit} />
+        <ReflectionPrompt key={currentPromptIndex} prompt={currentPrompt} onSubmit={handlePromptSubmit} />
       </div>
     );
   }
