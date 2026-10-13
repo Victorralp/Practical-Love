@@ -25,7 +25,7 @@ export function StudyBlockView({ block }: { block: StudyBlock }) {
   switch (block.type) {
     case 'h':
       return (
-        <h3 className="pt-[0.4em] !font-grotesk text-[1.3em] font-extrabold leading-[1.15] tracking-[-0.03em] text-pl-ink">
+        <h3 className="pt-[0.4em] text-[1.3em] font-extrabold leading-[1.15] tracking-[-0.03em] text-pl-ink">
           {inline(block.text)}
         </h3>
       );
