@@ -1,356 +1,153 @@
-import {
-  BookOpen,
-  Building2,
-  DollarSign,
-  HeartHandshake,
-  Home,
-  Landmark,
-  MapPin,
-  Shield,
-  Sparkles,
-  Users,
-} from 'lucide-react';
+import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  CTASection,
-  FeatureCard,
-  NumberedList,
-  PageHero,
-  PageShell,
-  SectionCard,
-} from '../components/ui';
-import Logo from '../components/Logo';
+import { ImageSlot, Marquee } from '../components/pl/primitives';
+import { useEntrance, usePopOnChange, useScrollReveal } from '../components/pl/motion';
 
-const DIAGNOSIS_POINTS = [
-  { number: 1, content: 'We do not love ourselves in Nigeria.', highlight: true },
-  {
-    number: 2,
-    content: 'To make this worse, we can become stubborn in wickedness when love is absent.',
-    highlight: true,
-  },
-  {
-    number: 3,
-    content: 'The crisis begins at the family level. No home is above the need for repentance and change.',
-    highlight: true,
-  },
-  {
-    number: 4,
-    content: 'Money and materialism have become the language of love in many homes.',
-    highlight: true,
-  },
-  {
-    number: 5,
-    content: 'When love of money rules a heart, corruption, injustice, and every other evil can grow from it.',
-    highlight: true,
-  },
-] as const;
+const MARQUEE = ['Heal the home', 'Heal the nation', 'Love one another', 'Serve, don’t rule', 'Truth in love'];
 
-const RESTORATION_POINTS = [
+const ROOTS = [
   {
-    number: 1,
-    content:
-      'There is a thin line between love of God and love of money. You must work daily to stay on the side of God.',
+    kicker: 'Where the crisis begins',
+    title: 'Corruption is learned before it is practised.',
+    text: 'Long before an office is abused, a child learns at home that rules bend for the powerful and love is earned, not given.',
   },
   {
-    number: 2,
-    content:
-      '“For God so loved the world” includes every Nigerian without exception, tribe, class, or religion.',
+    kicker: 'What changes everything',
+    title: 'Love, practised daily, forms a different citizen.',
+    text: 'Patience, honesty and service, learned at the table, become the habits a nation runs on.',
   },
-  {
-    number: 3,
-    content:
-      'The idea of husband, wife, and family is from God. If family is healed, communities and institutions can also be healed.',
-  },
-  {
-    number: 4,
-    content:
-      'The yellow card gives a practical language of love that can be learned, memorized, and lived in every home.',
-  },
-  {
-    number: 5,
-    content:
-      'A family that truly practices the characteristics of love creates the kind of environment where blessing can grow.',
-  },
-  {
-    number: 6,
-    content:
-      'When husbands, wives, parents, and children honor one another with God’s kind of love, they honor God Himself.',
-  },
-  {
-    number: 7,
-    content:
-      'Loving and God-fearing homes produce a different kind of person, and that difference eventually touches society.',
-  },
-  {
-    number: 8,
-    content:
-      'Whatever is truly good in a loving family will not stay inside the house alone; it will influence the community, worship space, and nation.',
-  },
-] as const;
+];
 
-const IMPACT_AREAS = [
+// TODO: no photos for these areas yet; ImageSlot shows a labelled placeholder until they exist.
+const AREAS = [
   {
     title: 'Family life',
-    description:
-      'The first place Nigeria changes is the home. Marriage, parenting, and sibling relationships set the moral atmosphere for the future.',
-    icon: <Home className="w-6 h-6" />,
-    accentColor: 'red' as const,
+    text: 'Homes where husbands, wives and children speak with patience and correct with kindness.',
+    list: ['Parents who apologise', 'Children taught to serve', 'Marriages without score-keeping'],
+    label: 'A Nigerian family at home',
   },
   {
     title: 'Community life',
-    description:
-      'A loving household produces people who are less likely to exploit neighbors and more likely to serve their communities with integrity.',
-    icon: <Users className="w-6 h-6" />,
-    accentColor: 'orange' as const,
+    text: 'Streets, markets and churches where honesty is normal and the vulnerable are seen.',
+    list: ['Fair dealing in business', 'Neighbours who check on each other', 'Churches that serve the street'],
+    label: 'A community gathering',
   },
   {
     title: 'National life',
-    description:
-      'The tone of a nation is shaped by the people it raises. Heal the family, and leadership culture begins to change.',
-    icon: <Landmark className="w-6 h-6" />,
-    accentColor: 'yellow' as const,
+    text: 'Leaders formed in loving homes who treat public office as service, not ownership.',
+    list: ['Integrity in public office', 'Justice for the poor', 'Unity across tribe and faith'],
+    label: 'A national or civic scene',
   },
-] as const;
+];
 
-const RESPONSE_LANES = [
-  {
-    title: 'Teach it at home',
-    description:
-      'Read the 17 characteristics of love in the family, memorize them together, and bring them into daily conduct.',
-    icon: <BookOpen className="w-5 h-5" />,
-  },
-  {
-    title: 'Model it publicly',
-    description:
-      'Carry practical love into schools, workspaces, markets, churches, mosques, streets, and civic life.',
-    icon: <MapPin className="w-5 h-5" />,
-  },
-  {
-    title: 'Reproduce it consistently',
-    description:
-      'Use the yellow card and related materials to spread the message from one family to another, one community to another.',
-    icon: <HeartHandshake className="w-5 h-5" />,
-  },
-] as const;
-
-const EXAMPLES = [
-  {
-    name: 'Ngozi Okonjo-Iweala',
-    role: 'Public leadership example',
-    note:
-      'A reminder that disciplined, principled formation can produce national and global impact.',
-  },
-  {
-    name: 'Akinwumi Adesina',
-    role: 'Institutional leadership example',
-    note:
-      'A reminder that healthy values and strong formation can shape service at the highest level.',
-  },
-] as const;
+const MOVES = [
+  { title: 'Teach it at home', text: 'Parents teach the 17 characteristics around the table, one a week.' },
+  { title: 'Model it publicly', text: 'Leaders, pastors and teachers show it in how they treat the least powerful.' },
+  { title: 'Reproduce it consistently', text: 'Every person who learns it hands a Yellow Card to someone else.' },
+];
 
 export default function LoveInNigeriaPage() {
+  const [tab, setTab] = useState(0);
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  const panelRef = useRef<HTMLDivElement | null>(null);
+  const area = AREAS[tab];
+
+  useEntrance(rootRef);
+  useScrollReveal(rootRef);
+  usePopOnChange(panelRef, tab, [
+    { transform: 'translateY(20px) scale(.98)', opacity: 0.3 },
+    { transform: 'none', opacity: 1 },
+  ]);
+
   return (
-    <PageShell
-      className="bg-[radial-gradient(circle_at_top_left,_rgba(254,215,170,0.24),_transparent_30%),radial-gradient(circle_at_top_right,_rgba(248,113,113,0.16),_transparent_34%),linear-gradient(180deg,_#fffaf5_0%,_#ffffff_48%,_#fff7ed_100%)]"
-      containerClassName="py-16 section-gap"
-    >
-      <PageHero
-        badge={
-          <>
-            <Logo className="w-4 h-4" />
-            Love Ministry for Nigeria
-          </>
-        }
-        icon={
-          <div className="flex h-14 w-14 items-center justify-center rounded-[1.25rem] bg-gradient-to-br from-red-600 via-orange-500 to-amber-400 text-white shadow-lg">
-            <Building2 className="h-7 w-7" />
-          </div>
-        }
-        title="Transforming Nigeria through practical love"
-        subtitle="A national call to confront corruption at the root, restore the family as the training ground of character, and build a culture where God’s kind of love becomes visible in everyday Nigerian life."
-        actions={
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <Link to="/yellow-card" className="btn-brand px-7 py-3">
-              Get the yellow card
-            </Link>
-            <Link to="/characteristics" className="btn-outline-brand px-7 py-3">
-              Start practicing love
-            </Link>
-          </div>
-        }
-      >
-        <div className="grid gap-4 md:grid-cols-4">
-          <div className="rounded-2xl border border-white/70 bg-white/85 p-4 backdrop-blur-sm">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-600">Root Issue</p>
-            <p className="mt-2 text-lg font-semibold text-gray-900">Love replaced by materialism</p>
-          </div>
-          <div className="rounded-2xl border border-white/70 bg-white/85 p-4 backdrop-blur-sm">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-600">Starting Point</p>
-            <p className="mt-2 text-lg font-semibold text-gray-900">Heal the family first</p>
-          </div>
-          <div className="rounded-2xl border border-white/70 bg-white/85 p-4 backdrop-blur-sm">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-600">Tool</p>
-            <p className="mt-2 text-lg font-semibold text-gray-900">The 17 characteristics of love</p>
-          </div>
-          <div className="rounded-2xl border border-white/70 bg-white/85 p-4 backdrop-blur-sm">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-600">Goal</p>
-            <p className="mt-2 text-lg font-semibold text-gray-900">Homes that bless the nation</p>
-          </div>
+    <div ref={rootRef}>
+      <section className="relative overflow-hidden bg-pl-red text-white">
+        <div className="pl-wrap grid items-end gap-[clamp(32px,5vw,72px)] pb-[clamp(48px,7vw,96px)] pt-[clamp(56px,9vw,120px)] [grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr))]">
+          <h1 data-in className="m-0 text-[clamp(52px,9vw,128px)] font-extrabold leading-[.88] tracking-[-0.055em]">
+            Love in <span className="pl-serif">Nigeria.</span>
+          </h1>
+          <p data-in className="m-0 max-w-[40ch] text-[clamp(18px,1.8vw,22px)] leading-[1.45]">
+            A national call to confront corruption at the root, restore the family as the training ground of character, and make God’s kind of love visible in everyday Nigerian life.
+          </p>
         </div>
-      </PageHero>
-
-      <section className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-        <SectionCard className="border-red-100 bg-white/95 shadow-lg">
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
-            National Diagnosis
-          </p>
-          <h2 className="mt-2 text-3xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">Where the crisis begins</h2>
-          <p className="mt-3 leading-7 text-gray-700">
-            This message is direct on purpose. A nation cannot heal what it refuses to name.
-          </p>
-          <div className="mt-6">
-            <NumberedList items={[...DIAGNOSIS_POINTS]} />
-          </div>
-        </SectionCard>
-
-        <SectionCard className="border-orange-200 bg-gradient-to-br from-orange-50 via-white to-red-50 shadow-lg">
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
-            Restoration Architecture
-          </p>
-          <h2 className="mt-2 text-3xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">What changes everything</h2>
-          <p className="mt-3 leading-7 text-gray-700">
-            The answer is not vague sentiment. It is disciplined, repeatable, practical love
-            anchored in God and worked out inside real homes.
-          </p>
-          <div className="mt-6">
-            <NumberedList items={[...RESTORATION_POINTS]} />
-          </div>
-        </SectionCard>
+        <Marquee items={MARQUEE} duration={30000} gap={40} className="h-16 bg-pl-ink" itemClassName="text-[22px] font-bold" />
       </section>
 
-      <section className="grid gap-6 md:grid-cols-3">
-        {IMPACT_AREAS.map(area => (
-          <FeatureCard
-            key={area.title}
-            icon={area.icon}
-            title={area.title}
-            description={area.description}
-            accentColor={area.accentColor}
-          />
+      <section className="pl-wrap grid gap-[clamp(32px,5vw,72px)] py-[clamp(56px,8vw,112px)] [grid-template-columns:repeat(auto-fit,minmax(min(100%,400px),1fr))]">
+        {ROOTS.map(root => (
+          <div key={root.title} data-reveal>
+            <p className="m-0 text-[14px] font-bold uppercase tracking-[0.08em] text-pl-red">{root.kicker}</p>
+            <h2 className="mb-0 mt-3 text-[clamp(32px,4vw,52px)] font-extrabold leading-[.98] tracking-[-0.04em]">{root.title}</h2>
+            <p className="mb-0 mt-4 text-[18px] leading-[1.55] text-pl-body">{root.text}</p>
+          </div>
         ))}
       </section>
 
-      <section className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
-        <SectionCard className="border-orange-200 bg-white/95 shadow-lg">
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
-            Response Lanes
-          </p>
-          <h2 className="mt-2 text-3xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">How the message should move</h2>
-          <div className="mt-6 grid gap-4">
-            {RESPONSE_LANES.map(lane => (
-              <div
-                key={lane.title}
-                className="rounded-2xl border border-orange-100 bg-gradient-to-r from-white to-orange-50 p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm"
-              >
-                <div className="flex items-start gap-4">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-red-100 text-red-700">
-                    {lane.icon}
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-serif text-gray-900">{lane.title}</h3>
-                    <p className="mt-2 leading-7 text-gray-700">{lane.description}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </SectionCard>
-
-        <SectionCard
-          variant="dark"
-          className="border-red-900 bg-[linear-gradient(160deg,_rgba(127,29,29,1)_0%,_rgba(136,19,55,1)_45%,_rgba(154,52,18,1)_100%)] shadow-xl"
+      <section className="pl-wrap pb-[clamp(56px,8vw,112px)]">
+        <div role="tablist" aria-label="Where love changes Nigeria" className="flex flex-wrap gap-2">
+          {AREAS.map((a, i) => (
+            <button
+              key={a.title}
+              type="button"
+              role="tab"
+              id={`ng-tab-${i}`}
+              aria-selected={tab === i}
+              aria-controls="ng-panel"
+              onClick={() => setTab(i)}
+              className={`min-h-[48px] rounded-full border-2 border-pl-ink px-6 text-[16px] font-bold transition-colors duration-[250ms] ${
+                tab === i ? 'bg-pl-ink text-white' : 'bg-white text-pl-ink'
+              }`}
+            >
+              {a.title}
+            </button>
+          ))}
+        </div>
+        <div
+          ref={panelRef}
+          id="ng-panel"
+          role="tabpanel"
+          aria-labelledby={`ng-tab-${tab}`}
+          className="mt-4 grid overflow-hidden rounded-[32px] border-2 border-pl-ink [grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr))]"
         >
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-orange-200">
-            Three-Part Summary
-          </p>
-          <div className="mt-6 space-y-4">
-            <div className="rounded-2xl border border-white/10 bg-white/10 p-5">
-              <div className="flex items-center gap-3">
-                <DollarSign className="h-5 w-5 text-orange-200" />
-                <h3 className="text-xl font-serif text-white">The problem</h3>
-              </div>
-              <p className="mt-3 leading-7 text-orange-100">
-                Money and materialism have replaced real love in too many homes, and national life
-                reflects that distortion.
-              </p>
-            </div>
-            <div className="rounded-2xl border border-white/10 bg-white/10 p-5">
-              <div className="flex items-center gap-3">
-                <Logo className="h-5 w-5 text-orange-200" />
-                <h3 className="text-xl font-serif text-white">The solution</h3>
-              </div>
-              <p className="mt-3 leading-7 text-orange-100">
-                Replace love of money with the love of God, and train homes to live the 17
-                characteristics of love every day.
-              </p>
-            </div>
-            <div className="rounded-2xl border border-white/10 bg-white/10 p-5">
-              <div className="flex items-center gap-3">
-                <Shield className="h-5 w-5 text-orange-200" />
-                <h3 className="text-xl font-serif text-white">The promise</h3>
-              </div>
-              <p className="mt-3 leading-7 text-orange-100">
-                A nation shaped by loving and God-fearing families will not stay broken forever.
-                Blessing follows honor.
-              </p>
-            </div>
+          <div className="bg-pl-blush p-[clamp(24px,4vw,48px)]">
+            <h3 className="m-0 text-[clamp(32px,4vw,52px)] font-extrabold leading-[.95] tracking-[-0.04em]">{area.title}</h3>
+            <p className="mb-0 mt-4 text-[18px] leading-[1.55]">{area.text}</p>
+            <ul className="m-0 mt-5 grid list-none gap-[10px] p-0">
+              {area.list.map(item => (
+                <li key={item} className="flex gap-[10px] text-[17px] font-semibold">
+                  <span className="text-pl-red" aria-hidden="true">
+                    ♥
+                  </span>
+                  {item}
+                </li>
+              ))}
+            </ul>
           </div>
-        </SectionCard>
+          <div className="relative min-h-[300px] bg-[#f6eeed]">
+            <ImageSlot label={area.label} alt={area.label} />
+          </div>
+        </div>
       </section>
 
-      <section className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-        <SectionCard className="border-red-100 bg-gradient-to-br from-red-50 via-white to-orange-50 shadow-lg">
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
-            Leadership Examples
-          </p>
-          <h2 className="mt-2 text-3xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">Why formation matters</h2>
-          <p className="mt-3 leading-7 text-gray-700">
-            The page’s core idea is that what is cultivated in a family eventually appears in
-            public life. Strong formation produces visible impact.
-          </p>
-          <div className="mt-6 grid gap-4">
-            {EXAMPLES.map(example => (
-              <div key={example.name} className="rounded-2xl border border-white/80 bg-white/90 p-5 shadow-sm">
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-orange-700">
-                  {example.role}
-                </p>
-                <h3 className="mt-2 text-xl font-serif text-gray-900">{example.name}</h3>
-                <p className="mt-3 leading-7 text-gray-700">{example.note}</p>
+      <section className="bg-pl-ink text-white">
+        <div className="pl-wrap py-[clamp(56px,8vw,112px)]">
+          <h2 data-reveal className="mb-[clamp(28px,4vw,48px)] mt-0 text-[clamp(36px,5vw,64px)] font-extrabold leading-[.95] tracking-[-0.045em]">
+            How the message <span className="pl-serif text-pl-coral">moves</span>
+          </h2>
+          <div className="grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))]">
+            {MOVES.map((move, i) => (
+              <div key={move.title} data-reveal className="rounded-[28px] border border-white/20 p-7">
+                <span className="pl-serif text-[52px] leading-[.8] text-pl-red">{String(i + 1).padStart(2, '0')}</span>
+                <h3 className="mb-0 mt-4 text-[28px] font-extrabold tracking-[-0.03em]">{move.title}</h3>
+                <p className="mb-0 mt-[10px] text-[17px] leading-[1.5] text-pl-ondark">{move.text}</p>
               </div>
             ))}
           </div>
-        </SectionCard>
-
-        <SectionCard className="border-orange-200 bg-white/95 shadow-lg text-center">
-          <Sparkles className="mx-auto h-12 w-12 text-red-600" />
-          <blockquote className="mt-6 text-2xl font-serif italic leading-relaxed text-gray-900 md:text-3xl">
-            &quot;For God so loved the world that He gave His only begotten Son, that whoever
-            believes in Him should not perish but have everlasting life.&quot;
-          </blockquote>
-          <cite className="mt-5 block text-lg font-medium text-red-700">John 3:16</cite>
-          <p className="mx-auto mt-6 max-w-2xl leading-7 text-gray-700">
-            This message is universal and practical. It includes every Nigerian, and it calls every
-            family to become a place where that love is translated into daily conduct.
-          </p>
-        </SectionCard>
+          <Link to="/family-first" className="pl-btn pl-btn-red mt-[clamp(36px,5vw,56px)]">
+            Start where it begins: the family →
+          </Link>
+        </div>
       </section>
-
-      <CTASection
-        title="Start the transformation where it actually begins"
-        description="Begin inside the home, practice the 17 characteristics of love, and let that discipline move outward into the community and the nation."
-        primaryAction={{ label: 'Get Your Yellow Card', href: '/yellow-card' }}
-        secondaryAction={{ label: 'Read 50 Love Passages', href: '/bible-passages' }}
-      />
-    </PageShell>
+    </div>
   );
 }

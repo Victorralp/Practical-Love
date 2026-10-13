@@ -101,7 +101,7 @@ export default function Header() {
         </nav>
         <Link
           to="/donate"
-          className="flex min-h-[44px] items-center rounded-full bg-pl-red px-[22px] text-[15px] font-semibold text-white no-underline transition-colors hover:bg-pl-press hover:text-white"
+          className="flex min-h-[44px] items-center whitespace-nowrap rounded-full bg-pl-red px-[clamp(14px,4vw,22px)] text-[15px] font-semibold text-white no-underline transition-colors hover:bg-pl-press hover:text-white"
         >
           Give a gift
         </Link>
