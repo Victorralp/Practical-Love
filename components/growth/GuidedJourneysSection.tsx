@@ -4,7 +4,7 @@
  * Requirements: 4.1, 4.2, 4.3, 4.4, 4.5
  */
 
-import { useState, useMemo, useCallback, useRef } from 'react';
+import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import JourneyCard from './JourneyCard';
 import JourneyStep from './JourneyStep';
 import HowItWorks from './HowItWorks';
@@ -34,6 +34,21 @@ export default function GuidedJourneysSection() {
   const journeys: Journey[] = useMemo(() => {
     return dataService.getJourneys();
   }, []);
+
+  // Progress saved before journeys recorded completion can have every step done
+  // but no completedAt; finish those so they count as completed.
+  useEffect(() => {
+    let repaired = false;
+    journeys.forEach(journey => {
+      const jp = progressService.getJourneyProgress(journey.id);
+      const total = journey.steps.length;
+      if (jp && !jp.completedAt && total > 0 && journey.steps.every((_, i) => jp.completedSteps.includes(i))) {
+        progressService.completeJourneyStep(journey.id, total - 1, total);
+        repaired = true;
+      }
+    });
+    if (repaired) setRefreshKey(k => k + 1);
+  }, [journeys]);
 
   // Get progress for all journeys
   const journeyProgressMap = useMemo(() => {
@@ -76,11 +91,11 @@ export default function GuidedJourneysSection() {
   const handleCompleteStep = useCallback(
     (stepIndex: number) => {
       if (!activeJourneyId) return;
-      progressService.completeJourneyStep(activeJourneyId, stepIndex);
+      progressService.completeJourneyStep(activeJourneyId, stepIndex, activeJourney?.steps.length);
       setViewedStepIndex(null);
       setRefreshKey(k => k + 1);
     },
-    [activeJourneyId]
+    [activeJourneyId, activeJourney]
   );
 
   // Handle going back to list

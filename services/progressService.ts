@@ -21,7 +21,7 @@ export interface ProgressService {
   completeChallenge(challengeId: string, reflection?: string): void;
   saveReflectionSession(session: ReflectionSession): void;
   startJourney(journeyId: string): void;
-  completeJourneyStep(journeyId: string, stepIndex: number): void;
+  completeJourneyStep(journeyId: string, stepIndex: number, totalSteps?: number): void;
   getJourneyProgress(journeyId: string): JourneyProgress | null;
 }
 
@@ -99,7 +99,7 @@ class ProgressServiceImpl implements ProgressService {
     this.saveProgress(progress);
   }
 
-  completeJourneyStep(journeyId: string, stepIndex: number): void {
+  completeJourneyStep(journeyId: string, stepIndex: number, totalSteps?: number): void {
     const progress = this.getProgress();
     const journeyProgress = progress.journeyProgress.find(jp => jp.journeyId === journeyId);
 
@@ -114,6 +114,16 @@ class ProgressServiceImpl implements ProgressService {
 
     // Update current step index to next step
     journeyProgress.currentStepIndex = stepIndex + 1;
+
+    // Mark the journey finished once every step has been completed
+    if (
+      totalSteps !== undefined &&
+      totalSteps > 0 &&
+      !journeyProgress.completedAt &&
+      Array.from({ length: totalSteps }, (_, i) => i).every(i => journeyProgress.completedSteps.includes(i))
+    ) {
+      journeyProgress.completedAt = new Date().toISOString();
+    }
 
     this.saveProgress(progress);
   }
