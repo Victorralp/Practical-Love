@@ -39,13 +39,13 @@ const MARQUEE = ['Love is patient', 'Love is kind', 'Peace on earth', 'Love one 
 const DAY = 864e5;
 
 /** Next Christmas Day, local time. Stays on this year's date until Dec 25 has fully passed. */
-export function christmasTarget(now: number) {
+function christmasTarget(now: number) {
   const year = new Date(now).getFullYear();
   const thisYear = new Date(year, 11, 25);
   return now >= thisYear.getTime() + DAY ? new Date(year + 1, 11, 25) : thisYear;
 }
 
-export function countdownParts(now: number) {
+function countdownParts(now: number) {
   const diff = Math.max(0, christmasTarget(now).getTime() - now);
   const pad = (n: number) => String(n).padStart(2, '0');
   return {

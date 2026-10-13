@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Em, ImageSlot } from '../components/pl/primitives';
 import { useEntrance, useStagger } from '../components/pl/motion';
-import { formatPostDate, readMinutes, useMessagePosts } from '../components/pl/messages';
+import { formatPostDate, readMinutes, useMessagePosts } from '../components/pl/messagePosts';
 import { countMessagePosts, filterMessagePosts, type MessageCategoryFilter } from '../services/messagePostFilters';
 import type { MessagePostRecord } from '../services/messagePostsService';
 
