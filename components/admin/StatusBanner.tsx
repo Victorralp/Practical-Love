@@ -50,7 +50,7 @@ const SUCCESS_HINTS = [
  * Guess the tone from the message so every page gets red errors and green
  * confirmations without threading a second piece of state through each handler.
  */
-export function inferStatusTone(message: string): StatusTone {
+function inferStatusTone(message: string): StatusTone {
   const text = message.toLowerCase();
 
   if (FAILURE_HINTS.some(hint => text.includes(hint))) return 'error';

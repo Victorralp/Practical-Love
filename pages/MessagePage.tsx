@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { EmTitle, PostMedia, formatPostDate, readMinutes, useMessagePosts } from '../components/pl/messages';
+import { EmTitle, PostMedia } from '../components/pl/messages';
+import { formatPostDate, readMinutes, useMessagePosts } from '../components/pl/messagePosts';
 import { animate, heartBurst, prefersReducedMotion, useEntrance, EASE_POP } from '../components/pl/motion';
 import { Toast } from '../components/pl/primitives';
 import {

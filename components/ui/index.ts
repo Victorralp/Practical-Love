@@ -4,6 +4,6 @@ export { PageShell, type PageShellProps } from './PageShell';
 export { PageHero, type PageHeroProps } from './PageHero';
 
 // Existing components
-export { Button, buttonVariants, type ButtonProps } from './button';
+export { Button, type ButtonProps } from './button';
 export { cn } from './utils';
 

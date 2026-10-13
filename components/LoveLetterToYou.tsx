@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Heart, Send, Sparkles, PenTool, RefreshCw } from 'lucide-react';
 import { usePauseWhenOffscreen } from './usePauseWhenOffscreen';
 
@@ -41,100 +41,103 @@ export default function LoveLetterToYou() {
   }, [envelopeOpened]);
 
   // Define the personalized letter lines
-  const letterLines = [
-    { text: `My beloved ${name.trim() || 'child'},`, delay: 0, className: 'text-4xl md:text-5xl font-semibold text-[#661214]' },
-    { text: '', delay: 600, className: '' },
-    {
-      text: 'Before I formed you in the womb, I knew you.',
-      delay: 900,
-      className: 'text-2xl md:text-3xl',
-    },
-    {
-      text: 'Before you took your very first breath, I had already chosen you.',
-      delay: 1700,
-      className: 'text-2xl md:text-3xl',
-    },
-    {
-      text: 'Before the world had a chance to label you, or decide what you were worth...',
-      delay: 2500,
-      className: 'text-2xl md:text-3xl',
-    },
-    {
-      text: 'I had already decided — you are precious, you are honored, and you are Mine.',
-      delay: 3300,
-      className: 'text-2xl md:text-3xl font-semibold text-[#801a1d]',
-    },
-    { text: '', delay: 3900, className: '' },
-    {
-      text: 'I have watched over every single step of your journey.',
-      delay: 4300,
-      className: 'text-2xl md:text-3xl',
-    },
-    {
-      text: 'I saw you in those quiet nights when you felt completely alone and wept in the dark.',
-      delay: 5100,
-      className: 'text-2xl md:text-3xl',
-    },
-    {
-      text: 'I witnessed your silent struggles, the times you were misunderstood, and the wounds you carry inside.',
-      delay: 5900,
-      className: 'text-2xl md:text-3xl',
-    },
-    {
-      text: 'None of your pain has escaped My sight. I have counted every tear, and I hold them dear.',
-      delay: 6700,
-      className: 'text-2xl md:text-3xl font-medium',
-    },
-    { text: '', delay: 7300, className: '' },
-    {
-      text: 'You have spent so much strength trying to prove yourself, trying to earn love, searching in dry places that left you empty.',
-      delay: 7700,
-      className: 'text-2xl md:text-3xl',
-    },
-    {
-      text: 'But My love for you is not a transaction. You do not have to perform for Me, and you do not have to be perfect to receive Me.',
-      delay: 8700,
-      className: 'text-2xl md:text-3xl',
-    },
-    {
-      text: 'I do not love a future, flawless version of you.',
-      delay: 9700,
-      className: 'text-2xl md:text-3xl font-semibold',
-    },
-    {
-      text: 'I love you right now. In the middle of your doubts, your questions, your mistakes, and your weariness.',
-      delay: 10500,
-      className: 'text-2xl md:text-3xl font-semibold text-[#801a1d]',
-    },
-    { text: '', delay: 11100, className: '' },
-    {
-      text: 'I did not send love as a distant theory to be studied.',
-      delay: 11500,
-      className: 'text-2xl md:text-3xl',
-    },
-    {
-      text: 'I sent it as a Person — My Son, Jesus — to bridge the gap and bring you close to My heart.',
-      delay: 12300,
-      className: 'text-2xl md:text-3xl',
-    },
-    {
-      text: 'Nothing you have ever done, and nothing that has been done to you, can ever separate you from My love.',
-      delay: 13100,
-      className: 'text-2xl md:text-3xl',
-    },
-    { text: '', delay: 13700, className: '' },
-    {
-      text: 'Rest your tired heart. You are safe. You are home.',
-      delay: 14100,
-      className: 'text-3xl md:text-4xl font-semibold text-[#661214]',
-    },
-    { text: '', delay: 14700, className: '' },
-    {
-      text: '— Your Heavenly Father',
-      delay: 15300,
-      className: 'text-3xl md:text-4xl font-semibold text-right block mt-8',
-    },
-  ];
+  const letterLines = useMemo(
+    () => [
+      { text: `My beloved ${name.trim() || 'child'},`, delay: 0, className: 'text-4xl md:text-5xl font-semibold text-[#661214]' },
+      { text: '', delay: 600, className: '' },
+      {
+        text: 'Before I formed you in the womb, I knew you.',
+        delay: 900,
+        className: 'text-2xl md:text-3xl',
+      },
+      {
+        text: 'Before you took your very first breath, I had already chosen you.',
+        delay: 1700,
+        className: 'text-2xl md:text-3xl',
+      },
+      {
+        text: 'Before the world had a chance to label you, or decide what you were worth...',
+        delay: 2500,
+        className: 'text-2xl md:text-3xl',
+      },
+      {
+        text: 'I had already decided — you are precious, you are honored, and you are Mine.',
+        delay: 3300,
+        className: 'text-2xl md:text-3xl font-semibold text-[#801a1d]',
+      },
+      { text: '', delay: 3900, className: '' },
+      {
+        text: 'I have watched over every single step of your journey.',
+        delay: 4300,
+        className: 'text-2xl md:text-3xl',
+      },
+      {
+        text: 'I saw you in those quiet nights when you felt completely alone and wept in the dark.',
+        delay: 5100,
+        className: 'text-2xl md:text-3xl',
+      },
+      {
+        text: 'I witnessed your silent struggles, the times you were misunderstood, and the wounds you carry inside.',
+        delay: 5900,
+        className: 'text-2xl md:text-3xl',
+      },
+      {
+        text: 'None of your pain has escaped My sight. I have counted every tear, and I hold them dear.',
+        delay: 6700,
+        className: 'text-2xl md:text-3xl font-medium',
+      },
+      { text: '', delay: 7300, className: '' },
+      {
+        text: 'You have spent so much strength trying to prove yourself, trying to earn love, searching in dry places that left you empty.',
+        delay: 7700,
+        className: 'text-2xl md:text-3xl',
+      },
+      {
+        text: 'But My love for you is not a transaction. You do not have to perform for Me, and you do not have to be perfect to receive Me.',
+        delay: 8700,
+        className: 'text-2xl md:text-3xl',
+      },
+      {
+        text: 'I do not love a future, flawless version of you.',
+        delay: 9700,
+        className: 'text-2xl md:text-3xl font-semibold',
+      },
+      {
+        text: 'I love you right now. In the middle of your doubts, your questions, your mistakes, and your weariness.',
+        delay: 10500,
+        className: 'text-2xl md:text-3xl font-semibold text-[#801a1d]',
+      },
+      { text: '', delay: 11100, className: '' },
+      {
+        text: 'I did not send love as a distant theory to be studied.',
+        delay: 11500,
+        className: 'text-2xl md:text-3xl',
+      },
+      {
+        text: 'I sent it as a Person — My Son, Jesus — to bridge the gap and bring you close to My heart.',
+        delay: 12300,
+        className: 'text-2xl md:text-3xl',
+      },
+      {
+        text: 'Nothing you have ever done, and nothing that has been done to you, can ever separate you from My love.',
+        delay: 13100,
+        className: 'text-2xl md:text-3xl',
+      },
+      { text: '', delay: 13700, className: '' },
+      {
+        text: 'Rest your tired heart. You are safe. You are home.',
+        delay: 14100,
+        className: 'text-3xl md:text-4xl font-semibold text-[#661214]',
+      },
+      { text: '', delay: 14700, className: '' },
+      {
+        text: '— Your Heavenly Father',
+        delay: 15300,
+        className: 'text-3xl md:text-4xl font-semibold text-right block mt-8',
+      },
+    ],
+    [name]
+  );
 
   // Reveal lines sequentially when opened
   useEffect(() => {
@@ -151,7 +154,7 @@ export default function LoveLetterToYou() {
     }, Math.max(wait, 150));
 
     return () => clearTimeout(timer);
-  }, [envelopeOpened, visibleLines]);
+  }, [envelopeOpened, visibleLines, letterLines]);
 
   const handleOpenEnvelope = () => {
     setSealCracked(true);

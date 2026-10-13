@@ -35,7 +35,7 @@ export interface CloudinaryUploadResponse {
 export interface CloudinaryUploadOptions {
   folder?: string;
   tags?: string[];
-  transformation?: any;
+  transformation?: Record<string, unknown>;
   resourceType?: 'image' | 'video' | 'raw' | 'auto';
 }
 
@@ -154,7 +154,7 @@ export const getThumbnailUrl = (
 export const deleteFromCloudinary = async (
   publicId: string,
   resourceType: 'image' | 'video' = 'image'
-): Promise<any> => {
+): Promise<unknown> => {
   const apiKey = import.meta.env.VITE_CLOUDINARY_API_KEY;
   const apiSecret = import.meta.env.VITE_CLOUDINARY_API_SECRET;
   const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
