@@ -25,7 +25,7 @@ export function StudyBlockView({ block }: { block: StudyBlock }) {
   switch (block.type) {
     case 'h':
       return (
-        <h3 className="pt-2 font-serif text-2xl font-semibold leading-[1.3] text-red-800">
+        <h3 className="pt-[0.4em] text-[1.3em] font-extrabold leading-[1.15] tracking-[-0.03em] text-pl-ink">
           {inline(block.text)}
         </h3>
       );
@@ -33,15 +33,17 @@ export function StudyBlockView({ block }: { block: StudyBlock }) {
       return <p>{inline(block.text)}</p>;
     case 'scripture':
       return (
-        <blockquote className="rounded-r-2xl border-l-4 border-orange-300 bg-orange-50/60 px-5 py-4">
-          <p className="italic text-gray-700">{inline(block.text)}</p>
-          <footer className="mt-2 text-right text-sm font-semibold text-red-800">{block.ref}</footer>
+        <blockquote className="rounded-r-[20px] border-l-4 border-pl-red bg-pl-blush px-5 py-4">
+          <p className="pl-serif text-[1.2em] leading-[1.35] text-pl-ink">{inline(block.text)}</p>
+          <footer className="mt-3 text-right font-grotesk text-[13px] font-bold uppercase tracking-[0.08em] text-pl-press">
+            {block.ref}
+          </footer>
         </blockquote>
       );
     case 'original':
       return (
-        <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5">
-          <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-amber-700">
+        <div className="grid gap-2 rounded-[20px] border-2 border-pl-hair bg-[#f6eeed] p-5">
+          <p className="font-grotesk text-[13px] font-bold uppercase tracking-[0.08em] text-pl-red">
             From the original leaflet
           </p>
           <p className="whitespace-pre-line">{inline(block.text)}</p>
@@ -49,14 +51,14 @@ export function StudyBlockView({ block }: { block: StudyBlock }) {
       );
     case 'callout':
       return (
-        <p className="rounded-2xl border border-orange-200 bg-orange-50 p-5 text-center font-semibold text-red-800">
+        <p className="rounded-[20px] bg-pl-yellow p-5 text-center font-grotesk font-bold leading-[1.4] text-pl-ink">
           {inline(block.text)}
         </p>
       );
     case 'list': {
       const ListTag = block.ordered ? 'ol' : 'ul';
       return (
-        <ListTag className={`ml-6 space-y-2 ${block.ordered ? 'list-decimal' : 'list-disc'}`}>
+        <ListTag className={`ml-6 space-y-2 marker:font-bold marker:text-pl-red ${block.ordered ? 'list-decimal' : 'list-disc'}`}>
           {block.items.map((text, index) => (
             <li key={index}>{inline(text)}</li>
           ))}

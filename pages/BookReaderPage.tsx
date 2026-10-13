@@ -457,7 +457,7 @@ export default function BookReaderPage() {
                 ) : (
                   <div
                     className={`mt-[clamp(28px,4vw,44px)] font-['Source_Serif_4',Georgia,serif] leading-[1.7] transition-[font-size] [transition-duration:250ms] ${
-                      currentPageIsPlainText ? 'whitespace-pre-line' : 'grid gap-[1.1em] [&_h2]:font-sans [&_h3]:font-sans [&_p]:m-0'
+                      currentPageIsPlainText ? 'whitespace-pre-line' : 'grid gap-[1.1em] [&_h2]:font-grotesk [&_h3]:font-grotesk [&_p]:m-0'
                     }`}
                     style={
                       currentPageIsPlainText || prefs.theme === 0
