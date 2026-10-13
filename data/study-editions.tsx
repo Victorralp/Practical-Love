@@ -15,7 +15,7 @@ export const loadStudyEdition =
       title: section.title,
       sourcePageNumber: section.pdfPage,
       content: (
-        <div className="space-y-5 text-lg leading-relaxed text-gray-800">
+        <div className="space-y-5 leading-[1.7] text-pl-body">
           {section.blocks.map((block, index) => (
             <StudyBlockView key={index} block={block} />
           ))}
