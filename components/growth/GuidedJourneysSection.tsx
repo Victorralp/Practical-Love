@@ -23,6 +23,8 @@ export default function GuidedJourneysSection() {
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [activeJourneyId, setActiveJourneyId] = useState<string | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
+  // Step being viewed with prev/next; null follows the journey's current step.
+  const [viewedStepIndex, setViewedStepIndex] = useState<number | null>(null);
   const gridRef = useRef<HTMLDivElement | null>(null);
 
   // Cards pop in each time the list is shown.
@@ -58,6 +60,7 @@ export default function GuidedJourneysSection() {
   const handleStartJourney = useCallback((journeyId: string) => {
     progressService.startJourney(journeyId);
     setActiveJourneyId(journeyId);
+    setViewedStepIndex(null);
     setViewMode('active');
     setRefreshKey(k => k + 1);
   }, []);
@@ -65,6 +68,7 @@ export default function GuidedJourneysSection() {
   // Handle continuing a journey
   const handleContinueJourney = useCallback((journeyId: string) => {
     setActiveJourneyId(journeyId);
+    setViewedStepIndex(null);
     setViewMode('active');
   }, []);
 
@@ -73,6 +77,7 @@ export default function GuidedJourneysSection() {
     (stepIndex: number) => {
       if (!activeJourneyId) return;
       progressService.completeJourneyStep(activeJourneyId, stepIndex);
+      setViewedStepIndex(null);
       setRefreshKey(k => k + 1);
     },
     [activeJourneyId]
@@ -82,13 +87,20 @@ export default function GuidedJourneysSection() {
   const handleBackToList = useCallback(() => {
     setViewMode('list');
     setActiveJourneyId(null);
+    setViewedStepIndex(null);
   }, []);
-
-  // Get current step index for active journey
-  const currentStepIndex = activeProgress?.currentStepIndex ?? 0;
 
   // Check if journey is completed
   const isJourneyCompleted = activeProgress?.completedAt !== undefined;
+
+  // Current step for active journey; completed journeys store one past the last step.
+  const lastStepIndex = Math.max(0, (activeJourney?.steps.length ?? 1) - 1);
+  const currentStepIndex = Math.min(activeProgress?.currentStepIndex ?? 0, lastStepIndex);
+
+  // Days up to the current one can be revisited; later days stay locked until reached.
+  const furthestViewable = isJourneyCompleted ? lastStepIndex : currentStepIndex;
+  const viewIndex = Math.min(viewedStepIndex ?? currentStepIndex, furthestViewable);
+  const showStep = (index: number) => setViewedStepIndex(index === currentStepIndex ? null : index);
 
   const inProgressCount = Array.from(journeyProgressMap.values()).filter(p => p && !p.completedAt).length;
   const completedCount = Array.from(journeyProgressMap.values()).filter(p => p?.completedAt).length;
@@ -188,38 +200,26 @@ export default function GuidedJourneysSection() {
           <h4 className="m-0 text-[clamp(22px,2.4vw,28px)] font-extrabold tracking-[-0.03em]">
             {isJourneyCompleted
               ? 'Review your journey'
-              : `Day ${currentStepIndex + 1} of ${totalSteps}`}
+              : `Day ${viewIndex + 1} of ${totalSteps}`}
           </h4>
           <div className="flex items-center gap-2">
             <button
               type="button"
               aria-label="Previous step"
-              onClick={() => {
-                const newIndex = Math.max(0, currentStepIndex - 1);
-                if (activeProgress && newIndex !== currentStepIndex) {
-                  setActiveJourneyId(activeJourneyId);
-                  // Navigate to previous step for viewing
-                }
-              }}
-              disabled={currentStepIndex === 0}
+              onClick={() => showStep(Math.max(0, viewIndex - 1))}
+              disabled={viewIndex === 0}
               className={STEP_NAV}
             >
               ←
             </button>
             <span className="min-w-[72px] text-center text-[14px] font-semibold text-pl-muted">
-              Step {currentStepIndex + 1}
+              Step {viewIndex + 1}
             </span>
             <button
               type="button"
               aria-label="Next step"
-              onClick={() => {
-                const newIndex = Math.min(totalSteps - 1, currentStepIndex + 1);
-                if (activeProgress && newIndex !== currentStepIndex) {
-                  setActiveJourneyId(activeJourneyId);
-                  // Navigate to next step for viewing
-                }
-              }}
-              disabled={currentStepIndex >= totalSteps - 1}
+              onClick={() => showStep(Math.min(furthestViewable, viewIndex + 1))}
+              disabled={viewIndex >= furthestViewable}
               className={STEP_NAV}
             >
               →
@@ -228,11 +228,12 @@ export default function GuidedJourneysSection() {
         </div>
 
         {/* Current Step */}
-        {activeJourney.steps[currentStepIndex] && (
+        {activeJourney.steps[viewIndex] && (
           <JourneyStep
-            step={activeJourney.steps[currentStepIndex]}
-            isCompleted={activeProgress?.completedSteps.includes(currentStepIndex) ?? false}
-            isActive={!isJourneyCompleted}
+            key={viewIndex}
+            step={activeJourney.steps[viewIndex]}
+            isCompleted={activeProgress?.completedSteps.includes(viewIndex) ?? false}
+            isActive={!isJourneyCompleted && viewIndex === currentStepIndex}
             onComplete={handleCompleteStep}
           />
         )}
@@ -244,13 +245,14 @@ export default function GuidedJourneysSection() {
             {activeJourney.steps.map((step, index) => {
               const isStepCompleted = activeProgress?.completedSteps.includes(index) ?? false;
               const isCurrentStep = index === currentStepIndex;
+              const isViewed = index === viewIndex;
 
               return (
                 <li
                   key={step.id}
                   aria-current={isCurrentStep ? 'step' : undefined}
                   className={`flex items-center gap-3 rounded-[20px] border-2 p-3 ${
-                    isCurrentStep
+                    isViewed
                       ? 'border-pl-ink bg-white'
                       : isStepCompleted
                         ? 'border-transparent bg-pl-yellow'
