@@ -30,6 +30,8 @@ const ResourcesPage = lazy(() => import('./pages/ResourcesPage'));
 const FamilyFirstPage = lazy(() => import('./pages/FamilyFirstPage'));
 const PrideHumilityPage = lazy(() => import('./pages/PrideHumilityPage'));
 const MessagesPage = lazy(() => import('./pages/MessagesPage'));
+const MessagePage = lazy(() => import('./pages/MessagePage'));
+const PrayerWallPage = lazy(() => import('./pages/PrayerWallPage'));
 const AdminMessagesPage = lazy(() => import('./pages/AdminMessagesPage'));
 const AdminPublicationsPage = lazy(() => import('./pages/AdminPublicationsPage'));
 const AdminDashboardPage = lazy(() => import('./pages/AdminDashboardPage'));
@@ -98,7 +100,9 @@ function AdminShortcut() {
 function AppLayout() {
   const { pathname } = useLocation();
   const isAdminRoute = pathname.startsWith('/admin');
-  // The book reader has its own sticky toolbar with Home/Close actions.
+  // These pages bring their own minimal header (back link + progress).
+  const hasOwnHeader =
+    pathname.startsWith('/read/') || /^\/messages\/[^/]+/.test(pathname);
   const isReaderRoute = pathname.startsWith('/read/');
 
   return (
@@ -106,7 +110,7 @@ function AppLayout() {
       <ScrollToTop />
       <AdminShortcut />
       <SiteSeo />
-      {!isAdminRoute && !isReaderRoute && <Header />}
+      {!isAdminRoute && !hasOwnHeader && <Header />}
       <main id="main-content" className="flex-grow">
         <Suspense fallback={<PageLoader />}>
           <Routes>
@@ -114,6 +118,8 @@ function AppLayout() {
             <Route path="/about-love" element={<AboutLovePage />} />
             <Route path="/resources" element={<ResourcesPage />} />
             <Route path="/messages" element={<MessagesPage />} />
+            <Route path="/messages/:id" element={<MessagePage />} />
+            <Route path="/prayer" element={<PrayerWallPage />} />
             <Route
               path="/admin"
               element={
@@ -197,7 +203,7 @@ function AppLayout() {
           </Routes>
         </Suspense>
       </main>
-      {!isAdminRoute && <Footer />}
+      {!isAdminRoute && !isReaderRoute && <Footer />}
     </div>
   );
 }
