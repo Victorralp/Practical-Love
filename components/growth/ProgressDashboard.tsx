@@ -139,9 +139,11 @@ export default function ProgressDashboard({ onNavigateToSection }: ProgressDashb
   const [totalJourneys, setTotalJourneys] = useState(0);
 
   useEffect(() => {
-    const userProgress = progressService.getProgress();
-    setProgress(userProgress);
-    setTotalJourneys(dataService.getJourneys().length);
+    const journeys = dataService.getJourneys();
+    // Finish journeys saved with every step done but no completion date
+    progressService.finishCompletedJourneys(Object.fromEntries(journeys.map(j => [j.id, j.steps.length])));
+    setProgress(progressService.getProgress());
+    setTotalJourneys(journeys.length);
   }, []);
 
   if (!progress) {

@@ -219,6 +219,22 @@ describe('Storage Round-Trip Properties', () => {
     expect(progressService.getJourneyProgress('j')!.completedAt).toBe(first);
   });
 
+  it('finishes saved journeys that have every step done but no completedAt', () => {
+    progressService.startJourney('done');
+    progressService.completeJourneyStep('done', 0);
+    progressService.completeJourneyStep('done', 1);
+    progressService.startJourney('partial');
+    progressService.completeJourneyStep('partial', 0);
+
+    expect(progressService.finishCompletedJourneys({ done: 2, partial: 2 })).toBe(true);
+    expect(progressService.getJourneyProgress('done')!.completedAt).toBeDefined();
+    expect(progressService.getJourneyProgress('partial')!.completedAt).toBeUndefined();
+
+    // Nothing left to repair, and unknown journeys are ignored
+    expect(progressService.finishCompletedJourneys({ done: 2, partial: 2 })).toBe(false);
+    expect(progressService.finishCompletedJourneys({})).toBe(false);
+  });
+
   it('never marks a journey completed without the total step count', () => {
     progressService.startJourney('j');
     progressService.completeJourneyStep('j', 0);

@@ -35,19 +35,10 @@ export default function GuidedJourneysSection() {
     return dataService.getJourneys();
   }, []);
 
-  // Progress saved before journeys recorded completion can have every step done
-  // but no completedAt; finish those so they count as completed.
+  // Finish journeys saved with every step done but no completion date
   useEffect(() => {
-    let repaired = false;
-    journeys.forEach(journey => {
-      const jp = progressService.getJourneyProgress(journey.id);
-      const total = journey.steps.length;
-      if (jp && !jp.completedAt && total > 0 && journey.steps.every((_, i) => jp.completedSteps.includes(i))) {
-        progressService.completeJourneyStep(journey.id, total - 1, total);
-        repaired = true;
-      }
-    });
-    if (repaired) setRefreshKey(k => k + 1);
+    const stepCounts = Object.fromEntries(journeys.map(j => [j.id, j.steps.length]));
+    if (progressService.finishCompletedJourneys(stepCounts)) setRefreshKey(k => k + 1);
   }, [journeys]);
 
   // Get progress for all journeys

@@ -23,6 +23,7 @@ export interface ProgressService {
   startJourney(journeyId: string): void;
   completeJourneyStep(journeyId: string, stepIndex: number, totalSteps?: number): void;
   getJourneyProgress(journeyId: string): JourneyProgress | null;
+  finishCompletedJourneys(stepCounts: Record<string, number>): boolean;
 }
 
 /**
@@ -131,6 +132,28 @@ class ProgressServiceImpl implements ProgressService {
   getJourneyProgress(journeyId: string): JourneyProgress | null {
     const progress = this.getProgress();
     return progress.journeyProgress.find(jp => jp.journeyId === journeyId) || null;
+  }
+
+  /**
+   * Progress saved before journeys recorded completion can have every step
+   * done but no completedAt. Finish those; returns true if any changed.
+   */
+  finishCompletedJourneys(stepCounts: Record<string, number>): boolean {
+    const progress = this.getProgress();
+    const now = new Date().toISOString();
+    let changed = false;
+
+    progress.journeyProgress.forEach(jp => {
+      const total = stepCounts[jp.journeyId];
+      if (jp.completedAt || !total) return;
+      if (Array.from({ length: total }, (_, i) => i).every(i => jp.completedSteps.includes(i))) {
+        jp.completedAt = now;
+        changed = true;
+      }
+    });
+
+    if (changed) this.saveProgress(progress);
+    return changed;
   }
 }
 
