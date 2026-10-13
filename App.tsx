@@ -1,13 +1,13 @@
 import { lazy, Suspense, useEffect } from 'react';
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import Header from './components/Header';
-import Hero from './components/Hero';
 import Footer from './components/Footer';
 import SiteSeo from './components/SiteSeo';
 import AdminRoute from './components/AdminRoute';
 import AdminLayout from './components/AdminLayout';
 
 // ── Lazy-loaded pages (code splitting) ──────────────────────────────
+const HomePage = lazy(() => import('./pages/HomePage'));
 const CharacteristicsPage = lazy(() => import('./pages/CharacteristicsPage'));
 const BiblePassagesPage = lazy(() => import('./pages/BiblePassagesPage'));
 const LoveInNigeriaPage = lazy(() => import('./pages/LoveInNigeriaPage'));
@@ -46,8 +46,10 @@ const isDev = import.meta.env.DEV;
 // ── Loading fallback ────────────────────────────────────────────────
 function PageLoader() {
   return (
-    <div className="flex min-h-[50vh] items-center justify-center">
-      <div className="h-8 w-8 animate-spin rounded-full border-4 border-orange-200 border-t-red-700" />
+    <div className="flex min-h-[50vh] items-center justify-center" role="status" aria-label="Loading">
+      <span className="animate-pulse text-[40px] leading-none text-pl-red motion-reduce:animate-none" aria-hidden="true">
+        ♥
+      </span>
     </div>
   );
 }
@@ -108,7 +110,7 @@ function AppLayout() {
       <main id="main-content" className="flex-grow">
         <Suspense fallback={<PageLoader />}>
           <Routes>
-            <Route path="/" element={<Hero />} />
+            <Route path="/" element={<HomePage />} />
             <Route path="/about-love" element={<AboutLovePage />} />
             <Route path="/resources" element={<ResourcesPage />} />
             <Route path="/messages" element={<MessagesPage />} />

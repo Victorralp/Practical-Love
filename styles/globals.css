@@ -2,132 +2,54 @@
 @tailwind components;
 @tailwind utilities;
 
-@custom-variant dark (&:is(.dark *));
-
+/*
+ * Practical Love — "bright, red, Christmas" design tokens.
+ * White ground, one strong red, ink borders, Bricolage Grotesque with
+ * Instrument Serif italic accents. Tailwind exposes these as `pl-*` colours.
+ */
 :root {
-  --font-size: 16px;
-  --background: #f7ecdd;
-  --foreground: oklch(0.145 0 0);
+  --pl-ink: #141010;
+  --pl-red: #e1251b;
+  --pl-red-press: #a3140c;
+  --pl-red-deep: #7a0f09;
+  --pl-blush: #ffe6e3;
+  --pl-yellow: #ffd23f;
+  --pl-body: #3d3333;
+  --pl-muted: #5a4f4f;
+  --pl-muted-2: #6b5f5f;
+  --pl-hair: #f1e4e2;
+  --pl-hair-2: #eadfdc;
+  --pl-input: #d9cbc8;
+  --pl-on-dark: #e9dcda;
+  --pl-on-dark-accent: #ff6b5e;
+  --pl-gutter: clamp(20px, 4.5vw, 56px);
+  --pl-ease-out: cubic-bezier(0.2, 0.9, 0.2, 1.1);
+  --pl-ease-spring: cubic-bezier(0.3, 1.5, 0.5, 1);
+
+  /* shadcn-style tokens still read by components/ui */
+  --background: #ffffff;
+  --foreground: #141010;
   --card: #ffffff;
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: #912018;
+  --card-foreground: #141010;
+  --popover: #ffffff;
+  --popover-foreground: #141010;
+  --primary: #e1251b;
   --primary-foreground: #ffffff;
-  --secondary: #f6e7d7;
-  --secondary-foreground: #5f2f20;
-  --muted: #f3e4d1;
-  --muted-foreground: #8d5339;
-  --accent: #f7dbc0;
-  --accent-foreground: #6d3720;
-  --destructive: #d4183d;
+  --secondary: #ffe6e3;
+  --secondary-foreground: #7a0f09;
+  --muted: #faf7f6;
+  --muted-foreground: #5a4f4f;
+  --accent: #ffe6e3;
+  --accent-foreground: #7a0f09;
+  --destructive: #e1251b;
   --destructive-foreground: #ffffff;
-  --border: rgba(101, 59, 39, 0.14);
-  --input: transparent;
-  --input-background: #f7f0e8;
-  --switch-background: #d2c2b4;
-  --font-weight-medium: 500;
-  --font-weight-normal: 400;
-  --ring: #e27b43;
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: #b91c1c;
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-}
-
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: #7c2d12;
-  --secondary-foreground: #ffedd5;
-  --muted: #7f1d1d;
-  --muted-foreground: #fed7aa;
-  --accent: #9a3412;
-  --accent-foreground: #ffedd5;
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.269 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: #fdba74;
-  --font-weight-medium: 500;
-  --font-weight-normal: 400;
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: #fb7185;
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-input-background: var(--input-background);
-  --color-switch-background: var(--switch-background);
-  --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
+  --border: #f1e4e2;
+  --input: #d9cbc8;
+  --ring: #141010;
+  --radius: 1.25rem;
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
-
   html,
   body,
   #root {
@@ -141,19 +63,18 @@
   }
 
   body {
-    @apply bg-background text-foreground;
     margin: 0;
     overflow-x: hidden;
-    font-family: 'Manrope', system-ui, sans-serif;
-    background-image:
-      radial-gradient(circle at top, rgba(255, 255, 255, 0.62), transparent 28%),
-      linear-gradient(180deg, #f9efe2 0%, #f6eadb 48%, #f4e6d4 100%);
+    background: #ffffff;
+    color: var(--pl-ink);
+    font-family: 'Bricolage Grotesque', system-ui, sans-serif;
     text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
   }
 
   ::selection {
-    background: rgba(226, 123, 67, 0.24);
-    color: #35140f;
+    background: var(--pl-blush);
+    color: var(--pl-red-deep);
   }
 
   a,
@@ -163,477 +84,325 @@
   select {
     font: inherit;
   }
-}
 
-/**
- * Base typography. This is not applied to elements which have an ancestor with a Tailwind text class.
- */
-@layer base {
-  :where(:not(:has([class*=' text-']), :not(:has([class^='text-'])))) {
-    h1 {
-      font-size: var(--text-2xl);
-      font-weight: var(--font-weight-medium);
-      line-height: 1.15;
-    }
-
-    h2 {
-      font-size: var(--text-xl);
-      font-weight: var(--font-weight-medium);
-      line-height: 1.2;
-    }
-
-    h3 {
-      font-size: var(--text-lg);
-      font-weight: var(--font-weight-medium);
-      line-height: 1.3;
-    }
-
-    h4 {
-      font-size: var(--text-base);
-      font-weight: var(--font-weight-medium);
-      line-height: 1.5;
-    }
-
-    p {
-      font-size: var(--text-base);
-      font-weight: var(--font-weight-normal);
-      line-height: 1.5;
-    }
-
-    label {
-      font-size: var(--text-base);
-      font-weight: var(--font-weight-medium);
-      line-height: 1.5;
-    }
-
-    button {
-      font-size: var(--text-base);
-      font-weight: var(--font-weight-medium);
-      line-height: 1.5;
-    }
-
-    input {
-      font-size: var(--text-base);
-      font-weight: var(--font-weight-normal);
-      line-height: 1.5;
-    }
+  a {
+    color: var(--pl-red);
   }
-}
 
-html {
-  font-size: var(--font-size);
+  a:hover {
+    color: var(--pl-red-press);
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--pl-ink);
+    outline-offset: 3px;
+  }
 }
 
 @layer components {
-  .font-serif {
-    font-family: 'Cormorant Garamond', Georgia, serif;
+  /* ── Layout ─────────────────────────────────────────────────────── */
+  .pl-wrap {
+    max-width: 1280px;
+    margin-inline: auto;
+    padding-inline: var(--pl-gutter);
+    box-sizing: border-box;
+    width: 100%;
   }
 
-  .font-sans {
-    font-family: 'Manrope', system-ui, sans-serif;
+  .pl-section {
+    padding-block: clamp(64px, 9vw, 128px);
   }
 
-  .btn-brand {
-    @apply inline-flex items-center justify-center rounded-full px-5 py-3 font-semibold text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
-    background:
-      linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0)) padding-box,
-      linear-gradient(135deg, #9b2318 0%, #c34f2a 54%, #eb9a4f 100%) border-box;
-    border: 1px solid transparent;
-    box-shadow: 0 20px 40px rgba(113, 42, 19, 0.18);
+  .pl-hero {
+    padding-top: clamp(48px, 8vw, 104px);
+    padding-bottom: clamp(28px, 4vw, 48px);
   }
 
-  .btn-outline-brand {
-    @apply inline-flex items-center justify-center rounded-full px-5 py-3 font-semibold text-red-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
-    background: rgba(255, 255, 255, 0.72);
-    border: 1px solid rgba(133, 60, 34, 0.2);
-    box-shadow: 0 18px 30px rgba(117, 74, 51, 0.08);
+  /* ── Type ───────────────────────────────────────────────────────── */
+  .pl-display {
+    margin: 0;
+    font-weight: 800;
+    font-size: clamp(56px, 10vw, 140px);
+    line-height: 0.88;
+    letter-spacing: -0.055em;
   }
 
-  .btn-outline-light {
-    @apply inline-flex items-center justify-center rounded-full px-5 py-3 font-semibold text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
-    border: 1px solid rgba(255, 244, 236, 0.36);
-    background: rgba(255, 244, 236, 0.06);
+  .pl-h2 {
+    margin: 0;
+    font-weight: 800;
+    font-size: clamp(36px, 5vw, 64px);
+    line-height: 0.95;
+    letter-spacing: -0.045em;
   }
 
-  .btn-brand,
-  .btn-outline-brand,
-  .btn-outline-light {
-    transition-property: transform, box-shadow, background-color, border-color, color;
-    transition-duration: 200ms;
-    transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
-    -webkit-tap-highlight-color: transparent;
+  .pl-em {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    color: var(--pl-red);
   }
 
-  /* Hover lift only on devices that really hover, so it doesn't stick after a tap. */
-  @media (hover: hover) {
-    .btn-brand:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 26px 48px rgba(113, 42, 19, 0.22);
-    }
-
-    .btn-outline-brand:hover {
-      transform: translateY(-2px);
-      background: rgba(255, 252, 248, 0.96);
-    }
-
-    .btn-outline-light:hover {
-      transform: translateY(-2px);
-      background: rgba(255, 244, 236, 0.14);
-    }
+  .pl-serif {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: -0.02em;
   }
 
-  /* Press feedback lands on pointer-down, faster than the hover lift. */
-  .btn-brand:active,
-  .btn-outline-brand:active,
-  .btn-outline-light:active {
+  .pl-lede {
+    margin: clamp(20px, 3vw, 32px) 0 0;
+    max-width: 42ch;
+    font-size: clamp(18px, 1.8vw, 22px);
+    line-height: 1.45;
+    color: var(--pl-body);
+  }
+
+  .pl-eyebrow {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .pl-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    align-self: flex-start;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* ── Buttons & chips ────────────────────────────────────────────── */
+  .pl-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 54px;
+    padding: 0 28px;
+    border-radius: 999px;
+    border: 2px solid transparent;
+    font-weight: 600;
+    font-size: 17px;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+      background-color 0.2s,
+      color 0.2s,
+      transform 0.45s var(--pl-ease-spring);
+  }
+
+  .pl-btn:active {
     transform: scale(0.97);
-    transition-duration: 80ms;
   }
 
-  .surface {
-    @apply rounded-[1.75rem] border bg-white shadow-lg;
-    border-color: rgba(122, 71, 47, 0.12);
-    box-shadow: 0 24px 48px rgba(95, 53, 30, 0.08);
+  .pl-btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
   }
 
-  .surface-soft {
-    @apply rounded-[1.75rem] border shadow-md backdrop-blur-xl;
-    background: rgba(255, 255, 255, 0.78);
-    border-color: rgba(255, 255, 255, 0.4);
-    box-shadow: 0 18px 36px rgba(84, 48, 29, 0.1);
+  .pl-btn-red {
+    background: var(--pl-red);
+    color: #fff;
   }
 
-  .section-gap {
-    @apply space-y-8 md:space-y-12;
+  .pl-btn-red:hover {
+    background: var(--pl-red-press);
+    color: #fff;
   }
 
-  .pill {
-    @apply inline-flex items-center gap-2 rounded-full px-4 py-2 font-medium;
-    background: rgba(255, 250, 245, 0.84);
-    border: 1px solid rgba(167, 110, 74, 0.16);
-    color: #8f4729;
+  .pl-btn-ink {
+    background: var(--pl-ink);
+    color: #fff;
   }
 
-  .editorial-panel {
-    position: relative;
-    overflow: hidden;
-    border-radius: 2rem;
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    background:
-      linear-gradient(180deg, rgba(255, 248, 242, 0.2), rgba(255, 255, 255, 0.06)),
-      rgba(47, 21, 17, 0.38);
-    box-shadow: 0 30px 70px rgba(18, 9, 7, 0.28);
-    backdrop-filter: blur(22px);
+  .pl-btn-ink:hover {
+    background: #2e2626;
+    color: #fff;
   }
 
-  .warm-grid {
-    position: relative;
+  .pl-btn-white {
+    background: #fff;
+    color: var(--pl-ink);
   }
 
-  .warm-grid::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(255, 244, 236, 0.08) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 244, 236, 0.08) 1px, transparent 1px);
-    background-size: 5rem 5rem;
-    mask-image: radial-gradient(circle at center, black 42%, transparent 84%);
-    pointer-events: none;
+  .pl-btn-white:hover {
+    background: var(--pl-blush);
+    color: var(--pl-ink);
   }
 
-  .texture-noise::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    opacity: 0.08;
-    background-image:
-      radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.9) 0.8px, transparent 0.9px),
-      radial-gradient(circle at 80% 30%, rgba(255, 255, 255, 0.65) 0.7px, transparent 0.9px),
-      radial-gradient(circle at 40% 70%, rgba(255, 255, 255, 0.55) 0.8px, transparent 0.9px),
-      radial-gradient(circle at 65% 80%, rgba(255, 255, 255, 0.7) 0.8px, transparent 1px);
-    background-size: 160px 160px;
-    mix-blend-mode: soft-light;
-    pointer-events: none;
+  .pl-btn-outline {
+    border-color: var(--pl-ink);
+    background: transparent;
+    color: var(--pl-ink);
+    padding: 0 24px;
   }
 
-  .reveal-item {
-    opacity: 0;
-    transform: translate3d(0, 32px, 0) scale(0.98);
-    will-change: transform, opacity;
+  .pl-btn-outline:hover {
+    background: var(--pl-ink);
+    color: #fff;
   }
 
-  .reveal-item.is-visible {
-    opacity: 1;
-    transform: translate3d(0, 0, 0) scale(1);
+  .pl-btn-outline-light {
+    border-color: #fff;
+    background: transparent;
+    color: #fff;
+    padding: 0 24px;
   }
 
-  .hero-line {
-    opacity: 0;
-    transform: translate3d(0, 24px, 0);
-    will-change: transform, opacity;
+  .pl-btn-outline-light:hover {
+    background: #fff;
+    color: var(--pl-ink);
   }
 
-  .ambient-orb {
-    will-change: transform, opacity;
+  .pl-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 44px;
+    padding: 0 20px;
+    border-radius: 999px;
+    border: 2px solid var(--pl-ink);
+    background: #fff;
+    color: var(--pl-ink);
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    transition:
+      background-color 0.2s,
+      color 0.2s;
   }
 
-  .glass-border {
-    border: 1px solid rgba(255, 246, 239, 0.18);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  .pl-chip:hover {
+    background: var(--pl-blush);
   }
 
-  /* ── Ember Particles ────────────────────────────────────────────── */
-  .ember-particle {
-    background: radial-gradient(circle, #ffb347 0%, #ff8c1a 40%, transparent 70%);
-    box-shadow: 0 0 6px 2px rgba(255, 160, 60, 0.3);
-    animation: float-ember var(--ember-duration, 8s) ease-in-out infinite;
+  .pl-chip[aria-pressed='true'],
+  .pl-chip[aria-selected='true'] {
+    background: var(--pl-ink);
+    color: #fff;
   }
 
-  @keyframes float-ember {
-    0% {
-      opacity: 0;
-      transform: translateY(0) translateX(0) scale(0.4);
-    }
-    10% {
-      opacity: var(--ember-opacity, 0.5);
-    }
-    50% {
-      transform: translateY(-40vh) translateX(var(--ember-drift, 20px)) scale(1);
-    }
-    85% {
-      opacity: var(--ember-opacity, 0.5);
-    }
-    100% {
-      opacity: 0;
-      transform: translateY(-80vh) translateX(calc(var(--ember-drift, 20px) * 1.5)) scale(0.2);
-    }
+  .pl-chip-count {
+    opacity: 0.6;
+    font-weight: 400;
   }
 
-  /* ── Candle Flame ───────────────────────────────────────────────── */
-  .candle-flame {
-    animation: flame-flicker 3s ease-in-out infinite alternate;
-    transform-origin: bottom center;
-    filter: drop-shadow(0 0 8px rgba(255, 170, 60, 0.5));
+  /* ── Forms ──────────────────────────────────────────────────────── */
+  .pl-input {
+    width: 100%;
+    min-height: 54px;
+    padding: 0 20px;
+    border-radius: 999px;
+    border: 2px solid var(--pl-input);
+    background: #fff;
+    color: var(--pl-ink);
+    font-size: 16px;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
   }
 
-  .candle-glow {
-    animation: candle-glow-pulse 4s ease-in-out infinite alternate;
+  .pl-input:focus {
+    outline: none;
+    border-color: var(--pl-ink);
   }
 
-  @keyframes flame-flicker {
-    0% { transform: scaleX(1) scaleY(1) rotate(-1deg); }
-    25% { transform: scaleX(0.94) scaleY(1.04) rotate(0.5deg); }
-    50% { transform: scaleX(1.02) scaleY(0.97) rotate(-0.5deg); }
-    75% { transform: scaleX(0.97) scaleY(1.02) rotate(1deg); }
-    100% { transform: scaleX(1) scaleY(1) rotate(0deg); }
+  .pl-textarea {
+    width: 100%;
+    min-height: 140px;
+    padding: 16px 20px;
+    border-radius: 24px;
+    border: 2px solid var(--pl-input);
+    background: #fff;
+    color: var(--pl-ink);
+    font-size: 16px;
+    line-height: 1.5;
+    resize: vertical;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
   }
 
-  @keyframes candle-glow-pulse {
-    0% { opacity: 0.6; transform: translateX(-50%) scale(0.9); }
-    100% { opacity: 1; transform: translateX(-50%) scale(1.15); }
+  .pl-textarea:focus {
+    outline: none;
+    border-color: var(--pl-ink);
   }
 
-  /* ── Prayer Button ─────────────────────────────────────────────── */
-  .prayer-ripple {
-    animation: prayer-ripple-expand 1.4s ease-out forwards;
+  .pl-label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 15px;
+    font-weight: 600;
   }
 
-  @keyframes prayer-ripple-expand {
-    0% { width: 0; height: 0; opacity: 0.5; }
-    100% { width: 400px; height: 400px; opacity: 0; }
+  /* ── Cards ──────────────────────────────────────────────────────── */
+  .pl-card {
+    border: 2px solid var(--pl-ink);
+    border-radius: 28px;
+    background: #fff;
+    color: var(--pl-ink);
   }
 
-  /* ── Scripture Mirror Glow ─────────────────────────────────────── */
-  .scripture-name {
-    transition: color 0.5s ease, filter 0.5s ease;
+  .pl-lift {
+    transition:
+      transform 0.45s var(--pl-ease-spring),
+      box-shadow 0.3s,
+      background-color 0.3s;
   }
 
-  .scripture-mirror-container {
-    transition: box-shadow 0.6s ease;
+  .pl-lift:hover {
+    transform: translateY(-8px);
+    box-shadow: 8px 8px 0 var(--pl-red);
   }
 
-  .scripture-mirror-container:has(input:focus) {
-    box-shadow: 0 28px 60px rgba(145, 32, 24, 0.1);
+  .pl-stamp {
+    box-shadow: 12px 12px 0 var(--pl-red);
   }
 
-  /* ── Love Letter Upgrade ────────────────────────────────────────── */
-  .font-handwriting {
-    font-family: 'Dancing Script', cursive, sans-serif;
+  .pl-grid {
+    display: grid;
+    gap: clamp(16px, 2vw, 24px);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--pl-min, 300px)), 1fr));
   }
 
-  .love-letter-glow {
-    box-shadow: 0 0 60px 15px rgba(244, 180, 123, 0.12);
+  .pl-grid-fit {
+    display: grid;
+    gap: clamp(16px, 2vw, 24px);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--pl-min, 300px)), 1fr));
   }
 
-  /* Opacity and transform only, so the flicker stays on the compositor. */
-  @keyframes candle-flicker {
-    0%, 100% {
-      opacity: 0.94;
-      transform: scale(1);
-    }
-    25% {
-      opacity: 0.92;
-      transform: scale(0.995);
-    }
-    50% {
-      opacity: 1;
-      transform: scale(1.01);
-    }
-    75% {
-      opacity: 0.97;
-      transform: scale(1.005);
-    }
+  .pl-masonry {
+    columns: var(--pl-col, 300px);
+    column-gap: clamp(16px, 2vw, 24px);
   }
 
-  .animate-candle {
-    animation: candle-flicker 5s ease-in-out infinite;
+  .pl-masonry > * {
+    break-inside: avoid;
+    margin-bottom: clamp(16px, 2vw, 24px);
   }
 
-  /* Envelope Flap 3D Opening Animation support */
-  .perspective-1000 {
-    perspective: 1000px;
-  }
-
-  .preserve-3d {
-    transform-style: preserve-3d;
-  }
-
-  .backface-hidden {
-    backface-visibility: hidden;
-  }
-
-  /* Paper deckled edge feel */
-  .deckled-border {
-    position: relative;
-    background-color: #faf6f0;
-    box-shadow: 
-      0 0 0 1px rgba(0, 0, 0, 0.05),
-      0 10px 30px rgba(0, 0, 0, 0.15),
-      inset 0 0 40px rgba(139, 92, 26, 0.05);
-  }
-
-  /* Wax Seal Stamp styles */
-  .wax-seal-btn {
-    position: relative;
-    background: radial-gradient(circle, #8a0f12 0%, #660708 100%);
-    box-shadow: 
-      0 6px 12px rgba(0, 0, 0, 0.4),
-      inset 0 2px 4px rgba(255, 255, 255, 0.2),
-      inset 0 -2px 4px rgba(0, 0, 0, 0.4);
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  }
-
-  .wax-seal-btn:hover {
-    transform: scale(1.05);
-    box-shadow: 
-      0 0 20px rgba(244, 180, 123, 0.4),
-      0 8px 16px rgba(0, 0, 0, 0.5),
-      inset 0 2px 4px rgba(255, 255, 255, 0.3);
-  }
-
-  .wax-seal-btn:active {
-    transform: scale(0.95);
-  }
-
-  /* Gold corner decoration lines */
-  .gold-decor-corner {
-    position: absolute;
-    width: 24px;
-    height: 24px;
-    border-color: rgba(184, 152, 118, 0.4);
-    pointer-events: none;
-  }
-
-  /* Ink drip effect */
-  .ink-drip {
-    opacity: 0.08;
-    filter: blur(0.5px);
-  }
-
-  /* ── Altar Call — Beating Heart ─────────────────────────────────── */
-  .altar-heart-icon {
-    animation: altar-heartbeat 1.4s ease-in-out infinite;
-  }
-
-  .altar-pulse-ring {
-    animation: altar-pulse-expand 2.8s ease-out infinite;
-  }
-
-  .altar-pulse-ring-delayed {
-    animation: altar-pulse-expand 2.8s ease-out infinite 1.4s;
-  }
-
-  @keyframes altar-heartbeat {
-    0%, 100% { transform: scale(1); }
-    10% { transform: scale(1.18); }
-    20% { transform: scale(1); }
-    30% { transform: scale(1.12); }
-    40% { transform: scale(1); }
-  }
-
-  @keyframes altar-pulse-expand {
-    0% {
-      transform: scale(0.6);
-      opacity: 0.5;
-    }
-    100% {
-      transform: scale(2.2);
-      opacity: 0;
-    }
-  }
-
-  /* ── Altar Call — Warm Gradient Text ───────────────────────────── */
-  /* Static: the beating heart is this section's one ambient loop. */
-  .altar-shimmer-text {
-    background: linear-gradient(90deg, #ffb380 0%, #fff1e3 50%, #ffb380 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-
-  /* ── Love Whispers (static background words) ───────────────────── */
-  .love-whisper {
-    white-space: nowrap;
-  }
-
-  /* ── Altar Pledge Response ─────────────────────────────────────── */
-  .altar-pledge-response {
-    animation: pledge-reveal 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  }
-
-  @keyframes pledge-reveal {
-    0% { opacity: 0; transform: translateY(20px) scale(0.97); }
-    100% { opacity: 1; transform: translateY(0) scale(1); }
+  /* ── Reader body ────────────────────────────────────────────────── */
+  .pl-reader {
+    font-family: 'Source Serif 4', Georgia, serif;
+    line-height: 1.7;
   }
 }
 
-/* Ambient loops stop while their section is off screen (see usePauseWhenOffscreen). */
-[data-offscreen] *,
-[data-offscreen] *::before,
-[data-offscreen] *::after {
-  animation-play-state: paused !important;
+/* Revealed-on-scroll elements start hidden only once JS has opted them in. */
+[data-pl-reveal='pending'] {
+  opacity: 0;
 }
 
 /* Translucent materials turn solid when people ask for less transparency or more contrast. */
 @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
-  .surface-soft {
-    background: #ffffff;
-    border-color: rgba(101, 59, 39, 0.28);
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
-  }
-
-  .editorial-panel {
-    background: #2f1511;
-    border-color: rgba(255, 244, 236, 0.4);
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
-  }
-
-  .material-dark {
-    background-color: #1a0e0b !important;
-    border-color: rgba(255, 244, 236, 0.32) !important;
+  .pl-glass {
+    background: #fff !important;
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
   }
@@ -653,41 +422,7 @@ html {
     scroll-behavior: auto !important;
   }
 
-  .reveal-item,
-  .hero-line,
-  .love-letter-line,
-  .altar-pledge-response,
-  .love-assessment-question,
-  .giving-heart-icon,
-  .giving-pulse-ring,
-  .giving-pulse-ring-delayed {
+  [data-pl-reveal='pending'] {
     opacity: 1;
-    transform: none;
-    animation: none !important;
   }
-}
-
-/* ── Assessment Quiz — Fade & Slide ─────────────────────────────── */
-@keyframes fadeSlideIn {
-  0% {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* ── Giving Heart — Pulse Rings ─────────────────────────────────── */
-.giving-heart-icon {
-  animation: altar-heartbeat 1.4s ease-in-out infinite;
-}
-
-.giving-pulse-ring {
-  animation: altar-pulse-expand 2.8s ease-out infinite;
-}
-
-.giving-pulse-ring-delayed {
-  animation: altar-pulse-expand 2.8s ease-out infinite 1.4s;
 }
