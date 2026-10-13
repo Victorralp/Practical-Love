@@ -102,7 +102,9 @@ function AppLayout() {
   const isAdminRoute = pathname.startsWith('/admin');
   // These pages bring their own minimal header (back link + progress).
   const hasOwnHeader =
-    pathname.startsWith('/read/') || /^\/messages\/[^/]+/.test(pathname);
+    pathname.startsWith('/read/') ||
+    /^\/messages\/[^/]+/.test(pathname) ||
+    pathname === '/share-testimony';
   const isReaderRoute = pathname.startsWith('/read/');
 
   return (
