@@ -17,7 +17,6 @@ type Tool = {
   keywords: string;
   tone: string;
   shadow: string;
-  wide?: boolean;
 } & ({ href: string; section?: never } | { section: GrowthSection; href?: never });
 
 const TOOLS: Tool[] = [
@@ -29,7 +28,6 @@ const TOOLS: Tool[] = [
     href: '/love-challenge',
     tone: 'bg-pl-red text-white',
     shadow: 'hover:shadow-[10px_10px_0_#141010]',
-    wide: true,
   },
   {
     kicker: 'Wisdom',
@@ -39,6 +37,15 @@ const TOOLS: Tool[] = [
     section: 'tips',
     tone: 'bg-white text-pl-ink',
     shadow: 'hover:shadow-[10px_10px_0_#e1251b]',
+  },
+  {
+    kicker: 'Today',
+    title: 'Take today’s challenge',
+    text: 'One small act of love for today, with room to note how it went.',
+    keywords: 'today daily challenge act empathy',
+    section: 'challenges',
+    tone: 'bg-pl-coral text-pl-ink',
+    shadow: 'hover:shadow-[10px_10px_0_#141010]',
   },
   {
     kicker: 'Reflection',
@@ -131,9 +138,7 @@ export default function GrowthPage() {
   };
 
   const cardClass = (t: Tool) =>
-    `flex min-h-[240px] flex-col justify-between gap-9 rounded-[28px] border-2 border-pl-ink p-7 text-left no-underline transition-[transform,box-shadow] duration-[450ms] [transition-timing-function:cubic-bezier(.3,1.5,.5,1)] hover:-translate-y-2 motion-reduce:hover:translate-y-0 ${t.tone} ${t.shadow} ${
-      t.wide && !q ? 'min-[760px]:col-span-2' : ''
-    } group`;
+    `flex min-h-[240px] flex-col justify-between gap-9 rounded-[28px] border-2 border-pl-ink p-7 text-left no-underline transition-[transform,box-shadow] [transition-duration:450ms] [transition-timing-function:cubic-bezier(.3,1.5,.5,1)] hover:-translate-y-2 motion-reduce:hover:translate-y-0 ${t.tone} ${t.shadow} group`;
 
   const cardBody = (t: Tool) => (
     <>
@@ -141,7 +146,7 @@ export default function GrowthPage() {
         <span className="text-[13px] font-bold uppercase tracking-[0.08em]">{t.kicker}</span>
         <span
           aria-hidden="true"
-          className="pl-serif text-[28px] transition-transform duration-[400ms] [transition-timing-function:cubic-bezier(.3,1.5,.5,1)] group-hover:translate-x-2"
+          className="pl-serif text-[28px] transition-transform [transition-duration:400ms] [transition-timing-function:cubic-bezier(.3,1.5,.5,1)] group-hover:translate-x-2"
         >
           →
         </span>

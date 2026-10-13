@@ -189,7 +189,7 @@ export default function LoveChallengePage() {
                 onClick={() => select(n)}
                 aria-label={`Day ${n}${d ? ', done' : ''}`}
                 aria-current={on ? 'true' : undefined}
-                className={`relative aspect-square rounded-[18px] border-2 text-[22px] font-extrabold transition-[transform,background-color,opacity] duration-[350ms] [transition-timing-function:cubic-bezier(.3,1.6,.5,1)] ${
+                className={`relative aspect-square rounded-[18px] border-2 text-[22px] font-extrabold transition-[transform,background-color,opacity] [transition-duration:350ms] [transition-timing-function:cubic-bezier(.3,1.6,.5,1)] ${
                   on ? 'scale-[1.08] bg-pl-red text-white' : d ? 'bg-pl-blush text-pl-ink' : 'bg-white text-pl-ink'
                 } ${on || inPhase ? 'border-pl-ink' : 'border-[#e6dad8]'} ${inPhase || d ? 'opacity-100' : 'opacity-45'}`}
               >
@@ -246,7 +246,7 @@ export default function LoveChallengePage() {
             return (
               <div
                 key={m.day}
-                className={`rounded-[24px] border-2 border-pl-ink p-[22px] transition-colors duration-[400ms] ${
+                className={`rounded-[24px] border-2 border-pl-ink p-[22px] transition-colors [transition-duration:400ms] ${
                   hit ? 'bg-pl-ink text-white' : 'bg-white text-pl-ink'
                 }`}
               >

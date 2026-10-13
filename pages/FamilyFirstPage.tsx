@@ -104,7 +104,7 @@ export default function FamilyFirstPage() {
                     <span className="text-[clamp(24px,2.8vw,36px)] font-extrabold leading-[1.05] tracking-[-0.03em]">{pillar.title}</span>
                     <span
                       aria-hidden="true"
-                      className="flex h-11 w-11 flex-none items-center justify-center rounded-full bg-pl-ink text-[22px] text-white transition-transform duration-[450ms] [transition-timing-function:cubic-bezier(.3,1.5,.5,1)]"
+                      className="flex h-11 w-11 flex-none items-center justify-center rounded-full bg-pl-ink text-[22px] text-white transition-transform [transition-duration:450ms] [transition-timing-function:cubic-bezier(.3,1.5,.5,1)]"
                       style={{ transform: `rotate(${isOpen ? 45 : 0}deg)` }}
                     >
                       +

@@ -277,7 +277,7 @@ export default function BookReaderPage() {
       style={{ background: th.bg, color: th.fg }}
     >
       <header
-        className="sticky top-0 z-30 border-b backdrop-blur-[8px] transition-[transform,background-color] duration-[450ms] [transition-timing-function:cubic-bezier(.3,0,0,1)]"
+        className="sticky top-0 z-30 border-b backdrop-blur-[8px] transition-[transform,background-color] [transition-duration:450ms] [transition-timing-function:cubic-bezier(.3,0,0,1)]"
         style={{ background: th.bar, borderColor: th.line, transform: focus ? 'translateY(-100%)' : 'none' }}
       >
         <div className="mx-auto flex max-w-[1280px] items-center gap-2 px-[clamp(16px,4vw,40px)] py-[10px]">
@@ -383,7 +383,7 @@ export default function BookReaderPage() {
           <div
             onClick={() => setTocOpen(false)}
             aria-hidden="true"
-            className="fixed inset-0 z-[35] bg-[rgba(20,16,16,.4)] transition-opacity duration-[400ms]"
+            className="fixed inset-0 z-[35] bg-[rgba(20,16,16,.4)] transition-opacity [transition-duration:400ms]"
             style={{ opacity: tocOpen ? 1 : 0, pointerEvents: tocOpen ? 'auto' : 'none' }}
           />
         </>
@@ -456,7 +456,7 @@ export default function BookReaderPage() {
                   </p>
                 ) : (
                   <div
-                    className={`mt-[clamp(28px,4vw,44px)] font-['Source_Serif_4',Georgia,serif] leading-[1.7] transition-[font-size] duration-[250ms] ${
+                    className={`mt-[clamp(28px,4vw,44px)] font-['Source_Serif_4',Georgia,serif] leading-[1.7] transition-[font-size] [transition-duration:250ms] ${
                       currentPageIsPlainText ? 'whitespace-pre-line' : 'grid gap-[1.1em] [&_h2]:font-sans [&_h3]:font-sans [&_p]:m-0'
                     }`}
                     style={

@@ -170,7 +170,7 @@ export default function BiblePassagesPage() {
               data-v
               onClick={() => pick(i)}
               aria-current={i === spot ? 'true' : undefined}
-              className={`mb-4 block w-full break-inside-avoid rounded-[24px] border-2 border-pl-ink p-6 text-left text-pl-ink transition-[background-color,transform] duration-[350ms] [transition-timing-function:cubic-bezier(.3,1.5,.5,1)] hover:-translate-y-1 motion-reduce:hover:translate-y-0 ${
+              className={`mb-4 block w-full break-inside-avoid rounded-[24px] border-2 border-pl-ink p-6 text-left text-pl-ink transition-[background-color,transform] [transition-duration:350ms] [transition-timing-function:cubic-bezier(.3,1.5,.5,1)] hover:-translate-y-1 motion-reduce:hover:translate-y-0 ${
                 i === spot ? 'bg-pl-blush' : 'bg-white'
               }`}
             >

@@ -81,7 +81,7 @@ export default function PrideHumilityPage() {
                   data-sign
                   aria-pressed={on}
                   onClick={() => setSelected(s => s.map((v, j) => (j === i ? !v : v)))}
-                  className={`flex min-h-[64px] w-full items-center justify-between gap-4 rounded-[20px] border-2 border-pl-ink px-[22px] text-left text-[18px] font-semibold transition-[background-color,color,transform] duration-[350ms] [transition-timing-function:cubic-bezier(.3,1.6,.5,1)] ${
+                  className={`flex min-h-[64px] w-full items-center justify-between gap-4 rounded-[20px] border-2 border-pl-ink px-[22px] text-left text-[18px] font-semibold transition-[background-color,color,transform] [transition-duration:350ms] [transition-timing-function:cubic-bezier(.3,1.6,.5,1)] ${
                     on ? 'scale-[1.02] bg-pl-ink text-white' : 'bg-white text-pl-ink'
                   }`}
                 >
@@ -101,7 +101,7 @@ export default function PrideHumilityPage() {
           <p className="m-0 text-[13px] font-bold uppercase tracking-[0.08em] opacity-80">The mirror</p>
           <div className="mt-4 h-[14px] overflow-hidden rounded-[7px] bg-black/10">
             <div
-              className={`h-full w-full origin-left rounded-[7px] transition-transform duration-[600ms] [transition-timing-function:cubic-bezier(.3,1.3,.5,1)] ${result.bar}`}
+              className={`h-full w-full origin-left rounded-[7px] transition-transform [transition-duration:600ms] [transition-timing-function:cubic-bezier(.3,1.3,.5,1)] ${result.bar}`}
               style={{ transform: `scaleX(${Math.max(0.04, count / SIGNS.length)})` }}
             />
           </div>

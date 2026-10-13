@@ -83,7 +83,7 @@ export default function YellowCardPage() {
                   flip();
                 }
               }}
-              className="relative aspect-[5/7] cursor-pointer transition-transform duration-[900ms] [transform-style:preserve-3d] [transition-timing-function:cubic-bezier(.3,1.3,.5,1)]"
+              className="relative aspect-[5/7] cursor-pointer transition-transform [transition-duration:900ms] [transform-style:preserve-3d] [transition-timing-function:cubic-bezier(.3,1.3,.5,1)]"
               style={{ transform: `rotateY(${back ? 180 : 0}deg) rotate(-3deg)` }}
             >
               <div className="absolute inset-0 flex flex-col rounded-[28px] border-2 border-pl-ink bg-pl-yellow p-[clamp(20px,3vw,32px)] shadow-[14px_14px_0_#e1251b] [backface-visibility:hidden]">

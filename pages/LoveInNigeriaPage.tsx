@@ -94,7 +94,7 @@ export default function LoveInNigeriaPage() {
               aria-selected={tab === i}
               aria-controls="ng-panel"
               onClick={() => setTab(i)}
-              className={`min-h-[48px] rounded-full border-2 border-pl-ink px-6 text-[16px] font-bold transition-colors duration-[250ms] ${
+              className={`min-h-[48px] rounded-full border-2 border-pl-ink px-6 text-[16px] font-bold transition-colors [transition-duration:250ms] ${
                 tab === i ? 'bg-pl-ink text-white' : 'bg-white text-pl-ink'
               }`}
             >

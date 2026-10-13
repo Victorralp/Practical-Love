@@ -5,7 +5,7 @@ export const CARD = 'rounded-[28px] border-2 border-pl-ink bg-white';
 
 /** Springy lift with the red offset shadow, as on the growth tool cards. */
 export const CARD_HOVER =
-  'transition-[transform,box-shadow] duration-[450ms] [transition-timing-function:cubic-bezier(.3,1.5,.5,1)] hover:-translate-y-1 hover:shadow-[10px_10px_0_#e1251b] motion-reduce:transition-none motion-reduce:hover:translate-y-0';
+  'transition-[transform,box-shadow] [transition-duration:450ms] [transition-timing-function:cubic-bezier(.3,1.5,.5,1)] hover:-translate-y-1 hover:shadow-[10px_10px_0_#e1251b] motion-reduce:transition-none motion-reduce:hover:translate-y-0';
 
 /** Small uppercase label. */
 export const KICKER = 'text-[13px] font-bold uppercase tracking-[0.08em]';

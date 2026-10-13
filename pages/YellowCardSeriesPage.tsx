@@ -121,7 +121,7 @@ export default function YellowCardSeriesPage() {
                   onClick={() => setActive(i)}
                   aria-label={card.title}
                   aria-pressed={i === active}
-                  className={`absolute left-1/2 top-1/2 m-0 box-border flex aspect-[5/7] w-[min(78%,340px)] flex-col justify-between rounded-[24px] border-2 border-pl-ink p-6 text-left transition-[transform,box-shadow] duration-[800ms] [transition-timing-function:cubic-bezier(.3,1.35,.5,1)] ${card.face} ${pos === 0 ? card.shadow : 'shadow-none'}`}
+                  className={`absolute left-1/2 top-1/2 m-0 box-border flex aspect-[5/7] w-[min(78%,340px)] flex-col justify-between rounded-[24px] border-2 border-pl-ink p-6 text-left transition-[transform,box-shadow] [transition-duration:800ms] [transition-timing-function:cubic-bezier(.3,1.35,.5,1)] ${card.face} ${pos === 0 ? card.shadow : 'shadow-none'}`}
                   style={{
                     zIndex: CARDS.length - pos,
                     transform: `translate(-50%,-50%) translateX(${slot.x}%) rotate(${slot.r}deg) scale(${slot.s})`,

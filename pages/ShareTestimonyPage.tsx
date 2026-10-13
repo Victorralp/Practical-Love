@@ -137,7 +137,7 @@ export default function ShareTestimonyPage() {
         </div>
         <div className="h-[3px] bg-[#f6eeed]">
           <div
-            className="h-full w-full origin-left bg-pl-red transition-transform duration-[600ms] [transition-timing-function:cubic-bezier(.3,1.3,.5,1)]"
+            className="h-full w-full origin-left bg-pl-red transition-transform [transition-duration:600ms] [transition-timing-function:cubic-bezier(.3,1.3,.5,1)]"
             style={{ transform: `scaleX(${progress})` }}
           />
         </div>

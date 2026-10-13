@@ -83,7 +83,7 @@ export default function MissionVisionPage() {
                 onMouseEnter={() => pick(i)}
                 aria-pressed={on}
                 aria-label={RINGS[i].title}
-                className={`absolute left-1/2 top-1/2 flex aspect-square items-start justify-center rounded-full border-2 border-pl-ink transition-[transform,background-color,color] duration-[700ms] [transition-timing-function:cubic-bezier(.3,1.5,.5,1)] ${
+                className={`absolute left-1/2 top-1/2 flex aspect-square items-start justify-center rounded-full border-2 border-pl-ink transition-[transform,background-color,color] [transition-duration:700ms] [transition-timing-function:cubic-bezier(.3,1.5,.5,1)] ${
                   on ? 'bg-pl-red text-white' : `${RING_IDLE[i]} text-pl-ink`
                 }`}
                 style={{

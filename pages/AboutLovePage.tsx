@@ -114,13 +114,13 @@ export default function AboutLovePage() {
               key={route.to}
               to={route.to}
               data-reveal
-              className={`group flex min-h-[200px] items-end justify-between gap-4 rounded-[28px] border-2 border-pl-ink p-7 no-underline transition-[transform,box-shadow] duration-[450ms] [transition-timing-function:cubic-bezier(.3,1.5,.5,1)] hover:-translate-y-2 hover:shadow-[8px_8px_0_#141010] motion-reduce:hover:translate-y-0 ${route.tone}`}
+              className={`group flex min-h-[200px] items-end justify-between gap-4 rounded-[28px] border-2 border-pl-ink p-7 no-underline transition-[transform,box-shadow] [transition-duration:450ms] [transition-timing-function:cubic-bezier(.3,1.5,.5,1)] hover:-translate-y-2 hover:shadow-[8px_8px_0_#141010] motion-reduce:hover:translate-y-0 ${route.tone}`}
             >
               <span>
                 <span className="block text-[clamp(26px,2.6vw,34px)] font-extrabold leading-none tracking-[-0.03em]">{route.title}</span>
                 <span className="mt-2 block max-w-[26ch] text-[16px] opacity-85">{route.text}</span>
               </span>
-              <span className="pl-serif text-[32px] transition-transform duration-[400ms] group-hover:translate-x-1" aria-hidden="true">
+              <span className="pl-serif text-[32px] transition-transform [transition-duration:400ms] group-hover:translate-x-1" aria-hidden="true">
                 →
               </span>
             </Link>

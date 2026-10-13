@@ -93,7 +93,7 @@ export default function CharacteristicsPage() {
             </div>
             <div className="mt-2 h-3 overflow-hidden rounded-[6px] bg-[#f6eeed]">
               <div
-                className="h-full w-full origin-left rounded-[6px] bg-pl-red transition-transform duration-[600ms] [transition-timing-function:cubic-bezier(.3,1.3,.5,1)]"
+                className="h-full w-full origin-left rounded-[6px] bg-pl-red transition-transform [transition-duration:600ms] [transition-timing-function:cubic-bezier(.3,1.3,.5,1)]"
                 style={{ transform: `scaleX(${count / total})` }}
               />
             </div>
@@ -137,7 +137,7 @@ export default function CharacteristicsPage() {
                   onClick={() => toggleGot(i)}
                   aria-pressed={on}
                   aria-label={on ? `Unmark “${trait.short}” as memorised` : `Mark “${trait.short}” as memorised`}
-                  className={`absolute right-3 top-3 z-[2] h-11 w-11 rounded-full border-2 text-[18px] font-extrabold transition-[transform,background-color] duration-[350ms] [transition-timing-function:cubic-bezier(.3,1.7,.5,1)] ${
+                  className={`absolute right-3 top-3 z-[2] h-11 w-11 rounded-full border-2 text-[18px] font-extrabold transition-[transform,background-color] [transition-duration:350ms] [transition-timing-function:cubic-bezier(.3,1.7,.5,1)] ${
                     on ? 'scale-110 border-pl-ink bg-pl-ink text-white' : 'border-[#e6dad8] bg-white text-[#c9bcba]'
                   } ${isFlipped ? 'invisible' : ''}`}
                 >

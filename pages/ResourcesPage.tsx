@@ -69,7 +69,7 @@ export default function ResourcesPage() {
             key={tile.to}
             to={tile.to}
             data-card
-            className={`group relative flex min-h-[clamp(280px,30vw,380px)] flex-col justify-between gap-12 overflow-hidden rounded-[32px] border-2 border-pl-ink p-[clamp(24px,3vw,40px)] no-underline transition-[transform,box-shadow] duration-[450ms] [transition-timing-function:cubic-bezier(.3,1.5,.5,1)] hover:-translate-y-2 motion-reduce:hover:translate-y-0 ${tile.tone} ${tile.shadow}`}
+            className={`group relative flex min-h-[clamp(280px,30vw,380px)] flex-col justify-between gap-12 overflow-hidden rounded-[32px] border-2 border-pl-ink p-[clamp(24px,3vw,40px)] no-underline transition-[transform,box-shadow] [transition-duration:450ms] [transition-timing-function:cubic-bezier(.3,1.5,.5,1)] hover:-translate-y-2 motion-reduce:hover:translate-y-0 ${tile.tone} ${tile.shadow}`}
           >
             <div className="flex items-start justify-between gap-4">
               <span className="pl-serif text-[clamp(56px,6vw,88px)] leading-[.8]" aria-hidden="true">
@@ -80,7 +80,7 @@ export default function ResourcesPage() {
             <div>
               <h2 className="m-0 text-[clamp(36px,4vw,56px)] font-extrabold leading-[.92] tracking-[-0.045em]">{tile.title}</h2>
               <p className="mb-0 mt-3 max-w-[34ch] text-[17px] leading-[1.45] opacity-85">{tile.text}</p>
-              <span className="pl-serif mt-5 inline-flex text-[24px] transition-transform duration-[400ms] [transition-timing-function:cubic-bezier(.3,1.5,.5,1)] group-hover:translate-x-2">
+              <span className="pl-serif mt-5 inline-flex text-[24px] transition-transform [transition-duration:400ms] [transition-timing-function:cubic-bezier(.3,1.5,.5,1)] group-hover:translate-x-2">
                 {tile.cta} →
               </span>
             </div>
