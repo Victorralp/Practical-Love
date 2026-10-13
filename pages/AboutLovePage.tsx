@@ -1,256 +1,132 @@
-import { BookOpen, Compass, HeartHandshake, MapPin, Quote, Sparkles, Users } from 'lucide-react';
+import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import Logo from '../components/Logo';
-import { CTASection, FeatureCard, PageHero, PageShell, SectionCard } from '../components/ui';
+import { Em, ImageSlot } from '../components/pl/primitives';
+import { prefersReducedMotion, useEntrance, useScrollReveal } from '../components/pl/motion';
 
-const ABOUT_ROUTES = [
+const STORY = [
+  {
+    title: 'The message already has tools people can carry.',
+    text: 'The Yellow Card, the 17 characteristics and 50 love passages turn teaching into something you can hold, memorise and pass on.',
+  },
+  {
+    title: 'Families should see how to practise it at once.',
+    text: 'Every page ends in an action: one sentence to say, one habit to try, one person to love on purpose today.',
+  },
+  {
+    title: 'The ministry is rooted in real homes.',
+    text: 'Practical love is proved at the dinner table and in the car before it is preached from a stage.',
+  },
+];
+
+const ROUTES = [
   {
     title: 'Characteristics of Love',
-    description:
-      'Study the 17 characteristics from 1 Corinthians 13 and use them as a daily mirror.',
-    href: '/characteristics',
-    accentColor: 'red' as const,
-    icon: <BookOpen className="h-6 w-6" />,
+    text: 'The 17 traits from 1 Corinthians 13.',
+    to: '/characteristics',
+    tone: 'bg-pl-yellow text-pl-ink hover:text-pl-ink',
   },
   {
     title: 'Bible Passages',
-    description:
-      'Read the scriptural passages that anchor the message in God’s standard, not sentiment.',
-    href: '/bible-passages',
-    accentColor: 'orange' as const,
-    icon: <Compass className="h-6 w-6" />,
+    text: '50 scriptures on love to read aloud.',
+    to: '/bible-passages',
+    tone: 'bg-white text-pl-ink hover:text-pl-ink',
   },
   {
     title: 'Mission and Vision',
-    description:
-      'See how household reform, discipleship, and national transformation fit together.',
-    href: '/mission-vision',
-    accentColor: 'yellow' as const,
-    icon: <HeartHandshake className="h-6 w-6" />,
+    text: 'Heart, household, nation.',
+    to: '/mission-vision',
+    tone: 'bg-pl-red text-white hover:text-white',
   },
-] as const;
-
-const MINISTRY_STORY_POINTS = [
-  'Practical Love starts from a simple conviction: biblical love must move from sermon language into household behavior.',
-  'The ministry keeps returning to the home because hidden tone, private habits, marriage, parenting, and forgiveness shape what children and communities later call normal.',
-  'The burden is not only personal healing. It is also national renewal, beginning with Nigerian homes that learn to practice love deliberately.',
-] as const;
-
-const OUTREACH_SNAPSHOTS = [
-  {
-    src: '/screencapture-127-0-0-1-3000-yellow-card-series-2026-02-21-13_26_48.png',
-    alt: 'Yellow Card teaching series preview',
-    label: 'Teaching snapshot',
-    title: 'The message already has practical tools people can carry.',
-    body: 'The yellow card series gives the ministry a concrete teaching format instead of abstract promises.',
-  },
-  {
-    src: '/screencapture-127-0-0-1-3000-love-challenge-2026-02-21-15_26_08.png',
-    alt: 'Love challenge experience preview',
-    label: 'Household practice',
-    title: 'Visitors should immediately see how families can practice the message.',
-    body: 'Challenges, devotion prompts, and repeatable actions make the site feel lived-in rather than informational only.',
-  },
-  {
-    src: '/love-hero.png',
-    alt: 'Practical Love family ministry visual',
-    label: 'Ministry image',
-    title: 'The ministry should feel rooted in real homes and visible relationships.',
-    body: 'The visual direction should keep reinforcing family life, warmth, and Nigeria-facing relevance.',
-  },
-] as const;
+];
 
 export default function AboutLovePage() {
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  const ringRef = useRef<HTMLDivElement | null>(null);
+
+  useEntrance(rootRef);
+  useScrollReveal(rootRef);
+
+  useEffect(() => {
+    if (prefersReducedMotion()) return;
+    const spin = ringRef.current?.animate([{ transform: 'rotate(0)' }, { transform: 'rotate(360deg)' }], {
+      duration: 40000,
+      iterations: Infinity,
+    });
+    return () => spin?.cancel();
+  }, []);
+
   return (
-    <PageShell>
-      <PageHero
-        badge={
-          <>
-            <Sparkles className="h-4 w-4" />
-            About the message
-          </>
-        }
-        icon={
-          <div className="flex h-14 w-14 items-center justify-center rounded-[1.25rem] bg-gradient-to-br from-red-600 via-orange-500 to-amber-400 text-white shadow-lg">
-            <Logo className="h-7 w-7" />
+    <div ref={rootRef}>
+      <section className="pl-wrap grid items-center gap-[clamp(40px,6vw,88px)] pb-[clamp(48px,6vw,80px)] pt-[clamp(48px,8vw,104px)] [grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr))]">
+        <div>
+          <h1 data-in className="m-0 text-[clamp(52px,9vw,124px)] font-extrabold leading-[.88] tracking-[-0.055em]">
+            What love is <Em>trying to restore.</Em>
+          </h1>
+          <p data-in className="pl-lede max-w-[38ch]">
+            How the ministry began, why it starts with the home, and how practical love is meant to become visible in Nigerian family life.
+          </p>
+        </div>
+        <div data-in className="relative aspect-square w-[min(100%,460px)] justify-self-center">
+          <div className="absolute inset-[28px] overflow-hidden rounded-full border-2 border-pl-ink bg-pl-blush">
+            <ImageSlot src="/love-hero.png" alt="A family sharing a moment of love at home" label="A family at home" />
           </div>
-        }
-        title="What Practical Love is trying to restore"
-        subtitle="This page explains how the ministry began, why it starts with the home, and how Practical Love is meant to become visible in Nigerian family life."
-        actions={
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <Link to="/characteristics" className="btn-brand px-7 py-3">
-              Study the characteristics
-            </Link>
-            <Link to="/mission-vision" className="btn-outline-brand px-7 py-3">
-              Read the mission
-            </Link>
-          </div>
-        }
-      >
-        <div className="grid gap-4 md:grid-cols-3">
-          <div className="surface-soft p-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#a45f3c]">
-              Truth
-            </p>
-            <p className="mt-2 text-lg font-semibold text-[#3d1d17]">
-              Love is measurable behavior.
-            </p>
-          </div>
-          <div className="surface-soft p-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#a45f3c]">
-              Burden
-            </p>
-            <p className="mt-2 text-lg font-semibold text-[#3d1d17]">
-              The home is the first battlefield.
-            </p>
-          </div>
-          <div className="surface-soft p-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#a45f3c]">
-              Outcome
-            </p>
-            <p className="mt-2 text-lg font-semibold text-[#3d1d17]">
-              Families shape the future of a nation.
-            </p>
+          <div ref={ringRef} className="pointer-events-none absolute inset-0" aria-hidden="true">
+            <svg viewBox="0 0 200 200" className="h-full w-full">
+              <defs>
+                <path id="about-ring" d="M100,100 m-92,0 a92,92 0 1,1 184,0 a92,92 0 1,1 -184,0" />
+              </defs>
+              <text className="fill-pl-red text-[11px] font-bold uppercase tracking-[3px]">
+                <textPath href="#about-ring">Memorise · Meditate · Verbalise · Practicalise · </textPath>
+              </text>
+            </svg>
           </div>
         </div>
-      </PageHero>
+      </section>
 
-      <section className="grid gap-6 lg:grid-cols-[1.02fr_0.98fr]">
-        <SectionCard>
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#a45f3c]">
-            How it began
-          </p>
-          <h2 className="mt-2 font-serif text-3xl text-[#3d1d17] leading-[1.1] tracking-[-0.015em]">
-            Practical Love is a ministry burden before it is a website section.
-          </h2>
-          <p className="mt-4 max-w-3xl leading-8 text-[#6e4737]">
-            The message behind Practical Love is direct: the love of God must become a practiced way
-            of life. The ministry exists to call people away from vague religious language and back
-            into visible love inside marriage, parenting, discipleship, friendship, and public
-            conduct.
-          </p>
-
-          <div className="mt-6 grid gap-4">
-            {MINISTRY_STORY_POINTS.map(point => (
+      <section className="bg-pl-ink text-white">
+        <div className="pl-wrap py-[clamp(56px,8vw,112px)]">
+          <p className="m-0 text-[14px] font-bold uppercase tracking-[0.08em] text-pl-coral">Our story</p>
+          <div className="mt-[clamp(24px,3vw,40px)] grid">
+            {STORY.map((item, i) => (
               <div
-                key={point}
-                className="rounded-[1.5rem] border border-[rgba(176,111,74,0.16)] bg-[linear-gradient(135deg,_rgba(255,255,255,0.92)_0%,_rgba(248,238,227,0.98)_100%)] p-5"
+                key={item.title}
+                data-reveal
+                className="grid gap-[clamp(16px,3vw,40px)] border-t border-white/20 py-[clamp(24px,3vw,36px)] [grid-template-columns:clamp(56px,10vw,140px)_minmax(0,1fr)]"
               >
-                <p className="leading-7 text-[#6e4737]">{point}</p>
+                <span className="pl-serif text-[clamp(40px,5vw,72px)] leading-[.9] text-pl-red">{String(i + 1).padStart(2, '0')}</span>
+                <div>
+                  <h2 className="m-0 text-[clamp(28px,3.4vw,44px)] font-extrabold leading-none tracking-[-0.035em]">{item.title}</h2>
+                  <p className="mb-0 mt-3 max-w-[52ch] text-[18px] leading-[1.55] text-pl-ondark">{item.text}</p>
+                </div>
               </div>
             ))}
           </div>
-        </SectionCard>
-
-        <SectionCard variant="gradient">
-          <div className="flex items-start gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#f3dfcb] text-[#9d4b2a]">
-              <Quote className="h-5 w-5" />
-            </div>
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#a45f3c]">
-                Ministry orientation
-              </p>
-              <h2 className="mt-2 font-serif text-3xl text-[#3d1d17] leading-[1.1] tracking-[-0.015em]">
-                The site should introduce the burden quickly and credibly.
-              </h2>
-            </div>
-          </div>
-
-          <blockquote className="mt-6 rounded-[1.5rem] border border-[rgba(176,111,74,0.16)] bg-white/86 p-6 font-serif text-2xl leading-relaxed text-[#3d1d17]">
-            Practical Love calls people to practice the love of God until it becomes a household
-            culture strong enough to bless communities and the nation.
-          </blockquote>
-
-          <div className="mt-6 grid gap-4 sm:grid-cols-2">
-            <div className="rounded-[1.5rem] border border-[rgba(176,111,74,0.16)] bg-white/86 p-5">
-              <div className="flex items-center gap-3 text-[#9d4b2a]">
-                <MapPin className="h-5 w-5" />
-                <p className="text-sm font-semibold uppercase tracking-[0.18em]">Nigeria focus</p>
-              </div>
-              <p className="mt-3 leading-7 text-[#6e4737]">
-                The copy now speaks directly to Nigerian homes, community life, and national
-                restoration instead of sounding generic.
-              </p>
-            </div>
-            <div className="rounded-[1.5rem] border border-[rgba(176,111,74,0.16)] bg-white/86 p-5">
-              <div className="flex items-center gap-3 text-[#9d4b2a]">
-                <Users className="h-5 w-5" />
-                <p className="text-sm font-semibold uppercase tracking-[0.18em]">Real-life lens</p>
-              </div>
-              <p className="mt-3 leading-7 text-[#6e4737]">
-                The page now shows practical entry points and supporting visuals so visitors can see
-                the ministry as active, not theoretical.
-              </p>
-            </div>
-          </div>
-        </SectionCard>
+        </div>
       </section>
 
-      <SectionCard>
-        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#a45f3c]">
-          Orientation
-        </p>
-        <h2 className="mt-2 font-serif text-3xl text-[#3d1d17] leading-[1.1] tracking-[-0.015em]">
-          Start with the route that answers your first question.
+      <section className="pl-wrap py-[clamp(56px,8vw,112px)]">
+        <h2 data-reveal className="mb-[clamp(24px,3vw,40px)] mt-0 text-[clamp(36px,5vw,64px)] font-extrabold leading-[.95] tracking-[-0.045em]">
+          Go deeper
         </h2>
-        <div className="mt-8 grid gap-5 md:grid-cols-3">
-          {ABOUT_ROUTES.map(route => (
-            <Link key={route.href} to={route.href} className="block">
-              <FeatureCard
-                icon={route.icon}
-                title={route.title}
-                description={route.description}
-                accentColor={route.accentColor}
-                className="h-full"
-              />
+        <div className="grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))]">
+          {ROUTES.map(route => (
+            <Link
+              key={route.to}
+              to={route.to}
+              data-reveal
+              className={`group flex min-h-[200px] items-end justify-between gap-4 rounded-[28px] border-2 border-pl-ink p-7 no-underline transition-[transform,box-shadow] [transition-duration:450ms] [transition-timing-function:cubic-bezier(.3,1.5,.5,1)] hover:-translate-y-2 hover:shadow-[8px_8px_0_#141010] motion-reduce:hover:translate-y-0 ${route.tone}`}
+            >
+              <span>
+                <span className="block text-[clamp(26px,2.6vw,34px)] font-extrabold leading-none tracking-[-0.03em]">{route.title}</span>
+                <span className="mt-2 block max-w-[26ch] text-[16px] opacity-85">{route.text}</span>
+              </span>
+              <span className="pl-serif text-[32px] transition-transform [transition-duration:400ms] group-hover:translate-x-1" aria-hidden="true">
+                →
+              </span>
             </Link>
           ))}
         </div>
-      </SectionCard>
-
-      <SectionCard>
-        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#a45f3c]">
-          Ministry snapshots
-        </p>
-        <h2 className="mt-2 font-serif text-3xl text-[#3d1d17] leading-[1.1] tracking-[-0.015em]">
-          Practical Love should feel visible, active, and rooted in real ministry life.
-        </h2>
-        <p className="mt-4 max-w-3xl leading-8 text-[#6e4737]">
-          These visual anchors reinforce teaching, family practice, and ministry presence so the
-          About page does not read like an isolated explanation.
-        </p>
-
-        <div className="mt-8 grid gap-5 lg:grid-cols-3">
-          {OUTREACH_SNAPSHOTS.map(snapshot => (
-            <article
-              key={snapshot.title}
-              className="overflow-hidden rounded-[1.75rem] border border-[rgba(138,88,60,0.12)] bg-white/94 shadow-[0_24px_48px_rgba(95,53,30,0.08)]"
-            >
-              <img
-                src={snapshot.src}
-                alt={snapshot.alt}
-                className="h-56 w-full object-cover object-top"
-              />
-              <div className="p-6">
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#a45f3c]">
-                  {snapshot.label}
-                </p>
-                <h3 className="mt-3 font-serif text-2xl text-[#3d1d17]">{snapshot.title}</h3>
-                <p className="mt-3 leading-7 text-[#6e4737]">{snapshot.body}</p>
-              </div>
-            </article>
-          ))}
-        </div>
-      </SectionCard>
-
-      <CTASection
-        title="Move from explanation into practice"
-        description="Learn the message, read the scriptures behind it, and then put it into household life where it can either stand or fail."
-        primaryAction={{ label: 'Start the challenge', href: '/love-challenge' }}
-        secondaryAction={{ label: 'Open Bible passages', href: '/bible-passages' }}
-      />
-    </PageShell>
+      </section>
+    </div>
   );
 }

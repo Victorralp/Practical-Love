@@ -5,8 +5,8 @@
  */
 
 import { useState } from 'react';
-import { MessageCircle, ChevronRight } from 'lucide-react';
 import type { ReflectionPrompt as ReflectionPromptType } from '../../types/growth';
+import { CARD, INSET, KICKER, LABEL, TEXT_LINK, titleCase } from './ui';
 
 interface ReflectionPromptProps {
   prompt: ReflectionPromptType;
@@ -22,19 +22,6 @@ export default function ReflectionPrompt({
   const [response, setResponse] = useState(initialResponse);
   const [showFollowUp, setShowFollowUp] = useState(false);
 
-  const getCategoryColor = (category: string) => {
-    const colors: Record<string, string> = {
-      patience: 'bg-orange-100 text-red-800 border-orange-200',
-      kindness: 'bg-amber-100 text-orange-800 border-amber-200',
-      forgiveness: 'bg-orange-100 text-red-800 border-orange-200',
-      empathy: 'bg-red-100 text-red-800 border-red-200',
-      humility: 'bg-amber-100 text-amber-800 border-amber-200',
-      trust: 'bg-cyan-100 text-cyan-800 border-cyan-200',
-      perseverance: 'bg-orange-100 text-orange-800 border-orange-200',
-    };
-    return colors[category] || 'bg-gray-100 text-gray-800 border-gray-200';
-  };
-
   const handleSubmit = () => {
     if (response.trim()) {
       onSubmit(prompt.id, response.trim());
@@ -44,72 +31,50 @@ export default function ReflectionPrompt({
   const isValid = response.trim().length > 0;
 
   return (
-    <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+    <div className={`${CARD} overflow-hidden`}>
       {/* Header */}
-      <div className="p-6 border-b border-gray-100">
-        <div className="flex items-center gap-3 mb-4">
-          <span
-            className={`px-3 py-1 rounded-full text-sm font-medium border ${getCategoryColor(prompt.category)}`}
-          >
-            {prompt.category.charAt(0).toUpperCase() + prompt.category.slice(1)}
-          </span>
-          <span className="flex items-center text-sm text-gray-500">
-            <MessageCircle className="w-4 h-4 mr-1" />
-            Reflection
-          </span>
+      <div className="bg-pl-yellow p-[clamp(20px,4vw,32px)]">
+        <div className="mb-4 flex flex-wrap items-center gap-2">
+          <span className="pl-tag bg-white text-pl-ink">{titleCase(prompt.category)}</span>
+          <span className={KICKER}>Reflection</span>
         </div>
 
         {/* Main Question */}
-        <h3 className="text-xl font-semibold text-gray-800 leading-relaxed">{prompt.question}</h3>
+        <h3 className="m-0 text-[clamp(24px,3vw,34px)] font-extrabold leading-[1.1] tracking-[-0.03em]">{prompt.question}</h3>
       </div>
 
       {/* Response Input */}
-      <div className="p-6 space-y-4">
+      <div className="space-y-4 border-t-2 border-pl-ink p-[clamp(20px,4vw,32px)]">
+        <label htmlFor={`reflection-${prompt.id}`} className="sr-only">
+          Your response
+        </label>
         <textarea
+          id={`reflection-${prompt.id}`}
           value={response}
           onChange={e => setResponse(e.target.value)}
           placeholder="Take your time to reflect and write your thoughts..."
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 resize-none min-h-[150px]"
+          className="pl-textarea min-h-[160px]"
           rows={5}
         />
 
         {/* Follow-up Question */}
-        {prompt.followUp && (
-          <div className="mt-4">
-            {!showFollowUp ? (
-              <button
-                onClick={() => setShowFollowUp(true)}
-                className="flex items-center text-orange-600 hover:text-orange-700 text-sm font-medium transition-colors"
-              >
-                <ChevronRight className="w-4 h-4 mr-1" />
-                Show follow-up question
-              </button>
-            ) : (
-              <div className="bg-orange-50 rounded-lg p-4 border border-orange-100">
-                <p className="text-orange-800 font-medium text-sm mb-2">Follow-up:</p>
-                <p className="text-orange-700">{prompt.followUp}</p>
-              </div>
-            )}
-          </div>
-        )}
+        {prompt.followUp &&
+          (!showFollowUp ? (
+            <button type="button" onClick={() => setShowFollowUp(true)} className={TEXT_LINK}>
+              Show follow-up question
+            </button>
+          ) : (
+            <div className={INSET}>
+              <b className={LABEL}>Follow-up</b>
+              <p className="pl-serif mb-0 mt-[6px] text-[22px] leading-[1.3]">{prompt.followUp}</p>
+            </div>
+          ))}
 
         {/* Submit Button */}
-        <div className="pt-4">
-          <button
-            onClick={handleSubmit}
-            disabled={!isValid}
-            className={`w-full py-3 px-6 rounded-lg font-medium transition-colors flex items-center justify-center ${
-              isValid
-                ? 'bg-orange-600 hover:bg-orange-700 text-white'
-                : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-            }`}
-          >
-            Save Response
-          </button>
-        </div>
+        <button type="button" onClick={handleSubmit} disabled={!isValid} className="pl-btn pl-btn-red w-full">
+          Save response
+        </button>
       </div>
     </div>
   );
 }
-
-

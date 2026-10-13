@@ -4,17 +4,20 @@
  * Requirements: 1.1, 1.3, 1.4
  */
 
-import { useState, useEffect, useMemo } from 'react';
-import { Calendar, RefreshCw, Trophy } from 'lucide-react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import ChallengeCard from './ChallengeCard';
+import HowItWorks from './HowItWorks';
+import { usePopOnChange } from '../pl/motion';
 import { dataService } from '../../services/dataService';
 import { progressService } from '../../services/progressService';
 import type { Challenge, ChallengeCompletion } from '../../types/growth';
+import { KICKER } from './ui';
 
 export default function DailyChallengeSection() {
   // State management for challenge completion
   const [completedChallenges, setCompletedChallenges] = useState<ChallengeCompletion[]>([]);
   const [justCompleted, setJustCompleted] = useState(false);
+  const countRef = useRef<HTMLDivElement | null>(null);
 
   // Get today's challenge using DataService
   const todayChallenge: Challenge = useMemo(() => {
@@ -52,40 +55,30 @@ export default function DailyChallengeSection() {
 
   // Count total completed challenges
   const totalCompleted = completedChallenges.length;
+  usePopOnChange(countRef, totalCompleted);
 
   return (
-    <section className="py-8">
-      {/* Section Header */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between flex-wrap gap-4">
-          <div>
-            <h2 className="text-3xl font-serif text-red-800 mb-2 leading-[1.1] tracking-[-0.015em]">Daily Love Challenge</h2>
-            <p className="text-gray-600 flex items-center">
-              <Calendar className="w-4 h-4 mr-2" />
-              {formattedDate}
-            </p>
+    <div>
+      {/* Header */}
+      <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+        <p className={`${KICKER} m-0 text-pl-red`}>{formattedDate}</p>
+        {totalCompleted > 0 && (
+          <div ref={countRef} className="rounded-[20px] bg-pl-yellow px-5 py-3 text-pl-ink" aria-live="polite">
+            <span className="text-[28px] font-extrabold leading-none tracking-[-0.04em]">{totalCompleted}</span>{' '}
+            <span className="text-[15px] font-semibold">
+              challenge{totalCompleted !== 1 ? 's' : ''} completed
+            </span>
           </div>
-          {totalCompleted > 0 && (
-            <div className="flex items-center bg-orange-100 text-orange-800 px-4 py-2 rounded-full">
-              <Trophy className="w-5 h-5 mr-2" />
-              <span className="font-medium">
-                {totalCompleted} challenge{totalCompleted !== 1 ? 's' : ''} completed
-              </span>
-            </div>
-          )}
-        </div>
+        )}
       </div>
 
       {/* Success Message */}
       {justCompleted && (
-        <div className="mb-6 bg-amber-100 border border-amber-300 rounded-lg p-4 flex items-center">
-          <Trophy className="w-6 h-6 text-orange-600 mr-3" />
-          <div>
-            <p className="font-medium text-orange-800">Challenge Completed!</p>
-            <p className="text-orange-700 text-sm">
-              Great job! Come back tomorrow for a new challenge.
-            </p>
-          </div>
+        <div role="status" className="mb-6 rounded-[24px] bg-pl-red p-5 text-white">
+          <p className="m-0 text-[20px] font-extrabold tracking-[-0.02em]">
+            Challenge completed. <span className="pl-serif font-normal">Well done.</span>
+          </p>
+          <p className="mb-0 mt-1 text-[15px] text-white/90">Come back tomorrow for a new challenge.</p>
         </div>
       )}
 
@@ -96,22 +89,15 @@ export default function DailyChallengeSection() {
         onComplete={handleComplete}
       />
 
-      {/* Info Section */}
-      <div className="mt-8 bg-gradient-to-r from-orange-50 to-red-50 rounded-xl p-6 border border-orange-100">
-        <div className="flex items-start">
-          <RefreshCw className="w-6 h-6 text-orange-600 mr-4 mt-1 flex-shrink-0" />
-          <div>
-            <h3 className="font-semibold text-gray-800 mb-2">How Daily Challenges Work</h3>
-            <ul className="text-gray-600 text-sm space-y-1">
-              <li>• A new challenge appears each day at midnight</li>
-              <li>• Complete the challenge and optionally add a reflection</li>
-              <li>• Track your progress over time in the Progress Dashboard</li>
-              <li>• Challenges rotate through different love categories</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
+      <HowItWorks
+        title="How daily challenges work"
+        items={[
+          'A new challenge appears each day at midnight',
+          'Complete the challenge and optionally add a reflection',
+          'Track your progress over time in the Progress Dashboard',
+          'Challenges rotate through different love categories',
+        ]}
+      />
+    </div>
   );
 }
-

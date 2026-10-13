@@ -181,6 +181,66 @@ describe('Storage Round-Trip Properties', () => {
     );
   });
 
+  it('marks a journey completed only once every step is done', () => {
+    fc.assert(
+      fc.property(
+        fc.uuid(),
+        fc.integer({ min: 1, max: 30 }).chain(total =>
+          fc.tuple(fc.constant(total), fc.shuffledSubarray(Array.from({ length: total }, (_, i) => i), { minLength: total, maxLength: total }))
+        ),
+        (journeyId, [total, order]) => {
+          testStorage.clear();
+          progressService = createProgressService(testStorage);
+          progressService.startJourney(journeyId);
+
+          order.forEach((stepIndex, n) => {
+            progressService.completeJourneyStep(journeyId, stepIndex, total);
+            const jp = progressService.getJourneyProgress(journeyId)!;
+            if (n < total - 1) {
+              expect(jp.completedAt).toBeUndefined();
+            } else {
+              expect(jp.completedAt).toBeDefined();
+            }
+          });
+        }
+      ),
+      { numRuns: 100 }
+    );
+  });
+
+  it('keeps the original completion time when a step is repeated', () => {
+    progressService.startJourney('j');
+    progressService.completeJourneyStep('j', 0, 2);
+    progressService.completeJourneyStep('j', 1, 2);
+    const first = progressService.getJourneyProgress('j')!.completedAt;
+    expect(first).toBeDefined();
+
+    progressService.completeJourneyStep('j', 1, 2);
+    expect(progressService.getJourneyProgress('j')!.completedAt).toBe(first);
+  });
+
+  it('finishes saved journeys that have every step done but no completedAt', () => {
+    progressService.startJourney('done');
+    progressService.completeJourneyStep('done', 0);
+    progressService.completeJourneyStep('done', 1);
+    progressService.startJourney('partial');
+    progressService.completeJourneyStep('partial', 0);
+
+    expect(progressService.finishCompletedJourneys({ done: 2, partial: 2 })).toBe(true);
+    expect(progressService.getJourneyProgress('done')!.completedAt).toBeDefined();
+    expect(progressService.getJourneyProgress('partial')!.completedAt).toBeUndefined();
+
+    // Nothing left to repair, and unknown journeys are ignored
+    expect(progressService.finishCompletedJourneys({ done: 2, partial: 2 })).toBe(false);
+    expect(progressService.finishCompletedJourneys({})).toBe(false);
+  });
+
+  it('never marks a journey completed without the total step count', () => {
+    progressService.startJourney('j');
+    progressService.completeJourneyStep('j', 0);
+    expect(progressService.getJourneyProgress('j')!.completedAt).toBeUndefined();
+  });
+
   /**
    * **Feature: practical-love-growth, Property 9: Journey progress persistence**
    * *For any* journey started via startJourney, getJourneyProgress SHALL return

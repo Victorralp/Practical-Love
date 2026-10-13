@@ -501,17 +501,17 @@ export default function AdminMessagesPage() {
                 className={controlClass}
               />
               {embedWarning ? (
-                <p className="mt-2 rounded-lg bg-[#fff4e8] px-3 py-2 text-xs leading-5 text-[#8a3f20]">
+                <p className="mt-2 rounded-lg bg-[#fff4dc] px-3 py-2 text-xs leading-5 text-[#a3140c]">
                   {embedWarning}
                 </p>
               ) : null}
             </Field>
 
             {/* ── Media ────────────────────────────────────────────── */}
-            <div className="rounded-xl border border-[#f0e2d8] bg-[#fdfaf7] p-4">
+            <div className="rounded-[12px] border border-[#eadfdc] bg-[#faf7f6] p-4">
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2.5">
-                  <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-[#a8735c] ring-1 ring-[#f0e2d8]">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-[#6b5f5f] ring-1 ring-[#eadfdc]">
                     {media?.resourceType === 'video' ? (
                       <Video className="h-4 w-4" />
                     ) : (
@@ -519,8 +519,8 @@ export default function AdminMessagesPage() {
                     )}
                   </span>
                   <div className="min-w-0">
-                    <p className="text-sm font-medium text-[#3d1d17]">Media</p>
-                    <p className="truncate text-xs text-[#8a6552]">
+                    <p className="text-sm font-medium text-[#141010]">Media</p>
+                    <p className="truncate text-xs text-[#6b5f5f]">
                       {selectedFileName || media?.publicId || 'One image or video, optional.'}
                     </p>
                   </div>
@@ -574,22 +574,22 @@ export default function AdminMessagesPage() {
               ) : null}
             </div>
 
-            <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-[#f0e2d8] bg-[#fdfaf7] px-4 py-3">
+            <label className="flex cursor-pointer items-start gap-3 rounded-[12px] border border-[#eadfdc] bg-[#faf7f6] px-4 py-3">
               <input
                 type="checkbox"
                 checked={form.pinned}
                 onChange={event => setForm(current => ({ ...current, pinned: event.target.checked }))}
-                className="mt-0.5 h-4 w-4 rounded border-[#d9c3b4] text-red-700 focus:ring-red-500"
+                className="mt-0.5 h-4 w-4 rounded border-[#d9cbc8] text-pl-red focus:ring-pl-red"
               />
-              <span className="text-sm text-[#5c3a2b]">
+              <span className="text-sm text-[#3d3333]">
                 Pin this post
-                <span className="mt-0.5 block text-xs text-[#8a6552]">
+                <span className="mt-0.5 block text-xs text-[#6b5f5f]">
                   Pinned posts stay above regular updates on /messages.
                 </span>
               </span>
             </label>
 
-            <div className="flex flex-col gap-2 border-t border-[#f6ece4] pt-4 sm:flex-row">
+            <div className="flex flex-col gap-2 border-t border-[#f3ecea] pt-4 sm:flex-row">
               <button
                 type="submit"
                 disabled={isSaving || isUploading}
@@ -618,9 +618,9 @@ export default function AdminMessagesPage() {
           description="Newest first, pinned posts on top. Every post stays editable, however old."
           flush
         >
-          <div className="border-b border-[#f6ece4] px-5 py-4">
+          <div className="border-b border-[#f3ecea] px-5 py-4">
             <div className="relative">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#a8735c]" />
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6b5f5f]" />
               <input
                 type="search"
                 value={searchTerm}
@@ -631,7 +631,7 @@ export default function AdminMessagesPage() {
               />
             </div>
             {searchTerm.trim() ? (
-              <p className="mt-2 text-xs text-[#a8735c]">
+              <p className="mt-2 text-xs text-[#6b5f5f]">
                 {visiblePosts.length} of {orderedPosts.length} post(s) match.
               </p>
             ) : null}
@@ -659,22 +659,22 @@ export default function AdminMessagesPage() {
               className="m-5"
             />
           ) : (
-            <ul className="divide-y divide-[#f6ece4]">
+            <ul className="divide-y divide-[#f3ecea]">
               {visiblePosts.map(post => (
                 <li
                   key={post.id}
-                  className={`px-5 py-4 transition hover:bg-[#fdfaf7] ${
-                    editingId === post.id ? 'bg-[#fdf3ec]' : ''
+                  className={`px-5 py-4 transition hover:bg-[#faf7f6] ${
+                    editingId === post.id ? 'bg-[#ffe6e3]' : ''
                   }`}
                 >
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-1.5">
-                        <span className="rounded-md bg-[#fdf3ec] px-2 py-0.5 text-[0.68rem] font-semibold uppercase tracking-[0.1em] text-[#a8735c]">
+                        <span className="rounded-full bg-[#f3ecea] px-[10px] py-[3px] text-[12px] font-bold capitalize text-[#5a4f4f]">
                           {post.category}
                         </span>
                         {post.pinned ? (
-                          <span className="inline-flex items-center gap-1 rounded-md bg-amber-50 px-2 py-0.5 text-[0.68rem] font-semibold uppercase tracking-[0.1em] text-amber-700">
+                          <span className="inline-flex items-center gap-1 rounded-full bg-[#fff4dc] px-[10px] py-[3px] text-[12px] font-bold text-[#8a5a00]">
                             <Pin className="h-3 w-3" />
                             Pinned
                           </span>
@@ -682,11 +682,11 @@ export default function AdminMessagesPage() {
                         <VideoProviderBadge url={post.youtubeUrl} size="sm" />
                       </div>
 
-                      <h3 className="mt-2 text-base font-semibold text-[#3d1d17]">{post.title}</h3>
-                      <p className="mt-1 line-clamp-2 text-sm leading-6 text-[#6e4737]">
+                      <h3 className="mt-2 text-base font-semibold text-[#141010]">{post.title}</h3>
+                      <p className="mt-1 line-clamp-2 text-sm leading-6 text-[#5a4f4f]">
                         {post.summary}
                       </p>
-                      <p className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[#a8735c]">
+                      <p className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[#6b5f5f]">
                         <span>{formatDate(post.createdAt)}</span>
                         <span className="inline-flex items-center gap-1">
                           <MessageSquare className="h-3.5 w-3.5" />

@@ -4,8 +4,8 @@
  * Requirements: 2.4
  */
 
-import { Clock } from 'lucide-react';
 import type { Exercise } from '../../types/growth';
+import { INSET, KICKER } from './ui';
 
 interface ExerciseStepsProps {
   exercise: Exercise;
@@ -13,28 +13,24 @@ interface ExerciseStepsProps {
 
 export default function ExerciseSteps({ exercise }: ExerciseStepsProps) {
   return (
-    <div className="bg-orange-50 rounded-lg p-4 border border-orange-100">
+    <div className={INSET}>
       {/* Exercise Header */}
-      <div className="flex items-center justify-between mb-3">
-        <h5 className="font-medium text-orange-800">{exercise.title}</h5>
-        <span className="flex items-center text-sm text-orange-600">
-          <Clock className="w-4 h-4 mr-1" />
-          {exercise.duration}
-        </span>
+      <div className="mb-4 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+        <h5 className="m-0 text-[18px] font-extrabold tracking-[-0.02em]">{exercise.title}</h5>
+        <span className={`${KICKER} text-pl-deep`}>{exercise.duration}</span>
       </div>
 
       {/* Numbered Steps */}
-      <ol className="space-y-2">
+      <ol className="m-0 list-none space-y-3 p-0">
         {exercise.steps.map((step, index) => (
-          <li key={index} className="flex items-start">
-            <span className="flex-shrink-0 w-6 h-6 bg-orange-200 text-orange-800 rounded-full flex items-center justify-center text-sm font-medium mr-3 mt-0.5">
+          <li key={index} className="flex items-start gap-3">
+            <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-pl-ink text-[13px] font-bold text-white">
               {index + 1}
             </span>
-            <span className="text-gray-700 text-sm leading-relaxed">{step}</span>
+            <span className="text-[16px] leading-[1.5] text-pl-body">{step}</span>
           </li>
         ))}
       </ol>
     </div>
   );
 }
-

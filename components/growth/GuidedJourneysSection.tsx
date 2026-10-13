@@ -4,13 +4,18 @@
  * Requirements: 4.1, 4.2, 4.3, 4.4, 4.5
  */
 
-import { useState, useMemo, useCallback } from 'react';
-import { Map as MapIcon, ArrowLeft, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
+import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import JourneyCard from './JourneyCard';
 import JourneyStep from './JourneyStep';
+import HowItWorks from './HowItWorks';
+import { useStagger } from '../pl/motion';
 import { dataService } from '../../services/dataService';
 import { progressService } from '../../services/progressService';
 import type { Journey, JourneyProgress } from '../../types/growth';
+import { CARD, FILL, KICKER, LABEL, TEXT_LINK, TRACK } from './ui';
+
+const STEP_NAV =
+  'flex h-11 w-11 items-center justify-center rounded-full border-2 border-pl-ink text-[18px] font-bold transition-colors hover:bg-pl-ink hover:text-white disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-pl-ink';
 
 type ViewMode = 'list' | 'active';
 
@@ -18,11 +23,23 @@ export default function GuidedJourneysSection() {
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [activeJourneyId, setActiveJourneyId] = useState<string | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
+  // Step being viewed with prev/next; null follows the journey's current step.
+  const [viewedStepIndex, setViewedStepIndex] = useState<number | null>(null);
+  const gridRef = useRef<HTMLDivElement | null>(null);
+
+  // Cards pop in each time the list is shown.
+  useStagger(gridRef, viewMode, { delay: 0 });
 
   // Get all journeys from DataService
   const journeys: Journey[] = useMemo(() => {
     return dataService.getJourneys();
   }, []);
+
+  // Finish journeys saved with every step done but no completion date
+  useEffect(() => {
+    const stepCounts = Object.fromEntries(journeys.map(j => [j.id, j.steps.length]));
+    if (progressService.finishCompletedJourneys(stepCounts)) setRefreshKey(k => k + 1);
+  }, [journeys]);
 
   // Get progress for all journeys
   const journeyProgressMap = useMemo(() => {
@@ -49,6 +66,7 @@ export default function GuidedJourneysSection() {
   const handleStartJourney = useCallback((journeyId: string) => {
     progressService.startJourney(journeyId);
     setActiveJourneyId(journeyId);
+    setViewedStepIndex(null);
     setViewMode('active');
     setRefreshKey(k => k + 1);
   }, []);
@@ -56,6 +74,7 @@ export default function GuidedJourneysSection() {
   // Handle continuing a journey
   const handleContinueJourney = useCallback((journeyId: string) => {
     setActiveJourneyId(journeyId);
+    setViewedStepIndex(null);
     setViewMode('active');
   }, []);
 
@@ -63,65 +82,54 @@ export default function GuidedJourneysSection() {
   const handleCompleteStep = useCallback(
     (stepIndex: number) => {
       if (!activeJourneyId) return;
-      progressService.completeJourneyStep(activeJourneyId, stepIndex);
+      progressService.completeJourneyStep(activeJourneyId, stepIndex, activeJourney?.steps.length);
+      setViewedStepIndex(null);
       setRefreshKey(k => k + 1);
     },
-    [activeJourneyId]
+    [activeJourneyId, activeJourney]
   );
 
   // Handle going back to list
   const handleBackToList = useCallback(() => {
     setViewMode('list');
     setActiveJourneyId(null);
+    setViewedStepIndex(null);
   }, []);
-
-  // Get current step index for active journey
-  const currentStepIndex = activeProgress?.currentStepIndex ?? 0;
 
   // Check if journey is completed
   const isJourneyCompleted = activeProgress?.completedAt !== undefined;
 
+  // Current step for active journey; completed journeys store one past the last step.
+  const lastStepIndex = Math.max(0, (activeJourney?.steps.length ?? 1) - 1);
+  const currentStepIndex = Math.min(activeProgress?.currentStepIndex ?? 0, lastStepIndex);
+
+  // Days up to the current one can be revisited; later days stay locked until reached.
+  const furthestViewable = isJourneyCompleted ? lastStepIndex : currentStepIndex;
+  const viewIndex = Math.min(viewedStepIndex ?? currentStepIndex, furthestViewable);
+  const showStep = (index: number) => setViewedStepIndex(index === currentStepIndex ? null : index);
+
+  const inProgressCount = Array.from(journeyProgressMap.values()).filter(p => p && !p.completedAt).length;
+  const completedCount = Array.from(journeyProgressMap.values()).filter(p => p?.completedAt).length;
+
   // Render journey list view
   const renderListView = () => (
     <>
-      {/* Section Header */}
-      <div className="mb-8">
-        <div className="flex items-center gap-3 mb-2">
-          <MapIcon className="w-8 h-8 text-orange-600" />
-          <h2 className="text-3xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">Guided Journeys</h2>
-        </div>
-        <p className="text-gray-600">
-          Multi-day devotional paths to help you grow spiritually and develop deeper love.
-        </p>
-      </div>
+      <p className="mb-6 mt-0 max-w-[52ch] text-[18px] leading-[1.5] text-pl-body">
+        Multi-day devotional paths to help you grow spiritually and develop deeper love.
+      </p>
 
       {/* Journey Stats */}
-      <div className="mb-6 flex flex-wrap gap-4">
-        <div className="bg-orange-50 rounded-lg px-4 py-2 border border-orange-100">
-          <span className="text-sm text-orange-700">
-            {journeys.length} journey{journeys.length !== 1 ? 's' : ''} available
-          </span>
-        </div>
-        {Array.from(journeyProgressMap.values()).filter(p => p && !p.completedAt).length > 0 && (
-          <div className="bg-orange-50 rounded-lg px-4 py-2 border border-orange-100">
-            <span className="text-sm text-red-700">
-              {Array.from(journeyProgressMap.values()).filter(p => p && !p.completedAt).length} in
-              progress
-            </span>
-          </div>
-        )}
-        {Array.from(journeyProgressMap.values()).filter(p => p?.completedAt).length > 0 && (
-          <div className="bg-amber-50 rounded-lg px-4 py-2 border border-amber-100">
-            <span className="text-sm text-orange-700">
-              {Array.from(journeyProgressMap.values()).filter(p => p?.completedAt).length} completed
-            </span>
-          </div>
-        )}
+      <div className="mb-6 flex flex-wrap gap-2">
+        <span className="pl-tag bg-pl-ink text-white">
+          {journeys.length} journey{journeys.length !== 1 ? 's' : ''} available
+        </span>
+        {inProgressCount > 0 && <span className="pl-tag bg-pl-blush text-pl-deep">{inProgressCount} in progress</span>}
+        {completedCount > 0 && <span className="pl-tag bg-pl-yellow text-pl-ink">{completedCount} completed</span>}
       </div>
 
       {/* Journeys Grid */}
       {journeys.length > 0 ? (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div ref={gridRef} className="grid gap-4 [grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr))]">
           {journeys.map(journey => (
             <JourneyCard
               key={journey.id}
@@ -133,27 +141,20 @@ export default function GuidedJourneysSection() {
           ))}
         </div>
       ) : (
-        <div className="text-center py-12 bg-gray-50 rounded-xl">
-          <MapIcon className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-          <p className="text-gray-500">No journeys available yet.</p>
+        <div className="rounded-[28px] border-2 border-dashed border-pl-input px-6 py-12 text-center">
+          <p className="m-0 text-[20px] text-pl-muted">No journeys available yet.</p>
         </div>
       )}
 
-      {/* Info Section */}
-      <div className="mt-8 bg-gradient-to-r from-orange-50 to-red-50 rounded-xl p-6 border border-orange-100">
-        <div className="flex items-start">
-          <MapIcon className="w-6 h-6 text-orange-600 mr-4 mt-1 flex-shrink-0" />
-          <div>
-            <h3 className="font-semibold text-gray-800 mb-2">About Guided Journeys</h3>
-            <ul className="text-gray-600 text-sm space-y-1">
-              <li>• Each journey spans multiple days with daily devotions</li>
-              <li>• Complete each day's action item before moving to the next</li>
-              <li>• Your progress is saved automatically</li>
-              <li>• Return anytime to continue where you left off</li>
-            </ul>
-          </div>
-        </div>
-      </div>
+      <HowItWorks
+        title="About guided journeys"
+        items={[
+          'Each journey spans multiple days with daily devotions',
+          "Complete each day's action item before moving to the next",
+          'Your progress is saved automatically',
+          'Return anytime to continue where you left off',
+        ]}
+      />
     </>
   );
 
@@ -167,165 +168,132 @@ export default function GuidedJourneysSection() {
     return (
       <>
         {/* Back Button */}
-        <button
-          onClick={handleBackToList}
-          className="flex items-center text-gray-600 hover:text-gray-800 mb-6 transition-colors"
-        >
-          <ArrowLeft className="w-5 h-5 mr-2" />
-          Back to all journeys
+        <button type="button" onClick={handleBackToList} className={`${TEXT_LINK} mb-5`}>
+          ← Back to all journeys
         </button>
 
         {/* Journey Header */}
-        <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
-          <div className="flex items-start justify-between mb-4">
-            <div>
-              <h2 className="text-2xl font-serif text-red-800 mb-2">{activeJourney.title}</h2>
-              <p className="text-gray-600">{activeJourney.description}</p>
-            </div>
-          </div>
+        <div className={`${CARD} mb-8 p-[clamp(20px,4vw,32px)]`}>
+          <h3 className="m-0 text-[clamp(28px,3.4vw,44px)] font-extrabold leading-[.98] tracking-[-0.04em]">
+            {activeJourney.title}
+          </h3>
+          <p className="mb-0 mt-3 text-[17px] leading-[1.5] text-pl-body">{activeJourney.description}</p>
 
           {/* Progress Bar */}
-          <div className="mt-4">
-            <div className="flex items-center justify-between text-sm mb-2">
-              <span className="text-gray-600">Journey Progress</span>
-              <span className="font-medium text-gray-800">
+          <div className="mt-6">
+            <div className="mb-2 flex flex-wrap items-center justify-between gap-2 text-[14px]">
+              <span className={`${KICKER} text-pl-muted`}>Journey progress</span>
+              <span className="font-bold">
                 {completedSteps} / {totalSteps} days completed
               </span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-3">
-              <div
-                className={`h-3 rounded-full transition-all duration-500 ${
-                  isJourneyCompleted ? 'bg-amber-500' : 'bg-orange-500'
-                }`}
-                style={{ width: `${(completedSteps / totalSteps) * 100}%` }}
-              />
+            <div className={TRACK}>
+              <div className={FILL} style={{ width: `${(completedSteps / totalSteps) * 100}%` }} />
             </div>
           </div>
 
           {isJourneyCompleted && (
-            <div className="mt-4 bg-amber-50 rounded-lg p-4 border border-amber-200">
-              <p className="text-orange-700 font-medium text-center inline-flex items-center justify-center gap-2 w-full">
-                <Sparkles className="w-4 h-4" />
-                Congratulations! You've completed this journey!
+            <div role="status" className="mt-5 rounded-[20px] bg-pl-red p-5 text-white">
+              <p className="m-0 text-[18px] font-extrabold tracking-[-0.02em]">
+                Journey complete. <span className="pl-serif font-normal">Well done.</span>
               </p>
             </div>
           )}
         </div>
 
         {/* Step Navigation */}
-        <div className="flex items-center justify-between mb-6">
-          <h3 className="text-lg font-semibold text-gray-800">
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+          <h4 className="m-0 text-[clamp(22px,2.4vw,28px)] font-extrabold tracking-[-0.03em]">
             {isJourneyCompleted
-              ? 'Review Your Journey'
-              : `Day ${currentStepIndex + 1} of ${totalSteps}`}
-          </h3>
+              ? 'Review your journey'
+              : `Day ${viewIndex + 1} of ${totalSteps}`}
+          </h4>
           <div className="flex items-center gap-2">
             <button
               type="button"
-              onClick={() => {
-                const newIndex = Math.max(0, currentStepIndex - 1);
-                if (activeProgress && newIndex !== currentStepIndex) {
-                  setActiveJourneyId(activeJourneyId);
-                  // Navigate to previous step for viewing
-                }
-              }}
-              disabled={currentStepIndex === 0}
-              className="p-2 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
+              aria-label="Previous step"
+              onClick={() => showStep(Math.max(0, viewIndex - 1))}
+              disabled={viewIndex === 0}
+              className={STEP_NAV}
             >
-              <ChevronLeft className="w-5 h-5" />
+              ←
             </button>
-            <span className="text-sm text-gray-600 min-w-[80px] text-center">
-              Step {currentStepIndex + 1}
+            <span className="min-w-[72px] text-center text-[14px] font-semibold text-pl-muted">
+              Step {viewIndex + 1}
             </span>
             <button
               type="button"
-              onClick={() => {
-                const newIndex = Math.min(totalSteps - 1, currentStepIndex + 1);
-                if (activeProgress && newIndex !== currentStepIndex) {
-                  setActiveJourneyId(activeJourneyId);
-                  // Navigate to next step for viewing
-                }
-              }}
-              disabled={currentStepIndex >= totalSteps - 1}
-              className="p-2 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
+              aria-label="Next step"
+              onClick={() => showStep(Math.min(furthestViewable, viewIndex + 1))}
+              disabled={viewIndex >= furthestViewable}
+              className={STEP_NAV}
             >
-              <ChevronRight className="w-5 h-5" />
+              →
             </button>
           </div>
         </div>
 
         {/* Current Step */}
-        {activeJourney.steps[currentStepIndex] && (
+        {activeJourney.steps[viewIndex] && (
           <JourneyStep
-            step={activeJourney.steps[currentStepIndex]}
-            isCompleted={activeProgress?.completedSteps.includes(currentStepIndex) ?? false}
-            isActive={!isJourneyCompleted}
+            key={viewIndex}
+            step={activeJourney.steps[viewIndex]}
+            isCompleted={activeProgress?.completedSteps.includes(viewIndex) ?? false}
+            isActive={!isJourneyCompleted && viewIndex === currentStepIndex}
             onComplete={handleCompleteStep}
           />
         )}
 
         {/* Steps Overview */}
-        <div className="mt-8">
-          <h4 className="text-lg font-semibold text-gray-800 mb-4">All Steps</h4>
-          <div className="space-y-2">
+        <div className="mt-[clamp(32px,5vw,48px)]">
+          <h4 className={`${LABEL} mb-4 mt-0`}>All steps</h4>
+          <ol className="m-0 list-none space-y-2 p-0">
             {activeJourney.steps.map((step, index) => {
               const isStepCompleted = activeProgress?.completedSteps.includes(index) ?? false;
               const isCurrentStep = index === currentStepIndex;
+              const isViewed = index === viewIndex;
 
               return (
-                <div
+                <li
                   key={step.id}
-                  className={`flex items-center p-3 rounded-lg transition-colors ${
-                    isCurrentStep
-                      ? 'bg-orange-50 border border-orange-200'
+                  aria-current={isCurrentStep ? 'step' : undefined}
+                  className={`flex items-center gap-3 rounded-[20px] border-2 p-3 ${
+                    isViewed
+                      ? 'border-pl-ink bg-white'
                       : isStepCompleted
-                        ? 'bg-amber-50 border border-amber-200'
-                        : 'bg-gray-50 border border-gray-200'
+                        ? 'border-transparent bg-pl-yellow'
+                        : 'border-transparent bg-pl-hair'
                   }`}
                 >
-                  <div
-                    className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium mr-3 ${
+                  <span
+                    className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-[14px] font-bold ${
                       isStepCompleted
-                        ? 'bg-amber-500 text-white'
+                        ? 'bg-pl-ink text-white'
                         : isCurrentStep
-                          ? 'bg-orange-500 text-white'
-                          : 'bg-gray-300 text-gray-600'
+                          ? 'bg-pl-red text-white'
+                          : 'bg-white text-pl-muted'
                     }`}
                   >
                     {isStepCompleted ? '✓' : index + 1}
-                  </div>
-                  <div className="flex-1">
-                    <p
-                      className={`font-medium ${
-                        isStepCompleted
-                          ? 'text-orange-700'
-                          : isCurrentStep
-                            ? 'text-orange-700'
-                            : 'text-gray-600'
-                      }`}
-                    >
-                      Day {step.dayNumber}: {step.title}
-                    </p>
-                  </div>
+                  </span>
+                  <p
+                    className={`m-0 min-w-0 flex-1 text-[16px] font-semibold ${
+                      isStepCompleted || isCurrentStep ? 'text-pl-ink' : 'text-pl-muted'
+                    }`}
+                  >
+                    Day {step.dayNumber}: {step.title}
+                  </p>
                   {isCurrentStep && !isStepCompleted && (
-                    <span className="text-xs bg-orange-100 text-orange-700 px-2 py-1 rounded-full">
-                      Current
-                    </span>
+                    <span className="pl-tag bg-pl-blush text-pl-deep">Current</span>
                   )}
-                </div>
+                </li>
               );
             })}
-          </div>
+          </ol>
         </div>
       </>
     );
   };
 
-  return (
-    <section className="py-8">
-      {viewMode === 'list' ? renderListView() : renderActiveView()}
-    </section>
-  );
+  return <div>{viewMode === 'list' ? renderListView() : renderActiveView()}</div>;
 }
-
-

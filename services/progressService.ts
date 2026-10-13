@@ -21,8 +21,9 @@ export interface ProgressService {
   completeChallenge(challengeId: string, reflection?: string): void;
   saveReflectionSession(session: ReflectionSession): void;
   startJourney(journeyId: string): void;
-  completeJourneyStep(journeyId: string, stepIndex: number): void;
+  completeJourneyStep(journeyId: string, stepIndex: number, totalSteps?: number): void;
   getJourneyProgress(journeyId: string): JourneyProgress | null;
+  finishCompletedJourneys(stepCounts: Record<string, number>): boolean;
 }
 
 /**
@@ -99,7 +100,7 @@ class ProgressServiceImpl implements ProgressService {
     this.saveProgress(progress);
   }
 
-  completeJourneyStep(journeyId: string, stepIndex: number): void {
+  completeJourneyStep(journeyId: string, stepIndex: number, totalSteps?: number): void {
     const progress = this.getProgress();
     const journeyProgress = progress.journeyProgress.find(jp => jp.journeyId === journeyId);
 
@@ -115,12 +116,44 @@ class ProgressServiceImpl implements ProgressService {
     // Update current step index to next step
     journeyProgress.currentStepIndex = stepIndex + 1;
 
+    // Mark the journey finished once every step has been completed
+    if (
+      totalSteps !== undefined &&
+      totalSteps > 0 &&
+      !journeyProgress.completedAt &&
+      Array.from({ length: totalSteps }, (_, i) => i).every(i => journeyProgress.completedSteps.includes(i))
+    ) {
+      journeyProgress.completedAt = new Date().toISOString();
+    }
+
     this.saveProgress(progress);
   }
 
   getJourneyProgress(journeyId: string): JourneyProgress | null {
     const progress = this.getProgress();
     return progress.journeyProgress.find(jp => jp.journeyId === journeyId) || null;
+  }
+
+  /**
+   * Progress saved before journeys recorded completion can have every step
+   * done but no completedAt. Finish those; returns true if any changed.
+   */
+  finishCompletedJourneys(stepCounts: Record<string, number>): boolean {
+    const progress = this.getProgress();
+    const now = new Date().toISOString();
+    let changed = false;
+
+    progress.journeyProgress.forEach(jp => {
+      const total = stepCounts[jp.journeyId];
+      if (jp.completedAt || !total) return;
+      if (Array.from({ length: total }, (_, i) => i).every(i => jp.completedSteps.includes(i))) {
+        jp.completedAt = now;
+        changed = true;
+      }
+    });
+
+    if (changed) this.saveProgress(progress);
+    return changed;
   }
 }
 
