@@ -5,8 +5,8 @@
  */
 
 import { useState } from 'react';
-import { Calendar, ChevronDown, ChevronUp, MessageSquare, Clock } from 'lucide-react';
 import type { ReflectionSession, ReflectionPrompt } from '../../types/growth';
+import { CARD, CARD_HOVER, INSET, KICKER, LABEL } from './ui';
 
 interface ReflectionHistoryProps {
   sessions: ReflectionSession[];
@@ -49,10 +49,9 @@ export default function ReflectionHistory({ sessions, prompts }: ReflectionHisto
 
   if (sortedSessions.length === 0) {
     return (
-      <div className="bg-white rounded-xl shadow-lg p-8 text-center">
-        <MessageSquare className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-        <h3 className="text-lg font-semibold text-gray-700 mb-2">No Reflections Yet</h3>
-        <p className="text-gray-500">
+      <div className="rounded-[28px] border-2 border-dashed border-pl-input px-6 py-12 text-center">
+        <h3 className="m-0 text-[24px] font-extrabold tracking-[-0.02em]">No reflections yet</h3>
+        <p className="mb-0 mt-2 text-[17px] text-pl-muted">
           Start your first reflection session to see your history here.
         </p>
       </div>
@@ -60,76 +59,65 @@ export default function ReflectionHistory({ sessions, prompts }: ReflectionHisto
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-2 mb-4">
-        <Calendar className="w-5 h-5 text-orange-600" />
-        <h3 className="text-lg font-semibold text-gray-800">Reflection History</h3>
-        <span className="text-sm text-gray-500">({sortedSessions.length} sessions)</span>
+    <div className="space-y-3">
+      <div className="mb-4 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+        <h3 className="m-0 text-[clamp(24px,2.6vw,32px)] font-extrabold tracking-[-0.03em]">Reflection history</h3>
+        <span className="text-[15px] text-pl-muted">
+          {sortedSessions.length} session{sortedSessions.length !== 1 ? 's' : ''}
+        </span>
       </div>
 
-      {sortedSessions.map(session => (
-        <div
-          key={session.id}
-          className="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300"
-        >
-          {/* Session Header */}
-          <div
-            className="p-4 cursor-pointer hover:bg-gray-50 transition-colors"
-            onClick={() => toggleSession(session.id)}
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="bg-orange-100 rounded-full p-2">
-                  <MessageSquare className="w-5 h-5 text-orange-600" />
-                </div>
-                <div>
-                  <p className="font-medium text-gray-800">{formatDate(session.completedAt)}</p>
-                  <p className="text-sm text-gray-500 flex items-center gap-1">
-                    <Clock className="w-3 h-3" />
-                    {formatTime(session.completedAt)} • {session.entries.length} reflection
-                    {session.entries.length !== 1 ? 's' : ''}
-                  </p>
-                </div>
-              </div>
-              <div>
-                {expandedSession === session.id ? (
-                  <ChevronUp className="w-5 h-5 text-gray-400" />
-                ) : (
-                  <ChevronDown className="w-5 h-5 text-gray-400" />
-                )}
-              </div>
-            </div>
-          </div>
+      {sortedSessions.map(session => {
+        const isOpen = expandedSession === session.id;
+        return (
+          <div key={session.id} className={`${CARD} ${CARD_HOVER} overflow-hidden`}>
+            {/* Session Header */}
+            <button
+              type="button"
+              aria-expanded={isOpen}
+              onClick={() => toggleSession(session.id)}
+              className="flex w-full items-center justify-between gap-4 p-5 text-left"
+            >
+              <span className="min-w-0">
+                <span className="block text-[18px] font-bold tracking-[-0.01em]">{formatDate(session.completedAt)}</span>
+                <span className={`${KICKER} mt-1 block text-pl-muted`}>
+                  {formatTime(session.completedAt)} · {session.entries.length} reflection
+                  {session.entries.length !== 1 ? 's' : ''}
+                </span>
+              </span>
+              <span
+                aria-hidden="true"
+                className={`pl-serif text-[26px] leading-none transition-transform duration-300 motion-reduce:transition-none ${
+                  isOpen ? 'rotate-90' : ''
+                }`}
+              >
+                →
+              </span>
+            </button>
 
-          {/* Expanded Entries */}
-          {expandedSession === session.id && (
-            <div className="border-t border-gray-100 p-4 space-y-4 bg-gray-50">
-              {session.entries.map((entry, index) => {
-                const prompt = getPromptById(entry.promptId);
-                return (
-                  <div key={entry.id} className="bg-white rounded-lg p-4 border border-gray-200">
-                    <div className="mb-3">
-                      <span className="text-xs font-medium text-gray-400 uppercase">
-                        Question {index + 1}
-                      </span>
-                      <p className="text-gray-700 font-medium mt-1">
+            {/* Expanded Entries */}
+            {isOpen && (
+              <div className="space-y-5 border-t-2 border-pl-ink p-5">
+                {session.entries.map((entry, index) => {
+                  const prompt = getPromptById(entry.promptId);
+                  return (
+                    <div key={entry.id}>
+                      <span className={`${KICKER} text-pl-muted`}>Question {index + 1}</span>
+                      <p className="mb-3 mt-1 text-[18px] font-semibold leading-[1.4]">
                         {prompt?.question || 'Question not found'}
                       </p>
+                      <div className={INSET}>
+                        <b className={LABEL}>Your response</b>
+                        <p className="mb-0 mt-1 whitespace-pre-wrap text-[16px] leading-[1.5] text-pl-body">{entry.response}</p>
+                      </div>
                     </div>
-                    <div className="bg-orange-50 rounded-lg p-3 border border-orange-100">
-                      <span className="text-xs font-medium text-orange-600 uppercase">
-                        Your Response
-                      </span>
-                      <p className="text-gray-700 mt-1 whitespace-pre-wrap">{entry.response}</p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      ))}
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }
-

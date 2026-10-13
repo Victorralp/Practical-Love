@@ -5,13 +5,12 @@
  */
 
 import { useState, useEffect } from 'react';
-import { Sparkles, TrendingUp, Target, Star, Trophy, MessageCircle, Map, PartyPopper } from 'lucide-react';
 import type { UserProgress } from '../../types/growth';
 import { progressService } from '../../services/progressService';
 import { dataService } from '../../services/dataService';
 import ProgressStats from './ProgressStats';
 import CompletionHistory from './CompletionHistory';
-import Logo from '../Logo';
+import { CARD, KICKER } from './ui';
 
 interface ProgressDashboardProps {
   onNavigateToSection?: (section: string) => void;
@@ -33,31 +32,23 @@ function hasProgress(progress: UserProgress): boolean {
  */
 function EmptyState({ onNavigateToSection }: { onNavigateToSection?: (section: string) => void }) {
   return (
-    <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-xl p-8 text-center">
-      <div className="inline-flex items-center justify-center w-16 h-16 bg-orange-100 rounded-full mb-4">
-        <Logo className="w-8 h-8" />
-      </div>
-      <h3 className="text-xl font-semibold text-gray-800 mb-2">Begin Your Growth Journey</h3>
-      <p className="text-gray-600 mb-6 max-w-md mx-auto">
+    <div className="rounded-[28px] bg-pl-blush p-[clamp(24px,5vw,48px)] text-center">
+      <span aria-hidden="true" className="text-[40px] leading-none text-pl-red">
+        ♥
+      </span>
+      <h3 className="mb-3 mt-4 text-[clamp(26px,3.2vw,38px)] font-extrabold leading-[1] tracking-[-0.04em]">
+        Begin your <span className="pl-serif font-normal text-pl-red">growth journey.</span>
+      </h3>
+      <p className="mx-auto mb-7 mt-0 max-w-[46ch] text-[18px] leading-[1.5] text-pl-body">
         Every journey starts with a single step. Complete challenges, reflect on your growth, and
         follow guided journeys to develop your capacity to love others.
       </p>
-      <div className="flex flex-col sm:flex-row gap-3 justify-center">
-        <button
-          type="button"
-          onClick={() => onNavigateToSection?.('challenges')}
-          className="px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
-        >
-          <Sparkles className="w-5 h-5" />
-          Start Today's Challenge
+      <div className="flex flex-col justify-center gap-3 sm:flex-row">
+        <button type="button" onClick={() => onNavigateToSection?.('challenges')} className="pl-btn pl-btn-red">
+          Start today's challenge
         </button>
-        <button
-          type="button"
-          onClick={() => onNavigateToSection?.('journeys')}
-          className="px-6 py-3 border border-gray-300 hover:bg-gray-50 text-gray-700 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
-        >
-          <TrendingUp className="w-5 h-5" />
-          Explore Journeys
+        <button type="button" onClick={() => onNavigateToSection?.('journeys')} className="pl-btn pl-btn-outline">
+          Explore journeys
         </button>
       </div>
     </div>
@@ -71,84 +62,74 @@ function Milestones({ progress }: { progress: UserProgress }) {
   const milestones = [
     {
       id: 'first-challenge',
-      title: 'First Step',
+      title: 'First step',
       description: 'Complete your first challenge',
       achieved: progress.completedChallenges.length >= 1,
-      icon: <Target className="w-5 h-5" />,
     },
     {
       id: 'five-challenges',
-      title: 'Getting Started',
+      title: 'Getting started',
       description: 'Complete 5 challenges',
       achieved: progress.completedChallenges.length >= 5,
-      icon: <Star className="w-5 h-5" />,
     },
     {
       id: 'ten-challenges',
       title: 'Dedicated',
       description: 'Complete 10 challenges',
       achieved: progress.completedChallenges.length >= 10,
-      icon: <Trophy className="w-5 h-5" />,
     },
     {
       id: 'first-reflection',
-      title: 'Self-Aware',
+      title: 'Self-aware',
       description: 'Complete your first reflection',
       achieved: progress.reflectionSessions.length >= 1,
-      icon: <MessageCircle className="w-5 h-5" />,
     },
     {
       id: 'first-journey',
-      title: 'Journey Begun',
+      title: 'Journey begun',
       description: 'Start a guided journey',
       achieved: progress.journeyProgress.length >= 1,
-      icon: <Map className="w-5 h-5" />,
     },
     {
       id: 'journey-complete',
-      title: 'Journey Master',
+      title: 'Journey master',
       description: 'Complete a guided journey',
       achieved: progress.journeyProgress.some(jp => jp.completedAt !== undefined),
-      icon: <PartyPopper className="w-5 h-5" />,
     },
   ];
 
   const achievedCount = milestones.filter(m => m.achieved).length;
 
   return (
-    <div className="bg-white rounded-xl shadow-md p-6">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-gray-800">Milestones</h3>
-        <span className="text-sm text-gray-500">
+    <div className={`${CARD} p-[clamp(20px,3vw,28px)]`}>
+      <div className="mb-5 flex flex-wrap items-baseline justify-between gap-2">
+        <h3 className="m-0 text-[clamp(22px,2.4vw,28px)] font-extrabold tracking-[-0.03em]">Milestones</h3>
+        <span className={`${KICKER} text-pl-muted`}>
           {achievedCount} / {milestones.length} achieved
         </span>
       </div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+      <ul className="m-0 grid list-none gap-3 p-0 [grid-template-columns:repeat(auto-fill,minmax(min(100%,150px),1fr))]">
         {milestones.map(milestone => (
-          <div
+          <li
             key={milestone.id}
-            className={`p-3 rounded-lg border-2 transition-all ${
-              milestone.achieved
-                ? 'border-amber-200 bg-amber-50'
-                : 'border-gray-100 bg-gray-50 opacity-60'
-            }`}
+            className={`rounded-[20px] p-4 ${milestone.achieved ? 'bg-pl-yellow text-pl-ink' : 'bg-pl-hair text-pl-muted'}`}
           >
-            <div
-              className={`inline-flex items-center justify-center w-9 h-9 rounded-lg mb-2 ${
-                milestone.achieved ? 'bg-amber-100 text-orange-700' : 'bg-white text-gray-600'
+            <span
+              aria-hidden="true"
+              className={`mb-3 flex h-9 w-9 items-center justify-center rounded-full text-[15px] font-bold ${
+                milestone.achieved ? 'bg-pl-ink text-white' : 'bg-white text-pl-muted'
               }`}
             >
-              {milestone.icon}
-            </div>
-            <p
-              className={`font-medium text-sm ${milestone.achieved ? 'text-orange-800' : 'text-gray-600'}`}
-            >
+              {milestone.achieved ? '✓' : '♥'}
+            </span>
+            <p className="m-0 text-[16px] font-bold">
               {milestone.title}
+              <span className="sr-only">{milestone.achieved ? ' (achieved)' : ' (not yet achieved)'}</span>
             </p>
-            <p className="text-xs text-gray-500 mt-0.5">{milestone.description}</p>
-          </div>
+            <p className="mb-0 mt-1 text-[14px] leading-[1.4] opacity-80">{milestone.description}</p>
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   );
 }
@@ -166,7 +147,7 @@ export default function ProgressDashboard({ onNavigateToSection }: ProgressDashb
   if (!progress) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="animate-pulse text-gray-500">Loading progress...</div>
+        <div className="animate-pulse text-[18px] text-pl-muted motion-reduce:animate-none">Loading progress…</div>
       </div>
     );
   }
@@ -181,7 +162,7 @@ export default function ProgressDashboard({ onNavigateToSection }: ProgressDashb
       <ProgressStats progress={progress} totalJourneys={totalJourneys} />
 
       {/* Two column layout for history and milestones */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* Completion History */}
         <CompletionHistory progress={progress} maxItems={8} />
 

@@ -5,9 +5,9 @@
  */
 
 import { useState } from 'react';
-import { ChevronDown, ChevronUp, Lightbulb } from 'lucide-react';
 import type { GrowthTip } from '../../types/growth';
 import ExerciseSteps from './ExerciseSteps';
+import { CARD, CARD_HOVER, KICKER, LABEL, TAG, titleCase } from './ui';
 
 interface TipCardProps {
   tip: GrowthTip;
@@ -16,27 +16,14 @@ interface TipCardProps {
 export default function TipCard({ tip }: TipCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const getCategoryColor = (category: string) => {
-    const colors: Record<string, string> = {
-      patience: 'bg-orange-100 text-red-800 border-orange-200',
-      kindness: 'bg-amber-100 text-orange-800 border-amber-200',
-      forgiveness: 'bg-orange-100 text-red-800 border-orange-200',
-      empathy: 'bg-red-100 text-red-800 border-red-200',
-      humility: 'bg-amber-100 text-amber-800 border-amber-200',
-      trust: 'bg-cyan-100 text-cyan-800 border-cyan-200',
-      perseverance: 'bg-orange-100 text-orange-800 border-orange-200',
-    };
-    return colors[category] || 'bg-gray-100 text-gray-800 border-gray-200';
-  };
-
   return (
-    <div className="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl">
+    <div data-card className={`${CARD} ${CARD_HOVER}`}>
       {/* Header - Always visible */}
       <div
         role="button"
         tabIndex={0}
         aria-expanded={isExpanded}
-        className="p-6 cursor-pointer rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-orange-500"
+        className="cursor-pointer rounded-[26px] p-[clamp(20px,4vw,28px)]"
         onClick={() => setIsExpanded(!isExpanded)}
         onKeyDown={e => {
           if (e.key === 'Enter' || e.key === ' ') {
@@ -45,49 +32,40 @@ export default function TipCard({ tip }: TipCardProps) {
           }
         }}
       >
-        <div className="flex items-start justify-between">
-          <div className="flex-1">
-            <div className="flex items-center gap-3 mb-2">
-              <span
-                className={`px-3 py-1 rounded-full text-sm font-medium border ${getCategoryColor(tip.category)}`}
-              >
-                {tip.category.charAt(0).toUpperCase() + tip.category.slice(1)}
-              </span>
-              <span className="flex items-center text-sm text-gray-500">
-                <Lightbulb className="w-4 h-4 mr-1" />
+        <div className="flex items-start justify-between gap-4">
+          <div className="min-w-0 flex-1">
+            <div className="mb-3 flex flex-wrap items-center gap-2">
+              <span className={TAG}>{titleCase(tip.category)}</span>
+              <span className={`${KICKER} text-pl-muted`}>
                 {tip.exercises.length} exercise{tip.exercises.length !== 1 ? 's' : ''}
               </span>
             </div>
-            <h3 className="text-xl font-semibold text-gray-800 mb-2">{tip.title}</h3>
-            <p className="text-gray-600">{tip.summary}</p>
+            <h3 className="m-0 text-[clamp(22px,2.4vw,28px)] font-extrabold leading-[1.05] tracking-[-0.03em]">{tip.title}</h3>
+            <p className="mb-0 mt-2 text-[17px] leading-[1.45] text-pl-body">{tip.summary}</p>
           </div>
-          <div className="ml-4 flex-shrink-0">
-            {isExpanded ? (
-              <ChevronUp className="w-6 h-6 text-gray-400" />
-            ) : (
-              <ChevronDown className="w-6 h-6 text-gray-400" />
-            )}
-          </div>
+          <span
+            aria-hidden="true"
+            className={`pl-serif text-[28px] leading-none transition-transform duration-300 motion-reduce:transition-none ${
+              isExpanded ? 'rotate-90' : ''
+            }`}
+          >
+            →
+          </span>
         </div>
       </div>
 
       {/* Expanded Content */}
       {isExpanded && (
-        <div className="px-6 pb-6 border-t border-gray-100">
-          <div className="pt-4 space-y-6">
+        <div className="border-t-2 border-pl-ink px-[clamp(20px,4vw,28px)] pb-[clamp(20px,4vw,28px)]">
+          <div className="space-y-6 pt-5">
             {/* Full Content */}
-            <div className="bg-gray-50 rounded-lg p-4">
-              <p className="text-gray-700 leading-relaxed">{tip.content}</p>
-            </div>
+            <p className="m-0 text-[18px] leading-[1.6] text-pl-body">{tip.content}</p>
 
             {/* Exercises */}
             {tip.exercises.length > 0 && (
               <div>
-                <h4 className="font-semibold text-gray-800 mb-4 flex items-center">
-                  <span className="mr-2">📝</span>
-                  Practical Exercises
-                </h4>
-                <div className="space-y-4">
+                <h4 className={`${LABEL} mb-3 mt-0`}>Practical exercises</h4>
+                <div className="space-y-3">
                   {tip.exercises.map(exercise => (
                     <ExerciseSteps key={exercise.id} exercise={exercise} />
                   ))}
@@ -100,5 +78,3 @@ export default function TipCard({ tip }: TipCardProps) {
     </div>
   );
 }
-
-

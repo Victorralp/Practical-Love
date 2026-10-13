@@ -4,14 +4,16 @@
  * Requirements: 2.1, 2.3
  */
 
-import { useState, useMemo } from 'react';
-import { Lightbulb, Filter } from 'lucide-react';
+import { useState, useMemo, useRef } from 'react';
 import TipCard from './TipCard';
+import HowItWorks from './HowItWorks';
+import { useStagger } from '../pl/motion';
 import { dataService } from '../../services/dataService';
 import type { LoveCategory, GrowthTip } from '../../types/growth';
+import { TEXT_LINK } from './ui';
 
 const CATEGORIES: { value: LoveCategory | 'all'; label: string }[] = [
-  { value: 'all', label: 'All Categories' },
+  { value: 'all', label: 'All' },
   { value: 'patience', label: 'Patience' },
   { value: 'kindness', label: 'Kindness' },
   { value: 'forgiveness', label: 'Forgiveness' },
@@ -23,6 +25,7 @@ const CATEGORIES: { value: LoveCategory | 'all'; label: string }[] = [
 
 export default function GrowthTipsSection() {
   const [selectedCategory, setSelectedCategory] = useState<LoveCategory | 'all'>('all');
+  const listRef = useRef<HTMLDivElement | null>(null);
 
   // Get tips from DataService, filtered by category
   const tips: GrowthTip[] = useMemo(() => {
@@ -32,93 +35,60 @@ export default function GrowthTipsSection() {
     return dataService.getTipsByCategory(selectedCategory);
   }, [selectedCategory]);
 
-  const getCategoryButtonStyle = (category: LoveCategory | 'all') => {
-    const isSelected = selectedCategory === category;
-    const baseStyle = 'px-4 py-2 rounded-full text-sm font-medium transition-all duration-200';
-
-    if (isSelected) {
-      return `${baseStyle} bg-orange-600 text-white shadow-md`;
-    }
-    return `${baseStyle} bg-gray-100 text-gray-700 hover:bg-gray-200`;
-  };
+  useStagger(listRef, selectedCategory, { delay: 0 });
 
   return (
-    <section className="py-8">
-      {/* Section Header */}
-      <div className="mb-8">
-        <div className="flex items-center gap-3 mb-2">
-          <Lightbulb className="w-8 h-8 text-orange-600" />
-          <h2 className="text-3xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">Growth Tips</h2>
-        </div>
-        <p className="text-gray-600">
-          Practical advice and exercises to help you grow in love and develop stronger
-          relationships.
-        </p>
-      </div>
+    <div>
+      <p className="mb-6 mt-0 max-w-[52ch] text-[18px] leading-[1.5] text-pl-body">
+        Practical advice and exercises to help you grow in love and develop stronger relationships.
+      </p>
 
       {/* Category Filter */}
-      <div className="mb-8">
-        <div className="flex items-center gap-2 mb-4">
-          <Filter className="w-5 h-5 text-gray-500" />
-          <span className="text-sm font-medium text-gray-700">Filter by category:</span>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {CATEGORIES.map(category => (
-            <button
-              key={category.value}
-              onClick={() => setSelectedCategory(category.value)}
-              className={getCategoryButtonStyle(category.value)}
-            >
-              {category.label}
-            </button>
-          ))}
-        </div>
+      <div className="mb-4 flex flex-wrap gap-2" role="group" aria-label="Filter tips by category">
+        {CATEGORIES.map(category => (
+          <button
+            key={category.value}
+            type="button"
+            aria-pressed={selectedCategory === category.value}
+            onClick={() => setSelectedCategory(category.value)}
+            className="pl-chip"
+          >
+            {category.label}
+          </button>
+        ))}
       </div>
 
       {/* Tips Count */}
-      <div className="mb-6">
-        <p className="text-sm text-gray-500">
-          Showing {tips.length} tip{tips.length !== 1 ? 's' : ''}
-          {selectedCategory !== 'all' && ` in ${selectedCategory}`}
-        </p>
-      </div>
+      <p className="mb-5 mt-0 text-[15px] text-pl-muted" aria-live="polite">
+        Showing {tips.length} tip{tips.length !== 1 ? 's' : ''}
+        {selectedCategory !== 'all' && ` in ${selectedCategory}`}
+      </p>
 
       {/* Tips List */}
       {tips.length > 0 ? (
-        <div className="space-y-6">
+        <div ref={listRef} className="space-y-4">
           {tips.map(tip => (
             <TipCard key={tip.id} tip={tip} />
           ))}
         </div>
       ) : (
-        <div className="text-center py-12 bg-gray-50 rounded-xl">
-          <Lightbulb className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-          <p className="text-gray-500">No tips found for this category.</p>
-          <button
-            onClick={() => setSelectedCategory('all')}
-            className="mt-4 text-orange-600 hover:text-orange-700 font-medium"
-          >
+        <div className="rounded-[28px] border-2 border-dashed border-pl-input px-6 py-12 text-center">
+          <p className="m-0 text-[20px] text-pl-muted">No tips found for this category.</p>
+          <button type="button" onClick={() => setSelectedCategory('all')} className={`${TEXT_LINK} mt-3`}>
             View all tips
           </button>
         </div>
       )}
 
-      {/* Info Section */}
-      <div className="mt-8 bg-gradient-to-r from-orange-50 to-red-50 rounded-xl p-6 border border-orange-100">
-        <div className="flex items-start">
-          <Lightbulb className="w-6 h-6 text-orange-600 mr-4 mt-1 flex-shrink-0" />
-          <div>
-            <h3 className="font-semibold text-gray-800 mb-2">How to Use Growth Tips</h3>
-            <ul className="text-gray-600 text-sm space-y-1">
-              <li>• Browse tips by category to find areas you want to develop</li>
-              <li>• Click on a tip to expand and see the full content</li>
-              <li>• Try the practical exercises to apply what you learn</li>
-              <li>• Return regularly to reinforce your growth journey</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
+      <HowItWorks
+        title="How to use growth tips"
+        items={[
+          'Browse tips by category to find areas you want to develop',
+          'Click on a tip to expand and see the full content',
+          'Try the practical exercises to apply what you learn',
+          'Return regularly to reinforce your growth journey',
+        ]}
+      />
+    </div>
   );
 }
-

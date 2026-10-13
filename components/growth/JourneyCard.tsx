@@ -4,8 +4,8 @@
  * Requirements: 4.1
  */
 
-import { MapPin, Calendar, CheckCircle, Play, ChevronRight } from 'lucide-react';
 import type { Journey, JourneyProgress } from '../../types/growth';
+import { CARD, CARD_HOVER, FILL, KICKER, TAG, TRACK, titleCase } from './ui';
 
 interface JourneyCardProps {
   journey: Journey;
@@ -21,19 +21,6 @@ export default function JourneyCard({ journey, progress, onStart, onContinue }: 
   const totalSteps = journey.steps.length;
   const progressPercent = totalSteps > 0 ? (completedSteps / totalSteps) * 100 : 0;
 
-  const getCategoryColor = (category: string) => {
-    const colors: Record<string, string> = {
-      patience: 'bg-orange-100 text-red-800 border-orange-200',
-      kindness: 'bg-amber-100 text-orange-800 border-amber-200',
-      forgiveness: 'bg-orange-100 text-red-800 border-orange-200',
-      empathy: 'bg-red-100 text-red-800 border-red-200',
-      humility: 'bg-amber-100 text-amber-800 border-amber-200',
-      trust: 'bg-cyan-100 text-cyan-800 border-cyan-200',
-      perseverance: 'bg-orange-100 text-orange-800 border-orange-200',
-    };
-    return colors[category] || 'bg-gray-100 text-gray-800 border-gray-200';
-  };
-
   const handleAction = () => {
     if (isCompleted) return;
     if (isStarted && onContinue) {
@@ -45,97 +32,48 @@ export default function JourneyCard({ journey, progress, onStart, onContinue }: 
 
   return (
     <div
-      className={`bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl ${
-        isCompleted ? 'ring-2 ring-amber-500' : ''
-      }`}
+      data-card
+      className={`flex flex-col p-[clamp(20px,3vw,28px)] ${CARD} ${CARD_HOVER} ${isCompleted ? '!bg-pl-yellow' : ''}`}
     >
-      <div className="p-6">
-        {/* Header */}
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex-1">
-            <div className="flex items-center gap-3 mb-2">
-              <span
-                className={`px-3 py-1 rounded-full text-sm font-medium border ${getCategoryColor(
-                  journey.category
-                )}`}
-              >
-                {journey.category.charAt(0).toUpperCase() + journey.category.slice(1)}
-              </span>
-              <span className="flex items-center text-sm text-gray-500">
-                <Calendar className="w-4 h-4 mr-1" />
-                {journey.durationDays} days
-              </span>
-            </div>
-            <h3 className="text-xl font-semibold text-gray-800">{journey.title}</h3>
-          </div>
-          {isCompleted && (
-            <div className="flex items-center text-orange-600">
-              <CheckCircle className="w-6 h-6" />
-            </div>
-          )}
-        </div>
+      {/* Header */}
+      <div className="mb-3 flex flex-wrap items-center gap-2">
+        <span className={isCompleted ? 'pl-tag bg-white text-pl-ink' : TAG}>{titleCase(journey.category)}</span>
+        <span className={`${KICKER} text-pl-muted`}>{journey.durationDays} days</span>
+        {isCompleted && <span className="pl-tag bg-pl-ink text-white">✓ Done</span>}
+      </div>
+      <h3 className="m-0 text-[clamp(24px,2.6vw,30px)] font-extrabold leading-[1.02] tracking-[-0.035em]">{journey.title}</h3>
 
-        {/* Description */}
-        <p className="text-gray-600 mb-4 leading-relaxed">{journey.description}</p>
+      {/* Description */}
+      <p className="mb-0 mt-3 text-[16px] leading-[1.5] text-pl-body">{journey.description}</p>
 
+      <div className="mt-auto pt-5">
         {/* Progress Bar */}
-        {isStarted && (
+        {isStarted ? (
           <div className="mb-4">
-            <div className="flex items-center justify-between text-sm mb-2">
-              <span className="text-gray-600">Progress</span>
-              <span className="font-medium text-gray-800">
+            <div className="mb-2 flex items-center justify-between text-[14px]">
+              <span className="text-pl-muted">Progress</span>
+              <span className="font-bold">
                 {completedSteps} / {totalSteps} steps
               </span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2.5">
-              <div
-                className={`h-2.5 rounded-full transition-all duration-500 ${
-                  isCompleted ? 'bg-amber-500' : 'bg-orange-500'
-                }`}
-                style={{ width: `${progressPercent}%` }}
-              />
+            <div className={TRACK}>
+              <div className={FILL} style={{ width: `${progressPercent}%` }} />
             </div>
           </div>
+        ) : (
+          <p className="mb-4 mt-0 text-[14px] text-pl-muted">{totalSteps} steps in this journey</p>
         )}
-
-        {/* Steps Preview */}
-        <div className="flex items-center text-sm text-gray-500 mb-4">
-          <MapPin className="w-4 h-4 mr-1" />
-          <span>{totalSteps} steps in this journey</span>
-        </div>
 
         {/* Action Button */}
         <button
+          type="button"
           onClick={handleAction}
           disabled={isCompleted}
-          className={`w-full py-3 px-4 rounded-lg font-medium transition-colors flex items-center justify-center ${
-            isCompleted
-              ? 'bg-amber-100 text-orange-700 cursor-default'
-              : isStarted
-                ? 'bg-orange-600 hover:bg-orange-700 text-white'
-                : 'bg-gray-800 hover:bg-gray-900 text-white'
-          }`}
+          className={`pl-btn w-full ${isCompleted ? 'pl-btn-white !opacity-100' : isStarted ? 'pl-btn-red' : 'pl-btn-ink'}`}
         >
-          {isCompleted ? (
-            <>
-              <CheckCircle className="w-5 h-5 mr-2" />
-              Journey Completed
-            </>
-          ) : isStarted ? (
-            <>
-              Continue Journey
-              <ChevronRight className="w-5 h-5 ml-2" />
-            </>
-          ) : (
-            <>
-              <Play className="w-5 h-5 mr-2" />
-              Start Journey
-            </>
-          )}
+          {isCompleted ? 'Journey completed' : isStarted ? 'Continue journey →' : 'Start journey'}
         </button>
       </div>
     </div>
   );
 }
-
-
