@@ -7,7 +7,6 @@ export type AdminPageHeaderProps = {
   description?: string;
   /** Kept for call-site compatibility; the redesign shows no icon in page headers. */
   icon?: React.ReactNode;
-  accentClassName?: string;
   /** Buttons or links aligned to the end of the header. */
   actions?: React.ReactNode;
   /** Short right-aligned status line, e.g. "12 of 40 shown". */

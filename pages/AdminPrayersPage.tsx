@@ -114,10 +114,10 @@ export default function AdminPrayersPage() {
   };
 
   const summaryStats = [
-    { label: 'Pending review', value: counts.pending, className: 'text-amber-700' },
-    { label: 'Approved public', value: counts.approved, className: 'text-emerald-700' },
-    { label: 'Private requests', value: counts.private, className: 'text-violet-700' },
-    { label: 'Prayers offered', value: totalPrayed, className: 'text-red-700' },
+    { label: 'Pending review', value: counts.pending, className: 'text-pl-red' },
+    { label: 'Approved public', value: counts.approved, className: 'text-pl-ink' },
+    { label: 'Private requests', value: counts.private, className: 'text-pl-muted' },
+    { label: 'Prayers offered', value: totalPrayed, className: 'text-pl-deep' },
   ];
 
   return (
@@ -127,7 +127,6 @@ export default function AdminPrayersPage() {
         title="Prayer requests"
         description="Approve public requests for the prayer wall. Private requests stay visible to admins only."
         icon={<HeartHandshake className="h-5 w-5" />}
-        accentClassName="bg-violet-50 text-violet-600 ring-violet-100"
         meta={isLoading ? 'Loading...' : `${filtered.length} of ${prayers.length} shown`}
       />
 

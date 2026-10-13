@@ -579,7 +579,7 @@ export default function AdminMessagesPage() {
                 type="checkbox"
                 checked={form.pinned}
                 onChange={event => setForm(current => ({ ...current, pinned: event.target.checked }))}
-                className="mt-0.5 h-4 w-4 rounded border-[#d9cbc8] text-red-700 focus:ring-red-500"
+                className="mt-0.5 h-4 w-4 rounded border-[#d9cbc8] text-pl-red focus:ring-pl-red"
               />
               <span className="text-sm text-[#3d3333]">
                 Pin this post

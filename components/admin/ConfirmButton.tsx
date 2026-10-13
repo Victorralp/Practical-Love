@@ -54,7 +54,7 @@ export function ConfirmButton({
       }}
       onBlur={disarm}
       className={cn(
-        armed ? `${adminButton.danger} border-red-500 bg-red-600 text-white hover:bg-red-700` : adminButton.danger,
+        armed ? `${adminButton.danger} border-pl-red bg-pl-red text-white hover:bg-pl-press` : adminButton.danger,
         className
       )}
     >

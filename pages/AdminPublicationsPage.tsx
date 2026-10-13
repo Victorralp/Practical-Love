@@ -288,7 +288,6 @@ export default function AdminPublicationsPage() {
         title="Books & PDFs"
         description="Publications with a PDF appear in the public catalog. Drafts stay hidden until published."
         icon={<BookOpen className="h-5 w-5" />}
-        accentClassName="bg-orange-50 text-orange-600 ring-orange-100"
         meta={isLoading ? 'Loading...' : `${orderedPublications.length} of ${publications.length} shown`}
         actions={
           <>
@@ -422,7 +421,7 @@ export default function AdminPublicationsPage() {
                   type="checkbox"
                   checked={form.featured}
                   onChange={e => setForm(c => ({ ...c, featured: e.target.checked }))}
-                  className="h-4 w-4 rounded border-[#d9cbc8] text-red-700 focus:ring-red-500"
+                  className="h-4 w-4 rounded border-[#d9cbc8] text-pl-red focus:ring-pl-red"
                 />
                 <Star
                   className={`h-4 w-4 ${form.featured ? 'fill-[#e8a400] text-[#e8a400]' : 'text-[#a39797]'}`}
@@ -480,7 +479,7 @@ export default function AdminPublicationsPage() {
                   <div className="flex items-center gap-2 text-sm font-medium text-[#141010]">
                     <FileText className="h-4 w-4 text-[#6b5f5f]" />
                     PDF file
-                    <span className="text-xs font-normal text-red-600">Required</span>
+                    <span className="text-xs font-normal text-pl-press">Required</span>
                   </div>
                   <label className={`${adminButton.secondary} cursor-pointer`}>
                     {isUploadingPdf ? (
@@ -508,7 +507,7 @@ export default function AdminPublicationsPage() {
                       href={pdfAsset.url}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex shrink-0 items-center gap-1 text-xs font-medium text-red-700 hover:underline"
+                      className="inline-flex shrink-0 items-center gap-1 text-xs font-medium text-pl-press hover:underline"
                     >
                       Open
                       <ExternalLink className="h-3 w-3" />

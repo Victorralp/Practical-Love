@@ -73,7 +73,7 @@ export function ConfirmDialog({
           <button
             type="button"
             onClick={onConfirm}
-            className={cn(adminButton.danger, 'border-red-500 bg-red-600 text-white hover:bg-red-700')}
+            className={cn(adminButton.danger, 'border-pl-red bg-pl-red text-white hover:bg-pl-press')}
           >
             {confirmLabel}
           </button>

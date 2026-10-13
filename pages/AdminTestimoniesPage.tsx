@@ -120,7 +120,6 @@ export default function AdminTestimoniesPage() {
         title="Submitted stories"
         description="Approve what should appear publicly. Approved stories are published without the submitter's email."
         icon={<HandHeart className="h-5 w-5" />}
-        accentClassName="bg-emerald-50 text-emerald-600 ring-emerald-100"
         meta={isLoading ? 'Loading...' : `${filtered.length} of ${testimonies.length} shown`}
       />
 
@@ -228,7 +227,7 @@ export default function AdminTestimoniesPage() {
                         <button
                           type="button"
                           onClick={() => setExpandedId(isExpanded ? null : testimony.id)}
-                          className="mt-1 text-xs font-medium text-red-700 hover:underline"
+                          className="mt-1 text-xs font-medium text-pl-press hover:underline"
                         >
                           {isExpanded ? 'Show less' : 'Read more'}
                         </button>

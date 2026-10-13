@@ -553,29 +553,5 @@
     "indexable": true,
     "schemaType": "DonateAction",
     "headline": "A page for supporting Practical Love through prayer, outreach, and giving."
-  },
-  {
-    "path": "/cloudinary-demo",
-    "name": "Cloudinary Demo",
-    "title": "Cloudinary Demo | Practical Love",
-    "description": "Internal image upload and integration demo for the Practical Love website.",
-    "keywords": ["internal demo"],
-    "changefreq": "yearly",
-    "priority": 0.1,
-    "indexable": false,
-    "schemaType": "WebPage",
-    "headline": "Internal demo page."
-  },
-  {
-    "path": "/env-test",
-    "name": "Environment Test",
-    "title": "Environment Test | Practical Love",
-    "description": "Internal environment test page for the Practical Love website.",
-    "keywords": ["internal test"],
-    "changefreq": "yearly",
-    "priority": 0.1,
-    "indexable": false,
-    "schemaType": "WebPage",
-    "headline": "Internal environment test page."
   }
 ]
