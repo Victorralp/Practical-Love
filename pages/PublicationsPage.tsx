@@ -1,239 +1,115 @@
-import { useEffect, useMemo, useState } from 'react';
-import { ArrowRight, BookOpen, Download } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Em } from '../components/pl/primitives';
+import { useEntrance, useStagger } from '../components/pl/motion';
 import { publications } from '../data/publications';
-import { FocusRail, type FocusRailItem } from '../components/ui/focus-rail';
-import { PageHero, PageShell } from '../components/ui';
-import Logo from '../components/Logo';
 import {
   mergePublicationCatalog,
   subscribeToManagedPublications,
   type ManagedPublicationRecord,
 } from '../services/publicationsService';
 
+// Fallback faces for publications added through admin without a cover.
+const PALETTE = [
+  'bg-pl-red text-white',
+  'bg-white text-pl-ink',
+  'bg-pl-ink text-white',
+  'bg-pl-yellow text-pl-ink',
+  'bg-pl-blush text-pl-deep',
+];
+
 export default function PublicationsPage() {
-  const [managedPublications, setManagedPublications] = useState<ManagedPublicationRecord[]>([]);
+  const [managed, setManaged] = useState<ManagedPublicationRecord[]>([]);
+  const [query, setQuery] = useState('');
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  const gridRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    const unsubscribe = subscribeToManagedPublications(
-      loadedPublications => {
-        setManagedPublications(loadedPublications);
-      },
-      error => {
-        console.error('Unable to load managed publications:', error);
-      }
-    );
-
-    return unsubscribe;
-  }, []);
-
-  const catalog = useMemo(
-    () => mergePublicationCatalog(publications, managedPublications),
-    [managedPublications]
-  );
-
-  // Every static publication ships a cover rendered from its own first page;
-  // the fallback only covers publications added later through the admin screen.
-  const railItems: FocusRailItem[] = useMemo(
+  useEffect(
     () =>
-      catalog.map(book => ({
-        id: book.id,
-        title: book.title,
-        description: book.description,
-        imageSrc: book.coverImage || '/publications/universal-cover.png',
-        href: `/read/${book.id}`,
-        meta: `${book.type} • ${book.author}`,
-      })),
-    [catalog]
+      subscribeToManagedPublications(setManaged, error => {
+        console.error('Unable to load managed publications:', error);
+      }),
+    []
   );
 
-  // Main render function
+  const catalog = useMemo(() => mergePublicationCatalog(publications, managed), [managed]);
+  const needle = query.trim().toLowerCase();
+  const books = needle
+    ? catalog.filter(b => `${b.title} ${b.author} ${b.description}`.toLowerCase().includes(needle))
+    : catalog;
+
+  useEntrance(rootRef);
+  useStagger(gridRef, catalog.length, { selector: '[data-book]', delay: 250, step: 60 });
+
   return (
-    <PageShell>
-      <PageHero
-        badge={
-          <>
-            <BookOpen className="w-4 h-4" />
-            Free Publications
-          </>
-        }
-        icon={
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center shadow-sm">
-            <Logo className="w-6 h-6" />
-          </div>
-        }
-        title={
-          <>
-            Free <span className="text-orange-700">Publications</span>
-          </>
-        }
-        subtitle={
-          <>
-            Download our free books and discover the transformative power of love.
-            <span className="block text-sm font-semibold text-orange-700 mt-2">
-              Feel free to reproduce and distribute these materials freely.
-            </span>
-          </>
-        }
-      />
-
-      {/* Focus Rail Carousel */}
-      {railItems.length > 0 && (
-        <div className="mb-12 rounded-2xl overflow-hidden shadow-2xl">
-          <FocusRail items={railItems} autoPlay={true} interval={5000} loop={true} />
+    <div ref={rootRef}>
+      <section className="pl-wrap pb-[clamp(28px,4vw,48px)] pt-[clamp(48px,7vw,96px)]">
+        <h1 data-in className="m-0 text-[clamp(56px,10vw,140px)] font-extrabold leading-[.88] tracking-[-0.055em]">
+          The <Em>library.</Em>
+        </h1>
+        <div data-in className="mt-6 flex flex-wrap items-end justify-between gap-x-10 gap-y-4">
+          <p className="m-0 max-w-[40ch] text-[clamp(18px,1.8vw,22px)] leading-[1.45] text-pl-body">
+            Booklets on love, family, health and nation. Free to read, free to print, free to share.
+          </p>
+          <input
+            type="search"
+            value={query}
+            onChange={e => setQuery(e.target.value)}
+            placeholder={`Search ${catalog.length} books`}
+            aria-label="Search publications"
+            className="min-h-[54px] min-w-0 flex-[0_1_340px] rounded-full border-2 border-pl-ink px-[22px] text-[16px]"
+          />
         </div>
-      )}
+      </section>
 
-      {/* Publications Grid */}
-      <h2 className="text-2xl font-serif text-red-800 mb-6 text-center leading-[1.2]">All Publications</h2>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
-        {catalog.map(book => {
-          const readablePageCount = book.pageCount ?? book.pages?.length;
-
-          return (
-            <div
-              key={book.id}
-              className="bg-white rounded-3xl shadow-xl overflow-hidden border-2 border-orange-100 hover:shadow-2xl hover:border-orange-300 transition-all duration-300 transform hover:-translate-y-2"
-            >
-              {/* Book Cover */}
-              <div className="relative h-80 bg-gradient-to-br from-red-900 to-orange-800 overflow-hidden">
-                {book.coverImage ? (
-                  <img
-                    src={book.coverImage}
-                    alt={book.title}
-                    className="w-full h-full object-cover opacity-40"
-                  />
-                ) : null}
-                <div className="absolute inset-0 flex items-center justify-center p-8">
-                  <h2 className="text-3xl md:text-4xl font-serif font-bold text-white text-center leading-tight">
-                    {book.title}
-                  </h2>
-                </div>
-                {/* Free Badge */}
-                <div className="absolute top-4 right-4 bg-amber-500 text-white px-4 py-2 rounded-full font-bold text-sm shadow-lg">
-                  FREE
-                </div>
-              </div>
-
-              {/* Book Details */}
-              <div className="p-8">
-                <div className="mb-4">
-                  <p className="text-sm text-gray-500 uppercase tracking-wider mb-2">Author</p>
-                  <p className="text-lg font-semibold text-gray-800">{book.author}</p>
-                </div>
-
-                <p className="text-gray-600 leading-relaxed mb-6">{book.description}</p>
-
-                <div className="flex items-center gap-2 text-sm text-gray-500 mb-6">
-                  <span className="px-3 py-1 bg-orange-100 text-orange-700 rounded-full font-medium">
-                    {book.type}
-                  </span>
-                  {readablePageCount ? (
-                    <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full font-medium">
-                      {readablePageCount} Pages
-                    </span>
-                  ) : null}
-                  {book.pdfUrl && (
-                    <span className="px-3 py-1 bg-red-100 text-red-700 rounded-full font-medium">
-                      PDF
-                    </span>
-                  )}
-                </div>
-
-                {/* Action Buttons */}
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <Link
-                    to={`/read/${book.id}`}
-                    className="flex-1 inline-flex items-center justify-center gap-2 bg-gradient-to-r from-red-600 to-orange-600 text-white font-bold px-6 py-3 rounded-xl hover:from-red-700 hover:to-orange-700 transition-all shadow-md hover:shadow-lg"
-                  >
-                    <BookOpen className="w-5 h-5" />
-                    {readablePageCount ? 'Read Book' : book.pdfUrl ? 'Open PDF' : 'Read Online'}
-                  </Link>
-                  {book.pdfUrl ? (
-                    <a
-                      href={book.pdfUrl}
-                      download
-                      className="flex-1 inline-flex items-center justify-center gap-2 bg-white border-2 border-orange-600 text-orange-600 font-bold px-6 py-3 rounded-xl hover:bg-orange-50 transition-all"
-                      title="Download PDF"
-                    >
-                      <Download className="w-5 h-5" />
-                      Download PDF
-                    </a>
+      <section className="pl-wrap pb-[clamp(64px,9vw,120px)]">
+        <div ref={gridRef} className="grid gap-x-[clamp(14px,2vw,28px)] gap-y-[clamp(20px,3vw,40px)] [grid-template-columns:repeat(auto-fill,minmax(min(46%,220px),1fr))]">
+          {books.map((book, i) => {
+            const pages = book.pageCount ?? book.pages?.length;
+            return (
+              <Link key={book.id} to={`/read/${book.id}`} data-book className="group block text-pl-ink no-underline hover:text-pl-ink">
+                <div
+                  className={`relative flex aspect-[3/4] flex-col justify-between overflow-hidden rounded-[6px_18px_18px_6px] border-2 border-pl-ink p-[clamp(14px,1.6vw,22px)] shadow-[4px_4px_0_#141010] transition-[transform,box-shadow] duration-500 [transition-timing-function:cubic-bezier(.3,1.5,.5,1)] group-hover:-translate-y-3 group-hover:shadow-[10px_12px_0_#141010] motion-reduce:group-hover:translate-y-0 ${
+                    i % 2 ? 'group-hover:rotate-2' : 'group-hover:-rotate-2'
+                  } ${book.coverImage ? 'bg-pl-ink' : PALETTE[i % PALETTE.length]}`}
+                >
+                  {book.coverImage ? (
+                    <img src={book.coverImage} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
                   ) : (
-                    <button
-                      type="button"
-                      onClick={() => window.print()}
-                      className="flex-1 inline-flex items-center justify-center gap-2 bg-white border-2 border-orange-600 text-orange-600 font-bold px-6 py-3 rounded-xl hover:bg-orange-50 transition-all"
-                      title="Print to PDF using your browser"
-                    >
-                      <Download className="w-5 h-5" />
-                      Print / Save PDF
-                    </button>
+                    <>
+                      <span className="pl-[10px] text-[11px] font-bold uppercase tracking-[0.08em]">{book.type}</span>
+                      <span className="pl-[10px] text-[clamp(20px,2vw,28px)] font-extrabold leading-[.95] tracking-[-0.035em]">{book.title}</span>
+                      <span className="pl-serif pl-[10px] text-[18px]">practical♥love</span>
+                    </>
                   )}
+                  <span className="absolute bottom-0 left-[10px] top-0 w-[2px] bg-current opacity-25" aria-hidden="true" />
                 </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
+                <h2 className="mb-0 mt-3 text-[17px] font-bold leading-[1.2] tracking-[-0.01em]">{book.title}</h2>
+                <div className="mt-1 flex items-baseline justify-between gap-2 text-[14px]">
+                  <span className="text-pl-muted">{pages ? `${pages} pages` : book.pdfUrl ? 'PDF' : book.type}</span>
+                  <span className="pl-serif text-[19px] text-pl-red opacity-50 transition-opacity duration-300 group-hover:opacity-100">Read →</span>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+        {books.length === 0 && (
+          <p className="mb-0 mt-10 text-[20px] text-pl-muted">
+            No book matches “{query}”. Try “love” or “family”.
+          </p>
+        )}
+      </section>
 
-      {/* Call to Action */}
-      <div className="bg-gradient-to-r from-red-600 to-orange-600 rounded-xl p-8 md:p-10 text-center shadow-xl mb-10">
-        <h2 className="text-3xl md:text-4xl font-serif text-white mb-6 leading-[1.1] tracking-[-0.015em]">
-          Share the Message of Love
-        </h2>
-        <p className="text-xl text-orange-100 mb-8 max-w-2xl mx-auto leading-relaxed">
-          These publications are free to reproduce and distribute. Help spread the message of love
-          and transformation to every corner of your nation.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link
-            to="/bible-passages"
-            className="inline-flex items-center justify-center gap-2 bg-white text-red-600 font-bold px-8 py-4 rounded-xl hover:bg-orange-50 transition-all shadow-lg"
-          >
-            Explore Bible Passages
-            <ArrowRight className="w-5 h-5" />
-          </Link>
-          <Link
-            to="/characteristics"
-            className="inline-flex items-center justify-center gap-2 bg-orange-800 text-white font-bold px-8 py-4 rounded-xl hover:bg-orange-900 transition-all shadow-lg"
-          >
-            Learn About Love
-            <Logo className="w-5 h-5" />
-          </Link>
-        </div>
-      </div>
-
-      {/* Additional Info */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-        <div className="p-6 bg-white rounded-2xl shadow-md border border-orange-100">
-          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <BookOpen className="w-8 h-8 text-red-600" />
-          </div>
-          <h3 className="text-lg font-bold text-gray-800 mb-2">Free to Read</h3>
-          <p className="text-gray-600 text-sm">
-            All publications are completely free to read online or download.
+      <section className="bg-pl-red text-white">
+        <div className="pl-wrap flex flex-wrap items-center justify-between gap-x-12 gap-y-6 py-[clamp(48px,7vw,96px)]">
+          <h2 className="m-0 max-w-[16ch] text-[clamp(36px,5vw,72px)] font-extrabold leading-[.92] tracking-[-0.045em]">
+            Reproduce them. <span className="pl-serif">Give them away.</span>
+          </h2>
+          <p className="m-0 max-w-[36ch] text-[18px] leading-[1.5]">
+            Every booklet is free to print and distribute. Help the message of love reach every home.
           </p>
         </div>
-        <div className="p-6 bg-white rounded-2xl shadow-md border border-orange-100">
-          <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Download className="w-8 h-8 text-orange-600" />
-          </div>
-          <h3 className="text-lg font-bold text-gray-800 mb-2">Free to Share</h3>
-          <p className="text-gray-600 text-sm">
-            Reproduce and distribute these materials to anyone, anywhere.
-          </p>
-        </div>
-        <div className="p-6 bg-white rounded-2xl shadow-md border border-orange-100">
-          <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Logo className="w-8 h-8" />
-          </div>
-          <h3 className="text-lg font-bold text-gray-800 mb-2">Transform Lives</h3>
-          <p className="text-gray-600 text-sm">
-            Help spread the message of love and bring blessings to nations.
-          </p>
-        </div>
-      </div>
-    </PageShell>
+      </section>
+    </div>
   );
 }
