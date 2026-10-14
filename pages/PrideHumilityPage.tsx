@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { Em } from '../components/pl/primitives';
+import { PRIDE_HUMILITY_PAIRS as PAIRS } from '../data/prideHumility';
 import { useEntrance, usePopOnChange, useScrollReveal, useStagger } from '../components/pl/motion';
 
 const SIGNS = [
@@ -30,13 +31,6 @@ const RESULTS = [
     panel: 'bg-pl-red text-white',
     bar: 'bg-white',
   },
-];
-
-const PAIRS = [
-  { pride: 'I was only trying to help.', humility: 'You’re right. I’m sorry.' },
-  { pride: 'Did you see what I did?', humility: 'I’m glad it got done.' },
-  { pride: 'They should come to me first.', humility: 'I’ll go to them first.' },
-  { pride: 'I don’t need advice.', humility: 'Tell me what you see.' },
 ];
 
 export default function PrideHumilityPage() {
