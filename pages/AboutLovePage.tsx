@@ -68,7 +68,7 @@ export default function AboutLovePage() {
         </div>
         <div data-in className="relative aspect-square w-[min(100%,460px)] justify-self-center">
           <div className="absolute inset-[28px] overflow-hidden rounded-full border-2 border-pl-ink bg-pl-blush">
-            <ImageSlot src="/love-hero.png" alt="A family sharing a moment of love at home" label="A family at home" />
+            <ImageSlot src="/love-hero.webp" alt="A family sharing a moment of love at home" label="A family at home" />
           </div>
           <div ref={ringRef} className="pointer-events-none absolute inset-0" aria-hidden="true">
             <svg viewBox="0 0 200 200" className="h-full w-full">
