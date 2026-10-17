@@ -1,852 +1,185 @@
-import { useEffect, useState } from 'react';
-import {
-  BookOpen,
-  Filter,
-  X,
-  PenLine,
-  Lightbulb,
-  Sparkles,
-  AlertTriangle,
-} from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { PageHero, PageShell } from '../components/ui';
-import Logo from '../components/Logo';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Em } from '../components/pl/primitives';
+import { EASE_POP, animate, prefersReducedMotion, useEntrance, usePopOnChange } from '../components/pl/motion';
+import { PASSAGES } from '../data/lovePassages';
 
-interface BiblePassage {
-  reference: string;
-  text: string;
-  explanation: string;
-  application: string;
-  category: 'command' | 'example' | 'promise' | 'warning';
+const GROUPS = ['All', 'Gospels', 'Paul', 'Letters'] as const;
+type Group = (typeof GROUPS)[number];
+
+const GOSPELS = ['Matthew', 'Mark', 'Luke', 'John'];
+const PAUL = [
+  'Romans',
+  '1 Corinthians',
+  '2 Corinthians',
+  'Galatians',
+  'Ephesians',
+  'Philippians',
+  'Colossians',
+  '1 Thessalonians',
+  '2 Thessalonians',
+  '1 Timothy',
+  '2 Timothy',
+  'Titus',
+  'Philemon',
+];
+
+function groupOf(reference: string): Exclude<Group, 'All'> {
+  const book = reference.replace(/\s+\d+(:.*)?$/, '');
+  if (GOSPELS.includes(book)) return 'Gospels';
+  if (PAUL.includes(book)) return 'Paul';
+  return 'Letters';
 }
 
-type CategoryFilter = 'all' | 'command' | 'example' | 'promise' | 'warning';
-
-const categoryConfig = {
-  command: {
-    label: 'Command',
-    icon: <PenLine className="w-4 h-4" />,
-    color: 'bg-orange-500',
-    textColor: 'text-red-600',
-    bgLight: 'bg-orange-100',
-    borderColor: 'border-orange-300',
-  },
-  example: {
-    label: 'Example',
-    icon: <Lightbulb className="w-4 h-4" />,
-    color: 'bg-orange-500',
-    textColor: 'text-red-600',
-    bgLight: 'bg-orange-100',
-    borderColor: 'border-orange-300',
-  },
-  promise: {
-    label: 'Promise',
-    icon: <Sparkles className="w-4 h-4" />,
-    color: 'bg-amber-500',
-    textColor: 'text-orange-600',
-    bgLight: 'bg-amber-100',
-    borderColor: 'border-amber-300',
-  },
-  warning: {
-    label: 'Warning',
-    icon: <AlertTriangle className="w-4 h-4" />,
-    color: 'bg-red-500',
-    textColor: 'text-red-600',
-    bgLight: 'bg-red-100',
-    borderColor: 'border-red-300',
-  },
-};
+const START = Math.max(
+  0,
+  PASSAGES.findIndex(p => p.reference === 'John 3:16')
+);
 
 export default function BiblePassagesPage() {
-  // State management
-  const [activeFilter, setActiveFilter] = useState<CategoryFilter>('all');
-  const [selectedPassage, setSelectedPassage] = useState<number | null>(null);
-  const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
+  const [group, setGroup] = useState<Group>('All');
+  const [query, setQuery] = useState('');
+  const [spot, setSpot] = useState(START);
+  const [copied, setCopied] = useState(false);
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  const spotRef = useRef<HTMLDivElement | null>(null);
+  const listRef = useRef<HTMLDivElement | null>(null);
+  const copyTimer = useRef<number | undefined>(undefined);
 
-  // Popup management functions
-  const openPopup = (index: number, event: React.MouseEvent<HTMLDivElement>) => {
-    const card = event.currentTarget;
-    const container = card.closest('.grid')?.parentElement;
+  useEntrance(rootRef);
+  usePopOnChange(spotRef, spot, [
+    { transform: 'translateY(24px)', opacity: 0 },
+    { transform: 'none', opacity: 1 },
+  ]);
 
-    if (!container) return;
-
-    const cardRect = card.getBoundingClientRect();
-    const containerRect = container.getBoundingClientRect();
-
-    // Calculate position relative to the container
-    const relativeTop = cardRect.top - containerRect.top + container.scrollTop;
-    const relativeLeft = cardRect.right - containerRect.left + 10; // 10px gap to the right
-
-    // Check if popup would overflow on the right
-    const popupWidth = 340;
-
-    let left = relativeLeft;
-    let top = relativeTop;
-
-    // If would overflow right, position to the left of the card
-    if (cardRect.right + popupWidth + 10 > containerRect.right) {
-      left = cardRect.left - containerRect.left - popupWidth - 10;
-    }
-
-    // If still would overflow left, position below the card
-    if (left < 0) {
-      left = cardRect.left - containerRect.left;
-      top = relativeTop + cardRect.height + 10;
-    }
-
-    setPopupPosition({ top, left });
-    setSelectedPassage(index);
-  };
-
-  const closePopup = () => {
-    setSelectedPassage(null);
-  };
-
-  // Escape closes the popup, so the pointer-only backdrop is never the only way out.
   useEffect(() => {
-    if (selectedPassage === null) return;
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setSelectedPassage(null);
-    };
-    document.addEventListener('keydown', onKeyDown);
-    return () => document.removeEventListener('keydown', onKeyDown);
-  }, [selectedPassage]);
+    if (prefersReducedMotion()) return;
+    listRef.current?.querySelectorAll<HTMLElement>('[data-v]').forEach((el, i) =>
+      animate(
+        el,
+        [
+          { transform: 'translateY(40px)', opacity: 0 },
+          { transform: 'none', opacity: 1 },
+        ],
+        { duration: 650, delay: 200 + Math.min(i, 12) * 50, easing: EASE_POP, fill: 'backwards' }
+      )
+    );
+  }, []);
 
-  // Bible passages data - 50 foundational verses about love
-  const passages: BiblePassage[] = [
-    {
-      reference: 'Matthew 5:43-45',
-      text: "You have heard that it was said, 'Love your neighbor and hate your enemy.' But I tell you, love your enemies and pray for those who persecute you, that you may be children of your Father in heaven.",
-      explanation: 'Love extends beyond friends to enemies.',
-      application: 'Pray for someone who has wronged you today.',
-      category: 'command',
-    },
-    {
-      reference: 'Matthew 19:19',
-      text: "honor your father and mother,' and 'love your neighbor as yourself.'",
-      explanation: 'The summary of the commandments regarding others.',
-      application: 'Show honor to your parents and love to a neighbor.',
-      category: 'command',
-    },
-    {
-      reference: 'Matthew 22:37-39',
-      text: "Jesus replied: 'Love the Lord your God with all your heart and with all your soul and with all your mind.' This is the first and greatest commandment. And the second is like it: 'Love your neighbor as yourself.'",
-      explanation: 'The Great Commandment.',
-      application: 'Prioritize God first, then others.',
-      category: 'command',
-    },
-    {
-      reference: 'Mark 12:31-33',
-      text: "The second is this: 'Love your neighbor as yourself.' There is no commandment greater than these... To love him with all your heart... and to love your neighbor as yourself is more important than all burnt offerings and sacrifices.",
-      explanation: 'Love is more important than religious ritual.',
-      application: 'Focus on love over ritual.',
-      category: 'command',
-    },
-    {
-      reference: 'Luke 6:27',
-      text: 'But to you who are listening I say: Love your enemies, do good to those who hate you.',
-      explanation: 'Active love towards opposition.',
-      application: 'Do one good deed for someone you dislike.',
-      category: 'command',
-    },
-    {
-      reference: 'Luke 6:32-35',
-      text: 'If you love those who love you, what credit is that to you? ... But love your enemies, do good to them, and lend to them without expecting to get anything back.',
-      explanation:
-        'When operating in love, no human being can stop your blessing and promotion under the sun.',
-      application: 'Give without expecting repayment.',
-      category: 'command',
-    },
-    {
-      reference: 'John 3:16',
-      text: 'For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life.',
-      explanation:
-        'The ultimate example of sacrificial love from God in heaven by giving the best of the best from heaven to those of us who do not deserve it.',
-      application: "Believe and receive God's love.",
-      category: 'example',
-    },
-    {
-      reference: 'John 13:34-35',
-      text: 'A new command I give you: Love one another. As I have loved you, so you must love one another. By this everyone will know that you are my disciples, if you love one another.',
-      explanation: 'The mark of a true disciple is love.',
-      application: 'Love others as Jesus loved you.',
-      category: 'command',
-    },
-    {
-      reference: 'John 14:15',
-      text: 'If you love me, keep my commands.',
-      explanation: 'Obedience is thicker than blood.',
-      application: "Obey God's word as an act of love.",
-      category: 'command',
-    },
-    {
-      reference: 'John 14:21-31',
-      text: 'Whoever has my commands and keeps them is the one who loves me... I love the Father and do exactly what my Father has commanded me.',
-      explanation: 'Love serves as the motivation for obedience.',
-      application: 'Let your love for God drive your actions.',
-      category: 'command',
-    },
-    {
-      reference: 'John 15:9-19',
-      text: 'As the Father has loved me, so have I loved you. Now remain in my love... My command is this: Love each other as I have loved you.',
-      explanation: 'Jesus is the only role model.',
-      application: "Spend time in God's presence.",
-      category: 'command',
-    },
-    {
-      reference: 'Romans 8:28',
-      text: 'And we know that in all things God works for the good of those who love him, who have been called according to his purpose.',
-      explanation: "God's sovereignty works for lovers of God.",
-      application: "Trust God's plan in difficult times.",
-      category: 'promise',
-    },
-    {
-      reference: 'Romans 8:35-39',
-      text: 'Who shall separate us from the love of Christ? ... For I am convinced that neither death nor life... nor anything else in all creation, will be able to separate us from the love of God.',
-      explanation: "The security of God's love.",
-      application: "Rest in the assurance of God's love.",
-      category: 'promise',
-    },
-    {
-      reference: 'Romans 12:9-10',
-      text: 'Love must be sincere. Hate what is evil; cling to what is good. Be devoted to one another in love. Honor one another above yourselves.',
-      explanation: 'Marks of a true Christian.',
-      application: 'Serve someone else before yourself.',
-      category: 'command',
-    },
-    {
-      reference: 'Romans 13:8',
-      text: 'Let no debt remain outstanding, except the continuing debt to love one another, for whoever loves others has fulfilled the law.',
-      explanation: 'Love is a perpetual obligation.',
-      application: "Look for ways to pay your 'debt' of love.",
-      category: 'command',
-    },
-    {
-      reference: 'Romans 13:9',
-      text: "The commandments... are summed up in this one rule: 'Love your neighbor as yourself.'",
-      explanation: 'Love fulfills the commandments.',
-      application: 'Treat your neighbor as you would want to be treated.',
-      category: 'command',
-    },
-    {
-      reference: 'Romans 13:10',
-      text: 'Love does no harm to a neighbor. Therefore love is the fulfillment of the law.',
-      explanation: 'Love is harmless and helpful.',
-      application: 'Ensure your actions harm no one.',
-      category: 'command',
-    },
-    {
-      reference: '1 Corinthians 2:9',
-      text: "However, as it is written: 'What no eye has seen, what no ear has heard, and what no human mind has conceived' — the things God has prepared for those who love him.",
-      explanation:
-        'Future glory for those who love God with present blessing and favour for those who operate in love.',
-      application: "Hope in God's future promises.",
-      category: 'promise',
-    },
-    {
-      reference: '1 Corinthians 13',
-      text: 'Love is patient, love is kind... It always protects, always trusts, always hopes, always perseveres. Love never fails.',
-      explanation: 'The definition and character of love.',
-      application: 'Practice one specific characteristic of love today.',
-      category: 'command',
-    },
-    {
-      reference: 'Galatians 5:6',
-      text: 'For in Christ Jesus neither circumcision nor uncircumcision has any value. The only thing that counts is faith expressing itself through love.',
-      explanation: 'Faith works through love.',
-      application: 'Let your faith be seen in your love.',
-      category: 'command',
-    },
-    {
-      reference: 'Galatians 5:13-22',
-      text: 'serve one another humbly in love... But the fruit of the Spirit is love, joy, peace...',
-      explanation: 'Freedom is for serving in love.',
-      application: 'Serve someone humbly today.',
-      category: 'command',
-    },
-    {
-      reference: 'Ephesians 4:2',
-      text: 'Be completely humble and gentle; be patient, bearing with one another in love.',
-      explanation: 'Unity requires loving patience.',
-      application: 'Be patient with a difficult person.',
-      category: 'command',
-    },
-    {
-      reference: 'Ephesians 4:15',
-      text: 'Instead, speaking the truth in love, we will grow to become in every respect the mature body of him who is the head, that is, Christ.',
-      explanation: 'Truth and love must go together.',
-      application: 'Speak a hard truth with gentleness.',
-      category: 'command',
-    },
-    {
-      reference: 'Ephesians 5:2',
-      text: 'and walk in the way of love, just as Christ loved us and gave himself up for us as a fragrant offering and sacrifice to God.',
-      explanation: "Imitate Christ's sacrificial walk.",
-      application: 'Sacrifice your preference for another.',
-      category: 'command',
-    },
-    {
-      reference: 'Ephesians 5:25',
-      text: 'Husbands, love your wives, just as Christ loved the church and gave himself up for her.',
-      explanation:
-        "Sacrificial love in marriage does not depend on the wife's action — irrespective of their action.",
-      application: 'Husbands, do something special for your wives.',
-      category: 'command',
-    },
-    {
-      reference: 'Ephesians 5:28',
-      text: 'In this same way, husbands ought to love their wives as their own bodies. He who loves his wife loves himself.',
-      explanation: "Caring for one's wife is self-care.",
-      application: "Care for your spouse's needs.",
-      category: 'command',
-    },
-    {
-      reference: 'Ephesians 5:33',
-      text: 'However, each one of you also must love his wife as he loves himself, and the wife must respect her husband.',
-      explanation: 'Summary of marital duties.',
-      application: 'Love and respect in your marriage.',
-      category: 'command',
-    },
-    {
-      reference: 'Colossians 3:14',
-      text: 'And over all these virtues put on love, which binds them all together in perfect unity.',
-      explanation: 'Love is the binding virtue.',
-      application: 'Let love unify your other actions.',
-      category: 'command',
-    },
-    {
-      reference: '1 Thessalonians 4:9',
-      text: 'Now about your love for one another we do not need to write to you, for you yourselves have been taught by God to love each other.',
-      explanation: 'God teaches us to love.',
-      application: 'Ask God to teach you how to love better.',
-      category: 'command',
-    },
-    {
-      reference: '1 Timothy 1:5',
-      text: 'The goal of this command is love, which comes from a pure heart and a good conscience and a sincere faith.',
-      explanation: 'The purpose of instruction is love.',
-      application: 'Check your motives: are they loving?',
-      category: 'command',
-    },
-    {
-      reference: '2 Timothy 1:7',
-      text: 'For the Spirit God gave us does not make us timid, but gives us power, love and self-discipline.',
-      explanation:
-        "God's Spirit is not the spirit of fear — any spirit of fear is not a spirit of God.",
-      application: "Rely on the Spirit's power to love.",
-      category: 'promise',
-    },
-    {
-      reference: 'Titus 2:4',
-      text: 'Then they can urge the younger women to love their husbands and children.',
-      explanation: 'Love is learned and taught.',
-      application: 'Mentor someone in loving their family.',
-      category: 'command',
-    },
-    {
-      reference: 'Philemon 1:5-10',
-      text: 'I hear about your love for all his holy people and your faith in the Lord Jesus... Your love has given me great joy and encouragement.',
-      explanation: 'Love refreshes others.',
-      application: 'Refresh someone with your love.',
-      category: 'example',
-    },
-    {
-      reference: 'Hebrews 10:24',
-      text: 'And let us consider how we may spur one another on toward love and good deeds.',
-      explanation: 'Encourage others to love.',
-      application: 'Encourage a friend to do good.',
-      category: 'command',
-    },
-    {
-      reference: 'Hebrews 13:1',
-      text: 'Keep on loving one another as brothers and sisters.',
-      explanation: 'Brotherly love should continue.',
-      application: 'Treat church members as family.',
-      category: 'command',
-    },
-    {
-      reference: 'James 2:8',
-      text: "If you really keep the royal law found in Scripture, 'Love your neighbor as yourself,' you are doing right.",
-      explanation: 'The Royal Law.',
-      application: 'Fulfill the royal law today.',
-      category: 'command',
-    },
-    {
-      reference: '1 Peter 1:8',
-      text: 'Though you have not seen him, you love him; and even though you do not see him now, you believe in him and are filled with an inexpressible and glorious joy.',
-      explanation: 'Loving the unseen Christ.',
-      application: 'Express your love to Jesus.',
-      category: 'promise',
-    },
-    {
-      reference: '1 Peter 3:10',
-      text: "For, 'Whoever would love life and see good days must keep their tongue from evil and their lips from deceitful speech.'",
-      explanation: 'Meaning and speaking the truth always.',
-      application: 'Speak only good today.',
-      category: 'command',
-    },
-    {
-      reference: '1 Peter 4:8',
-      text: 'Above all, love each other deeply, because love covers over a multitude of sins.',
-      explanation: 'Love forgives and overlooks offenses.',
-      application: 'Forgive a repeat offense.',
-      category: 'command',
-    },
-    {
-      reference: '1 John 3:14',
-      text: 'We know that we have passed from death to life, because we love each other. Anyone who does not love remains in death.',
-      explanation: 'Love is evidence of salvation.',
-      application: 'Examine your heart for love for believers.',
-      category: 'command',
-    },
-    {
-      reference: '1 John 3:16-23',
-      text: 'This is how we know what love is: Jesus Christ laid down his life for us. And we ought to lay down our lives for our brothers and sisters... let us not love with words or speech but with actions and in truth.',
-      explanation: 'Love is practical action.',
-      application: 'Do a tangible act of love.',
-      category: 'command',
-    },
-    {
-      reference: '1 John 4:7-9',
-      text: 'Dear friends, let us love one another, for love comes from God... This is how God showed his love among us: He sent his one and only Son into the world that we might live through him.',
-      explanation: 'God is the source of love.',
-      application: 'Connect with God to love others.',
-      category: 'command',
-    },
-    {
-      reference: '1 John 4:20-21',
-      text: 'Whoever claims to love God yet hates a brother or sister is a liar... Anyone who loves God must also love their brother and sister.',
-      explanation: 'Loving God requires loving people.',
-      application: 'Mend a broken relationship.',
-      category: 'warning',
-    },
-    {
-      reference: '2 John 1:5-6',
-      text: 'I am writing to remind you, dear friends, that we should love one another. This is not a new commandment, but one we have had from the beginning. Love means doing what God has commanded us.',
-      explanation: 'Love involves obedience.',
-      application: "Walk in God's commandments.",
-      category: 'command',
-    },
-    {
-      reference: '2 John 1:1-6',
-      text: '(Same passage context - emphasize walking in truth and love)',
-      explanation: 'Truth and love.',
-      application: 'Be true and loving.',
-      category: 'command',
-    },
-    {
-      reference: '3 John 1',
-      text: 'The elder, To my dear friend Gaius, whom I love in the truth.',
-      explanation: 'Personal affection in truth.',
-      application: 'Express affection to a friend.',
-      category: 'example',
-    },
-    {
-      reference: 'Jude 1:2',
-      text: 'Mercy, peace and love be yours in abundance.',
-      explanation: 'A blessing of love.',
-      application: 'Pray this blessing for someone.',
-      category: 'promise',
-    },
-    {
-      reference: 'Jude 1:21',
-      text: "Keep yourselves in God's love as you wait for the mercy of our Lord Jesus Christ to bring you to eternal life.",
-      explanation: "Remain in God's love.",
-      application: 'Stay close to God today.',
-      category: 'command',
-    },
-    {
-      reference: 'Revelation 2:4',
-      text: 'Yet I hold this against you: You have forsaken the love you had at first.',
-      explanation: "Don't lose your first love.",
-      application: 'Return to your initial passion for Christ.',
-      category: 'warning',
-    },
-    {
-      reference: 'Revelation 3:19',
-      text: 'Those whom I love I rebuke and discipline. So be earnest and repent.',
-      explanation: 'Discipline is a sign of love.',
-      application: "Accept correction as God's love.",
-      category: 'promise',
-    },
-  ];
+  useEffect(() => () => window.clearTimeout(copyTimer.current), []);
 
-  // Main render function
+  const list = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return PASSAGES.map((p, i) => ({ p, i })).filter(
+      ({ p }) => (group === 'All' || groupOf(p.reference) === group) && (!q || `${p.reference} ${p.text}`.toLowerCase().includes(q))
+    );
+  }, [group, query]);
+
+  const current = PASSAGES[spot];
+
+  const pick = (i: number) => {
+    setSpot(i);
+    setCopied(false);
+    window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+  };
+
+  const shuffle = () => {
+    let next = spot;
+    while (next === spot) next = Math.floor(Math.random() * PASSAGES.length);
+    setSpot(next);
+    setCopied(false);
+  };
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(`“${current.text}” ${current.reference}`);
+      setCopied(true);
+      window.clearTimeout(copyTimer.current);
+      copyTimer.current = window.setTimeout(() => setCopied(false), 1800);
+    } catch {
+      // Clipboard can be blocked; the verse stays on screen to copy by hand.
+    }
+  };
+
   return (
-    <PageShell
-      className="bg-gradient-to-b from-orange-100 to-red-50"
-      containerClassName="py-16 section-gap"
-    >
-      <PageHero
-        className="mb-10"
-        badge={
-          <>
-            <BookOpen className="w-4 h-4" />
-            New Testament Study
-          </>
-        }
-        icon={
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center shadow-sm">
-            <Logo className="w-6 h-6" />
+    <div ref={rootRef}>
+      <section className="bg-pl-red text-white">
+        <div className="pl-wrap py-[clamp(48px,8vw,104px)]">
+          <p data-in className="m-0 text-[14px] font-bold uppercase tracking-[0.08em]">
+            Verse spotlight
+          </p>
+          <div ref={spotRef} aria-live="polite">
+            <p className="pl-serif mb-0 mt-4 max-w-[22ch] text-[clamp(36px,5.6vw,80px)] not-italic leading-[1.04] tracking-[-0.01em]">
+              “{current.text}”
+            </p>
+            <p className="mb-0 mt-5 text-[20px] font-extrabold">{current.reference}</p>
+            <p className="mb-0 mt-2 max-w-[48ch] text-[17px] leading-[1.45] text-white/85">
+              <span className="font-bold text-white">Practise it:</span> {current.application}
+            </p>
           </div>
-        }
-        title={
-          <>
-            Love Passages in <span className="text-orange-700">the New Testament</span>
-          </>
-        }
-        subtitle={
-          <>
-            Explore 50 foundational passages about love that guide our ministry and daily life.
-            <span className="block text-sm font-semibold text-orange-700 mt-2">
-              Click any reference to read the verse.
-            </span>
-          </>
-        }
-      >
-        <div className="bg-white border-l-8 border-amber-500 rounded-xl p-6 md:p-7 max-w-3xl shadow-sm">
-          <p className="text-2xl font-serif font-bold text-gray-900 mb-2">
-            "For God so loved the world"{' '}
-            <span className="text-base text-gray-500 font-sans">(John 3:16)</span>
-          </p>
-          <p className="text-gray-700 font-medium text-lg">
-            This includes every human being on this planet —{' '}
-            <span className="text-red-700 font-bold uppercase">NO EXCEPTION!</span>
-          </p>
+          <div data-in className="mt-7 flex flex-wrap gap-3">
+            <button type="button" onClick={shuffle} className="pl-btn pl-btn-white">
+              Another verse ↻
+            </button>
+            <button type="button" onClick={copy} className="pl-btn pl-btn-outline-light">
+              {copied ? 'Copied ✓' : 'Copy verse'}
+            </button>
+          </div>
         </div>
-      </PageHero>
+      </section>
 
-        {/* Category Legend and Filter */}
-        <div className="bg-white rounded-2xl p-6 md:p-8 shadow-lg border border-orange-100 mb-8">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <Filter className="w-5 h-5 text-gray-600" />
-              <span className="font-semibold text-gray-700">Filter by Category:</span>
-            </div>
-            <div className="flex flex-wrap gap-3">
+      <section className="pl-wrap pb-[clamp(24px,3vw,40px)] pt-[clamp(48px,7vw,88px)]">
+        <h1 data-in className="m-0 text-[clamp(48px,8vw,112px)] font-extrabold leading-[.88] tracking-[-0.055em]">
+          Love passages <Em>to read aloud.</Em>
+        </h1>
+        <div className="mt-7 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex flex-wrap gap-2" role="group" aria-label="Filter by book group">
+            {GROUPS.map(g => (
               <button
+                key={g}
                 type="button"
-                onClick={() => setActiveFilter('all')}
-                className={`min-h-[44px] min-w-[44px] px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
-                  activeFilter === 'all'
-                    ? 'bg-gray-800 text-white shadow-md'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                aria-pressed={group === g}
+                onClick={() => setGroup(g)}
+                className={`min-h-[44px] rounded-full border-2 border-pl-ink px-[18px] text-[15px] font-semibold transition-colors duration-200 ${
+                  group === g ? 'bg-pl-ink text-white' : 'bg-white text-pl-ink'
                 }`}
               >
-                All ({passages.length})
+                {g}
               </button>
-              {(Object.keys(categoryConfig) as Array<keyof typeof categoryConfig>).map(category => {
-                const config = categoryConfig[category];
-                const count = passages.filter(p => p.category === category).length;
-                return (
-                  <button
-                    key={category}
-                    type="button"
-                    onClick={() => setActiveFilter(category)}
-                    className={`min-h-[44px] min-w-[44px] px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 ${
-                      activeFilter === category
-                        ? `${config.color} text-white shadow-md`
-                        : `${config.bgLight} ${config.textColor} hover:opacity-80`
-                    }`}
-                  >
-                    <span className="shrink-0">{config.icon}</span>
-                    <span>{config.label}</span>
-                    <span
-                      className={`text-xs px-1.5 py-0.5 rounded-full ${
-                        activeFilter === category ? 'bg-white/20' : 'bg-white/50'
-                      }`}
-                    >
-                      {count}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
+            ))}
           </div>
-
-          {/* Legend Description */}
-          <div className="mt-6 pt-6 border-t border-gray-100">
-            <p className="text-sm text-gray-500 mb-3 font-medium">Category Descriptions:</p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-              <div className="flex items-start gap-2 p-3 bg-orange-50 rounded-lg">
-                <PenLine className="w-5 h-5 text-red-700 mt-0.5" />
-                <div>
-                  <p className="font-semibold text-red-800 text-sm">Command</p>
-                  <p className="text-xs text-red-600">Instructions to follow</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-2 p-3 bg-orange-50 rounded-lg">
-                <Lightbulb className="w-5 h-5 text-red-700 mt-0.5" />
-                <div>
-                  <p className="font-semibold text-red-800 text-sm">Example</p>
-                  <p className="text-xs text-red-600">Love demonstrated</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-2 p-3 bg-amber-50 rounded-lg">
-                <Sparkles className="w-5 h-5 text-orange-700 mt-0.5" />
-                <div>
-                  <p className="font-semibold text-orange-800 text-sm">Promise</p>
-                  <p className="text-xs text-orange-600">God's assurances</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-2 p-3 bg-red-50 rounded-lg">
-                <AlertTriangle className="w-5 h-5 text-red-700 mt-0.5" />
-                <div>
-                  <p className="font-semibold text-red-800 text-sm">Warning</p>
-                  <p className="text-xs text-red-600">Cautions to heed</p>
-                </div>
-              </div>
-            </div>
-          </div>
+          <input
+            type="search"
+            value={query}
+            onChange={e => setQuery(e.target.value)}
+            placeholder="Search a word, e.g. enemy"
+            aria-label="Search passages"
+            className="min-h-[52px] w-full flex-[0_1_320px] rounded-full border-2 border-pl-ink bg-white px-5 text-[16px] text-pl-ink"
+          />
         </div>
+      </section>
 
-        <div className="bg-white rounded-2xl p-8 md:p-12 shadow-xl border border-orange-100 overflow-visible relative">
-          {/* Show filtered count */}
-          {activeFilter !== 'all' && (
-            <div className="mb-6 flex items-center justify-between">
-              <p className="text-gray-600">
-                Showing{' '}
-                <span className="font-semibold text-gray-800">
-                  {passages.filter(p => p.category === activeFilter).length}
-                </span>{' '}
-                {categoryConfig[activeFilter]?.label.toLowerCase()} passages
-              </p>
-              <button
-                type="button"
-                onClick={() => setActiveFilter('all')}
-                className="text-sm text-orange-600 hover:text-orange-700 font-medium"
-              >
-                Clear filter
-              </button>
-            </div>
-          )}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 overflow-visible">
-            {passages
-              .filter(passage => activeFilter === 'all' || passage.category === activeFilter)
-              .map(passage => {
-                const config = categoryConfig[passage.category];
-                const originalIndex = passages.indexOf(passage);
-                return (
-                  <div
-                    key={originalIndex}
-                    className={`group relative bg-orange-50 rounded-xl p-4 shadow-sm hover:shadow-xl hover:bg-orange-100 transition-shadow duration-300 cursor-pointer border-2 ${config.borderColor} hover:border-orange-300 min-h-[100px]`}
-                    role="button"
-                    tabIndex={0}
-                    aria-label={`View passage ${passage.reference}`}
-                    onClick={e => openPopup(originalIndex, e)}
-                    onKeyDown={e => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        openPopup(originalIndex, e as unknown as React.MouseEvent<HTMLDivElement>);
-                      }
-                    }}
-                  >
-                    {/* Category indicator dot */}
-                    <div
-                      className={`absolute top-2 right-2 w-3 h-3 rounded-full ${config.color}`}
-                      title={config.label}
-                    ></div>
-                    <span className="text-xs text-orange-500 font-bold uppercase tracking-wider block mb-1">
-                      #{originalIndex + 1}
-                    </span>
-                    <p className="text-sm md:text-base font-bold text-gray-800 group-hover:text-red-700 transition-colors">
-                      {passage.reference}
-                    </p>
-                    {/* Category badge */}
-                    <span
-                      className={`inline-block mt-2 text-[10px] px-2 py-0.5 rounded-full ${config.bgLight} ${config.textColor} font-medium`}
-                    >
-                      {config.icon} {config.label}
-                    </span>
-                  </div>
-                );
-              })}
-          </div>
-
-          {/* Popup positioned next to the card */}
-          {selectedPassage !== null && (
-            <>
-              {/* Pointer-only backdrop; keyboard users close with Escape or the close button. */}
-              <div
-                className="fixed inset-0"
-                style={{ zIndex: 99998 }}
-                onClick={closePopup}
-                aria-hidden="true"
-              />
-
-              {/* Popup */}
-              <div
-                className="absolute w-[340px] bg-white rounded-2xl shadow-2xl border-2 border-orange-400 overflow-hidden"
-                style={{
-                  top: `${popupPosition.top}px`,
-                  left: `${popupPosition.left}px`,
-                  zIndex: 99999,
-                  maxHeight: '80vh',
-                }}
-              >
-                {/* Header */}
-                <div
-                  className={`p-4 border-b ${
-                    passages[selectedPassage].category === 'command'
-                      ? 'bg-orange-50 border-orange-200'
-                      : passages[selectedPassage].category === 'promise'
-                        ? 'bg-amber-50 border-amber-200'
-                        : passages[selectedPassage].category === 'warning'
-                          ? 'bg-red-50 border-red-200'
-                          : 'bg-orange-50 border-orange-200'
-                  }`}
-                >
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-                        #{selectedPassage + 1}
-                      </span>
-                      <h3 className="text-lg font-serif font-bold text-gray-800 mt-1">
-                        {passages[selectedPassage].reference}
-                      </h3>
-                      <span
-                        className={`inline-block mt-1 text-xs px-2 py-0.5 rounded-full font-medium ${
-                          passages[selectedPassage].category === 'command'
-                            ? 'bg-orange-100 text-red-700'
-                            : passages[selectedPassage].category === 'promise'
-                              ? 'bg-amber-100 text-orange-700'
-                              : passages[selectedPassage].category === 'warning'
-                                ? 'bg-red-100 text-red-700'
-                                : 'bg-orange-100 text-red-700'
-                        }`}
-                      >
-                        {categoryConfig[passages[selectedPassage].category].icon}{' '}
-                        {categoryConfig[passages[selectedPassage].category].label}
-                      </span>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={closePopup}
-                      className="relative p-1.5 hover:bg-gray-200 rounded-full transition-colors before:absolute before:-inset-1.5 before:content-['']"
-                      aria-label="Close popup"
-                    >
-                      <X className="w-5 h-5 text-gray-500" />
-                    </button>
-                  </div>
-                </div>
-
-                {/* Content - scrollable */}
-                <div
-                  className="p-4 space-y-4 overflow-y-auto"
-                  style={{ maxHeight: 'calc(80vh - 120px)' }}
-                >
-                  {/* Scripture Text */}
-                  <div className="bg-orange-50 border-l-4 border-orange-400 p-3 rounded-r-lg">
-                    <p className="text-gray-800 italic leading-relaxed text-sm">
-                      "{passages[selectedPassage].text}"
-                    </p>
-                  </div>
-
-                  {/* Explanation */}
-                  {passages[selectedPassage].explanation && (
-                    <div>
-                      <h4 className="font-bold text-gray-700 mb-1 text-sm flex items-center">
-                        <span className="w-1.5 h-1.5 bg-red-500 rounded-full mr-2"></span>
-                        Meaning
-                      </h4>
-                      <p className="text-gray-600 leading-relaxed text-sm">
-                        {passages[selectedPassage].explanation}
-                      </p>
-                    </div>
-                  )}
-
-                  {/* Application */}
-                  {passages[selectedPassage].application && (
-                    <div className="bg-amber-50 p-3 rounded-xl border border-amber-200">
-                      <h4 className="font-bold text-orange-800 mb-1 text-sm flex items-center">
-                        <Lightbulb className="w-4 h-4 mr-1" />
-                        Application
-                      </h4>
-                      <p className="text-orange-700 leading-relaxed text-sm">
-                        {passages[selectedPassage].application}
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </>
-          )}
-        </div>
-
-        <div className="mt-20 flex flex-col items-center">
-          <div className="bg-white rounded-2xl p-8 md:p-10 shadow-lg max-w-4xl w-full border-t-4 border-red-800">
-            <h3 className="text-2xl font-serif text-red-800 mb-6 flex items-center">
-              <BookOpen className="w-6 h-6 mr-2" />
-              Study & Application Guide
-            </h3>
-            <div className="space-y-4 text-gray-700 leading-relaxed">
-              <div className="flex items-start">
-                <span className="bg-red-100 text-red-800 font-bold rounded-full w-6 h-6 flex items-center justify-center mr-3 mt-1 text-sm">
-                  1
-                </span>
-                <p>
-                  Download the free books:{' '}
-                  <span className="font-semibold text-gray-900">
-                    Love Nigerian or Live on Curses
-                  </span>{' '}
-                  and{' '}
-                  <span className="font-semibold text-gray-900">
-                    Love Americans or Live on Curses
-                  </span>{' '}
-                  from our publications page.
-                </p>
-              </div>
-              <div className="flex items-start">
-                <span className="bg-red-100 text-red-800 font-bold rounded-full w-6 h-6 flex items-center justify-center mr-3 mt-1 text-sm">
-                  2
-                </span>
-                <p>
-                  Use a <span className="font-semibold">Life Application Bible Commentary</span> to
-                  study these 50 passages in depth (passages 1-50).
-                </p>
-              </div>
-              <div className="flex items-start">
-                <span className="bg-red-100 text-red-800 font-bold rounded-full w-6 h-6 flex items-center justify-center mr-3 mt-1 text-sm">
-                  3
-                </span>
-                <p>
-                  See the power of love in action by visiting our{' '}
-                  <a
-                    href="/testimonies"
-                    className="text-red-600 font-bold hover:underline inline-block min-h-[44px] py-2"
-                  >
-                    Testimonies
-                  </a>{' '}
-                  page.
-                </p>
-              </div>
-              <div className="flex items-start">
-                <span className="bg-red-100 text-red-800 font-bold rounded-full w-6 h-6 flex items-center justify-center mr-3 mt-1 text-sm">
-                  4
-                </span>
-                <p className="font-semibold text-red-800">
-                  Our Goal: Reproduce and give a Yellow Card to every NIGERIAN.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-12 bg-gradient-to-r from-red-600 to-orange-600 rounded-2xl p-10 max-w-4xl w-full text-center shadow-xl">
-            <h3 className="text-3xl font-serif text-white mb-4">Start Your Love Journey</h3>
-            <p className="text-xl text-orange-100 mb-8 max-w-2xl mx-auto">
-              These 50 passages form the biblical foundation for understanding and practicing God's
-              love.
-            </p>
-            <Link
-              to="/publications"
-              className="bg-white text-red-600 px-10 py-4 rounded-xl font-bold text-lg hover:bg-orange-50 transition-colors shadow-lg inline-flex items-center justify-center min-h-[44px]"
+      <section className="pl-wrap pb-[clamp(64px,9vw,120px)]">
+        <p className="mb-4 mt-0 text-[15px] text-pl-muted" aria-live="polite">
+          {list.length ? `${list.length} passages · tap one to put it in the spotlight` : `No passage matches “${query}”.`}
+        </p>
+        <div ref={listRef} className="[column-gap:16px] [columns:3_300px]">
+          {list.map(({ p, i }) => (
+            <button
+              key={p.reference}
+              type="button"
+              data-v
+              onClick={() => pick(i)}
+              aria-current={i === spot ? 'true' : undefined}
+              className={`mb-4 block w-full break-inside-avoid rounded-[24px] border-2 border-pl-ink p-6 text-left text-pl-ink transition-[background-color,transform] [transition-duration:350ms] [transition-timing-function:cubic-bezier(.3,1.5,.5,1)] hover:-translate-y-1 motion-reduce:hover:translate-y-0 ${
+                i === spot ? 'bg-pl-blush' : 'bg-white'
+              }`}
             >
-              Browse Free Publications
-            </Link>
-          </div>
+              <span className="block text-[15px] font-extrabold text-pl-red">{p.reference}</span>
+              <span className="pl-serif mt-[10px] block text-[23px] not-italic leading-[1.25]">{p.text}</span>
+            </button>
+          ))}
         </div>
-    </PageShell>
+      </section>
+    </div>
   );
 }
-
-

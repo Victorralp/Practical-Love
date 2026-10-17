@@ -55,14 +55,14 @@ export function ConfirmDialog({
         // A click on the dialog element itself (not its content) landed on the backdrop.
         if (event.target === event.currentTarget) onCancel();
       }}
-      className="m-auto w-[min(26rem,calc(100vw-2rem))] rounded-2xl border border-[#f0e2d8] bg-white p-0 text-[#3d1d17] shadow-[0_24px_60px_rgba(61,29,23,0.25)] backdrop:bg-[rgba(26,14,11,0.45)] open:animate-in open:fade-in-0 open:zoom-in-95 open:duration-150"
+      className="m-auto w-[min(26rem,calc(100vw-2rem))] rounded-2xl border border-[#eadfdc] bg-white p-0 text-[#141010] shadow-[0_24px_60px_rgba(20,16,16,0.25)] backdrop:bg-[rgba(26,14,11,0.45)] open:animate-in open:fade-in-0 open:zoom-in-95 open:duration-150"
     >
       <div className="p-5">
         <h2 id={titleId} className="text-base font-semibold">
           {title}
         </h2>
         {description ? (
-          <p id={descriptionId} className="mt-2 text-sm leading-6 text-[#6e4737]">
+          <p id={descriptionId} className="mt-2 text-sm leading-6 text-[#5a4f4f]">
             {description}
           </p>
         ) : null}
@@ -73,7 +73,7 @@ export function ConfirmDialog({
           <button
             type="button"
             onClick={onConfirm}
-            className={cn(adminButton.danger, 'border-red-500 bg-red-600 text-white hover:bg-red-700')}
+            className={cn(adminButton.danger, 'border-pl-red bg-pl-red text-white hover:bg-pl-press')}
           >
             {confirmLabel}
           </button>

@@ -2,7 +2,7 @@ import { cn } from '../ui/utils';
 
 /** Shared control styling so every admin input matches. */
 export const controlClass =
-  'w-full rounded-xl border border-[#e8d9cd] bg-white px-3.5 py-2.5 text-sm text-[#3d1d17] placeholder:text-[#bda392] transition focus:border-red-400 focus:outline-none focus:ring-4 focus:ring-red-500/10 disabled:cursor-not-allowed disabled:bg-[#faf5f1]';
+  'w-full rounded-[12px] border border-[#d9cbc8] bg-white px-[14px] py-3 text-[16px] text-pl-ink placeholder:text-[#a39797] transition focus:border-pl-red focus:outline-none focus:ring-4 focus:ring-pl-red/10 disabled:cursor-not-allowed disabled:bg-[#faf7f6]';
 
 export type FieldProps = {
   label: string;
@@ -21,16 +21,16 @@ export function Field({ label, htmlFor, hint, note, className, children }: Field
     <div className={cn('min-w-0', className)}>
       <div className="mb-1.5 flex items-baseline justify-between gap-3">
         {htmlFor ? (
-          <label htmlFor={htmlFor} className="text-sm font-medium text-[#4a2b20]">
+          <label htmlFor={htmlFor} className="text-[14px] font-semibold text-pl-ink">
             {label}
           </label>
         ) : (
-          <span className="text-sm font-medium text-[#4a2b20]">{label}</span>
+          <span className="text-[14px] font-semibold text-pl-ink">{label}</span>
         )}
-        {note ? <span className="text-xs text-[#a8735c]">{note}</span> : null}
+        {note ? <span className="text-xs text-[#6b5f5f]">{note}</span> : null}
       </div>
       {children}
-      {hint ? <p className="mt-1.5 text-xs leading-5 text-[#8a6552]">{hint}</p> : null}
+      {hint ? <p className="mt-1.5 text-xs leading-5 text-[#6b5f5f]">{hint}</p> : null}
     </div>
   );
 }

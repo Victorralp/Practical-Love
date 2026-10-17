@@ -1,757 +1,162 @@
-import { useEffect, useMemo, useRef, useState, type ComponentType } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import {
-  BookOpen,
-  CalendarDays,
-  FileImage,
-  Heart,
-  Loader,
-  Megaphone,
-  MessageSquare,
-  Pin,
-  ScrollText,
-  Send,
-  Share2,
-  Sparkles,
-  Video,
-} from 'lucide-react';
-import { Link } from 'react-router-dom';
-import Logo from '../components/Logo';
-import { PageHero, PageShell, SectionCard } from '../components/ui';
-import ReactionBar from '../components/ReactionBar';
-import PrayerWall from '../components/PrayerWall';
-import DailyDevotionCard from '../components/DailyDevotionCard';
-import PostSkeleton from '../components/PostSkeleton';
-import MessageVideoPlayer from '../components/MessageVideoPlayer';
-import {
-  addCommentToMessagePost,
-  subscribeToMessagePosts,
-  type MessagePostRecord,
-} from '../services/messagePostsService';
-import {
-  countMessagePosts,
-  filterMessagePosts,
-  type MessageCategoryFilter,
-} from '../services/messagePostFilters';
-import VideoProviderBadge from '../components/VideoProviderBadge';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Em, ImageSlot } from '../components/pl/primitives';
+import { useEntrance, useStagger } from '../components/pl/motion';
+import { formatPostDate, readMinutes, useMessagePosts } from '../components/pl/messagePosts';
+import { countMessagePosts, filterMessagePosts, type MessageCategoryFilter } from '../services/messagePostFilters';
+import type { MessagePostRecord } from '../services/messagePostsService';
 
-// ── Helpers ─────────────────────────────────────────────────────────
-
-function timeAgo(isoDate: string): string {
-  const seconds = Math.floor((Date.now() - new Date(isoDate).getTime()) / 1000);
-  if (seconds < 60) return 'just now';
-  const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) return `${minutes}m ago`;
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours}h ago`;
-  const days = Math.floor(hours / 24);
-  if (days < 7) return `${days}d ago`;
-  return new Intl.DateTimeFormat('en-NG', { dateStyle: 'medium' }).format(new Date(isoDate));
-}
-
-function formatFullDate(isoDate: string) {
-  return new Intl.DateTimeFormat('en-NG', {
-    dateStyle: 'medium',
-    timeStyle: 'short',
-  }).format(new Date(isoDate));
-}
-
-// ── Types ───────────────────────────────────────────────────────────
-
-type TabId = 'feed' | 'prayer';
-
-const CATEGORY_TABS: {
-  id: MessageCategoryFilter;
-  label: string;
-  icon: ComponentType<{ className?: string }>;
-}[] = [
-  { id: 'all', label: 'All', icon: ScrollText },
-  { id: 'announcement', label: 'Updates', icon: Megaphone },
-  { id: 'teaching', label: 'Teaching', icon: BookOpen },
-  { id: 'media', label: 'Media', icon: Video },
-  { id: 'pinned', label: 'Pinned', icon: Pin },
+const FILTERS: { id: MessageCategoryFilter; label: string }[] = [
+  { id: 'all', label: 'All' },
+  { id: 'teaching', label: 'Teaching' },
+  { id: 'announcement', label: 'Updates' },
+  { id: 'media', label: 'Watch' },
+  { id: 'pinned', label: 'Pinned' },
 ];
 
-const WEEKLY_PRACTICES = [
-  'Before you react, pause.',
-  'Before you answer, listen.',
-  'Before you correct, love.',
-] as const;
+const TILT = [-1.2, 0.8, -0.6, 1.1, -0.9, 0.7];
 
-// ── Share helper ────────────────────────────────────────────────────
-
-async function sharePost(post: MessagePostRecord) {
-  const url = window.location.href;
-  const text = `${post.title}\n${post.summary}`;
-
-  if (navigator.share) {
-    try {
-      await navigator.share({ title: post.title, text, url });
-      return;
-    } catch {
-      // User cancelled or share failed — fall through to clipboard
-    }
-  }
-
-  try {
-    await navigator.clipboard.writeText(`${text}\n${url}`);
-    // Could show a toast here
-  } catch {
-    // Clipboard failed
-  }
+function FeaturedCard({ post }: { post: MessagePostRecord }) {
+  const image = post.media?.resourceType === 'image' ? post.media.url : undefined;
+  return (
+    <Link
+      to={`/messages/${post.id}`}
+      data-card
+      className="mb-[clamp(16px,2vw,24px)] grid overflow-hidden rounded-[32px] bg-pl-red text-white no-underline [grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr))] hover:text-white"
+    >
+      <div className="flex flex-col justify-between gap-8 p-[clamp(28px,4vw,56px)]">
+        <span className="self-start rounded-full bg-white px-3 py-[6px] text-[13px] font-bold uppercase tracking-[0.08em] text-pl-red">
+          {post.pinned ? 'Pinned' : 'Latest'} · {post.category}
+        </span>
+        <div>
+          <h2 className="m-0 text-[clamp(40px,5vw,72px)] font-extrabold leading-[.92] tracking-[-0.045em]">{post.title}</h2>
+          {post.summary && <p className="mt-4 max-w-[36ch] text-[18px] leading-[1.45] text-pl-blush">{post.summary}</p>}
+          <p className="pl-serif mt-6 text-[22px]">Read · {readMinutes(post)} min →</p>
+        </div>
+      </div>
+      <div className="relative min-h-[300px] bg-pl-blush">
+        <ImageSlot src={image} label="Series artwork" />
+      </div>
+    </Link>
+  );
 }
 
-// ═══════════════════════════════════════════════════════════════════════
-// COMPONENT
-// ═══════════════════════════════════════════════════════════════════════
+function MessageCard({ post, index, hovered, onHover }: { post: MessagePostRecord; index: number; hovered: boolean; onHover: (on: boolean) => void }) {
+  const dark = index % 4 === 2;
+  const tone = hovered ? 'bg-pl-blush text-pl-ink' : dark ? 'bg-pl-ink text-white' : 'bg-white text-pl-ink';
+  return (
+    <Link
+      to={`/messages/${post.id}`}
+      data-card
+      onMouseEnter={() => onHover(true)}
+      onMouseLeave={() => onHover(false)}
+      onFocus={() => onHover(true)}
+      onBlur={() => onHover(false)}
+      className={`flex min-h-[280px] flex-col justify-between gap-7 rounded-[28px] border-2 border-pl-ink p-7 no-underline ${tone} hover:text-pl-ink`}
+      style={{
+        transform: hovered ? `translateY(-8px) rotate(${TILT[index % TILT.length]}deg)` : 'none',
+        boxShadow: hovered ? '8px 8px 0 #e1251b' : '0 0 0 #e1251b',
+        transition: 'transform .45s cubic-bezier(.3,1.5,.5,1), box-shadow .3s, background .3s',
+      }}
+    >
+      <div className="flex justify-between gap-3 text-[13px] font-semibold uppercase tracking-[0.08em]">
+        <span>{post.category}</span>
+        <span className="opacity-70">{readMinutes(post)} min</span>
+      </div>
+      <div>
+        <h3 className="m-0 text-[clamp(28px,2.6vw,36px)] font-extrabold leading-[.98] tracking-[-0.035em]">{post.title}</h3>
+        {post.summary && <p className="mt-3 text-[16px] leading-[1.45] opacity-85">{post.summary}</p>}
+      </div>
+      <div className="flex items-baseline justify-between gap-3">
+        <span className="pl-serif text-[22px]">Read →</span>
+        <span className="text-[13px] opacity-70">{formatPostDate(post.createdAt)}</span>
+      </div>
+    </Link>
+  );
+}
 
 export default function MessagesPage() {
-  const [posts, setPosts] = useState<MessagePostRecord[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [statusMessage, setStatusMessage] = useState('Loading ministry posts...');
-  const [commentForms, setCommentForms] = useState<
-    Record<string, { author: string; body: string }>
-  >({});
-  const [submittingCommentId, setSubmittingCommentId] = useState<string | null>(null);
-  const [openComments, setOpenComments] = useState<Record<string, boolean>>({});
-  const commentTextareas = useRef<Record<string, HTMLTextAreaElement | null>>({});
+  const { posts, loading, error } = useMessagePosts();
+  const [filter, setFilter] = useState<MessageCategoryFilter>('all');
+  const [hovered, setHovered] = useState(-1);
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  const { hash } = useLocation();
+  const navigate = useNavigate();
 
-  // Tabs & filters
-  const [activeTab, setActiveTab] = useState<TabId>('feed');
-  const [categoryFilter, setCategoryFilter] = useState<MessageCategoryFilter>('all');
-
+  // Old deep links pointed at the prayer tab that used to live here.
   useEffect(() => {
-    const syncTabToHash = () => {
-      if (window.location.hash === '#prayer-wall') {
-        setActiveTab('prayer');
-      } else if (window.location.hash === '#daily-devotion') {
-        setActiveTab('feed');
-      }
-    };
+    if (hash === '#prayer-wall') navigate('/prayer', { replace: true });
+  }, [hash, navigate]);
 
-    syncTabToHash();
-    window.addEventListener('hashchange', syncTabToHash);
+  const counts = useMemo(() => countMessagePosts(posts), [posts]);
+  const featured = filter === 'all' ? posts[0] : undefined;
+  const list = useMemo(() => {
+    const filtered = filterMessagePosts(posts, filter);
+    return featured ? filtered.filter(p => p.id !== featured.id) : filtered;
+  }, [posts, filter, featured]);
 
-    return () => {
-      window.removeEventListener('hashchange', syncTabToHash);
-    };
-  }, []);
-
-  useEffect(() => {
-    const loadingTimeout = window.setTimeout(() => {
-      setIsLoading(false);
-      setStatusMessage(
-        'Messages are still loading. Please wait a moment, then refresh if nothing appears.'
-      );
-    }, 8000);
-
-    const unsubscribe = subscribeToMessagePosts(
-      loadedPosts => {
-        window.clearTimeout(loadingTimeout);
-        setPosts(loadedPosts);
-        setIsLoading(false);
-        setStatusMessage(
-          loadedPosts.length > 0
-            ? 'Latest ministry posts loaded.'
-            : 'No messages have been published yet. Please check back soon.'
-        );
-      },
-      error => {
-        window.clearTimeout(loadingTimeout);
-        setStatusMessage(`We could not load the messages right now. ${error.message}`);
-        setIsLoading(false);
-      }
-    );
-
-    return () => {
-      window.clearTimeout(loadingTimeout);
-      unsubscribe();
-    };
-  }, []);
-
-  // ── Derived data ────────────────────────────────────────────────────
-
-  const orderedPosts = useMemo(
-    () =>
-      [...posts].sort((a, b) => {
-        if (a.pinned !== b.pinned) {
-          return a.pinned ? -1 : 1;
-        }
-        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-      }),
-    [posts]
-  );
-
-  const filteredPosts = useMemo(() => {
-    return filterMessagePosts(orderedPosts, categoryFilter);
-  }, [orderedPosts, categoryFilter]);
-
-  const categoryCounts = useMemo(() => {
-    return countMessagePosts(orderedPosts);
-  }, [orderedPosts]);
-
-  // ── Comment handlers ────────────────────────────────────────────────
-
-  const handleCommentChange = (postId: string, field: 'author' | 'body', value: string) => {
-    setCommentForms(current => ({
-      ...current,
-      [postId]: {
-        author: current[postId]?.author || '',
-        body: current[postId]?.body || '',
-        [field]: value,
-      },
-    }));
-  };
-
-  const handleCommentSubmit = async (postId: string) => {
-    const form = commentForms[postId] || { author: '', body: '' };
-    const author = form.author.trim() || 'Anonymous visitor';
-    const body = form.body.trim();
-
-    if (!body) {
-      setStatusMessage('Comment text is required.');
-      return;
-    }
-
-    setSubmittingCommentId(postId);
-
-    try {
-      await addCommentToMessagePost(postId, { author, body });
-      setCommentForms(current => ({
-        ...current,
-        [postId]: {
-          author: current[postId]?.author || '',
-          body: '',
-        },
-      }));
-      setStatusMessage('Comment added.');
-    } catch (error) {
-      setStatusMessage(error instanceof Error ? error.message : 'Unable to add comment.');
-    } finally {
-      setSubmittingCommentId(null);
-    }
-  };
-
-  const handleQuickAmen = async (postId: string) => {
-    setSubmittingCommentId(postId);
-    try {
-      await addCommentToMessagePost(postId, { author: 'Community member', body: '🙏 Amen!' });
-    } catch {
-      // Silently fail
-    } finally {
-      setSubmittingCommentId(null);
-    }
-  };
-
-  const handleRespondToPost = (postId: string) => {
-    setOpenComments(current => ({
-      ...current,
-      [postId]: true,
-    }));
-    setStatusMessage('Comment box opened. Share what you received from the message.');
-
-    window.setTimeout(() => {
-      commentTextareas.current[postId]?.focus();
-    }, 150);
-  };
-
-  // ══════════════════════════════════════════════════════════════════════
-  // RENDER
-  // ══════════════════════════════════════════════════════════════════════
+  useEntrance(rootRef);
+  useStagger(rootRef, `${filter}:${posts.length}`);
 
   return (
-    <PageShell className="bg-[radial-gradient(circle_at_top_left,_rgba(254,215,170,0.28),_transparent_28%),radial-gradient(circle_at_top_right,_rgba(248,113,113,0.16),_transparent_34%),linear-gradient(180deg,_#fffaf5_0%,_#ffffff_50%,_#fff7ed_100%)]">
-      <div className="space-y-8">
-        <PageHero
-          compact
-          badge={
-            <>
-              <Megaphone className="h-4 w-4" />
-              Community Hub
-            </>
-          }
-          icon={
-            <div className="flex h-14 w-14 items-center justify-center rounded-[1.25rem] bg-gradient-to-br from-red-600 via-orange-500 to-amber-400 text-white shadow-lg">
-              <Logo className="h-7 w-7" />
-            </div>
-          }
-          title="Messages for the Practical Love family"
-          subtitle="Read the latest teachings, ministry updates, and prayer focus. Then respond with one practical step of love."
-          actions={
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <Link to="/contact" className="btn-brand px-7 py-3">
-                Contact the ministry
-              </Link>
-              <Link to="/resources" className="btn-outline-brand px-7 py-3">
-                Explore resources
-              </Link>
-            </div>
-          }
-        >
-          <div className="grid gap-4 md:grid-cols-3">
-            <div className="rounded-2xl border border-white/70 bg-white/85 p-4 backdrop-blur-sm">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-600">
-                Latest teaching
-              </p>
-              <p className="mt-2 text-lg font-semibold text-gray-900">Read, watch & reflect</p>
-            </div>
-            <div className="rounded-2xl border border-white/70 bg-white/85 p-4 backdrop-blur-sm">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-600">
-                Prayer focus
-              </p>
-              <p className="mt-2 text-lg font-semibold text-gray-900">Share & intercede together</p>
-            </div>
-            <div className="rounded-2xl border border-white/70 bg-white/85 p-4 backdrop-blur-sm">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-600">
-                Community response
-              </p>
-              <p className="mt-2 text-lg font-semibold text-gray-900">Encourage one another</p>
-            </div>
-          </div>
-        </PageHero>
-
-        <DailyDevotionCard variant="full" showActions={false} />
-
-        {/* ── Main Tab Switcher ──────────────────────────────────────── */}
-        <div className="flex gap-2 rounded-2xl border border-orange-100 bg-white/90 p-1.5 shadow-sm backdrop-blur-sm">
-          <button
-            type="button"
-            onClick={() => setActiveTab('feed')}
-            className={`flex flex-1 items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold transition-all ${
-              activeTab === 'feed'
-                ? 'bg-gradient-to-r from-red-700 to-red-600 text-white shadow-sm'
-                : 'text-gray-600 hover:bg-orange-50 hover:text-red-700'
-            }`}
-          >
-            <Megaphone className="h-4 w-4" />
-            Message Feed
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab('prayer')}
-            className={`flex flex-1 items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold transition-all ${
-              activeTab === 'prayer'
-                ? 'bg-gradient-to-r from-red-700 to-red-600 text-white shadow-sm'
-                : 'text-gray-600 hover:bg-orange-50 hover:text-red-700'
-            }`}
-          >
-            <Heart className="h-4 w-4" />
-            Prayer Wall
-          </button>
+    <div ref={rootRef}>
+      <section className="pl-wrap pb-[clamp(28px,4vw,48px)] pt-[clamp(48px,8vw,104px)]">
+        <h1 data-in className="m-0 text-[clamp(56px,10vw,140px)] font-extrabold leading-[.88] tracking-[-0.055em]">
+          Messages <Em>you can live.</Em>
+        </h1>
+        <p data-in className="pl-lede max-w-[42ch]">
+          Short teachings on biblical love, each with one thing to practise before the day ends.
+        </p>
+        <div className="mt-[clamp(28px,4vw,44px)] flex flex-wrap gap-2" role="group" aria-label="Filter messages">
+          {FILTERS.map(f => (
+            <button key={f.id} type="button" className="pl-chip" aria-pressed={filter === f.id} onClick={() => setFilter(f.id)}>
+              {f.label} <span className="pl-chip-count">{counts[f.id]}</span>
+            </button>
+          ))}
         </div>
+      </section>
 
-        <SectionCard className="border-orange-100 bg-white/92 shadow-lg">
-          <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
-                This week's love practice
-              </p>
-              <h2 className="mt-2 text-3xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">
-                Let every message become a step.
-              </h2>
-              <p className="mt-3 max-w-2xl leading-7 text-gray-600">
-                The feed is not only for information. It is a place to pause, pray, and practice the
-                love of God in ordinary life.
-              </p>
-            </div>
-
-            <div className="grid gap-3 sm:grid-cols-3">
-              {WEEKLY_PRACTICES.map((practice, index) => (
-                <div
-                  key={practice}
-                  className="rounded-[1.35rem] border border-orange-100 bg-orange-50/80 p-4"
-                >
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-sm font-semibold text-red-700">
-                    {index + 1}
-                  </div>
-                  <p className="mt-3 text-sm font-semibold leading-6 text-gray-800">{practice}</p>
-                </div>
-              ))}
-            </div>
+      <section className="pl-wrap pb-[clamp(64px,9vw,120px)]">
+        {loading ? (
+          <div className="grid gap-[clamp(16px,2vw,24px)] [grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr))]" aria-busy="true">
+            {Array.from({ length: 6 }, (_, i) => (
+              <div key={i} className="min-h-[280px] animate-pulse rounded-[28px] bg-pl-blush motion-reduce:animate-none" />
+            ))}
           </div>
-        </SectionCard>
+        ) : error ? (
+          <p className="rounded-[28px] border-2 border-pl-ink p-7 text-[18px]" role="alert">
+            {error}
+          </p>
+        ) : posts.length === 0 ? (
+          <p className="rounded-[28px] border-2 border-pl-ink p-7 text-[18px]">No messages have been published yet. Please check back soon.</p>
+        ) : (
+          <>
+            {featured && <FeaturedCard post={featured} />}
+            {list.length === 0 ? (
+              <p className="text-[18px] text-pl-body">Nothing here yet. Try another filter.</p>
+            ) : (
+              <div className="grid gap-[clamp(16px,2vw,24px)] [grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr))]">
+                {list.map((post, i) => (
+                  <MessageCard key={post.id} post={post} index={i} hovered={hovered === i} onHover={on => setHovered(on ? i : -1)} />
+                ))}
+              </div>
+            )}
+          </>
+        )}
 
-        {/* ═══════════════════════════════════════════════════════════ */}
-        {/* FEED TAB                                                    */}
-        {/* ═══════════════════════════════════════════════════════════ */}
-        <AnimatePresence mode="wait">
-          {activeTab === 'feed' && (
-            <motion.div
-              key="feed"
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
-              transition={{ duration: 0.25 }}
-            >
-              <SectionCard className="border-red-100 bg-white/95 shadow-lg">
-                {/* Header + Category Filters */}
-                <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-                  <div>
-                    <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
-                      Public feed
-                    </p>
-                    <h2 className="mt-2 text-3xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">Latest posts</h2>
-                  </div>
-                  <p className="text-sm text-gray-500">
-                    {isLoading ? statusMessage : `${filteredPosts.length} post(s) available`}
-                  </p>
-                </div>
-
-                {/* Category Filter Tabs */}
-                {!isLoading && orderedPosts.length > 0 && (
-                  <div className="mt-5 flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
-                    {CATEGORY_TABS.map(tab => {
-                      const Icon = tab.icon;
-                      return (
-                        <button
-                          key={tab.id}
-                          type="button"
-                          onClick={() => setCategoryFilter(tab.id)}
-                          className={`inline-flex flex-shrink-0 items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-medium transition-all ${
-                            categoryFilter === tab.id
-                              ? 'border-red-200 bg-red-50 text-red-700 shadow-sm'
-                              : 'border-orange-100 bg-white text-gray-500 hover:border-orange-200 hover:text-gray-700'
-                          }`}
-                        >
-                          <Icon className="h-4 w-4" />
-                          {tab.label}
-                          {categoryCounts[tab.id] > 0 && (
-                            <span
-                              className={`ml-1 tabular-nums ${categoryFilter === tab.id ? 'text-red-500' : 'text-gray-400'}`}
-                            >
-                              {categoryCounts[tab.id]}
-                            </span>
-                          )}
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
-
-                {/* Post List */}
-                {isLoading ? (
-                  <PostSkeleton count={3} />
-                ) : filteredPosts.length === 0 ? (
-                  <div className="mt-8 rounded-2xl border border-orange-100 bg-orange-50 px-6 py-10 text-center text-gray-700">
-                    <p className="text-lg font-semibold text-[#3d1d17]">
-                      {categoryFilter === 'all'
-                        ? 'No posts available right now.'
-                        : `No ${categoryFilter} posts found.`}
-                    </p>
-                    <p className="mt-3 text-sm leading-7">{statusMessage}</p>
-                    {categoryFilter !== 'all' && (
-                      <button
-                        type="button"
-                        onClick={() => setCategoryFilter('all')}
-                        className="btn-outline-brand mt-5 px-6 py-3"
-                      >
-                        Show all posts
-                      </button>
-                    )}
-                    {categoryFilter === 'all' && (
-                      <div className="mt-5">
-                        <Link to="/contact" className="btn-outline-brand px-6 py-3">
-                          Contact the ministry
-                        </Link>
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <div className="mt-6 space-y-5">
-                    <AnimatePresence initial={false}>
-                      {filteredPosts.map((post, index) => (
-                        <motion.article
-                          key={post.id}
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, scale: 0.98 }}
-                          transition={{ delay: index * 0.04, duration: 0.35 }}
-                          layout
-                          className="rounded-[1.8rem] border border-orange-100 bg-[linear-gradient(135deg,_rgba(255,255,255,0.98)_0%,_rgba(255,247,237,0.95)_100%)] p-6 shadow-sm"
-                        >
-                          {/* Badges */}
-                          <div className="min-w-0">
-                            <div className="flex flex-wrap items-center gap-3">
-                              <span className="rounded-full bg-red-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-red-700">
-                                {post.category}
-                              </span>
-                              {post.pinned ? (
-                                <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-amber-700">
-                                  <Pin className="h-3.5 w-3.5" />
-                                  Pinned
-                                </span>
-                              ) : null}
-                              {post.media ? (
-                                <span className="inline-flex items-center gap-1 rounded-full bg-orange-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-orange-700">
-                                  {post.media.resourceType === 'video' ? (
-                                    <Video className="h-3.5 w-3.5" />
-                                  ) : (
-                                    <FileImage className="h-3.5 w-3.5" />
-                                  )}
-                                  {post.media.resourceType}
-                                </span>
-                              ) : null}
-                              <VideoProviderBadge url={post.youtubeUrl} />
-                            </div>
-
-                            <h3 className="mt-4 text-2xl font-serif text-gray-900">{post.title}</h3>
-                            <p className="mt-3 max-w-3xl text-base leading-7 text-gray-700">
-                              {post.summary}
-                            </p>
-                          </div>
-
-                          {/* Meta row */}
-                          <div className="mt-5 flex flex-wrap items-center gap-4 text-sm text-gray-500">
-                            <span>By {post.author}</span>
-                            <span
-                              className="inline-flex items-center gap-1 cursor-help"
-                              title={formatFullDate(post.createdAt)}
-                            >
-                              <CalendarDays className="h-4 w-4" />
-                              {timeAgo(post.createdAt)}
-                            </span>
-                          </div>
-
-                          {/* Media / Video */}
-                          {post.youtubeUrl || post.media ? (
-                            <div className="mt-5">
-                              {post.youtubeUrl ? (
-                                <MessageVideoPlayer
-                                  videoUrl={post.youtubeUrl}
-                                  title={post.title}
-                                  onRespond={() => handleRespondToPost(post.id)}
-                                />
-                              ) : post.media?.resourceType === 'video' ? (
-                                <MessageVideoPlayer
-                                  src={post.media.url}
-                                  title={post.title}
-                                  onRespond={() => handleRespondToPost(post.id)}
-                                />
-                              ) : post.media ? (
-                                <div className="overflow-hidden rounded-2xl border border-orange-100 bg-white">
-                                  <img
-                                    src={post.media.url}
-                                    alt={post.title}
-                                    className="max-h-[32rem] w-full object-cover"
-                                  />
-                                </div>
-                              ) : null}
-                            </div>
-                          ) : null}
-
-                          {/* Body */}
-                          <div className="mt-5 rounded-2xl border border-orange-100 bg-white/85 p-5">
-                            <p className="whitespace-pre-line leading-8 text-gray-700">
-                              {post.body}
-                            </p>
-                          </div>
-
-                          <div className="mt-5 grid gap-3 rounded-2xl border border-red-100 bg-red-50/70 p-4 sm:grid-cols-[auto_1fr] sm:items-center">
-                            <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-red-700">
-                              <Sparkles className="h-5 w-5" />
-                            </div>
-                            <div>
-                              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-600">
-                                Practice this message
-                              </p>
-                              <p className="mt-1 text-sm leading-6 text-gray-700">
-                                Pause for one minute, pray over what you received, and choose one
-                                act of practical love today.
-                              </p>
-                            </div>
-                          </div>
-
-                          {/* ── Reaction + Share Bar ────────────────── */}
-                          <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
-                            <ReactionBar postId={post.id} reactions={post.reactions} />
-                            <div className="flex flex-wrap items-center gap-2">
-                              <button
-                                type="button"
-                                onClick={() => handleRespondToPost(post.id)}
-                                className="inline-flex items-center gap-1.5 rounded-full border border-red-100 bg-red-50 px-3.5 py-1.5 text-sm font-medium text-red-700 transition hover:border-red-200 hover:bg-red-100"
-                              >
-                                <MessageSquare className="h-4 w-4" />
-                                Respond
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => sharePost(post)}
-                                className="inline-flex items-center gap-1.5 rounded-full border border-orange-100 bg-white px-3.5 py-1.5 text-sm font-medium text-gray-500 transition hover:border-orange-200 hover:bg-orange-50 hover:text-gray-700"
-                              >
-                                <Share2 className="h-4 w-4" />
-                                Share
-                              </button>
-                            </div>
-                          </div>
-
-                          {/* ── Comments Section ───────────────────── */}
-                          <AnimatePresence>
-                            {openComments[post.id] && (
-                              <motion.div
-                                initial={{ height: 0, opacity: 0 }}
-                                animate={{ height: 'auto', opacity: 1 }}
-                                exit={{ height: 0, opacity: 0 }}
-                                transition={{ duration: 0.25 }}
-                                className="mt-5 overflow-hidden rounded-2xl border border-orange-100 bg-[linear-gradient(180deg,_rgba(255,250,245,1),_rgba(255,255,255,1))]"
-                              >
-                                <div className="px-5 py-4">
-                                  <div className="flex flex-wrap items-center justify-between gap-3">
-                                    <div className="flex items-center gap-2 text-[#9a5534]">
-                                      <MessageSquare className="h-5 w-5" />
-                                      <h4 className="text-lg font-semibold">
-                                        Respond ({post.comments.length})
-                                      </h4>
-                                    </div>
-                                    <button
-                                      type="button"
-                                      onClick={() =>
-                                        setOpenComments(current => ({
-                                          ...current,
-                                          [post.id]: false,
-                                        }))
-                                      }
-                                      className="rounded-full border border-orange-100 bg-white px-3 py-1.5 text-sm font-medium text-gray-500 transition hover:bg-orange-50"
-                                    >
-                                      Hide
-                                    </button>
-                                  </div>
-
-                                  <div className="mt-4 border-t border-orange-100 pt-4">
-                                    <div className="space-y-3">
-                                      {post.comments.length > 0 ? (
-                                        post.comments.map(comment => (
-                                          <div
-                                            key={comment.id}
-                                            className="rounded-2xl border border-orange-100 bg-white p-4"
-                                          >
-                                            <div className="flex flex-wrap items-center gap-3 text-sm text-gray-500">
-                                              <span className="font-semibold text-gray-900">
-                                                {comment.author}
-                                              </span>
-                                              <span title={formatFullDate(comment.createdAt)}>
-                                                {timeAgo(comment.createdAt)}
-                                              </span>
-                                            </div>
-                                            <p className="mt-3 whitespace-pre-line leading-7 text-gray-700">
-                                              {comment.body}
-                                            </p>
-                                          </div>
-                                        ))
-                                      ) : (
-                                        <p className="rounded-2xl border border-dashed border-orange-200 bg-orange-50 px-4 py-4 text-sm text-gray-600">
-                                          No comments yet. Be the first to respond.
-                                        </p>
-                                      )}
-                                    </div>
-
-                                    {/* Quick Amen */}
-                                    <div className="mt-4">
-                                      <button
-                                        type="button"
-                                        onClick={() => handleQuickAmen(post.id)}
-                                        disabled={submittingCommentId === post.id}
-                                        className="inline-flex items-center gap-1.5 rounded-full border border-orange-100 bg-white px-4 py-2 text-sm font-medium text-gray-600 transition hover:border-red-200 hover:bg-red-50 hover:text-red-700"
-                                      >
-                                        🙏 Quick Amen
-                                      </button>
-                                    </div>
-
-                                    {/* Comment form */}
-                                    <div className="mt-4 grid gap-3">
-                                      <input
-                                        type="text"
-                                        value={commentForms[post.id]?.author || ''}
-                                        onChange={event =>
-                                          handleCommentChange(post.id, 'author', event.target.value)
-                                        }
-                                        placeholder="Your name"
-                                        className="w-full rounded-2xl border border-orange-100 bg-white px-4 py-3 text-sm focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20"
-                                      />
-                                      <textarea
-                                        ref={element => {
-                                          commentTextareas.current[post.id] = element;
-                                        }}
-                                        value={commentForms[post.id]?.body || ''}
-                                        onChange={event =>
-                                          handleCommentChange(
-                                            post.id,
-                                            'body',
-                                            event.target.value.slice(0, 500)
-                                          )
-                                        }
-                                        rows={3}
-                                        maxLength={500}
-                                        placeholder="Write a comment..."
-                                        className="w-full resize-none rounded-2xl border border-orange-100 bg-white px-4 py-3 text-sm focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20"
-                                      />
-                                      <div className="flex items-center gap-3">
-                                        <button
-                                          type="button"
-                                          onClick={() => handleCommentSubmit(post.id)}
-                                          disabled={submittingCommentId === post.id}
-                                          className="inline-flex items-center gap-2 rounded-2xl bg-red-700 px-6 py-3 text-sm font-semibold text-white transition hover:bg-red-800 disabled:cursor-not-allowed disabled:opacity-70"
-                                        >
-                                          {submittingCommentId === post.id ? (
-                                            <Loader className="h-4 w-4 animate-spin" />
-                                          ) : (
-                                            <Send className="h-4 w-4" />
-                                          )}
-                                          {submittingCommentId === post.id
-                                            ? 'Posting...'
-                                            : 'Post comment'}
-                                        </button>
-                                        <span className="text-xs text-gray-400">
-                                          {(commentForms[post.id]?.body || '').length}/500
-                                        </span>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </motion.div>
-                            )}
-                          </AnimatePresence>
-                        </motion.article>
-                      ))}
-                    </AnimatePresence>
-                  </div>
-                )}
-              </SectionCard>
-            </motion.div>
-          )}
-
-          {/* ═══════════════════════════════════════════════════════════ */}
-          {/* PRAYER WALL TAB                                            */}
-          {/* ═══════════════════════════════════════════════════════════ */}
-          {activeTab === 'prayer' && (
-            <motion.div
-              key="prayer"
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
-              transition={{ duration: 0.25 }}
-            >
-              <SectionCard className="border-red-100 bg-white/95 shadow-lg">
-                <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-                  <div>
-                    <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
-                      Prayer wall
-                    </p>
-                    <h2 className="mt-2 text-3xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">Pray for one another</h2>
-                    <p className="mt-2 max-w-xl text-sm leading-6 text-gray-500">
-                      "Bear one another's burdens, and so fulfill the law of Christ." — Galatians
-                      6:2
-                    </p>
-                  </div>
-                </div>
-
-                <div className="mt-6">
-                  <PrayerWall />
-                </div>
-              </SectionCard>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </PageShell>
+        <Link
+          to="/prayer"
+          className="mt-[clamp(32px,5vw,56px)] flex items-center justify-between gap-4 rounded-[28px] bg-pl-ink p-7 text-white no-underline hover:text-white"
+        >
+          <span>
+            <span className="block text-[13px] uppercase tracking-[0.08em] opacity-70">Need someone to pray with you?</span>
+            <span className="mt-[6px] block text-[clamp(26px,3vw,34px)] font-extrabold tracking-[-0.03em]">Visit the prayer wall</span>
+          </span>
+          <span className="pl-serif text-[32px] text-pl-coral" aria-hidden="true">
+            →
+          </span>
+        </Link>
+      </section>
+    </div>
   );
 }

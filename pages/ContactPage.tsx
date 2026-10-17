@@ -1,479 +1,161 @@
-import { useState } from 'react';
-import {
-  Clock3,
-  Handshake,
-  Mail,
-  MapPin,
-  MessageSquareHeart,
-  Phone,
-  Send,
-  Sparkles,
-} from 'lucide-react';
-import { CTASection, PageHero, PageShell, SectionCard } from '../components/ui';
-import Logo from '../components/Logo';
+import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from 'react';
+import { Link } from 'react-router-dom';
+import { Em } from '../components/pl/primitives';
+import { EASE_POP, animate, useEntrance } from '../components/pl/motion';
+import { sendWeb3Form } from '../services/web3formsService';
 
 const CONTACT_EMAIL = 'logosrhema842@gmail.com';
-const CONTACT_PHONE = '+234 123 456 7890';
-const CONTACT_LOCATION = 'Lagos, Nigeria';
-const WEB3FORMS_ENDPOINT = 'https://api.web3forms.com/submit';
 
-const CONTACT_LANES = [
-  {
-    title: 'General questions',
-    description: 'Ask about the ministry, the site, publications, or where to start.',
-    icon: <Sparkles className="h-5 w-5" />,
-  },
-  {
-    title: 'Partnership and outreach',
-    description: 'Reach out if you want to collaborate, host a session, or support distribution.',
-    icon: <Handshake className="h-5 w-5" />,
-  },
-  {
-    title: 'Prayer and testimony',
-    description: 'Send a prayer request or share what practical love has changed in your life.',
-    icon: <MessageSquareHeart className="h-5 w-5" />,
-  },
+// Each topic maps to the subject line the ministry inbox already filters on.
+const TOPICS = [
+  { label: 'A question', subject: 'General Inquiry' },
+  { label: 'Partnership', subject: 'Partnership Opportunity' },
+  { label: 'Testimony', subject: 'Share a Testimony' },
+  { label: 'Yellow Card', subject: 'Yellow Card Request' },
+  { label: 'Invite us', subject: 'Invitation to Minister' },
 ] as const;
 
-const CONTACT_CHANNELS = [
-  {
-    title: 'Email us',
-    detail: CONTACT_EMAIL,
-    helper: 'Best for testimonies, partnership requests, and detailed messages.',
-    href: `mailto:${CONTACT_EMAIL}`,
-    icon: <Mail className="h-5 w-5" />,
-  },
-  {
-    title: 'Call the team',
-    detail: CONTACT_PHONE,
-    helper: 'Best for direct conversations and urgent follow-up.',
-    href: `tel:${CONTACT_PHONE.replace(/\s+/g, '')}`,
-    icon: <Phone className="h-5 w-5" />,
-  },
-  {
-    title: 'Visit our base',
-    detail: CONTACT_LOCATION,
-    helper: 'Use the contact form first if you need to plan a visit or meeting.',
-    href: '#contact-form',
-    icon: <MapPin className="h-5 w-5" />,
-  },
-] as const;
-
-const RESPONSE_NOTES = [
-  'General messages usually receive a response within 1 to 3 working days.',
-  'Prayer requests and testimonies can also be sent through the form below.',
-  'For partnership requests, include your location, audience, and what kind of collaboration you have in mind.',
-] as const;
-
-const WHAT_TO_INCLUDE = [
-  'Your name and the best way to reach you back',
-  'A clear subject so the team can route your message quickly',
-  'Enough context for your prayer request, testimony, or partnership idea',
-] as const;
-
-type SubmitState = {
-  status: 'idle' | 'success' | 'error';
-  message: string;
-};
+const EMPTY_FORM = { name: '', email: '', message: '' };
 
 export default function ContactPage() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: '',
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitState, setSubmitState] = useState<SubmitState>({ status: 'idle', message: '' });
-  const WARM_PROMPTS = [
-    'Tell us what\'s on your heart...',
-    'Every prayer request is sacred to us...',
-    'Your story matters — share it here...',
-    'We\'re listening with love...',
-    'This space is safe. Speak freely...',
-  ];
+  const [topic, setTopic] = useState<(typeof TOPICS)[number]>(TOPICS[0]);
+  const [form, setForm] = useState(EMPTY_FORM);
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
+  const [error, setError] = useState('');
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  const heartRef = useRef<HTMLDivElement | null>(null);
 
-  // One prompt per visit. Text that keeps changing beside the form pulls attention while people type.
-  const [warmPrompt] = useState(
-    () => WARM_PROMPTS[Math.floor(Math.random() * WARM_PROMPTS.length)]
-  );
+  useEntrance(rootRef);
 
-  const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
-    setFormData(prev => ({ ...prev, [event.target.name]: event.target.value }));
-    if (submitState.status !== 'idle') {
-      setSubmitState({ status: 'idle', message: '' });
+  useEffect(() => {
+    if (sent) {
+      animate(heartRef.current, [{ transform: 'scale(0) rotate(-20deg)' }, { transform: 'scale(1.2)' }, { transform: 'none' }], { duration: 800, easing: EASE_POP });
     }
+  }, [sent]);
+
+  const update = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setForm(prev => ({ ...prev, [event.target.name]: event.target.value }));
+    if (error) setError('');
   };
 
-  const getSubjectLabel = (value: string) => {
-    const subjects: Record<string, string> = {
-      general: 'General Inquiry',
-      partnership: 'Partnership Opportunity',
-      'yellow-card': 'Yellow Card Request',
-      testimony: 'Share a Testimony',
-      prayer: 'Prayer Request',
-      other: 'Other',
-    };
-    return subjects[value] || value;
-  };
-
-  const handleSubmit = async (event: React.FormEvent) => {
+  const submit = async (event: FormEvent) => {
     event.preventDefault();
-
-    const accessKey = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY;
-    if (!accessKey) {
-      setSubmitState({
-        status: 'error',
-        message: 'Contact form is not configured yet. Please add VITE_WEB3FORMS_ACCESS_KEY.',
-      });
-      return;
-    }
-
-    setIsSubmitting(true);
-    setSubmitState({ status: 'idle', message: '' });
-
+    setSending(true);
+    setError('');
     try {
-      const response = await fetch(WEB3FORMS_ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({
-          access_key: accessKey,
-          name: formData.name,
-          email: formData.email,
-          subject: `[Practical Love] ${getSubjectLabel(formData.subject)}`,
-          message: formData.message,
-          from_name: 'Practical Love Website',
-          replyto: formData.email,
-          botcheck: '',
-        }),
-      });
-
-      const result = (await response.json()) as { success?: boolean; message?: string };
-      if (!response.ok || !result.success) {
-        throw new Error(result.message || 'Unable to send message right now.');
-      }
-
-      setSubmitState({
-        status: 'success',
-        message: 'Your message has been sent successfully. We will get back to you soon.',
-      });
-      setFormData({
-        name: '',
-        email: '',
-        subject: '',
-        message: '',
-      });
-    } catch (error) {
-      setSubmitState({
-        status: 'error',
-        message: error instanceof Error ? error.message : 'Something went wrong. Please try again.',
-      });
+      await sendWeb3Form({ subject: topic.subject, name: form.name, email: form.email, message: form.message });
+      setForm(EMPTY_FORM);
+      setSent(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
     } finally {
-      setIsSubmitting(false);
+      setSending(false);
     }
   };
+
+  const field = 'min-h-[54px] rounded-[16px] border-0 px-[18px] text-[16px] text-pl-ink';
 
   return (
-    <PageShell className="bg-[radial-gradient(circle_at_top_left,_rgba(254,215,170,0.25),_transparent_28%),radial-gradient(circle_at_top_right,_rgba(248,113,113,0.18),_transparent_34%),linear-gradient(180deg,_#fffaf5_0%,_#ffffff_52%,_#fff7ed_100%)]">
-      <div className="space-y-8">
-        <PageHero
-          badge={
-            <>
-              <Logo className="w-4 h-4" />
-              Get In Touch
-            </>
-          }
-          icon={
-            <div className="flex h-14 w-14 items-center justify-center rounded-[1.25rem] bg-gradient-to-br from-red-600 via-orange-500 to-amber-400 text-white shadow-lg">
-              <Mail className="h-7 w-7" />
-            </div>
-          }
-          title="Contact the Practical Love team"
-          subtitle="Reach out with your questions, partnership ideas, prayer requests, testimonies, and outreach conversations. We want the page to feel open, clear, and easy to use."
-          actions={
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <a href="#contact-form" className="btn-brand px-7 py-3">
-                Send a Message
-              </a>
-              <a href={`mailto:${CONTACT_EMAIL}`} className="btn-outline-brand px-7 py-3">
-                Email Directly
-              </a>
-            </div>
-          }
-        >
-          <div className="grid gap-4 md:grid-cols-3">
-            {CONTACT_LANES.map(lane => (
-              <div
-                key={lane.title}
-                className="rounded-2xl border border-white/70 bg-white/80 p-4 backdrop-blur-sm"
-              >
-                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-red-100 text-red-700">
-                  {lane.icon}
-                </div>
-                <h2 className="mt-4 text-lg font-semibold text-gray-900">{lane.title}</h2>
-                <p className="mt-2 text-sm leading-6 text-gray-700">{lane.description}</p>
-              </div>
-            ))}
+    <div ref={rootRef}>
+      <section className="pl-wrap grid items-start gap-[clamp(40px,6vw,88px)] pb-[clamp(64px,9vw,120px)] pt-[clamp(48px,8vw,104px)] [grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr))]">
+        <div>
+          <h1 data-in className="m-0 text-[clamp(56px,9vw,128px)] font-extrabold leading-[.88] tracking-[-0.055em]">
+            Say <Em>hello.</Em>
+          </h1>
+          <p data-in className="pl-lede max-w-[36ch]">
+            Questions, partnerships, a testimony, or a request to bring Practical Love to your church. We usually reply within one to three working days.
+          </p>
+          <div data-in className="mt-[clamp(28px,4vw,44px)] grid gap-[10px]">
+            <a
+              href={`mailto:${CONTACT_EMAIL}`}
+              className="flex min-h-[64px] items-center justify-between gap-3 break-all rounded-[20px] border-2 border-pl-ink px-6 text-[18px] font-semibold text-pl-ink no-underline hover:text-pl-ink"
+            >
+              {CONTACT_EMAIL}
+              <span className="pl-serif text-[24px] text-pl-red" aria-hidden="true">
+                →
+              </span>
+            </a>
+            <Link
+              to="/prayer"
+              className="flex min-h-[64px] items-center justify-between rounded-[20px] bg-pl-blush px-6 text-[18px] font-semibold text-pl-deep no-underline hover:text-pl-deep"
+            >
+              Need prayer instead?
+              <span className="pl-serif text-[24px]" aria-hidden="true">
+                →
+              </span>
+            </Link>
           </div>
-        </PageHero>
+        </div>
 
-        <section className="grid gap-6 lg:grid-cols-[0.92fr_1.08fr]">
-          <SectionCard className="border-red-100 bg-white/95 shadow-lg">
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
-              Contact Routes
-            </p>
-            <h2 className="mt-2 text-3xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">Choose the best way to reach us</h2>
-            <div className="mt-6 space-y-4">
-              {CONTACT_CHANNELS.map(channel => (
-                <a
-                  key={channel.title}
-                  href={channel.href}
-                  className="block rounded-2xl border border-orange-100 bg-gradient-to-r from-white to-orange-50 p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-orange-200 hover:shadow-sm"
-                >
-                  <div className="flex items-start gap-4">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-red-100 text-red-700">
-                      {channel.icon}
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-sm font-semibold uppercase tracking-[0.16em] text-orange-700">
-                        {channel.title}
-                      </p>
-                      <h3 className="mt-2 text-xl font-serif text-gray-900">{channel.detail}</h3>
-                      <p className="mt-2 leading-7 text-gray-700">{channel.helper}</p>
-                    </div>
-                  </div>
-                </a>
-              ))}
-            </div>
-          </SectionCard>
-
-          <SectionCard
-            variant="dark"
-            className="border-red-900 bg-[linear-gradient(160deg,_rgba(127,29,29,1)_0%,_rgba(136,19,55,1)_45%,_rgba(154,52,18,1)_100%)] shadow-xl"
-          >
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-orange-200">
-              Before You Send
-            </p>
-            <h2 className="mt-2 text-3xl font-serif text-white leading-[1.1] tracking-[-0.015em]">Help the team respond well</h2>
-
-            <div className="mt-6 space-y-4">
-              <div className="rounded-2xl border border-white/10 bg-white/10 p-5">
-                <div className="flex items-center gap-3">
-                  <Clock3 className="h-5 w-5 text-orange-200" />
-                  <h3 className="text-lg font-semibold text-white">Response notes</h3>
-                </div>
-                <ul className="mt-4 space-y-3 text-sm leading-7 text-orange-100">
-                  {RESPONSE_NOTES.map(note => (
-                    <li key={note}>{note}</li>
-                  ))}
-                </ul>
+        <div data-in className="rounded-[32px] bg-pl-ink p-[clamp(24px,3.4vw,40px)] text-white">
+          {sent ? (
+            <div className="py-6 text-center" role="status">
+              <div ref={heartRef} className="text-[72px] leading-none text-pl-red" aria-hidden="true">
+                ♥
               </div>
-
-              <div className="rounded-2xl border border-white/10 bg-black/10 p-5">
-                <div className="flex items-center gap-3">
-                  <Send className="h-5 w-5 text-orange-200" />
-                  <h3 className="text-lg font-semibold text-white">What to include</h3>
-                </div>
-                <ul className="mt-4 space-y-3 text-sm leading-7 text-orange-100">
-                  {WHAT_TO_INCLUDE.map(item => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="rounded-2xl border border-white/10 bg-white/10 p-5">
-                <p className="text-sm font-semibold uppercase tracking-[0.16em] text-orange-200">
-                  Ministry Hours
-                </p>
-                <p className="mt-3 leading-7 text-white">
-                  Monday - Friday: 9am - 5pm
-                  <br />
-                  Saturday: 10am - 2pm
-                  <br />
-                  Sunday: Closed
-                </p>
-              </div>
-            </div>
-          </SectionCard>
-        </section>
-
-        <section id="contact-form" className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
-          <SectionCard className="border-orange-200 bg-white/95 shadow-lg">
-            <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-              <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
-                  Message Form
-                </p>
-                <h2 className="mt-2 text-3xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">Send your message here</h2>
-              </div>
-              <p className="text-sm text-gray-500">
-                Web3Forms powered submission
-              </p>
-            </div>
-
-            {/* Warm prompt */}
-            <div className="mt-4 rounded-2xl border border-[rgba(176,111,74,0.12)] bg-[linear-gradient(135deg,_rgba(255,248,240,0.9)_0%,_rgba(255,243,231,0.9)_100%)] p-4 text-center">
-              <p className="font-serif text-lg italic text-[#8d5339]">{warmPrompt}</p>
-            </div>
-
-            <form onSubmit={handleSubmit} className="mt-6 space-y-6">
-              {submitState.status === 'success' ? (
-                <div className="rounded-[1.75rem] border border-green-200 bg-[linear-gradient(135deg,_#f0fdf4_0%,_#ecfdf5_100%)] p-8 text-center">
-                  <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
-                    <svg className="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                    </svg>
-                  </div>
-                  <p className="font-serif text-2xl text-gray-900">Your words have reached us.</p>
-                  <p className="mt-2 text-base text-gray-600">We are praying already. God bless you.</p>
-                </div>
-              ) : submitState.status === 'error' ? (
-                <div
-                  className="rounded-2xl px-4 py-3 text-sm font-medium border border-red-200 bg-red-50 text-red-800"
-                >
-                  {submitState.message}
-                </div>
-              ) : null}
-
-              <div className="grid gap-6 md:grid-cols-2">
-                <div>
-                  <label htmlFor="name" className="mb-2 block text-sm font-semibold text-gray-700">
-                    Your Name
-                  </label>
-                  <input
-                    id="name"
-                    name="name"
-                    type="text"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                    className="w-full rounded-2xl border border-orange-100 bg-white px-4 py-3 transition-all focus:border-red-500 focus:ring-2 focus:ring-red-500"
-                    placeholder="John Doe"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="email" className="mb-2 block text-sm font-semibold text-gray-700">
-                    Email Address
-                  </label>
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    className="w-full rounded-2xl border border-orange-100 bg-white px-4 py-3 transition-all focus:border-red-500 focus:ring-2 focus:ring-red-500"
-                    placeholder="john@example.com"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="subject" className="mb-2 block text-sm font-semibold text-gray-700">
-                  Subject
-                </label>
-                <select
-                  id="subject"
-                  name="subject"
-                  value={formData.subject}
-                  onChange={handleChange}
-                  required
-                  className="w-full rounded-2xl border border-orange-100 bg-white px-4 py-3 transition-all focus:border-red-500 focus:ring-2 focus:ring-red-500"
-                >
-                  <option value="">Select a subject</option>
-                  <option value="general">General Inquiry</option>
-                  <option value="partnership">Partnership Opportunity</option>
-                  <option value="yellow-card">Yellow Card Request</option>
-                  <option value="testimony">Share a Testimony</option>
-                  <option value="prayer">Prayer Request</option>
-                  <option value="other">Other</option>
-                </select>
-              </div>
-
-              <div>
-                <label htmlFor="message" className="mb-2 block text-sm font-semibold text-gray-700">
-                  Your Message
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  required
-                  rows={7}
-                  className="w-full resize-none rounded-2xl border border-orange-100 bg-white px-4 py-3 transition-all focus:border-red-500 focus:ring-2 focus:ring-red-500"
-                  placeholder="Tell us how we can help, pray, collaborate, or respond."
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-red-700 px-8 py-4 font-semibold text-white transition-all hover:bg-red-800 disabled:cursor-not-allowed disabled:opacity-70 md:w-auto"
-              >
-                <Send className="h-5 w-5" />
-                {isSubmitting ? 'Sending...' : 'Send Message'}
+              <h2 className="mb-0 mt-4 text-[40px] font-extrabold tracking-[-0.04em]">Message sent.</h2>
+              <p className="mb-0 mt-3 text-[18px] text-pl-ondark">Thank you. We’ll be in touch soon.</p>
+              <button type="button" onClick={() => setSent(false)} className="pl-btn pl-btn-outline-light mt-6">
+                Send another
               </button>
+            </div>
+          ) : (
+            <form onSubmit={submit} className="grid gap-4">
+              <div>
+                <span id="contact-topic" className="mb-[10px] block text-[14px] font-semibold">
+                  I’m writing about
+                </span>
+                <div className="flex flex-wrap gap-2" role="group" aria-labelledby="contact-topic">
+                  {TOPICS.map(t => {
+                    const on = topic.label === t.label;
+                    return (
+                      <button
+                        key={t.label}
+                        type="button"
+                        aria-pressed={on}
+                        onClick={() => setTopic(t)}
+                        className={`min-h-[44px] rounded-full border-2 px-[18px] text-[15px] font-semibold text-white transition-colors duration-200 ${
+                          on ? 'border-pl-red bg-pl-red' : 'border-white/40 bg-transparent'
+                        }`}
+                      >
+                        {t.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+              <label htmlFor="contact-name" className="text-[14px] font-semibold">
+                Name
+              </label>
+              <input id="contact-name" name="name" required autoComplete="name" value={form.name} onChange={update} className={`-mt-2 ${field}`} />
+              <label htmlFor="contact-email" className="text-[14px] font-semibold">
+                Email
+              </label>
+              <input id="contact-email" name="email" type="email" required autoComplete="email" value={form.email} onChange={update} className={`-mt-2 ${field}`} />
+              <label htmlFor="contact-message" className="text-[14px] font-semibold">
+                Message
+              </label>
+              <textarea
+                id="contact-message"
+                name="message"
+                required
+                value={form.message}
+                onChange={update}
+                className="-mt-2 min-h-[130px] resize-y rounded-[16px] border-0 px-[18px] py-[14px] text-[16px] text-pl-ink"
+              />
+              <button type="submit" disabled={sending} className="min-h-[58px] rounded-full border-0 bg-pl-red text-[18px] font-bold text-white disabled:opacity-70">
+                {sending ? 'Sending…' : 'Send message'}
+              </button>
+              {error && (
+                <p role="alert" className="m-0 text-[15px] font-semibold text-pl-coral">
+                  {error}
+                </p>
+              )}
             </form>
-          </SectionCard>
-
-          <div className="space-y-6">
-            <SectionCard className="border-red-100 bg-gradient-to-br from-red-50 via-white to-orange-50 shadow-lg">
-              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
-                Best Uses
-              </p>
-              <h2 className="mt-2 text-3xl font-serif text-red-800 leading-[1.1] tracking-[-0.015em]">What people usually contact us about</h2>
-              <div className="mt-6 space-y-4">
-                {CONTACT_LANES.map(lane => (
-                  <div key={lane.title} className="rounded-2xl border border-white/70 bg-white/90 p-4">
-                    <h3 className="text-lg font-semibold text-gray-900">{lane.title}</h3>
-                    <p className="mt-2 leading-7 text-gray-700">{lane.description}</p>
-                  </div>
-                ))}
-              </div>
-            </SectionCard>
-
-            <SectionCard className="border-orange-200 bg-white/95 shadow-lg">
-              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-600">
-                Direct Summary
-              </p>
-              <div className="mt-5 space-y-4">
-                <div className="rounded-2xl border border-orange-100 bg-orange-50 p-4">
-                  <p className="text-sm font-semibold text-orange-700">Email</p>
-                  <a
-                    href={`mailto:${CONTACT_EMAIL}`}
-                    className="mt-1 block text-lg font-semibold text-gray-900 hover:text-red-700"
-                  >
-                    {CONTACT_EMAIL}
-                  </a>
-                </div>
-                <div className="rounded-2xl border border-orange-100 bg-orange-50 p-4">
-                  <p className="text-sm font-semibold text-orange-700">Phone</p>
-                  <a
-                    href={`tel:${CONTACT_PHONE.replace(/\s+/g, '')}`}
-                    className="mt-1 block text-lg font-semibold text-gray-900 hover:text-red-700"
-                  >
-                    {CONTACT_PHONE}
-                  </a>
-                </div>
-                <div className="rounded-2xl border border-orange-100 bg-orange-50 p-4">
-                  <p className="text-sm font-semibold text-orange-700">Location</p>
-                  <p className="mt-1 text-lg font-semibold text-gray-900">{CONTACT_LOCATION}</p>
-                </div>
-              </div>
-            </SectionCard>
-          </div>
-        </section>
-
-        <CTASection
-          title="Want to partner, testify, or ask for prayer?"
-          description="Use the contact form for detailed messages, or go straight to testimony sharing if you want to tell the story of what practical love has done."
-          primaryAction={{ label: 'Share Your Testimony', href: '/share-testimony' }}
-          secondaryAction={{ label: 'Read The Mission', href: '/mission-vision' }}
-        />
-      </div>
-    </PageShell>
+          )}
+        </div>
+      </section>
+    </div>
   );
 }
