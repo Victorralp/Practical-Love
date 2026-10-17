@@ -112,6 +112,7 @@ function AppLayout() {
             <Route path="/about-love" element={<AboutLovePage />} />
             <Route path="/resources" element={<ResourcesPage />} />
             <Route path="/messages" element={<MessagesPage />} />
+            <Route path="/messages/:postId" element={<MessagesPage />} />
             <Route
               path="/admin"
               element={

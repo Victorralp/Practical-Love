@@ -15,7 +15,7 @@ import {
   Sparkles,
   Video,
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import Logo from '../components/Logo';
 import { PageHero, PageShell, SectionCard } from '../components/ui';
 import ReactionBar from '../components/ReactionBar';
@@ -81,7 +81,8 @@ const WEEKLY_PRACTICES = [
 // ── Share helper ────────────────────────────────────────────────────
 
 async function sharePost(post: MessagePostRecord) {
-  const url = window.location.href;
+  // Each post has its own link so Facebook previews that post's title and image.
+  const url = `${window.location.origin}/messages/${encodeURIComponent(post.id)}`;
   const text = `${post.title}\n${post.summary}`;
 
   if (navigator.share) {
@@ -136,6 +137,24 @@ export default function MessagesPage() {
       window.removeEventListener('hashchange', syncTabToHash);
     };
   }, []);
+
+  // Shared links (/messages/:postId) land on the matching post once the feed has loaded.
+  const { postId } = useParams<{ postId?: string }>();
+  const scrolledToPostRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (!postId || isLoading || scrolledToPostRef.current === postId) return;
+    if (!posts.some(post => post.id === postId)) return;
+
+    scrolledToPostRef.current = postId;
+    setActiveTab('feed');
+    setCategoryFilter('all');
+    window.setTimeout(() => {
+      document
+        .getElementById(`post-${postId}`)
+        ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 350);
+  }, [postId, isLoading, posts]);
 
   useEffect(() => {
     const loadingTimeout = window.setTimeout(() => {
@@ -462,6 +481,8 @@ export default function MessagesPage() {
                       {filteredPosts.map((post, index) => (
                         <motion.article
                           key={post.id}
+                          id={`post-${post.id}`}
+                          style={{ scrollMarginTop: '6rem' }}
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, scale: 0.98 }}
