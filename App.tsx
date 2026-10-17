@@ -25,6 +25,7 @@ const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'));
 const TermsOfServicePage = lazy(() => import('./pages/TermsOfServicePage'));
 const CookiePolicyPage = lazy(() => import('./pages/CookiePolicyPage'));
 const DonationPage = lazy(() => import('./pages/DonationPage'));
+const PrayerWallPage = lazy(() => import('./pages/PrayerWallPage'));
 const AboutLovePage = lazy(() => import('./pages/AboutLovePage'));
 const ResourcesPage = lazy(() => import('./pages/ResourcesPage'));
 const FamilyFirstPage = lazy(() => import('./pages/FamilyFirstPage'));
@@ -112,6 +113,7 @@ function AppLayout() {
             <Route path="/about-love" element={<AboutLovePage />} />
             <Route path="/resources" element={<ResourcesPage />} />
             <Route path="/messages" element={<MessagesPage />} />
+            <Route path="/prayer" element={<PrayerWallPage />} />
             <Route
               path="/admin"
               element={

@@ -8,6 +8,7 @@ import TestimonyHeartbeat from './TestimonyHeartbeat';
 import LoveLetterToYou from './LoveLetterToYou';
 import TheWeightOfWords from './TheWeightOfWords';
 import AltarCall from './AltarCall';
+import HomeGiveBand from './HomeGiveBand';
 import type { LucideIcon } from 'lucide-react';
 import {
   ArrowRight,
@@ -545,6 +546,8 @@ export default function Hero() {
           </div>
         </div>
       </section>
+
+      <HomeGiveBand />
 
       <PrayerPause />
 

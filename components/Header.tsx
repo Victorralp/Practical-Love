@@ -25,6 +25,7 @@ const NAV_ITEMS: readonly NavItem[] = [
     ],
   },
   { name: 'Messages', href: '/messages' },
+  { name: 'Prayer Wall', href: '/prayer' },
   {
     name: 'Resources',
     href: '/resources',

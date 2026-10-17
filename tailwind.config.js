@@ -10,7 +10,28 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        grotesk: ['"Bricolage Grotesque"', 'system-ui', 'sans-serif'],
+        display: ['"Instrument Serif"', 'Georgia', 'serif'],
+        reader: ['"Source Serif 4"', 'Georgia', 'serif'],
+      },
       colors: {
+        pl: {
+          ink: '#141010',
+          red: '#e1251b',
+          press: '#a3140c',
+          deep: '#7a0f09',
+          blush: '#ffe6e3',
+          yellow: '#ffd23f',
+          body: '#3d3333',
+          muted: '#5a4f4f',
+          muted2: '#6b5f5f',
+          hair: '#f1e4e2',
+          hair2: '#eadfdc',
+          input: '#d9cbc8',
+          ondark: '#e9dcda',
+          coral: '#ff6b5e',
+        },
         background: 'var(--background)',
         foreground: 'var(--foreground)',
         card: {
