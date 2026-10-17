@@ -12,7 +12,7 @@ const routesPath = path.join(projectRoot, 'src', 'seo', 'routes.json');
 
 const SITE_NAME = 'Practical Love Ministry (Logosrhema)';
 const SITE_URL = 'https://logosrhema.org.ng';
-const FACEBOOK_URL = 'https://web.facebook.com/profile.php?id=61590900447700';
+const FACEBOOK_URL = 'https://web.facebook.com/PracticalLoveMinistry';
 const DEFAULT_IMAGE_PATH = '/love-hero-v2.png';
 const DEFAULT_DESCRIPTION =
   'Practical Love Ministry (Logosrhema) teaches biblical love through 1 Corinthians 13, family discipleship, the Yellow Card, and daily practice for homes, churches, and communities in Nigeria.';

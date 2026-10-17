@@ -43,7 +43,7 @@ const CONTACT_ITEMS = [
   {
     label: 'Facebook',
     value: 'Practical Love Ministry',
-    href: 'https://web.facebook.com/profile.php?id=61590900447700',
+    href: 'https://web.facebook.com/PracticalLoveMinistry',
     icon: Share2,
   },
 ] as const;
