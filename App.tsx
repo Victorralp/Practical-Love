@@ -1,13 +1,13 @@
 import { lazy, Suspense, useEffect } from 'react';
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import Header from './components/Header';
-import Hero from './components/Hero';
 import Footer from './components/Footer';
 import SiteSeo from './components/SiteSeo';
 import AdminRoute from './components/AdminRoute';
 import AdminLayout from './components/AdminLayout';
 
 // ── Lazy-loaded pages (code splitting) ──────────────────────────────
+const HomePage = lazy(() => import('./pages/HomePage'));
 const CharacteristicsPage = lazy(() => import('./pages/CharacteristicsPage'));
 const BiblePassagesPage = lazy(() => import('./pages/BiblePassagesPage'));
 const LoveInNigeriaPage = lazy(() => import('./pages/LoveInNigeriaPage'));
@@ -21,15 +21,15 @@ const PublicationsPage = lazy(() => import('./pages/PublicationsPage'));
 const BookReaderPage = lazy(() => import('./pages/BookReaderPage'));
 const ContactPage = lazy(() => import('./pages/ContactPage'));
 const TestimoniesPage = lazy(() => import('./pages/TestimoniesPage'));
-const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'));
-const TermsOfServicePage = lazy(() => import('./pages/TermsOfServicePage'));
-const CookiePolicyPage = lazy(() => import('./pages/CookiePolicyPage'));
+const LegalPage = lazy(() => import('./pages/LegalPage'));
 const DonationPage = lazy(() => import('./pages/DonationPage'));
 const AboutLovePage = lazy(() => import('./pages/AboutLovePage'));
 const ResourcesPage = lazy(() => import('./pages/ResourcesPage'));
 const FamilyFirstPage = lazy(() => import('./pages/FamilyFirstPage'));
 const PrideHumilityPage = lazy(() => import('./pages/PrideHumilityPage'));
 const MessagesPage = lazy(() => import('./pages/MessagesPage'));
+const MessagePage = lazy(() => import('./pages/MessagePage'));
+const PrayerWallPage = lazy(() => import('./pages/PrayerWallPage'));
 const AdminMessagesPage = lazy(() => import('./pages/AdminMessagesPage'));
 const AdminPublicationsPage = lazy(() => import('./pages/AdminPublicationsPage'));
 const AdminDashboardPage = lazy(() => import('./pages/AdminDashboardPage'));
@@ -38,16 +38,16 @@ const AdminPrayersPage = lazy(() => import('./pages/AdminPrayersPage'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 
 // Dev-only pages — only imported during development
-const CloudinaryDemoPage = lazy(() => import('./pages/CloudinaryDemoPage'));
-const EnvTestPage = lazy(() => import('./pages/EnvTestPage'));
 
 const isDev = import.meta.env.DEV;
 
 // ── Loading fallback ────────────────────────────────────────────────
 function PageLoader() {
   return (
-    <div className="flex min-h-[50vh] items-center justify-center">
-      <div className="h-8 w-8 animate-spin rounded-full border-4 border-orange-200 border-t-red-700" />
+    <div className="flex min-h-[50vh] items-center justify-center" role="status" aria-label="Loading">
+      <span className="animate-pulse text-[40px] leading-none text-pl-red motion-reduce:animate-none" aria-hidden="true">
+        ♥
+      </span>
     </div>
   );
 }
@@ -96,7 +96,11 @@ function AdminShortcut() {
 function AppLayout() {
   const { pathname } = useLocation();
   const isAdminRoute = pathname.startsWith('/admin');
-  // The book reader has its own sticky toolbar with Home/Close actions.
+  // These pages bring their own minimal header (back link + progress).
+  const hasOwnHeader =
+    pathname.startsWith('/read/') ||
+    /^\/messages\/[^/]+/.test(pathname) ||
+    pathname === '/share-testimony';
   const isReaderRoute = pathname.startsWith('/read/');
 
   return (
@@ -104,14 +108,16 @@ function AppLayout() {
       <ScrollToTop />
       <AdminShortcut />
       <SiteSeo />
-      {!isAdminRoute && !isReaderRoute && <Header />}
+      {!isAdminRoute && !hasOwnHeader && <Header />}
       <main id="main-content" className="flex-grow">
         <Suspense fallback={<PageLoader />}>
           <Routes>
-            <Route path="/" element={<Hero />} />
+            <Route path="/" element={<HomePage />} />
             <Route path="/about-love" element={<AboutLovePage />} />
             <Route path="/resources" element={<ResourcesPage />} />
             <Route path="/messages" element={<MessagesPage />} />
+            <Route path="/messages/:id" element={<MessagePage />} />
+            <Route path="/prayer" element={<PrayerWallPage />} />
             <Route
               path="/admin"
               element={
@@ -177,16 +183,14 @@ function AppLayout() {
             <Route path="/read/:id" element={<BookReaderPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/testimonies" element={<TestimoniesPage />} />
-            <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
-            <Route path="/terms-of-service" element={<TermsOfServicePage />} />
-            <Route path="/cookie-policy" element={<CookiePolicyPage />} />
+            <Route path="/privacy-policy" element={<LegalPage doc="privacy" />} />
+            <Route path="/terms-of-service" element={<LegalPage doc="terms" />} />
+            <Route path="/cookie-policy" element={<LegalPage doc="cookies" />} />
             <Route path="/donate" element={<DonationPage />} />
 
             {/* Dev-only debug routes — tree-shaken out of production builds */}
             {isDev && (
               <>
-                <Route path="/cloudinary-demo" element={<CloudinaryDemoPage />} />
-                <Route path="/env-test" element={<EnvTestPage />} />
               </>
             )}
 
@@ -195,7 +199,7 @@ function AppLayout() {
           </Routes>
         </Suspense>
       </main>
-      {!isAdminRoute && <Footer />}
+      {!isAdminRoute && !isReaderRoute && <Footer />}
     </div>
   );
 }

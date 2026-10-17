@@ -4,13 +4,13 @@
  * Requirements: 5.2
  */
 
-import { CheckCircle, BookOpen, MapPin, Calendar } from 'lucide-react';
 import type {
   UserProgress,
   ChallengeCompletion,
   ReflectionSession,
   JourneyProgress,
 } from '../../types/growth';
+import { CARD, KICKER } from './ui';
 
 interface CompletionHistoryProps {
   progress: UserProgress;
@@ -25,7 +25,6 @@ interface TimelineItem {
   title: string;
   description?: string;
   date: string;
-  icon: React.ReactNode;
   color: string;
 }
 
@@ -68,11 +67,10 @@ function buildTimelineItems(progress: UserProgress): TimelineItem[] {
     items.push({
       id: `challenge-${completion.challengeId}-${index}`,
       type: 'challenge',
-      title: 'Challenge Completed',
+      title: 'Challenge completed',
       description: completion.reflection || undefined,
       date: completion.completedAt,
-      icon: <CheckCircle className="w-5 h-5" />,
-      color: 'bg-amber-500',
+      color: 'bg-pl-red',
     });
   });
 
@@ -81,11 +79,10 @@ function buildTimelineItems(progress: UserProgress): TimelineItem[] {
     items.push({
       id: `reflection-${session.id}`,
       type: 'reflection',
-      title: 'Reflection Session',
+      title: 'Reflection session',
       description: `${session.entries.length} reflection${session.entries.length !== 1 ? 's' : ''} completed`,
       date: session.completedAt,
-      icon: <BookOpen className="w-5 h-5" />,
-      color: 'bg-orange-500',
+      color: 'bg-pl-yellow',
     });
   });
 
@@ -96,11 +93,10 @@ function buildTimelineItems(progress: UserProgress): TimelineItem[] {
       items.push({
         id: `journey-complete-${jp.journeyId}`,
         type: 'journey_complete',
-        title: 'Journey Completed',
+        title: 'Journey completed',
         description: 'Finished all steps',
         date: jp.completedAt,
-        icon: <MapPin className="w-5 h-5" />,
-        color: 'bg-amber-500',
+        color: 'bg-pl-ink',
       });
     }
   });
@@ -119,45 +115,32 @@ export default function CompletionHistory({ progress, maxItems = 10 }: Completio
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-md p-6">
-      <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-        <Calendar className="w-5 h-5 mr-2 text-gray-500" />
-        Recent Activity
-      </h3>
+    <div className={`${CARD} p-[clamp(20px,3vw,28px)]`}>
+      <h3 className="mb-5 mt-0 text-[clamp(22px,2.4vw,28px)] font-extrabold tracking-[-0.03em]">Recent activity</h3>
 
-      <div className="relative">
+      <ol className="relative m-0 list-none space-y-4 p-0">
         {/* Timeline line */}
-        <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-200" />
+        <span aria-hidden="true" className="absolute bottom-2 left-[7px] top-2 w-0.5 bg-pl-hair2" />
 
-        {/* Timeline items */}
-        <div className="space-y-4">
-          {timelineItems.map(item => (
-            <div key={item.id} className="relative flex items-start gap-4 pl-10">
-              {/* Timeline dot */}
-              <div
-                className={`absolute left-2 w-5 h-5 rounded-full ${item.color} text-white flex items-center justify-center -translate-x-1/2`}
-              >
-                {item.icon}
-              </div>
+        {timelineItems.map(item => (
+          <li key={item.id} className="relative flex items-start gap-4 pl-8">
+            {/* Timeline dot */}
+            <span
+              aria-hidden="true"
+              className={`absolute left-0 top-[3px] h-4 w-4 rounded-full border-2 border-pl-ink ${item.color}`}
+            />
 
-              {/* Content */}
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between gap-2">
-                  <p className="font-medium text-gray-800">{item.title}</p>
-                  <span className="text-xs text-gray-500 whitespace-nowrap">
-                    {formatRelativeTime(item.date)}
-                  </span>
-                </div>
-                {item.description && (
-                  <p className="text-sm text-gray-600 mt-1 truncate">{item.description}</p>
-                )}
+            {/* Content */}
+            <div className="min-w-0 flex-1">
+              <div className="flex items-baseline justify-between gap-2">
+                <p className="m-0 text-[16px] font-bold">{item.title}</p>
+                <span className={`${KICKER} whitespace-nowrap text-pl-muted`}>{formatRelativeTime(item.date)}</span>
               </div>
+              {item.description && <p className="mb-0 mt-1 truncate text-[15px] text-pl-body">{item.description}</p>}
             </div>
-          ))}
-        </div>
-      </div>
+          </li>
+        ))}
+      </ol>
     </div>
   );
 }
-
-

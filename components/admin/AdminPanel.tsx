@@ -35,16 +35,16 @@ export function AdminPanel({
     <section
       id={id}
       className={cn(
-        'rounded-2xl border border-[#f0e2d8] bg-white shadow-[0_1px_2px_rgba(61,29,23,0.04),0_10px_28px_-18px_rgba(61,29,23,0.25)]',
+        'rounded-[20px] border border-[#eadfdc] bg-white',
         className
       )}
     >
       {hasHeader ? (
-        <div className="flex flex-col gap-3 border-b border-[#f6ece4] px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 border-b border-[#f3ecea] px-[18px] py-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex min-w-0 items-start gap-3">
             {icon ? (
               <span
-                className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#fdf3ec] text-red-600"
+                className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-pl-blush text-pl-red"
                 aria-hidden="true"
               >
                 {icon}
@@ -52,17 +52,17 @@ export function AdminPanel({
             ) : null}
             <div className="min-w-0">
               {eyebrow ? (
-                <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[#a8735c]">
+                <p className="m-0 text-[12px] font-bold uppercase tracking-[0.08em] text-pl-press">
                   {eyebrow}
                 </p>
               ) : null}
               {title ? (
-                <h2 className="mt-0.5 text-lg font-semibold tracking-tight text-[#3d1d17]">
+                <h2 className="m-0 mt-0.5 text-[18px] font-extrabold tracking-[-0.02em] text-pl-ink">
                   {title}
                 </h2>
               ) : null}
               {description ? (
-                <p className="mt-1 text-sm leading-6 text-[#6e4737]">{description}</p>
+                <p className="mb-0 mt-1 text-[14px] leading-6 text-[#5a4f4f]">{description}</p>
               ) : null}
             </div>
           </div>
@@ -70,7 +70,7 @@ export function AdminPanel({
         </div>
       ) : null}
 
-      <div className={cn(flush ? '' : 'px-5 py-5', bodyClassName)}>{children}</div>
+      <div className={cn(flush ? '' : 'p-[18px]', bodyClassName)}>{children}</div>
     </section>
   );
 }

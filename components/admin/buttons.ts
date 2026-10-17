@@ -3,13 +3,13 @@
  * them onto buttons, links, and file-input labels alike.
  */
 const base =
-  'inline-flex items-center justify-center gap-2 rounded-xl text-sm font-medium transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-red-500/15 disabled:cursor-not-allowed disabled:opacity-60';
+  'inline-flex min-h-[40px] items-center justify-center gap-2 rounded-full text-[14px] font-semibold no-underline transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-pl-red/15 disabled:cursor-not-allowed disabled:opacity-60';
 
 export const adminButton = {
-  primary: `${base} bg-red-700 px-4 py-2.5 text-white hover:bg-red-800`,
-  secondary: `${base} border border-[#e8d9cd] bg-white px-4 py-2.5 text-[#5c3a2b] hover:bg-[#fdf8f4]`,
-  ghost: `${base} px-3 py-2 text-[#6e4737] hover:bg-[#fdf3ec]`,
-  subtle: `${base} border border-[#f0e2d8] bg-[#fdf8f4] px-3 py-1.5 text-[#5c3a2b] hover:bg-white`,
-  danger: `${base} border border-red-200 bg-white px-3 py-1.5 text-red-700 hover:bg-red-50`,
-  success: `${base} border border-emerald-200 bg-white px-3 py-1.5 text-emerald-700 hover:bg-emerald-50`,
+  primary: `${base} min-h-[46px] bg-pl-red px-5 text-[15px] font-bold text-white hover:bg-pl-press hover:text-white`,
+  secondary: `${base} min-h-[46px] border border-[#d9cbc8] bg-white px-5 text-pl-ink hover:border-pl-ink hover:text-pl-ink`,
+  ghost: `${base} px-3 text-pl-ink hover:bg-[#f3ecea]`,
+  subtle: `${base} border border-[#d9cbc8] bg-white px-[14px] text-[13px] text-pl-ink hover:border-pl-ink`,
+  danger: `${base} border border-[#f3c6c2] bg-white px-[14px] text-[13px] text-pl-press hover:bg-pl-blush`,
+  success: `${base} bg-pl-ink px-[14px] text-[13px] text-white hover:bg-black hover:text-white`,
 } as const;

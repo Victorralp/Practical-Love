@@ -18,15 +18,15 @@ function internetFigure({
   imageUrl: string;
 }) {
   return (
-    <figure className="not-prose overflow-hidden rounded-[1.75rem] border border-orange-100 bg-stone-950 shadow-[0_28px_70px_rgba(120,53,15,0.18)]">
+    <figure className="not-prose overflow-hidden rounded-[1.75rem] border border-pl-hair bg-pl-ink shadow-[0_28px_70px_rgba(20,16,16,0.18)]">
       <img src={imageUrl} alt={alt} className="h-[260px] w-full object-cover md:h-[340px]" />
-      <figcaption className="space-y-3 border-t border-white/10 px-6 py-5 text-sm text-stone-200">
+      <figcaption className="space-y-3 border-t border-white/10 px-6 py-5 text-sm text-pl-ondark">
         <p>{caption}</p>
         <a
           href={creditHref}
           target="_blank"
           rel="noreferrer"
-          className="font-medium text-orange-200 transition-colors hover:text-orange-100"
+          className="font-medium text-pl-blush transition-colors hover:text-white"
         >
           Image source: {creditLabel}
         </a>
@@ -112,7 +112,7 @@ export const agapeLoveBook: PublicationProps = {
       title: 'Seven Characteristics of Agape Love',
       content: (
         <div className="space-y-10">
-          <div className="not-prose overflow-hidden rounded-[2rem] bg-gradient-to-br from-red-900 via-orange-800 to-amber-700 text-white shadow-[0_30px_80px_rgba(127,29,29,0.35)]">
+          <div className="not-prose overflow-hidden rounded-[2rem] bg-pl-red text-white shadow-[0_30px_80px_rgba(122,15,9,0.35)]">
             <div className="grid gap-0 md:grid-cols-[1.1fr_0.9fr]">
               <div className="space-y-8 p-8 md:p-12">
                 <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium tracking-[0.2em] uppercase">
@@ -120,28 +120,28 @@ export const agapeLoveBook: PublicationProps = {
                   Readable Booklet
                 </div>
                 <div className="space-y-5">
-                  <p className="text-sm uppercase tracking-[0.4em] text-orange-100">
+                  <p className="text-sm uppercase tracking-[0.4em] text-white">
                     Practical Love Series
                   </p>
                   <h1 className="font-serif text-4xl font-bold leading-tight md:text-6xl">
                     Seven Characteristics of Agape Love
                   </h1>
-                  <p className="max-w-2xl text-lg leading-8 text-orange-50/90">
+                  <p className="max-w-2xl text-lg leading-8 text-white/90">
                     A clearer, slower, more readable version of the Agape Love sheet, arranged as
                     a 12-page guide for reflection, teaching, and daily practice.
                   </p>
                 </div>
                 <div className="grid gap-4 sm:grid-cols-3">
                   <div className="rounded-2xl border border-white/15 bg-white/10 p-4">
-                    <p className="text-xs uppercase tracking-[0.25em] text-orange-100">Core</p>
+                    <p className="text-xs uppercase tracking-[0.25em] text-white">Core</p>
                     <p className="mt-2 text-xl font-semibold">7 Traits</p>
                   </div>
                   <div className="rounded-2xl border border-white/15 bg-white/10 p-4">
-                    <p className="text-xs uppercase tracking-[0.25em] text-orange-100">Format</p>
+                    <p className="text-xs uppercase tracking-[0.25em] text-white">Format</p>
                     <p className="mt-2 text-xl font-semibold">12 Pages</p>
                   </div>
                   <div className="rounded-2xl border border-white/15 bg-white/10 p-4">
-                    <p className="text-xs uppercase tracking-[0.25em] text-orange-100">Use</p>
+                    <p className="text-xs uppercase tracking-[0.25em] text-white">Use</p>
                     <p className="mt-2 text-xl font-semibold">Study + Action</p>
                   </div>
                 </div>
@@ -175,25 +175,25 @@ export const agapeLoveBook: PublicationProps = {
             into a book format so a reader can absorb them one by one, meditate on them, and apply
             them in family life, ministry, friendship, and society.
           </p>
-          <div className="not-prose grid gap-4 rounded-[1.75rem] bg-orange-50 p-6 md:grid-cols-3">
+          <div className="not-prose grid gap-4 rounded-[1.75rem] bg-pl-blush/60 p-6 md:grid-cols-3">
             <div className="rounded-2xl bg-white p-5 shadow-sm">
-              <BookOpen className="h-6 w-6 text-red-600" />
-              <p className="mt-3 font-semibold text-gray-900">Read slowly</p>
-              <p className="mt-2 text-sm leading-6 text-gray-600">
+              <BookOpen className="h-6 w-6 text-pl-red" />
+              <p className="mt-3 font-semibold text-pl-ink">Read slowly</p>
+              <p className="mt-2 text-sm leading-6 text-pl-muted">
                 One characteristic at a time is enough for deep reflection.
               </p>
             </div>
             <div className="rounded-2xl bg-white p-5 shadow-sm">
-              <Users className="h-6 w-6 text-red-600" />
-              <p className="mt-3 font-semibold text-gray-900">Discuss together</p>
-              <p className="mt-2 text-sm leading-6 text-gray-600">
+              <Users className="h-6 w-6 text-pl-red" />
+              <p className="mt-3 font-semibold text-pl-ink">Discuss together</p>
+              <p className="mt-2 text-sm leading-6 text-pl-muted">
                 Use it in family devotion, small groups, or mentoring conversations.
               </p>
             </div>
             <div className="rounded-2xl bg-white p-5 shadow-sm">
-              <Sparkles className="h-6 w-6 text-red-600" />
-              <p className="mt-3 font-semibold text-gray-900">Act on it</p>
-              <p className="mt-2 text-sm leading-6 text-gray-600">
+              <Sparkles className="h-6 w-6 text-pl-red" />
+              <p className="mt-3 font-semibold text-pl-ink">Act on it</p>
+              <p className="mt-2 text-sm leading-6 text-pl-muted">
                 Every page ends in behaviour, not theory alone.
               </p>
             </div>
@@ -205,23 +205,23 @@ export const agapeLoveBook: PublicationProps = {
       title: item.title,
       content: (
         <div className="space-y-8">
-          <div className="not-prose rounded-[1.75rem] border border-orange-100 bg-gradient-to-br from-red-50 via-white to-orange-50 p-8 shadow-[0_24px_60px_rgba(120,53,15,0.08)]">
-            <p className="text-sm font-semibold uppercase tracking-[0.35em] text-orange-600">
+          <div className="not-prose rounded-[1.75rem] border border-pl-hair bg-pl-blush/60 p-8 shadow-[0_24px_60px_rgba(20,16,16,0.08)]">
+            <p className="text-sm font-semibold uppercase tracking-[0.35em] text-pl-red">
               Characteristic {item.number}
             </p>
-            <h2 className="mt-4 font-serif text-3xl font-bold text-gray-900 md:text-4xl">
+            <h2 className="mt-4 font-serif text-3xl font-bold text-pl-ink md:text-4xl">
               {item.title}
             </h2>
-            <p className="mt-5 text-lg leading-8 text-gray-700">{item.statement}</p>
+            <p className="mt-5 text-lg leading-8 text-pl-body">{item.statement}</p>
           </div>
           <p>{item.explanation}</p>
           <div className="not-prose grid gap-4 md:grid-cols-2">
             {item.practice.map(point => (
-              <div key={point} className="rounded-2xl border border-orange-100 bg-white p-6 shadow-sm">
-                <p className="text-sm font-semibold uppercase tracking-[0.25em] text-orange-600">
+              <div key={point} className="rounded-2xl border border-pl-hair bg-white p-6 shadow-sm">
+                <p className="text-sm font-semibold uppercase tracking-[0.25em] text-pl-red">
                   Practice
                 </p>
-                <p className="mt-3 text-base leading-7 text-gray-700">{point}</p>
+                <p className="mt-3 text-base leading-7 text-pl-body">{point}</p>
               </div>
             ))}
           </div>
@@ -232,14 +232,14 @@ export const agapeLoveBook: PublicationProps = {
       title: 'Agape Love Is Commitment',
       content: (
         <div className="space-y-8">
-          <div className="not-prose rounded-[1.75rem] border border-orange-100 bg-gradient-to-br from-red-50 via-white to-orange-50 p-8 shadow-[0_24px_60px_rgba(120,53,15,0.08)]">
-            <p className="text-sm font-semibold uppercase tracking-[0.35em] text-orange-600">
+          <div className="not-prose rounded-[1.75rem] border border-pl-hair bg-pl-blush/60 p-8 shadow-[0_24px_60px_rgba(20,16,16,0.08)]">
+            <p className="text-sm font-semibold uppercase tracking-[0.35em] text-pl-red">
               Characteristic 04
             </p>
-            <h2 className="mt-4 font-serif text-3xl font-bold text-gray-900 md:text-4xl">
+            <h2 className="mt-4 font-serif text-3xl font-bold text-pl-ink md:text-4xl">
               Agape Love Is Commitment
             </h2>
-            <p className="mt-5 text-lg leading-8 text-gray-700">
+            <p className="mt-5 text-lg leading-8 text-pl-body">
               Agape love means permanent commitment to the object of one’s love.
             </p>
           </div>
@@ -269,14 +269,14 @@ export const agapeLoveBook: PublicationProps = {
             imageUrl:
               'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Fruits_and_Vegetables_%28Unsplash%29.jpg/1280px-Fruits_and_Vegetables_%28Unsplash%29.jpg',
           })}
-          <div className="not-prose rounded-[1.75rem] border border-orange-100 bg-gradient-to-br from-red-50 via-white to-orange-50 p-8 shadow-[0_24px_60px_rgba(120,53,15,0.08)]">
-            <p className="text-sm font-semibold uppercase tracking-[0.35em] text-orange-600">
+          <div className="not-prose rounded-[1.75rem] border border-pl-hair bg-pl-blush/60 p-8 shadow-[0_24px_60px_rgba(20,16,16,0.08)]">
+            <p className="text-sm font-semibold uppercase tracking-[0.35em] text-pl-red">
               Characteristic 05
             </p>
-            <h2 className="mt-4 font-serif text-3xl font-bold text-gray-900 md:text-4xl">
+            <h2 className="mt-4 font-serif text-3xl font-bold text-pl-ink md:text-4xl">
               Agape Love Gives Constructively
             </h2>
-            <p className="mt-5 text-lg leading-8 text-gray-700">
+            <p className="mt-5 text-lg leading-8 text-pl-body">
               Agape love means constructive purpose giving based not on blind sentimentality but on
               the knowledge of the best for the beloved.
             </p>
@@ -297,14 +297,14 @@ export const agapeLoveBook: PublicationProps = {
       title: 'Agape Love Is Consistent',
       content: (
         <div className="space-y-8">
-          <div className="not-prose rounded-[1.75rem] border border-orange-100 bg-gradient-to-br from-red-50 via-white to-orange-50 p-8 shadow-[0_24px_60px_rgba(120,53,15,0.08)]">
-            <p className="text-sm font-semibold uppercase tracking-[0.35em] text-orange-600">
+          <div className="not-prose rounded-[1.75rem] border border-pl-hair bg-pl-blush/60 p-8 shadow-[0_24px_60px_rgba(20,16,16,0.08)]">
+            <p className="text-sm font-semibold uppercase tracking-[0.35em] text-pl-red">
               Characteristic 06
             </p>
-            <h2 className="mt-4 font-serif text-3xl font-bold text-gray-900 md:text-4xl">
+            <h2 className="mt-4 font-serif text-3xl font-bold text-pl-ink md:text-4xl">
               Agape Love Is Consistent
             </h2>
-            <p className="mt-5 text-lg leading-8 text-gray-700">
+            <p className="mt-5 text-lg leading-8 text-pl-body">
               Agape love means consistency of behaviour showing an ever-present concern for the
               beloved highest good or goals.
             </p>
@@ -333,14 +333,14 @@ export const agapeLoveBook: PublicationProps = {
             imageUrl:
               'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Group_Hug_%288737565975%29.jpg/1280px-Group_Hug_%288737565975%29.jpg',
           })}
-          <div className="not-prose rounded-[1.75rem] border border-orange-100 bg-gradient-to-br from-red-50 via-white to-orange-50 p-8 shadow-[0_24px_60px_rgba(120,53,15,0.08)]">
-            <p className="text-sm font-semibold uppercase tracking-[0.35em] text-orange-600">
+          <div className="not-prose rounded-[1.75rem] border border-pl-hair bg-pl-blush/60 p-8 shadow-[0_24px_60px_rgba(20,16,16,0.08)]">
+            <p className="text-sm font-semibold uppercase tracking-[0.35em] text-pl-red">
               Characteristic 07
             </p>
-            <h2 className="mt-4 font-serif text-3xl font-bold text-gray-900 md:text-4xl">
+            <h2 className="mt-4 font-serif text-3xl font-bold text-pl-ink md:text-4xl">
               Agape Love Blesses Widely
             </h2>
-            <p className="mt-5 text-lg leading-8 text-gray-700">
+            <p className="mt-5 text-lg leading-8 text-pl-body">
               Agape love is the chief means and the best way of blessing God, your spouse, your
               family both physical and spiritual, your neighbours, your enemies, and yourself.
             </p>
@@ -352,9 +352,9 @@ export const agapeLoveBook: PublicationProps = {
           </p>
           <div className="not-prose grid gap-4 md:grid-cols-2">
             {['God', 'Spouse', 'Family', 'Neighbours', 'Enemies', 'Yourself'].map(item => (
-              <div key={item} className="rounded-2xl border border-orange-100 bg-white p-5 shadow-sm">
-                <p className="font-semibold text-gray-900">{item}</p>
-                <p className="mt-2 text-sm leading-6 text-gray-600">
+              <div key={item} className="rounded-2xl border border-pl-hair bg-white p-5 shadow-sm">
+                <p className="font-semibold text-pl-ink">{item}</p>
+                <p className="mt-2 text-sm leading-6 text-pl-muted">
                   Ask: What would faithful, constructive, active love look like here?
                 </p>
               </div>
@@ -377,17 +377,17 @@ export const agapeLoveBook: PublicationProps = {
               'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/OlderCoupleWalkg.jpg/1280px-OlderCoupleWalkg.jpg',
           })}
           <div className="not-prose grid gap-4 md:grid-cols-2">
-            <div className="rounded-[1.5rem] border border-orange-100 bg-white p-6 shadow-sm">
-              <Home className="h-6 w-6 text-red-600" />
-              <h3 className="mt-4 text-xl font-semibold text-gray-900">At Home</h3>
-              <p className="mt-3 text-sm leading-6 text-gray-600">
+            <div className="rounded-[1.5rem] border border-pl-hair bg-white p-6 shadow-sm">
+              <Home className="h-6 w-6 text-pl-red" />
+              <h3 className="mt-4 text-xl font-semibold text-pl-ink">At Home</h3>
+              <p className="mt-3 text-sm leading-6 text-pl-muted">
                 Speak with patience, keep commitments, and let love be visible in ordinary service.
               </p>
             </div>
-            <div className="rounded-[1.5rem] border border-orange-100 bg-white p-6 shadow-sm">
-              <Users className="h-6 w-6 text-red-600" />
-              <h3 className="mt-4 text-xl font-semibold text-gray-900">In Community</h3>
-              <p className="mt-3 text-sm leading-6 text-gray-600">
+            <div className="rounded-[1.5rem] border border-pl-hair bg-white p-6 shadow-sm">
+              <Users className="h-6 w-6 text-pl-red" />
+              <h3 className="mt-4 text-xl font-semibold text-pl-ink">In Community</h3>
+              <p className="mt-3 text-sm leading-6 text-pl-muted">
                 Refuse indifference. Step toward the needy, the lonely, and the overlooked.
               </p>
             </div>
@@ -404,14 +404,14 @@ export const agapeLoveBook: PublicationProps = {
       title: 'Reflection and Prayer',
       content: (
         <div className="space-y-8">
-          <div className="not-prose rounded-[1.75rem] bg-gradient-to-br from-red-900 via-orange-800 to-amber-700 p-8 text-white shadow-[0_30px_80px_rgba(127,29,29,0.35)]">
-            <p className="text-sm font-semibold uppercase tracking-[0.35em] text-orange-100">
+          <div className="not-prose rounded-[1.75rem] bg-pl-red p-8 text-white shadow-[0_30px_80px_rgba(122,15,9,0.35)]">
+            <p className="text-sm font-semibold uppercase tracking-[0.35em] text-white">
               Reflection
             </p>
             <h2 className="mt-4 font-serif text-3xl font-bold md:text-4xl">
               Let Love Become Measurable
             </h2>
-            <p className="mt-5 max-w-3xl text-lg leading-8 text-orange-50/90">
+            <p className="mt-5 max-w-3xl text-lg leading-8 text-white/90">
               This booklet is useful only if it moves from reading into repentance, prayer, and new
               behaviour.
             </p>
@@ -423,12 +423,12 @@ export const agapeLoveBook: PublicationProps = {
               'Where have I been detached instead of involved?',
               'Who needs practical love from me this week?',
             ].map(question => (
-              <div key={question} className="rounded-2xl border border-orange-100 bg-orange-50 p-5">
-                <p className="text-base leading-7 text-gray-700">{question}</p>
+              <div key={question} className="rounded-2xl border border-pl-hair bg-pl-blush/60 p-5">
+                <p className="text-base leading-7 text-pl-body">{question}</p>
               </div>
             ))}
           </div>
-          <blockquote className="border-l-4 border-red-500 pl-6 italic">
+          <blockquote className="border-l-4 border-pl-red pl-6 italic">
             Lord, teach me to love in action, in involvement, in consistency, and in wisdom. Let my
             life become a channel of blessing to You, to my family, to my neighbour, and even to
             those who oppose me.
@@ -440,14 +440,14 @@ export const agapeLoveBook: PublicationProps = {
       title: 'Closing Charge',
       content: (
         <div className="space-y-8">
-          <div className="not-prose rounded-[2rem] border border-orange-100 bg-white p-8 shadow-[0_24px_60px_rgba(120,53,15,0.08)]">
-            <p className="text-sm font-semibold uppercase tracking-[0.35em] text-orange-600">
+          <div className="not-prose rounded-[2rem] border border-pl-hair bg-white p-8 shadow-[0_24px_60px_rgba(20,16,16,0.08)]">
+            <p className="text-sm font-semibold uppercase tracking-[0.35em] text-pl-red">
               Final Word
             </p>
-            <h2 className="mt-4 font-serif text-3xl font-bold text-gray-900 md:text-5xl">
+            <h2 className="mt-4 font-serif text-3xl font-bold text-pl-ink md:text-5xl">
               Make Love Your Aim
             </h2>
-            <p className="mt-5 max-w-3xl text-lg leading-8 text-gray-700">
+            <p className="mt-5 max-w-3xl text-lg leading-8 text-pl-body">
               Let these seven characteristics move beyond the page. Teach them. Practice them.
               Share them. Build your home, your friendships, and your witness around them.
             </p>
@@ -456,11 +456,11 @@ export const agapeLoveBook: PublicationProps = {
             A short sheet can start a long transformation. Read this again, discuss it with others,
             and let every page become visible in your conduct.
           </p>
-          <div className="not-prose rounded-[1.75rem] bg-orange-50 p-6">
-            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-orange-600">
+          <div className="not-prose rounded-[1.75rem] bg-pl-blush/60 p-6">
+            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-pl-red">
               Share Freely
             </p>
-            <p className="mt-3 text-base leading-7 text-gray-700">
+            <p className="mt-3 text-base leading-7 text-pl-body">
               Feel free to reproduce, teach, print, and distribute this message so the practice of
               agape love can spread from person to person, home to home, and nation to nation.
             </p>

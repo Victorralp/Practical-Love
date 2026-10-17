@@ -4,8 +4,7 @@
  * Requirements: 3.1, 3.2, 3.3, 3.4
  */
 
-import { useState, useMemo } from 'react';
-import { Sparkles, History, Play, CheckCircle, RotateCcw } from 'lucide-react';
+import { useState, useMemo, useRef } from 'react';
 import type {
   ReflectionPrompt as ReflectionPromptType,
   ReflectionEntry,
@@ -16,6 +15,8 @@ import { reflectionPrompts } from '../../data/reflectionPrompts';
 import { progressService } from '../../services/progressService';
 import ReflectionPrompt from './ReflectionPrompt';
 import ReflectionHistory from './ReflectionHistory';
+import { usePopOnChange } from '../pl/motion';
+import { CARD, FILL, INSET, KICKER, LABEL, TEXT_LINK, TRACK } from './ui';
 
 type ViewMode = 'start' | 'session' | 'summary' | 'history';
 
@@ -25,7 +26,7 @@ interface CategoryOption {
 }
 
 const categoryOptions: CategoryOption[] = [
-  { value: 'all', label: 'All Categories' },
+  { value: 'all', label: 'All' },
   { value: 'patience', label: 'Patience' },
   { value: 'kindness', label: 'Kindness' },
   { value: 'forgiveness', label: 'Forgiveness' },
@@ -41,6 +42,13 @@ export default function SelfReflectionSection() {
   const [currentPromptIndex, setCurrentPromptIndex] = useState(0);
   const [sessionEntries, setSessionEntries] = useState<ReflectionEntry[]>([]);
   const [sessionPrompts, setSessionPrompts] = useState<ReflectionPromptType[]>([]);
+  const viewRef = useRef<HTMLDivElement | null>(null);
+
+  // Each view change, and each new question, rises in.
+  usePopOnChange(viewRef, `${viewMode}-${currentPromptIndex}`, [
+    { transform: 'translateY(24px)', opacity: 0 },
+    { transform: 'none', opacity: 1 },
+  ]);
 
   // Get user progress for history
   const progress = progressService.getProgress();
@@ -105,75 +113,64 @@ export default function SelfReflectionSection() {
   // Start View
   if (viewMode === 'start') {
     return (
-      <div className="space-y-6">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">Self-Reflection</h2>
-          <p className="text-gray-600">
-            Take time to examine your thoughts and growth through guided reflection questions.
-          </p>
-        </div>
+      <div ref={viewRef} className="space-y-6">
+        <p className="m-0 max-w-[52ch] text-[18px] leading-[1.5] text-pl-body">
+          Take time to examine your thoughts and growth through guided reflection questions.
+        </p>
 
         {/* Start Session Card */}
-        <div className="bg-white rounded-xl shadow-lg p-8">
-          <div className="text-center mb-6">
-            <div className="bg-orange-100 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-              <Sparkles className="w-8 h-8 text-orange-600" />
-            </div>
-            <h3 className="text-xl font-semibold text-gray-800 mb-2">Begin a Reflection Session</h3>
-            <p className="text-gray-600">
-              Answer 3 guided questions to explore your thoughts and feelings.
-            </p>
-          </div>
+        <div className={`${CARD} p-[clamp(20px,4vw,40px)]`}>
+          <h3 className="m-0 text-[clamp(26px,3vw,36px)] font-extrabold leading-[1] tracking-[-0.035em]">
+            Begin a reflection <span className="pl-serif font-normal text-pl-red">session</span>
+          </h3>
+          <p className="mb-0 mt-3 text-[17px] leading-[1.5] text-pl-body">
+            Answer 3 guided questions to explore your thoughts and feelings.
+          </p>
 
           {/* Category Selection */}
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Focus Area (Optional)
-            </label>
-            <select
-              value={selectedCategory}
-              onChange={e => setSelectedCategory(e.target.value as LoveCategory | 'all')}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-            >
+          <div className="mt-6">
+            <p id="reflection-focus" className={`${KICKER} mb-3 mt-0 text-pl-muted`}>
+              Focus area (optional)
+            </p>
+            <div className="flex flex-wrap gap-2" role="group" aria-labelledby="reflection-focus">
               {categoryOptions.map(option => (
-                <option key={option.value} value={option.value}>
+                <button
+                  key={option.value}
+                  type="button"
+                  aria-pressed={selectedCategory === option.value}
+                  onClick={() => setSelectedCategory(option.value)}
+                  className="pl-chip"
+                >
                   {option.label}
-                </option>
+                </button>
               ))}
-            </select>
+            </div>
           </div>
 
           {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-3">
+          <div className="mt-7 flex flex-wrap gap-3">
             <button
+              type="button"
               onClick={startSession}
               disabled={filteredPrompts.length === 0}
-              className="flex-1 bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center justify-center disabled:bg-gray-300 disabled:cursor-not-allowed"
+              className="pl-btn pl-btn-red flex-1"
             >
-              <Play className="w-5 h-5 mr-2" />
-              Start Session
+              Start session
             </button>
-            <button
-              onClick={() => setViewMode('history')}
-              className="flex-1 border border-gray-300 text-gray-700 hover:bg-gray-50 px-6 py-3 rounded-lg font-medium transition-colors flex items-center justify-center"
-            >
-              <History className="w-5 h-5 mr-2" />
-              View History
+            <button type="button" onClick={() => setViewMode('history')} className="pl-btn pl-btn-outline flex-1">
+              View history
             </button>
           </div>
         </div>
 
         {/* Quick Stats */}
         {progress.reflectionSessions.length > 0 && (
-          <div className="bg-gradient-to-r from-orange-50 to-amber-50 rounded-xl p-6 border border-orange-100">
-            <p className="text-orange-800 font-medium">
+          <div className="rounded-[24px] bg-pl-yellow p-5 text-pl-ink">
+            <p className="m-0 text-[18px] font-bold">
               You've completed {progress.reflectionSessions.length} reflection session
               {progress.reflectionSessions.length !== 1 ? 's' : ''}.
             </p>
-            <p className="text-orange-600 text-sm mt-1">
-              Keep reflecting to deepen your self-awareness and growth!
-            </p>
+            <p className="mb-0 mt-1 text-[15px]">Keep reflecting to deepen your self-awareness and growth.</p>
           </div>
         )}
       </div>
@@ -183,31 +180,27 @@ export default function SelfReflectionSection() {
   // Session View
   if (viewMode === 'session' && currentPrompt) {
     return (
-      <div className="space-y-6">
+      <div ref={viewRef} className="space-y-5">
         {/* Progress Indicator */}
-        <div className="bg-white rounded-xl shadow-lg p-4">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium text-gray-600">
+        <div>
+          <div className="mb-3 flex items-center justify-between gap-4">
+            <span className={`${KICKER} text-pl-muted`} aria-live="polite">
               Question {currentPromptIndex + 1} of {sessionPrompts.length}
             </span>
-            <button
-              onClick={resetSession}
-              className="text-sm text-gray-500 hover:text-gray-700 flex items-center"
-            >
-              <RotateCcw className="w-4 h-4 mr-1" />
-              Start Over
+            <button type="button" onClick={resetSession} className={TEXT_LINK}>
+              Start over
             </button>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          <div className={TRACK}>
             <div
-              className="bg-orange-600 h-2 rounded-full transition-all duration-300"
+              className={FILL}
               style={{ width: `${((currentPromptIndex + 1) / sessionPrompts.length) * 100}%` }}
             />
           </div>
         </div>
 
         {/* Current Prompt */}
-        <ReflectionPrompt prompt={currentPrompt} onSubmit={handlePromptSubmit} />
+        <ReflectionPrompt key={currentPromptIndex} prompt={currentPrompt} onSubmit={handlePromptSubmit} />
       </div>
     );
   }
@@ -215,35 +208,28 @@ export default function SelfReflectionSection() {
   // Summary View
   if (viewMode === 'summary') {
     return (
-      <div className="space-y-6">
+      <div ref={viewRef} className="space-y-5">
         {/* Success Header */}
-        <div className="bg-white rounded-xl shadow-lg p-8 text-center">
-          <div className="bg-amber-100 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-            <CheckCircle className="w-8 h-8 text-orange-600" />
-          </div>
-          <h3 className="text-2xl font-bold text-gray-800 mb-2">Session Complete!</h3>
-          <p className="text-gray-600 mb-6">
+        <div role="status" className="rounded-[28px] bg-pl-red p-[clamp(24px,4vw,40px)] text-white">
+          <h3 className="m-0 text-[clamp(30px,4vw,48px)] font-extrabold leading-[.95] tracking-[-0.04em]">
+            Session complete. <span className="pl-serif font-normal">Well done.</span>
+          </h3>
+          <p className="mb-0 mt-3 text-[17px] text-white/90">
             Great job taking time for self-reflection. Here's a summary of your responses.
           </p>
         </div>
 
         {/* Summary of Responses */}
-        <div className="space-y-4">
+        <div className="space-y-3">
           {sessionEntries.map((entry, index) => {
             const prompt = sessionPrompts.find(p => p.id === entry.promptId);
             return (
-              <div key={entry.id} className="bg-white rounded-xl shadow-lg p-6">
-                <div className="mb-3">
-                  <span className="text-xs font-medium text-gray-400 uppercase">
-                    Question {index + 1}
-                  </span>
-                  <p className="text-gray-700 font-medium mt-1">{prompt?.question}</p>
-                </div>
-                <div className="bg-orange-50 rounded-lg p-4 border border-orange-100">
-                  <span className="text-xs font-medium text-orange-600 uppercase">
-                    Your Response
-                  </span>
-                  <p className="text-gray-700 mt-1 whitespace-pre-wrap">{entry.response}</p>
+              <div key={entry.id} className={`${CARD} p-[clamp(20px,4vw,28px)]`}>
+                <span className={`${KICKER} text-pl-muted`}>Question {index + 1}</span>
+                <p className="mb-3 mt-1 text-[18px] font-semibold leading-[1.4]">{prompt?.question}</p>
+                <div className={INSET}>
+                  <b className={LABEL}>Your response</b>
+                  <p className="mb-0 mt-1 whitespace-pre-wrap text-[16px] leading-[1.5] text-pl-body">{entry.response}</p>
                 </div>
               </div>
             );
@@ -251,26 +237,15 @@ export default function SelfReflectionSection() {
         </div>
 
         {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-3">
-          <button
-            onClick={startSession}
-            className="flex-1 bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center justify-center"
-          >
-            <Play className="w-5 h-5 mr-2" />
-            Start New Session
+        <div className="flex flex-wrap gap-3">
+          <button type="button" onClick={startSession} className="pl-btn pl-btn-red flex-1">
+            Start new session
           </button>
-          <button
-            onClick={() => setViewMode('history')}
-            className="flex-1 border border-gray-300 text-gray-700 hover:bg-gray-50 px-6 py-3 rounded-lg font-medium transition-colors flex items-center justify-center"
-          >
-            <History className="w-5 h-5 mr-2" />
-            View All History
+          <button type="button" onClick={() => setViewMode('history')} className="pl-btn pl-btn-outline flex-1">
+            View all history
           </button>
-          <button
-            onClick={resetSession}
-            className="flex-1 border border-gray-300 text-gray-700 hover:bg-gray-50 px-6 py-3 rounded-lg font-medium transition-colors"
-          >
-            Back to Start
+          <button type="button" onClick={resetSession} className="pl-btn pl-btn-outline flex-1">
+            Back to start
           </button>
         </div>
       </div>
@@ -280,13 +255,10 @@ export default function SelfReflectionSection() {
   // History View
   if (viewMode === 'history') {
     return (
-      <div className="space-y-6">
+      <div ref={viewRef} className="space-y-6">
         {/* Back Button */}
-        <button
-          onClick={resetSession}
-          className="text-orange-600 hover:text-orange-700 font-medium flex items-center"
-        >
-          ← Back to Reflection
+        <button type="button" onClick={resetSession} className={TEXT_LINK}>
+          ← Back to reflection
         </button>
 
         {/* History Component */}
@@ -294,12 +266,8 @@ export default function SelfReflectionSection() {
 
         {/* Start New Session Button */}
         <div className="text-center">
-          <button
-            onClick={startSession}
-            className="bg-orange-600 hover:bg-orange-700 text-white px-8 py-3 rounded-lg font-medium transition-colors inline-flex items-center"
-          >
-            <Play className="w-5 h-5 mr-2" />
-            Start New Session
+          <button type="button" onClick={startSession} className="pl-btn pl-btn-red">
+            Start new session
           </button>
         </div>
       </div>
@@ -308,4 +276,3 @@ export default function SelfReflectionSection() {
 
   return null;
 }
-

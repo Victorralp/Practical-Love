@@ -1,168 +1,187 @@
-import { ImageWithFallback } from '../components/figma/ImageWithFallback';
-import { Star, Quote, User } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getAvatarUrl } from '../services/cloudinaryService';
-import { PageHero, PageShell } from '../components/ui';
-import Logo from '../components/Logo';
+import { Em } from '../components/pl/primitives';
+import { animate, prefersReducedMotion, useEntrance } from '../components/pl/motion';
+import { initials } from '../components/pl/text';
+import { subscribeToApprovedTestimonies, type TestimonyRecord } from '../services/testimoniesService';
 
-interface TestimonyProps {
-  name: string;
-  role: string;
-  image: string;
-  testimony: string;
-  rating: number;
+const FEATURED = 3;
+const ROTATE_MS = 7000;
+const TONES = [
+  { card: 'bg-white text-pl-ink', avatar: 'bg-pl-ink text-white' },
+  { card: 'bg-pl-blush text-pl-ink', avatar: 'bg-pl-ink text-white' },
+  { card: 'bg-pl-ink text-white', avatar: 'bg-pl-red text-white' },
+  { card: 'bg-pl-yellow text-pl-ink', avatar: 'bg-pl-ink text-white' },
+];
+
+function byNewest(a: TestimonyRecord, b: TestimonyRecord) {
+  return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
 }
 
-function TestimonyCard({ name, role, image, testimony, rating }: TestimonyProps) {
-  // Handle image optimization for Cloudinary
-  // Use Cloudinary optimized image if it's a Cloudinary URL
-  const isCloudinaryImage = image.includes('cloudinary.com');
-  let optimizedImage = image;
+function Avatar({ t, className }: { t: TestimonyRecord; className: string }) {
+  if (t.imageUrl) return <img src={t.imageUrl} alt="" loading="lazy" className={`flex-none rounded-full object-cover ${className}`} />;
+  return <span className={`flex flex-none items-center justify-center rounded-full font-extrabold ${className}`}>{initials(t.name)}</span>;
+}
 
-  if (isCloudinaryImage) {
-    // Extract public ID from Cloudinary URL
-    const urlParts = image.split('/');
-    const uploadIndex = urlParts.indexOf('upload');
-    if (uploadIndex !== -1 && uploadIndex + 1 < urlParts.length) {
-      const publicId = urlParts
-        .slice(uploadIndex + 1)
-        .join('/')
-        .split('.')[0];
-      optimizedImage = getAvatarUrl(publicId, 200);
-    }
-  }
-
-  return (
-    <div className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow duration-300">
-      <div className="flex items-center mb-6">
-        <div className="w-16 h-16 rounded-full overflow-hidden mr-4 bg-gradient-to-br from-orange-100 to-red-100 flex items-center justify-center">
-          {image ? (
-            <ImageWithFallback
-              src={optimizedImage}
-              alt={`${name} profile`}
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-red-600 to-orange-600">
-              <User className="w-8 h-8 text-white" />
-            </div>
-          )}
-        </div>
-        <div>
-          <h3 className="text-lg font-semibold text-gray-800">{name}</h3>
-          <p className="text-gray-500">{role}</p>
-          <div className="flex items-center mt-1">
-            {[...Array(rating)].map((_, i) => (
-              <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <Quote className="w-8 h-8 text-orange-300 mb-4" />
-      <blockquote className="text-gray-600 leading-relaxed italic">"{testimony}"</blockquote>
-    </div>
-  );
+function roleLine(t: TestimonyRecord) {
+  return [t.role, t.location].filter(Boolean).join(', ');
 }
 
 export default function TestimoniesPage() {
-  // Testimony data - currently empty but ready for submissions
-  const testimonies: TestimonyProps[] = [];
+  const [items, setItems] = useState<TestimonyRecord[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [featured, setFeatured] = useState(0);
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  const featRef = useRef<HTMLDivElement | null>(null);
+  const gridRef = useRef<HTMLDivElement | null>(null);
 
-  // Main render function
+  useEffect(
+    () =>
+      subscribeToApprovedTestimonies(
+        loaded => {
+          setItems([...loaded].sort(byNewest));
+          setLoading(false);
+        },
+        err => {
+          setError(`We could not load testimonies right now. ${err.message}`);
+          setLoading(false);
+        }
+      ),
+    []
+  );
+
+  useEntrance(rootRef);
+
+  const featureCount = Math.min(FEATURED, items.length);
+
+  useEffect(() => {
+    if (featureCount < 2) return;
+    const timer = window.setInterval(() => setFeatured(f => (f + 1) % featureCount), ROTATE_MS);
+    return () => window.clearInterval(timer);
+  }, [featureCount]);
+
+  const firstFeature = useRef(true);
+  useEffect(() => {
+    if (firstFeature.current) {
+      firstFeature.current = false;
+      return;
+    }
+    animate(featRef.current, [{ transform: 'translateY(24px)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 700, easing: 'cubic-bezier(.3,1.3,.5,1)' });
+  }, [featured]);
+
+  // Cards rise in as they scroll into view.
+  useEffect(() => {
+    const root = gridRef.current;
+    if (!root || prefersReducedMotion()) return;
+    const io = new IntersectionObserver(
+      entries =>
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          io.unobserve(entry.target);
+          animate(entry.target as HTMLElement, [{ transform: 'translateY(40px) rotate(-1deg)', opacity: 0 }, { transform: 'none', opacity: 1 }], {
+            duration: 750,
+            easing: 'cubic-bezier(.3,1.4,.5,1)',
+            fill: 'backwards',
+          });
+        }),
+      { threshold: 0.1 }
+    );
+    root.querySelectorAll('[data-t]').forEach(el => io.observe(el));
+    return () => io.disconnect();
+  }, [items]);
+
+  const feat = items[Math.min(featured, Math.max(0, featureCount - 1))];
+
   return (
-    <PageShell className="bg-gradient-to-b from-orange-50 via-white to-red-50">
-      <PageHero
-        badge={
-          <>
-            <Logo className="w-4 h-4" />
-            Community Stories
-          </>
-        }
-        title="Stories of Transformation"
-        subtitle="Discover how real people have experienced life-changing growth through genuine, practical love."
-        actions={
-          <div className="flex flex-col sm:flex-row gap-3">
-            <Link
-              to="/share-testimony"
-              className="inline-flex items-center justify-center px-6 py-3 rounded-xl bg-red-600 text-white font-semibold hover:bg-red-700 transition-colors shadow-sm"
-            >
-              Share Your Testimony
-            </Link>
-            <Link
-              to="/love-challenge"
-              className="inline-flex items-center justify-center px-6 py-3 rounded-xl bg-white/80 border border-orange-200 text-red-700 font-semibold hover:bg-white transition-colors"
-            >
-              Take the 30-Day Challenge
-            </Link>
-          </div>
-        }
-      />
-
-        {testimonies.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mb-20">
-            {testimonies.map((testimony, index) => (
-              <TestimonyCard
-                key={index}
-                name={testimony.name}
-                role={testimony.role}
-                image={testimony.image}
-                testimony={testimony.testimony}
-                rating={testimony.rating}
-              />
-            ))}
-          </div>
-        ) : (
-          <div className="mb-14 bg-white rounded-2xl shadow-md border border-orange-100 overflow-hidden">
-            <div className="p-8 md:p-10 text-center">
-              <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-orange-100 to-red-100 flex items-center justify-center">
-                <Logo className="w-8 h-8" />
-              </div>
-              <p className="text-2xl font-serif text-gray-900 mb-2">Your Story Matters</p>
-              <p className="text-lg text-gray-600 max-w-xl mx-auto leading-relaxed">
-                We’re building a library of real-life experiences. If Practical Love has impacted
-                your marriage, family, friendships, or faith, your testimony can encourage someone
-                today.
-              </p>
-            </div>
-            <div className="border-t border-orange-100 bg-gradient-to-r from-orange-50 to-red-50 p-6">
-              <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                <Link
-                  to="/share-testimony"
-                  className="inline-flex items-center justify-center px-7 py-3 rounded-xl bg-red-600 text-white font-semibold hover:bg-red-700 transition-colors shadow-sm"
-                >
-                  Be the First to Share
-                </Link>
-                <Link
-                  to="/characteristics"
-                  className="inline-flex items-center justify-center px-7 py-3 rounded-xl bg-white border border-orange-200 text-red-700 font-semibold hover:bg-orange-50 transition-colors"
-                >
-                  Review the 17 Characteristics
-                </Link>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Call to Action */}
-        <div className="bg-gradient-to-r from-red-700 to-orange-700 rounded-2xl p-12 md:p-16 text-white text-center shadow-xl">
-          <Logo className="w-20 h-20 mx-auto mb-8 animate-pulse" />
-          <h3 className="text-3xl md:text-4xl font-serif mb-6">Share Your Transformation Story</h3>
-          <p className="text-lg text-orange-100 mb-10 max-w-2xl mx-auto leading-relaxed">
-            Has practical love changed your relationships, your family, or your life? Your story
-            could be the encouragement someone else needs to begin their own journey of
-            transformation.
+    <div ref={rootRef}>
+      <section className="bg-pl-red text-white">
+        <div className="pl-wrap pb-[clamp(48px,7vw,88px)] pt-[clamp(56px,9vw,120px)]">
+          <p data-in className="m-0 text-[14px] font-bold uppercase tracking-[0.08em]">
+            Stories of transformation
           </p>
-          <Link
-            to="/share-testimony"
-            className="bg-white text-red-600 px-10 py-4 rounded-lg font-semibold hover:bg-orange-50 transition-all hover:shadow-lg inline-block text-lg"
-          >
-            Share Your Story Now
+          {feat ? (
+            <>
+              <div ref={featRef} className="mt-5" aria-live="polite">
+                <p className="pl-serif m-0 line-clamp-6 max-w-[24ch] text-[clamp(36px,5.6vw,80px)] leading-[1.04]">“{feat.testimony}”</p>
+                <div className="mt-7 flex items-center gap-[14px]">
+                  <Avatar t={feat} className="h-[52px] w-[52px] bg-white text-[20px] text-pl-red" />
+                  <span>
+                    <b className="block text-[19px]">{feat.name}</b>
+                    <span className="text-[15px] opacity-85">{roleLine(feat)}</span>
+                  </span>
+                </div>
+              </div>
+              {featureCount > 1 && (
+                <div className="mt-7 flex gap-1">
+                  {Array.from({ length: featureCount }, (_, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      aria-label={`Story ${i + 1}`}
+                      aria-pressed={i === featured}
+                      onClick={() => setFeatured(i)}
+                      className="flex h-11 w-12 items-center border-0 bg-transparent"
+                    >
+                      <span className={`block h-1 w-full rounded-sm transition-colors duration-300 ${i === featured ? 'bg-white' : 'bg-white/35'}`} />
+                    </button>
+                  ))}
+                </div>
+              )}
+            </>
+          ) : (
+            <p data-in className="pl-serif mb-0 mt-5 max-w-[22ch] text-[clamp(36px,5.6vw,80px)] leading-[1.04]">
+              {loading ? 'Gathering stories…' : '“Your story could be the first one here.”'}
+            </p>
+          )}
+        </div>
+      </section>
+
+      <section className="pl-wrap py-[clamp(56px,8vw,104px)]">
+        <div className="mb-[clamp(24px,3vw,40px)] flex flex-wrap items-end justify-between gap-4">
+          <h1 data-in className="m-0 text-[clamp(44px,6.4vw,92px)] font-extrabold leading-[.9] tracking-[-0.05em]">
+            Real people. <Em>Real change.</Em>
+          </h1>
+          <Link to="/share-testimony" className="pl-btn pl-btn-ink">
+            Share your story →
           </Link>
         </div>
-    </PageShell>
+
+        {loading ? (
+          <div className="[column-gap:16px] [columns:3_300px]" aria-busy="true">
+            {Array.from({ length: 6 }, (_, i) => (
+              <div key={i} className="mb-4 h-48 animate-pulse break-inside-avoid rounded-[26px] bg-pl-blush motion-reduce:animate-none" />
+            ))}
+          </div>
+        ) : error ? (
+          <p role="alert" className="rounded-[26px] border-2 border-pl-ink p-7 text-[18px]">
+            {error}
+          </p>
+        ) : items.length === 0 ? (
+          <p className="rounded-[26px] border-2 border-pl-ink p-7 text-[18px]">
+            No stories have been published yet. Has practical love changed something in your home, church or work? <Link to="/share-testimony">Tell us about it.</Link>
+          </p>
+        ) : (
+          <div ref={gridRef} className="[column-gap:16px] [columns:3_300px]">
+            {items.map((t, i) => {
+              const tone = TONES[i % TONES.length];
+              return (
+                <figure key={t.id} data-t className={`m-0 mb-4 break-inside-avoid rounded-[26px] border-2 border-pl-ink p-[26px] ${tone.card}`}>
+                  {t.location && <span className="text-[13px] font-bold uppercase tracking-[0.08em] opacity-75">{t.location}</span>}
+                  <blockquote className="pl-serif mx-0 mb-0 mt-3 whitespace-pre-line text-[24px] leading-[1.25]">“{t.testimony}”</blockquote>
+                  <figcaption className="mt-[18px] flex items-center gap-3">
+                    <Avatar t={t} className={`h-10 w-10 ${tone.avatar}`} />
+                    <span>
+                      <b className="block text-[16px]">{t.name}</b>
+                      {t.role && <span className="text-[14px] opacity-75">{t.role}</span>}
+                    </span>
+                  </figcaption>
+                </figure>
+              );
+            })}
+          </div>
+        )}
+      </section>
+    </div>
   );
 }
-
-
-
