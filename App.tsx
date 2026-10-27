@@ -63,7 +63,14 @@ function PageLoader() {
 }
 
 function PrefetchPages() {
+  const { pathname } = useLocation();
+  const isPublicRoute = !pathname.startsWith('/admin');
+
   useEffect(() => {
+    if (!isPublicRoute) {
+      return;
+    }
+
     const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
     if (connection?.saveData) {
       return;
@@ -82,7 +89,7 @@ function PrefetchPages() {
 
     const id = setTimeout(prefetch, 2000);
     return () => clearTimeout(id);
-  }, []);
+  }, [isPublicRoute]);
 
   return null;
 }
