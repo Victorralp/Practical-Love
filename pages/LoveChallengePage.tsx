@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { CTASection, PageHero, PageShell, SectionCard } from '../components/ui';
+import FollowOnFacebook from '../components/FollowOnFacebook';
 import challenges from '../data/challenges';
 import challengeDays, { getChallengeDayContent, type ChallengeDay } from '../data/challengeDays';
 import {
@@ -880,6 +881,8 @@ export default function LoveChallengePage() {
         primaryAction={{ label: 'Share Your Testimony', href: '/share-testimony' }}
         secondaryAction={{ label: 'Explore Love Passages', href: '/bible-passages' }}
       />
+
+      <FollowOnFacebook description="Do the challenge with other families. We post each day's act of love on our Page, so you can share how it went." />
 
       <div className="flex justify-center">
         <Link

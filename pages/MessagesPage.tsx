@@ -16,6 +16,7 @@ import {
   Video,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import FollowOnFacebook from '../components/FollowOnFacebook';
 import Logo from '../components/Logo';
 import { PageHero, PageShell, SectionCard } from '../components/ui';
 import ReactionBar from '../components/ReactionBar';
@@ -752,6 +753,8 @@ export default function MessagesPage() {
           )}
         </AnimatePresence>
       </div>
+
+      <FollowOnFacebook description="New messages, devotions and Sunday prayers for families go up on our Page first. Follow along and pray with us." />
     </PageShell>
   );
 }
