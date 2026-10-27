@@ -65,8 +65,6 @@ Your `.env` file has:
 
 ```
 VITE_CLOUDINARY_CLOUD_NAME=dwglljtzn
-VITE_CLOUDINARY_API_KEY=727794839772922
-VITE_CLOUDINARY_API_SECRET=955H3la9p1e3EWWjOVA1ba2mlf0
 VITE_CLOUDINARY_UPLOAD_PRESET=logorhema
 ```
 
@@ -176,8 +174,7 @@ export default function EnvTest() {
       <pre>
         {JSON.stringify({
           cloudName: import.meta.env.VITE_CLOUDINARY_CLOUD_NAME,
-          uploadPreset: import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET,
-          hasApiKey: !!import.meta.env.VITE_CLOUDINARY_API_KEY
+          uploadPreset: import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET
         }, null, 2)}
       </pre>
     </div>

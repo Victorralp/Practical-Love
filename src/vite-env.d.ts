@@ -9,8 +9,6 @@ interface ImportMetaEnv {
   readonly VITE_FIREBASE_APP_ID: string;
   readonly VITE_FIREBASE_MEASUREMENT_ID: string;
   readonly VITE_CLOUDINARY_CLOUD_NAME: string;
-  readonly VITE_CLOUDINARY_API_KEY: string;
-  readonly VITE_CLOUDINARY_API_SECRET: string;
   readonly VITE_CLOUDINARY_UPLOAD_PRESET: string;
   readonly VITE_WEB3FORMS_ACCESS_KEY: string;
 }
