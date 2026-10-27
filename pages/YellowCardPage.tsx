@@ -1,6 +1,7 @@
 import { Award, Download, Printer, Calendar, Target, Star, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { PageHero, PageShell } from '../components/ui';
+import FollowOnFacebook from '../components/FollowOnFacebook';
 import Logo from '../components/Logo';
 
 export default function YellowCardPage() {
@@ -251,6 +252,8 @@ export default function YellowCardPage() {
           </Link>
         </div>
       </div>
+
+      <FollowOnFacebook description="Every week we share one trait from the card, a short prayer for your home, and ideas to practise love with your children." />
     </PageShell>
   );
 }
