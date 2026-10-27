@@ -49,7 +49,6 @@ const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 
 // Dev-only pages — only imported during development
 const CloudinaryDemoPage = lazy(() => import('./pages/CloudinaryDemoPage'));
-const EnvTestPage = lazy(() => import('./pages/EnvTestPage'));
 
 const isDev = import.meta.env.DEV;
 
@@ -230,7 +229,6 @@ function AppLayout() {
             {isDev && (
               <>
                 <Route path="/cloudinary-demo" element={<CloudinaryDemoPage />} />
-                <Route path="/env-test" element={<EnvTestPage />} />
               </>
             )}
 

@@ -28,9 +28,11 @@ Update your `.env` file with your Cloudinary credentials:
 ```bash
 # Cloudinary Configuration
 VITE_CLOUDINARY_CLOUD_NAME=your_actual_cloud_name
-VITE_CLOUDINARY_API_KEY=your_actual_api_key
-VITE_CLOUDINARY_API_SECRET=your_actual_api_secret
 VITE_CLOUDINARY_UPLOAD_PRESET=your_upload_preset_name
+
+# Server-only: used by api/cloudinary-delete.js. Never prefix with VITE_.
+CLOUDINARY_API_KEY=your_actual_api_key
+CLOUDINARY_API_SECRET=your_actual_api_secret
 ```
 
 ### 4. Configure Upload Preset
@@ -119,7 +121,7 @@ const thumbnailUrl = getThumbnailUrl('public_id_here', 400, 300);
 
 ## Security Considerations
 
-1. **API Secret**: Never expose in client-side code (already handled)
+1. **API Secret**: Lives only in the `/api/cloudinary-delete` server function (`CLOUDINARY_API_SECRET`). Deletes require a signed-in admin's Firebase ID token.
 2. **Upload Preset**: Use unsigned uploads for client-side
 3. **File Validation**: Implemented in both frontend and Cloudinary
 4. **Rate Limiting**: Cloudinary free tier has limits
