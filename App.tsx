@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect } from 'react';
+import { lazy, Suspense, useEffect, type ComponentType } from 'react';
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import Header from './components/Header';
 import Hero from './components/Hero';
@@ -8,29 +8,38 @@ import AdminRoute from './components/AdminRoute';
 import AdminLayout from './components/AdminLayout';
 
 // ── Lazy-loaded pages (code splitting) ──────────────────────────────
-const CharacteristicsPage = lazy(() => import('./pages/CharacteristicsPage'));
-const BiblePassagesPage = lazy(() => import('./pages/BiblePassagesPage'));
-const LoveInNigeriaPage = lazy(() => import('./pages/LoveInNigeriaPage'));
-const MissionVisionPage = lazy(() => import('./pages/MissionVisionPage'));
-const YellowCardPage = lazy(() => import('./pages/YellowCardPage'));
-const LoveChallengePage = lazy(() => import('./pages/LoveChallengePage'));
-const ShareTestimonyPage = lazy(() => import('./pages/ShareTestimonyPage'));
-const GrowthPage = lazy(() => import('./pages/GrowthPage'));
-const YellowCardSeriesPage = lazy(() => import('./pages/YellowCardSeriesPage'));
-const PublicationsPage = lazy(() => import('./pages/PublicationsPage'));
-const BookReaderPage = lazy(() => import('./pages/BookReaderPage'));
-const ContactPage = lazy(() => import('./pages/ContactPage'));
-const TestimoniesPage = lazy(() => import('./pages/TestimoniesPage'));
-const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'));
-const TermsOfServicePage = lazy(() => import('./pages/TermsOfServicePage'));
-const CookiePolicyPage = lazy(() => import('./pages/CookiePolicyPage'));
-const DonationPage = lazy(() => import('./pages/DonationPage'));
-const PrayerWallPage = lazy(() => import('./pages/PrayerWallPage'));
-const AboutLovePage = lazy(() => import('./pages/AboutLovePage'));
-const ResourcesPage = lazy(() => import('./pages/ResourcesPage'));
-const FamilyFirstPage = lazy(() => import('./pages/FamilyFirstPage'));
-const PrideHumilityPage = lazy(() => import('./pages/PrideHumilityPage'));
-const MessagesPage = lazy(() => import('./pages/MessagesPage'));
+// Public pages register their loader so they can be prefetched once the
+// browser is idle; otherwise every first click waits on a chunk download.
+const publicPageLoaders: Array<() => Promise<unknown>> = [];
+
+function publicPage<T extends ComponentType<any>>(load: () => Promise<{ default: T }>) {
+  publicPageLoaders.push(load);
+  return lazy(load);
+}
+
+const CharacteristicsPage = publicPage(() => import('./pages/CharacteristicsPage'));
+const BiblePassagesPage = publicPage(() => import('./pages/BiblePassagesPage'));
+const LoveInNigeriaPage = publicPage(() => import('./pages/LoveInNigeriaPage'));
+const MissionVisionPage = publicPage(() => import('./pages/MissionVisionPage'));
+const YellowCardPage = publicPage(() => import('./pages/YellowCardPage'));
+const LoveChallengePage = publicPage(() => import('./pages/LoveChallengePage'));
+const ShareTestimonyPage = publicPage(() => import('./pages/ShareTestimonyPage'));
+const GrowthPage = publicPage(() => import('./pages/GrowthPage'));
+const YellowCardSeriesPage = publicPage(() => import('./pages/YellowCardSeriesPage'));
+const PublicationsPage = publicPage(() => import('./pages/PublicationsPage'));
+const BookReaderPage = publicPage(() => import('./pages/BookReaderPage'));
+const ContactPage = publicPage(() => import('./pages/ContactPage'));
+const TestimoniesPage = publicPage(() => import('./pages/TestimoniesPage'));
+const PrivacyPolicyPage = publicPage(() => import('./pages/PrivacyPolicyPage'));
+const TermsOfServicePage = publicPage(() => import('./pages/TermsOfServicePage'));
+const CookiePolicyPage = publicPage(() => import('./pages/CookiePolicyPage'));
+const DonationPage = publicPage(() => import('./pages/DonationPage'));
+const PrayerWallPage = publicPage(() => import('./pages/PrayerWallPage'));
+const AboutLovePage = publicPage(() => import('./pages/AboutLovePage'));
+const ResourcesPage = publicPage(() => import('./pages/ResourcesPage'));
+const FamilyFirstPage = publicPage(() => import('./pages/FamilyFirstPage'));
+const PrideHumilityPage = publicPage(() => import('./pages/PrideHumilityPage'));
+const MessagesPage = publicPage(() => import('./pages/MessagesPage'));
 const AdminMessagesPage = lazy(() => import('./pages/AdminMessagesPage'));
 const AdminPublicationsPage = lazy(() => import('./pages/AdminPublicationsPage'));
 const AdminDashboardPage = lazy(() => import('./pages/AdminDashboardPage'));
@@ -51,6 +60,31 @@ function PageLoader() {
       <div className="h-8 w-8 animate-spin rounded-full border-4 border-orange-200 border-t-red-700" />
     </div>
   );
+}
+
+function PrefetchPages() {
+  useEffect(() => {
+    const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
+    if (connection?.saveData) {
+      return;
+    }
+
+    const prefetch = () => {
+      publicPageLoaders.forEach(load => {
+        load().catch(() => {});
+      });
+    };
+
+    if ('requestIdleCallback' in window) {
+      const id = window.requestIdleCallback(prefetch, { timeout: 4000 });
+      return () => window.cancelIdleCallback(id);
+    }
+
+    const id = setTimeout(prefetch, 2000);
+    return () => clearTimeout(id);
+  }, []);
+
+  return null;
 }
 
 function ScrollToTop() {
@@ -103,6 +137,7 @@ function AppLayout() {
   return (
     <div className="flex flex-col min-h-screen">
       <ScrollToTop />
+      <PrefetchPages />
       <AdminShortcut />
       <SiteSeo />
       {!isAdminRoute && !isReaderRoute && <Header />}
